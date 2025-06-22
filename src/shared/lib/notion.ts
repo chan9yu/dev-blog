@@ -1,6 +1,6 @@
 import { Client, type PageObjectResponse, type PersonUserObjectResponse } from "@notionhq/client";
 
-import type { BlogPost } from "@/shared/types/blog";
+import type { BlogPost, BlogTagFilterItem } from "@/shared/types/blog";
 
 class NotionService {
 	private static instance: NotionService;
@@ -17,6 +17,13 @@ class NotionService {
 		this.client = new Client({ auth: this.token });
 	}
 
+	get allTagInfo(): Omit<BlogTagFilterItem, "count"> {
+		return {
+			id: "all",
+			name: "전체"
+		};
+	}
+
 	public static getInstance(): NotionService {
 		if (!NotionService.instance) {
 			NotionService.instance = new NotionService();
@@ -25,14 +32,24 @@ class NotionService {
 		return NotionService.instance;
 	}
 
-	public async getBlogPosts() {
+	public async getBlogPosts(tag?: string) {
 		const response = await this.client.databases.query({
 			database_id: this.databaseId,
 			filter: {
-				property: "Status",
-				select: {
-					equals: "Published"
-				}
+				and: [
+					{
+						property: "Status",
+						select: { equals: "Published" }
+					},
+					...(tag && tag !== this.allTagInfo.name
+						? [
+								{
+									property: "Tags",
+									multi_select: { contains: tag }
+								}
+							]
+						: [])
+				]
 			},
 			sorts: [
 				{
@@ -45,6 +62,34 @@ class NotionService {
 		return response.results
 			.filter((page): page is PageObjectResponse => "properties" in page)
 			.map((page) => this.convertToBlogPost(page));
+	}
+
+	public async getTags() {
+		const blogPosts = await this.getBlogPosts();
+
+		const tagCount = blogPosts.reduce(
+			(acc, post) => {
+				post.tags?.forEach((tag) => (acc[tag] = (acc[tag] || 0) + 1));
+				return acc;
+			},
+			{} as Record<string, number>
+		);
+
+		const tags: BlogTagFilterItem[] = Object.entries(tagCount).map(([name, count]) => ({
+			id: name,
+			name,
+			count
+		}));
+
+		tags.unshift({
+			...this.allTagInfo,
+			count: blogPosts.length
+		});
+
+		const [allTag, ...restTags] = tags;
+		const sortedTags = restTags.sort((a, b) => a.name.localeCompare(b.name));
+
+		return [allTag, ...sortedTags];
 	}
 
 	private getCoverImage(cover: PageObjectResponse["cover"]) {
