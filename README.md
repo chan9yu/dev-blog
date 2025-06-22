@@ -43,7 +43,8 @@ pnpm build
 루트 디렉토리에 `.env` 파일을 생성하세요:
 
 ```env
-NOTION_TOKEN=your-notion-api-secret-token
+NOTION_TOKEN=your-notion-api-token
+NOTION_DATABASE_ID=your-notion-database-id
 ```
 
 <br />
