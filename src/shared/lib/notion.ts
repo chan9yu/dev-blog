@@ -17,7 +17,7 @@ class NotionService {
 		this.client = new Client({ auth: this.token });
 	}
 
-	get allTagInfo(): Omit<BlogTagFilterItem, "count"> {
+	public get allTagInfo(): Omit<BlogTagFilterItem, "count"> {
 		return {
 			id: "all",
 			name: "전체"
