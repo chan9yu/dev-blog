@@ -7,10 +7,10 @@ import Image from "next/image";
 
 import { Badge } from "@/shared/components/ui/Badge";
 import { Card, CardContent } from "@/shared/components/ui/Card";
-import type { NotionPost } from "@/shared/types/notion";
+import type { BlogPost } from "@/shared/types/blog";
 
 type PostCardProps = {
-	post: NotionPost;
+	post: BlogPost;
 };
 
 export default function PostCard({ post }: PostCardProps) {
@@ -33,11 +33,11 @@ export default function PostCard({ post }: PostCardProps) {
 				<div className="mb-4 flex flex-wrap gap-2">
 					{post.tags?.map((tag) => (
 						<Badge
-							key={tag.id}
+							key={tag}
 							variant="secondary"
 							className="bg-primary/10 text-primary hover:bg-primary/20 font-medium transition-colors"
 						>
-							{tag.name}
+							{tag}
 						</Badge>
 					))}
 				</div>
