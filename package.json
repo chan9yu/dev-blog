@@ -4,7 +4,7 @@
 	"author": "chan9yu <dev.cgyeo@gmail.com>",
 	"description": "👨🏻‍💻 @chan9yu dev blog.",
 	"private": true,
-	"packageManager": "pnpm@10.12.1",
+	"packageManager": "pnpm@10.12.4",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/chan9yu/chan9yu-blog"
