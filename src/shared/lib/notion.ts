@@ -24,12 +24,39 @@ class NotionService {
 		};
 	}
 
-	public static getInstance(): NotionService {
+	public static getInstance() {
 		if (!NotionService.instance) {
 			NotionService.instance = new NotionService();
 		}
 
 		return NotionService.instance;
+	}
+
+	public async getBlogPost(slug: string) {
+		const response = await this.client.databases.query({
+			database_id: this.databaseId,
+			filter: {
+				and: [
+					{
+						property: "Slug",
+						rich_text: {
+							equals: slug
+						}
+					},
+					{
+						property: "Status",
+						select: {
+							equals: "Published"
+						}
+					}
+				]
+			}
+		});
+
+		return {
+			markdown: "",
+			blogPost: this.getPostMetadata(response.results[0] as PageObjectResponse)
+		};
 	}
 
 	public async getBlogPosts(tag?: string) {
@@ -61,7 +88,7 @@ class NotionService {
 
 		return response.results
 			.filter((page): page is PageObjectResponse => "properties" in page)
-			.map((page) => this.convertToBlogPost(page));
+			.map(this.getPostMetadata.bind(this));
 	}
 
 	public async getTags() {
@@ -105,11 +132,11 @@ class NotionService {
 		}
 	}
 
-	private convertToBlogPost(page: PageObjectResponse): BlogPost {
+	private getPostMetadata(page: PageObjectResponse) {
 		const { cover, id, last_edited_time, properties } = page;
 		const { Title, Description, Tags, Author, Date, Slug } = properties;
 
-		return {
+		const blogPost: BlogPost = {
 			id,
 			title: Title.type === "title" ? (Title.title[0]?.plain_text ?? "") : "",
 			description: Description.type === "rich_text" ? (Description.rich_text[0]?.plain_text ?? "") : "",
@@ -120,6 +147,8 @@ class NotionService {
 			modifiedDate: last_edited_time,
 			slug: Slug.type === "rich_text" ? (Slug.rich_text[0]?.plain_text ?? id) : id
 		};
+
+		return blogPost;
 	}
 }
 
