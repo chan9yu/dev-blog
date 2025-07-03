@@ -7,6 +7,7 @@ import Image from "next/image";
 
 import { Badge } from "@/shared/components/ui/Badge";
 import { Card, CardContent } from "@/shared/components/ui/Card";
+import { formatDate } from "@/shared/lib/date";
 import type { BlogPost } from "@/shared/types/blog";
 
 type PostCardProps = {
@@ -57,7 +58,7 @@ export default function PostCard({ post }: PostCardProps) {
 					{post.date && (
 						<div className="flex items-center gap-1.5">
 							<Calendar className="h-4 w-4" />
-							<time>{format(new Date(post.date), "PPP", { locale: ko })}</time>
+							<time>{formatDate(post.date)}</time>
 						</div>
 					)}
 				</div>

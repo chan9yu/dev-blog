@@ -45,7 +45,7 @@ export default async function MainPage({ searchParams }: MainPageProps) {
 					<div className="grid gap-4">
 						{/* 블로그 카드 반복 */}
 						{blogPosts.map((post) => (
-							<Link href={`/blog/${post.id}`} key={post.id}>
+							<Link href={`/blog/${post.slug}`} key={post.id}>
 								<PostCard post={post} />
 							</Link>
 						))}
