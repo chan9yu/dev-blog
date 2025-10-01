@@ -1,9 +1,15 @@
-export default function BlogPage() {
+import { BlogPosts } from "app/components/posts";
+
+export const metadata = {
+	title: "Blog",
+	description: "Read my blog."
+};
+
+export default function Page() {
 	return (
-		<div className="container py-8">
-			<div className="space-y-8">
-				<h2 className="text-3xl font-bold tracking-tight">블로그</h2>
-			</div>
-		</div>
+		<section>
+			<h1 className="mb-8 text-2xl font-semibold tracking-tighter">My Blog</h1>
+			<BlogPosts />
+		</section>
 	);
 }
