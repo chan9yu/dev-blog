@@ -1,4 +1,4 @@
-import "./global.css";
+import "@/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -6,8 +6,9 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 
-import Footer from "./components/footer";
-import { Navbar } from "./components/nav";
+import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/nav";
+
 import { baseUrl } from "./sitemap";
 
 export const metadata: Metadata = {

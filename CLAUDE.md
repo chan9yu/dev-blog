@@ -24,29 +24,43 @@ blog9yu.dev - Next.js 15 기반의 개인 개발 블로그. MDX를 활용한 파
 ```
 blog9yu.dev/
 ├── src/
-│   └── app/                    # Next.js App Router
-│       ├── blog/
-│       │   ├── [slug]/        # 블로그 상세 페이지 (동적 라우트)
-│       │   ├── posts/         # MDX 블로그 포스트 (파일 시스템)
-│       │   ├── page.tsx       # 블로그 목록 페이지
-│       │   └── utils.ts       # MDX 파싱 유틸리티
-│       ├── components/        # React 컴포넌트
-│       │   ├── mdx.tsx       # MDX 커스텀 컴포넌트
-│       │   ├── posts.tsx     # 블로그 목록 컴포넌트
-│       │   ├── nav.tsx       # 네비게이션
-│       │   └── footer.tsx    # 푸터
-│       ├── og/               # OG 이미지 생성 (Dynamic)
-│       ├── rss/              # RSS 피드 생성
-│       ├── layout.tsx        # 루트 레이아웃
-│       ├── page.tsx          # 홈페이지
-│       ├── sitemap.ts        # 사이트맵 생성
-│       └── robots.ts         # robots.txt 생성
-├── public/                   # 정적 파일
-├── .prettierrc.yaml         # Prettier 설정
-├── eslint.config.mjs        # ESLint Flat Config
-├── tailwind.config.ts       # Tailwind 설정
-└── tsconfig.json            # TypeScript 설정
+│   ├── app/                    # Next.js App Router (페이지와 라우트만)
+│   │   ├── blog/
+│   │   │   ├── [slug]/        # 블로그 상세 페이지 (동적 라우트)
+│   │   │   └── page.tsx       # 블로그 목록 페이지
+│   │   ├── og/                # OG 이미지 생성 (Dynamic Route)
+│   │   ├── rss/               # RSS 피드 생성 (Route Handler)
+│   │   ├── layout.tsx         # 루트 레이아웃
+│   │   ├── page.tsx           # 홈페이지
+│   │   ├── not-found.tsx      # 404 페이지
+│   │   ├── sitemap.ts         # 사이트맵 생성
+│   │   └── robots.ts          # robots.txt 생성
+│   ├── components/            # 재사용 가능한 React 컴포넌트
+│   │   ├── mdx.tsx           # MDX 커스텀 컴포넌트
+│   │   ├── posts.tsx         # 블로그 목록 컴포넌트
+│   │   ├── nav.tsx           # 네비게이션
+│   │   └── footer.tsx        # 푸터
+│   ├── lib/                   # 유틸리티 함수 및 비즈니스 로직
+│   │   └── blog.ts           # MDX 파싱 및 블로그 관련 함수
+│   ├── styles/                # 글로벌 스타일
+│   │   └── globals.css       # Tailwind 기본 설정
+│   └── content/               # 컨텐츠 (MDX 포스트)
+│       └── posts/            # MDX 블로그 포스트
+├── public/                    # 정적 파일
+├── scripts/                   # Git hooks 및 스크립트
+├── .prettierrc.yaml          # Prettier 설정
+├── eslint.config.mjs         # ESLint Flat Config
+├── lefthook.yaml             # Git hooks 설정
+└── tsconfig.json             # TypeScript 설정
 ```
+
+### 폴더 구조 설계 원칙 (2025-10 Best Practice)
+
+1. **`src/app/`** - 페이지와 라우트만 위치 (Next.js App Router)
+2. **`src/components/`** - 재사용 가능한 UI 컴포넌트
+3. **`src/lib/`** - 유틸리티 함수, 비즈니스 로직
+4. **`src/styles/`** - 글로벌 CSS 파일
+5. **`src/content/`** - MDX 포스트 등 컨텐츠 파일
 
 ## 개발 명령어
 
@@ -76,7 +90,7 @@ pnpm format:check
 
 ### MDX 기반 컨텐츠 관리
 
-- **저장 위치**: `src/app/blog/posts/*.mdx`
+- **저장 위치**: `src/content/posts/*.mdx`
 - **빌드 타임 처리**: Static Site Generation (SSG)
 - **Frontmatter 스키마**:
   ```yaml
@@ -88,7 +102,7 @@ pnpm format:check
   ---
   ```
 
-### 핵심 유틸리티 (src/app/blog/utils.ts)
+### 핵심 유틸리티 (src/lib/blog.ts)
 
 ```typescript
 // MDX 파일 읽기 및 파싱
@@ -98,7 +112,7 @@ getBlogPosts(): Array<{ metadata: Metadata; slug: string; content: string }>
 formatDate(date: string, includeRelative?: boolean): string
 ```
 
-### MDX 커스텀 컴포넌트 (src/app/components/mdx.tsx)
+### MDX 커스텀 컴포넌트 (src/components/mdx.tsx)
 
 - **Heading (h1-h6)**: 자동 ID 생성 및 앵커 링크
 - **Image**: rounded-lg 스타일 적용
@@ -740,10 +754,17 @@ async function loadPostPage(slug: string) {
 
 ## 주의사항
 
-- 블로그 포스트는 `src/app/blog/posts/`에만 위치
+- 블로그 포스트는 `src/content/posts/`에만 위치
 - MDX frontmatter는 반드시 검증 후 사용
 - 빌드 타임에 모든 포스트 읽으므로 대량 포스트 시 빌드 시간 증가
 - baseUrl은 프로덕션 배포 시 변경 필요 (`src/app/sitemap.ts`)
+
+## Import 경로 규칙
+
+- `@/components/*` - 컴포넌트
+- `@/lib/*` - 유틸리티 함수
+- `@/styles/*` - 스타일 파일
+- 같은 app 디렉토리 내에서는 상대 경로 사용 가능
 
 ## AI 도구 활용 가이드
 
