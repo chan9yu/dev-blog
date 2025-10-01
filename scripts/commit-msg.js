@@ -3,7 +3,7 @@ import { join } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const templatePath = join(__dirname, ".", ".gitmessage.txt");
+const templatePath = join(__dirname, "commit-template.txt");
 const targetPath = process.argv[2];
 
 const existingMessage = readFileSync(targetPath, "utf-8");

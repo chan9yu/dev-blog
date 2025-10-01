@@ -1,5 +1,2 @@
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
   - lefthook
-  - sharp
-  - unrs-resolver

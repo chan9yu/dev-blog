@@ -1,24 +1,26 @@
 pre-commit:
   parallel: true
   commands:
-    eslint:
-      glob: "*.{js,ts,jsx,tsx}"
-      run: pnpm lint:fix
-      stage_fixed: true
     prettier:
-      glob: "*.{js,ts,jsx,tsx,html,json,yaml,md,prettierrc}"
+      glob: "*.{js,ts,jsx,tsx,json,yaml,yml,md,mdx,css}"
       run: pnpm prettier --write {staged_files}
       stage_fixed: true
+    eslint:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: pnpm eslint {staged_files} --fix --max-warnings=0
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    template:
+      run: node scripts/commit-msg.js {1}
 
 pre-push:
   parallel: true
   commands:
-    audit-check:
-      run: pnpm audit
     type-check:
       run: pnpm type-check
-
-prepare-commit-msg:
-  commands:
-    template:
-      run: node scripts/copy-template.mjs {1}
+    lint:
+      run: pnpm lint
+    build:
+      run: pnpm build
