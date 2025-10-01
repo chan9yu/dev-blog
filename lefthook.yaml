@@ -16,11 +16,6 @@ commit-msg:
       run: node scripts/commit-msg.js {1}
 
 pre-push:
-  parallel: true
   commands:
-    type-check:
-      run: pnpm type-check
-    lint:
-      run: pnpm lint
-    build:
-      run: pnpm build
+    validate:
+      run: pnpm build && pnpm type-check && pnpm lint
