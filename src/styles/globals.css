@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 ::selection {
 	background-color: #47a3f3;
 	color: #fefefe;
@@ -31,6 +33,13 @@
 
 html {
 	min-width: 360px;
+	background-color: white;
+	color: black;
+}
+
+html.dark {
+	background-color: black;
+	color: white;
 }
 
 .prose .anchor {

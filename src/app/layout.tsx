@@ -5,10 +5,13 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 import { baseUrl } from "@/app/sitemap";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/nav";
+import type { Theme } from "@/lib/theme";
+import { themeInitScript } from "@/lib/theme-script";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
@@ -38,14 +41,25 @@ export const metadata: Metadata = {
 	}
 };
 
-const cx = (...classes: (string | boolean | undefined)[]) => classes.filter(Boolean).join(" ");
+type RootLayoutProps = {
+	readonly children: React.ReactNode;
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+	const cookieStore = await cookies();
+	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+
+	const htmlClassName = `${theme === "dark" ? "dark" : ""} ${GeistSans.variable} ${GeistMono.variable}`.trim();
+
 	return (
-		<html
-			lang="ko"
-			className={cx("bg-white text-black dark:bg-black dark:text-white", GeistSans.variable, GeistMono.variable)}
-		>
+		<html lang="ko" className={htmlClassName}>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: themeInitScript
+					}}
+				/>
+			</head>
 			<body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
 				<main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
 					<Navbar />
