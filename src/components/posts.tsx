@@ -2,19 +2,19 @@ import Link from "next/link";
 
 import { formatDate, getBlogPosts } from "@/lib/blog";
 
-export function BlogPosts() {
-	const allBlogs = getBlogPosts();
+export async function BlogPosts() {
+	const allBlogs = await getBlogPosts();
 
 	return (
 		<div>
 			{allBlogs
-				.sort((a: ReturnType<typeof getBlogPosts>[0], b: ReturnType<typeof getBlogPosts>[0]) => {
+				.sort((a, b) => {
 					if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
 						return -1;
 					}
 					return 1;
 				})
-				.map((post: ReturnType<typeof getBlogPosts>[0]) => (
+				.map((post) => (
 					<Link key={post.slug} className="mb-4 flex flex-col space-y-1" href={`/blog/${post.slug}`}>
 						<div className="flex w-full flex-col space-x-0 md:flex-row md:space-x-2">
 							<p className="w-[100px] text-neutral-600 tabular-nums dark:text-neutral-400">
