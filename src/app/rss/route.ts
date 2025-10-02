@@ -1,19 +1,18 @@
+import { baseUrl } from "@/app/sitemap";
 import { getBlogPosts } from "@/lib/blog";
-
-import { baseUrl } from "../sitemap";
 
 export async function GET() {
 	const allBlogs = await getBlogPosts();
 
 	const itemsXml = allBlogs
-		.sort((a: ReturnType<typeof getBlogPosts>[0], b: ReturnType<typeof getBlogPosts>[0]) => {
+		.sort((a, b) => {
 			if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
 				return -1;
 			}
 			return 1;
 		})
 		.map(
-			(post: ReturnType<typeof getBlogPosts>[0]) =>
+			(post) =>
 				`<item>
           <title>${post.metadata.title}</title>
           <link>${baseUrl}/blog/${post.slug}</link>
@@ -23,7 +22,7 @@ export async function GET() {
 		)
 		.join("\n");
 
-	const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
+	const rssFeed = /* XML */ `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
     <channel>
         <title>My Portfolio</title>

@@ -6,10 +6,9 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 
+import { baseUrl } from "@/app/sitemap";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/nav";
-
-import { baseUrl } from "./sitemap";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
@@ -44,7 +43,7 @@ const cx = (...classes: (string | boolean | undefined)[]) => classes.filter(Bool
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html
-			lang="en"
+			lang="ko"
 			className={cx("bg-white text-black dark:bg-black dark:text-white", GeistSans.variable, GeistMono.variable)}
 		>
 			<body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
