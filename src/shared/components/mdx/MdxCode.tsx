@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 import { highlight } from "sugar-high";
 
 export function MdxCode({ children, ...props }: { children: string } & HTMLAttributes<HTMLElement>) {

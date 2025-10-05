@@ -1,5 +1,5 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { ComponentType } from "react";
+import type { ComponentType } from "react";
 
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";

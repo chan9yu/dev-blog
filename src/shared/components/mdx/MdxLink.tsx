@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AnchorHTMLAttributes } from "react";
+import type { AnchorHTMLAttributes } from "react";
 
 export function MdxLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
 	const href = props.href || "";

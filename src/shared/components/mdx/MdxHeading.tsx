@@ -1,4 +1,5 @@
-import { createElement, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { createElement } from "react";
 
 function slugify(str: string): string {
 	return str
