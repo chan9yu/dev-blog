@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/shared/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,10 +8,8 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { baseUrl } from "@/app/sitemap";
-import { Footer } from "@/components/footer";
-import { Navbar } from "@/components/nav";
-import type { Theme } from "@/lib/theme";
-import { themeInitScript } from "@/lib/theme-script";
+import { SiteFooter, SiteNavbar } from "@/shared/components";
+import { type Theme, themeInitScript } from "@/shared/utils";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
@@ -62,9 +60,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 			</head>
 			<body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
 				<main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
-					<Navbar />
+					<SiteNavbar />
 					{children}
-					<Footer />
+					<SiteFooter />
 					<Analytics />
 					<SpeedInsights />
 				</main>

@@ -1,6 +1,8 @@
-import { BlogPosts } from "@/components/posts";
+import type { Metadata } from "next";
 
-export const metadata = {
+import { BlogPosts } from "@/features/blog";
+
+export const metadata: Metadata = {
 	title: "Blog",
 	description: "Read my blog."
 };

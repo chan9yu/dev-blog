@@ -24,43 +24,133 @@ blog9yu.dev - Next.js 15 기반의 개인 개발 블로그. MDX를 활용한 파
 ```
 blog9yu.dev/
 ├── src/
-│   ├── app/                    # Next.js App Router (페이지와 라우트만)
-│   │   ├── blog/
-│   │   │   ├── [slug]/        # 블로그 상세 페이지 (동적 라우트)
-│   │   │   └── page.tsx       # 블로그 목록 페이지
-│   │   ├── og/                # OG 이미지 생성 (Dynamic Route)
-│   │   ├── rss/               # RSS 피드 생성 (Route Handler)
-│   │   ├── layout.tsx         # 루트 레이아웃
-│   │   ├── page.tsx           # 홈페이지
-│   │   ├── not-found.tsx      # 404 페이지
-│   │   ├── sitemap.ts         # 사이트맵 생성
-│   │   └── robots.ts          # robots.txt 생성
-│   ├── components/            # 재사용 가능한 React 컴포넌트
-│   │   ├── mdx.tsx           # MDX 커스텀 컴포넌트
-│   │   ├── posts.tsx         # 블로그 목록 컴포넌트
-│   │   ├── nav.tsx           # 네비게이션
-│   │   └── footer.tsx        # 푸터
-│   ├── lib/                   # 유틸리티 함수 및 비즈니스 로직
-│   │   └── blog.ts           # MDX 파싱 및 블로그 관련 함수
-│   ├── styles/                # 글로벌 스타일
-│   │   └── globals.css       # Tailwind 기본 설정
-│   └── content/               # 컨텐츠 (MDX 포스트)
-│       └── posts/            # MDX 블로그 포스트
-├── public/                    # 정적 파일
-├── scripts/                   # Git hooks 및 스크립트
-├── .prettierrc.yaml          # Prettier 설정
-├── eslint.config.mjs         # ESLint Flat Config
-├── lefthook.yaml             # Git hooks 설정
-└── tsconfig.json             # TypeScript 설정
+│   ├── app/                        # Next.js App Router (라우팅 전용)
+│   │   ├── (home)/                # 홈 페이지 라우트 그룹
+│   │   │   └── page.tsx          # 홈페이지
+│   │   ├── blog/                  # 블로그 라우트
+│   │   │   ├── [slug]/           # 블로그 상세 페이지 (동적 라우트)
+│   │   │   └── page.tsx          # 블로그 목록 페이지
+│   │   ├── og/                    # OG 이미지 생성 (Dynamic Route)
+│   │   ├── rss/                   # RSS 피드 생성 (Route Handler)
+│   │   ├── layout.tsx             # 루트 레이아웃
+│   │   ├── not-found.tsx          # 404 페이지
+│   │   ├── sitemap.ts             # 사이트맵 생성
+│   │   └── robots.ts              # robots.txt 생성
+│   ├── assets/                     # 정적 리소스
+│   │   └── image.webp             # 이미지 파일
+│   ├── features/                   # 기능별 모듈 (Feature-First Architecture)
+│   │   ├── calendar/              # 캘린더 기능
+│   │   │   ├── components/       # 캘린더 컴포넌트
+│   │   │   ├── mutations/        # 캘린더 상태 변경 로직
+│   │   │   ├── queries/          # 캘린더 데이터 조회 로직
+│   │   │   ├── types/            # 캘린더 타입 정의
+│   │   │   ├── utils/            # 캘린더 유틸리티
+│   │   │   └── index.ts          # Public API
+│   │   └── inkwell/               # Inkwell 기능
+│   │       ├── components/       # Inkwell 컴포넌트
+│   │       ├── queries/          # Inkwell 데이터 조회 로직
+│   │       └── index.ts          # Public API
+│   ├── shared/                     # 공유 모듈 (전역 사용)
+│   │   ├── components/            # 공통 UI 컴포넌트
+│   │   ├── queries/               # 공통 데이터 조회 로직
+│   │   ├── mutations/             # 공통 상태 변경 로직
+│   │   ├── hooks/                 # 공통 Custom Hooks
+│   │   ├── services/              # 외부 서비스 통합 (API, GitHub 등)
+│   │   ├── types/                 # 전역 타입 정의
+│   │   └── utils/                 # 전역 유틸리티 함수
+│   └── tests/                      # 테스트 파일
+│       ├── fixtures/              # 테스트 픽스처
+│       └── utils/                 # 테스트 유틸리티
+├── public/                         # 정적 파일 (퍼블릭 접근)
+├── scripts/                        # Git hooks 및 스크립트
+├── .prettierrc.yaml               # Prettier 설정
+├── eslint.config.mjs              # ESLint Flat Config
+├── lefthook.yaml                  # Git hooks 설정
+└── tsconfig.json                  # TypeScript 설정
 ```
 
-### 폴더 구조 설계 원칙 (2025-10 Best Practice)
+### 폴더 구조 설계 원칙 (Features-First Architecture - 2025 Best Practice)
 
-1. **`src/app/`** - 페이지와 라우트만 위치 (Next.js App Router)
-2. **`src/components/`** - 재사용 가능한 UI 컴포넌트
-3. **`src/lib/`** - 유틸리티 함수, 비즈니스 로직
-4. **`src/styles/`** - 글로벌 CSS 파일
-5. **`src/content/`** - MDX 포스트 등 컨텐츠 파일
+#### 핵심 개념
+
+**Features-First Architecture**는 코드를 기능(Feature) 단위로 조직화하는 구조입니다. 각 기능은 독립적인 폴더에 관련된 모든 파일(컴포넌트, 로직, 타입, 유틸리티)을 함께 배치하여 응집도를 높이고 의존성을 명확히 합니다.
+
+#### 폴더별 역할
+
+1. **`src/app/`** - Next.js App Router 라우팅 전용
+   - 페이지 라우트 정의만 담당
+   - 비즈니스 로직은 포함하지 않음
+   - Route Handlers, 메타데이터 생성 등 Next.js 고유 기능만 위치
+
+2. **`src/features/`** - 기능별 모듈 (독립적인 기능 단위)
+   - 각 기능은 독립된 폴더로 구성
+   - 기능 내부에서만 사용되는 모든 요소를 포함
+   - **내부 구조**: `components/`, `queries/`, `mutations/`, `types/`, `utils/`, `index.ts`
+   - **Public API Pattern**: `index.ts`를 통해 외부 노출 요소만 export
+   - **예시**: `calendar/`, `inkwell/`, `blog/` 등
+
+3. **`src/shared/`** - 전역 공유 모듈
+   - 여러 기능(feature)에서 재사용되는 모듈만 위치
+   - 특정 기능에 종속되지 않는 범용 코드
+   - **하위 폴더**: `components/`, `hooks/`, `services/`, `types/`, `utils/`
+   - **예시**: `Button`, `Modal` 같은 UI 컴포넌트, API 클라이언트, 공통 타입
+
+4. **`src/assets/`** - 정적 리소스
+   - 이미지, 폰트 등 정적 파일
+   - 빌드 시 번들에 포함되는 리소스
+
+5. **`src/tests/`** - 테스트 관련
+   - 테스트 픽스처 및 유틸리티
+   - 통합 테스트 파일
+
+#### Features-First 구조의 장점
+
+✅ **높은 응집도**: 관련 코드가 한 곳에 모여 있어 유지보수 용이
+✅ **명확한 경계**: 기능 간 의존성이 명확하게 드러남
+✅ **쉬운 온보딩**: 신규 개발자도 기능별로 코드 위치를 직관적으로 파악
+✅ **확장성**: 새로운 기능 추가 시 독립된 폴더만 생성
+✅ **삭제 용이**: 기능 제거 시 폴더만 삭제하면 됨
+
+#### Feature 내부 구조 예시
+
+```
+src/features/calendar/
+├── components/          # 캘린더 UI 컴포넌트
+│   ├── CalendarGrid.tsx
+│   └── DatePicker.tsx
+├── queries/             # 데이터 조회 로직
+│   └── useCalendarEvents.ts
+├── mutations/           # 상태 변경 로직
+│   └── useCreateEvent.ts
+├── types/               # 타입 정의
+│   └── calendar.types.ts
+├── utils/               # 유틸리티 함수
+│   └── dateHelpers.ts
+└── index.ts             # Public API (외부 노출 요소만 export)
+```
+
+#### Public API Pattern
+
+각 feature의 `index.ts`는 외부에 노출할 요소만 export합니다:
+
+```typescript
+// src/features/calendar/index.ts
+export { CalendarGrid, DatePicker } from "./components";
+export { useCalendarEvents } from "./queries";
+export { useCreateEvent } from "./mutations";
+export type { CalendarEvent } from "./types";
+```
+
+#### Import 경로 예시
+
+```typescript
+// ✅ 좋은 예: Public API를 통한 import
+import { CalendarGrid, useCalendarEvents } from "@/features/calendar";
+import { Button } from "@/shared/components";
+
+// ❌ 나쁜 예: 내부 구조에 직접 접근
+import { CalendarGrid } from "@/features/calendar/components/CalendarGrid";
+```
 
 ## 개발 명령어
 
@@ -782,10 +872,53 @@ async function loadPostPage(slug: string) {
 
 ## Import 경로 규칙
 
-- `@/components/*` - 컴포넌트
-- `@/lib/*` - 유틸리티 함수
-- `@/styles/*` - 스타일 파일
-- 같은 app 디렉토리 내에서는 상대 경로 사용 가능
+### Features-First Architecture 기반 경로 매핑
+
+```json
+{
+	"paths": {
+		"@/*": ["./src/*"],
+		"@/features/*": ["./src/features/*"],
+		"@/shared/*": ["./src/shared/*"],
+		"@/assets/*": ["./src/assets/*"]
+	}
+}
+```
+
+### Import 규칙
+
+1. **Feature 모듈 import**: Public API를 통해서만 접근
+
+   ```typescript
+   // ✅ 좋은 예
+   import { CalendarGrid } from "@/features/calendar";
+
+   // ❌ 나쁜 예
+   import { CalendarGrid } from "@/features/calendar/components/CalendarGrid";
+   ```
+
+2. **Shared 모듈 import**: 전역 공유 리소스 접근
+
+   ```typescript
+   import { Button } from "@/shared/components";
+   import { useDebounce } from "@/shared/hooks";
+   import { apiClient } from "@/shared/services";
+   ```
+
+3. **같은 feature 내부**: 상대 경로 사용
+
+   ```typescript
+   // src/features/calendar/components/CalendarGrid.tsx
+   import { formatDate } from "../utils";
+   import type { CalendarEvent } from "../types";
+   ```
+
+4. **App Router 페이지**: 절대 경로 사용
+   ```typescript
+   // src/app/blog/page.tsx
+   import { BlogPostList } from "@/features/blog";
+   import { Container } from "@/shared/components";
+   ```
 
 ## AI 도구 활용 가이드
 

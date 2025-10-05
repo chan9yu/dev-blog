@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import type { Theme } from "@/lib/theme";
+import type { Theme } from "../utils";
+import { ThemeSwitcher } from ".";
 
 const navItems = {
 	"/": {
@@ -13,7 +13,7 @@ const navItems = {
 	}
 } as const;
 
-export async function Navbar() {
+export async function SiteNavbar() {
 	const cookieStore = await cookies();
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
 

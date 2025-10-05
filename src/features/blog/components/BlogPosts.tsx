@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { formatDate, getBlogPosts } from "@/lib/blog";
+import { getBlogPosts } from "@/features/blog/services";
+import { formatDate } from "@/features/blog/utils";
 
 export async function BlogPosts() {
 	const allBlogs = await getBlogPosts();

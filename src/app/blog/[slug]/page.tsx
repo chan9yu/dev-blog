@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { baseUrl } from "@/app/sitemap";
-import { CustomMDX } from "@/components/mdx";
-import { formatDate, getBlogPosts } from "@/lib/blog";
+import { formatDate, getBlogPosts } from "@/features/blog";
+import { CustomMdx } from "@/shared/components/mdx";
 
 export async function generateStaticParams() {
 	const posts = await getBlogPosts();
@@ -85,7 +85,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				<p className="text-sm text-neutral-600 dark:text-neutral-400">{formatDate(post.metadata.publishedAt)}</p>
 			</div>
 			<article className="prose">
-				<CustomMDX source={post.content} />
+				<CustomMdx source={post.content} />
 			</article>
 		</section>
 	);
