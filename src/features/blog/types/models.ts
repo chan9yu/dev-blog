@@ -19,25 +19,4 @@ export interface PostSummary {
  */
 export interface PostDetail extends PostSummary {
 	content: string;
-	// 시리즈 네비게이션용
-	prev?: PostSummary;
-	next?: PostSummary;
-}
-
-/**
- * 시리즈 그룹 정보
- */
-export interface SeriesBucket {
-	name: string;
-	url_slug: string;
-	updated_at: string;
-	posts: PostSummary[];
-}
-
-/**
- * 태그 집계 정보
- */
-export interface TagCount {
-	tag: string;
-	count: number;
 }

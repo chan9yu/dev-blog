@@ -2,14 +2,20 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 
 import type { Theme } from "../utils";
-import { ThemeSwitcher } from ".";
+import { NavLink, ThemeSwitcher } from ".";
 
 const navItems = {
 	"/": {
 		name: "홈"
 	},
-	"/blog": {
+	"/posts": {
 		name: "블로그"
+	},
+	"/series": {
+		name: "시리즈"
+	},
+	"/tags": {
+		name: "태그"
 	}
 } as const;
 
@@ -35,14 +41,9 @@ export async function SiteNavbar() {
 
 				<div className="flex items-center gap-1">
 					{Object.entries(navItems).map(([path, { name }]) => (
-						<Link
-							key={path}
-							href={path}
-							className="rounded-lg px-4 py-2 text-sm font-medium transition-all hover:bg-[rgb(var(--color-bg-secondary))]"
-							style={{ color: "rgb(var(--color-text-secondary))" }}
-						>
+						<NavLink key={path} href={path}>
 							{name}
-						</Link>
+						</NavLink>
 					))}
 					<div className="ml-2">
 						<ThemeSwitcher initialTheme={theme} />

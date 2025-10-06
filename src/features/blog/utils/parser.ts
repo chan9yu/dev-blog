@@ -22,6 +22,7 @@ export function parseFrontmatter(fileContent: string) {
 
 /**
  * Frontmatter만 추출 (내용 불필요한 경우)
+ * @deprecated 현재 사용되지 않음. parseFrontmatter 사용 권장.
  */
 export function extractFrontmatter(fileContent: string): Frontmatter {
 	const { metadata } = parseFrontmatter(fileContent);

@@ -78,7 +78,7 @@ export default function Page() {
 						최근 포스트
 					</h2>
 					<Link
-						href="/blog"
+						href="/posts"
 						className="text-sm font-medium transition-colors hover:underline"
 						style={{ color: "rgb(var(--color-accent))" }}
 					>
