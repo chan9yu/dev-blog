@@ -1,53 +1,44 @@
-function ArrowIcon() {
-	return (
-		<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path
-				d="M2.07102 11.3494L0.963068 10.2415L9.2017 1.98864H2.83807L2.85227 0.454545H11.8438V9.46023H10.2955L10.3097 3.09659L2.07102 11.3494Z"
-				fill="currentColor"
-			/>
-		</svg>
-	);
-}
-
 export function SiteFooter() {
+	const links = [
+		{ href: "/rss", label: "RSS", external: false },
+		{ href: "https://github.com", label: "GitHub", external: true },
+		{ href: "mailto:your@email.com", label: "Email", external: false }
+	];
+
 	return (
-		<footer className="mb-16">
-			<ul className="font-sm mt-8 flex flex-col space-y-2 space-x-0 text-neutral-600 md:flex-row md:space-y-0 md:space-x-4 dark:text-neutral-300">
-				<li>
-					<a
-						className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-						rel="noopener noreferrer"
-						target="_blank"
-						href="/rss"
-					>
-						<ArrowIcon />
-						<p className="ml-2 h-7">rss</p>
-					</a>
-				</li>
-				<li>
-					<a
-						className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-						rel="noopener noreferrer"
-						target="_blank"
-						href="https://github.com/vercel/next.js"
-					>
-						<ArrowIcon />
-						<p className="ml-2 h-7">github</p>
-					</a>
-				</li>
-				<li>
-					<a
-						className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-						rel="noopener noreferrer"
-						target="_blank"
-						href="https://vercel.com/templates/next.js/portfolio-starter-kit"
-					>
-						<ArrowIcon />
-						<p className="ml-2 h-7">view source</p>
-					</a>
-				</li>
-			</ul>
-			<p className="mt-8 text-neutral-600 dark:text-neutral-300">© {new Date().getFullYear()} MIT Licensed</p>
+		<footer className="mt-24 border-t pt-12" style={{ borderColor: "rgb(var(--color-border-primary))" }}>
+			<div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+				<div className="space-y-2">
+					<p className="text-sm font-medium" style={{ color: "rgb(var(--color-text-primary))" }}>
+						Blog9yu.dev
+					</p>
+					<p className="text-sm" style={{ color: "rgb(var(--color-text-tertiary))" }}>
+						프론트엔드 개발 블로그
+					</p>
+				</div>
+
+				<nav className="flex flex-wrap gap-6">
+					{links.map((link) => (
+						<a
+							key={link.href}
+							href={link.href}
+							target={link.external ? "_blank" : undefined}
+							rel={link.external ? "noopener noreferrer" : undefined}
+							className="text-sm font-medium transition-colors hover:text-[rgb(var(--color-accent))]"
+							style={{ color: "rgb(var(--color-text-secondary))" }}
+						>
+							{link.label}
+						</a>
+					))}
+				</nav>
+			</div>
+
+			<div
+				className="mt-8 border-t pt-6 text-center text-sm"
+				style={{ borderColor: "rgb(var(--color-border-secondary))", color: "rgb(var(--color-text-tertiary))" }}
+			>
+				© {new Date().getFullYear()} Blog9yu. All rights reserved.
+			</div>
 		</footer>
 	);
 }

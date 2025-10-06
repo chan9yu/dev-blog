@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
 	return (
 		<html lang="ko" className={htmlClassName}>
-			<body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
+			<body className="antialiased">
 				<Script
 					id="theme-init"
 					strategy="beforeInteractive"
@@ -60,13 +60,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 						__html: themeInitScript
 					}}
 				/>
-				<main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
+				<div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:px-12">
 					<SiteNavbar />
-					{children}
+					<main className="mt-16">{children}</main>
 					<SiteFooter />
-					<Analytics />
-					<SpeedInsights />
-				</main>
+				</div>
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
