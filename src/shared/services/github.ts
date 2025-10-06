@@ -24,7 +24,8 @@ type GitHubFileContent = {
 };
 
 /**
- * GitHub API를 통해 posts 디렉토리의 MDX 파일 목록을 가져옵니다.
+ * GitHub API를 통해 posts 디렉토리의 포스트 목록을 가져옵니다.
+ * posts/{slug}/index.mdx 구조를 가정합니다.
  */
 export async function getGitHubMDXFiles(): Promise<GitHubFile[]> {
 	const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_POSTS_PATH}`;
@@ -42,10 +43,10 @@ export async function getGitHubMDXFiles(): Promise<GitHubFile[]> {
 		throw new Error(`Failed to fetch GitHub files: ${response.statusText}`);
 	}
 
-	const files: GitHubFile[] = await response.json();
+	const directories: GitHubFile[] = await response.json();
 
-	// .mdx 파일만 필터링
-	return files.filter((file) => file.type === "file" && file.name.endsWith(".mdx"));
+	// 디렉토리만 필터링 (각 디렉토리가 하나의 포스트)
+	return directories.filter((file) => file.type === "dir");
 }
 
 /**
@@ -79,9 +80,10 @@ export async function getGitHubFileContent(path: string): Promise<string> {
 
 /**
  * Raw GitHub URL을 통해 MDX 파일 내용을 가져옵니다. (더 빠름)
+ * posts/{slug}/index.mdx 구조를 사용합니다.
  */
-export async function getGitHubFileContentRaw(fileName: string): Promise<string> {
-	const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${GITHUB_POSTS_PATH}/${fileName}`;
+export async function getGitHubFileContentRaw(slug: string): Promise<string> {
+	const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${GITHUB_POSTS_PATH}/${slug}/index.mdx`;
 
 	const response = await fetch(url, {
 		next: {

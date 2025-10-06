@@ -1,12 +1,12 @@
-import { baseUrl } from "@/app/sitemap";
-import { getBlogPosts } from "@/features/blog";
+import { getAllPosts } from "@/features/blog";
+import { baseUrl } from "@/shared/constants";
 
 export async function GET() {
-	const allBlogs = await getBlogPosts();
+	const allBlogs = await getAllPosts();
 
 	const itemsXml = allBlogs
 		.sort((a, b) => {
-			if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
+			if (new Date(a.released_at) > new Date(b.released_at)) {
 				return -1;
 			}
 			return 1;
@@ -14,10 +14,10 @@ export async function GET() {
 		.map(
 			(post) =>
 				`<item>
-          <title>${post.metadata.title}</title>
-          <link>${baseUrl}/blog/${post.slug}</link>
-          <description>${post.metadata.summary || ""}</description>
-          <pubDate>${new Date(post.metadata.publishedAt).toUTCString()}</pubDate>
+          <title>${post.title}</title>
+          <link>${baseUrl}/blog/${post.url_slug}</link>
+          <description>${post.short_description || ""}</description>
+          <pubDate>${new Date(post.released_at).toUTCString()}</pubDate>
         </item>`
 		)
 		.join("\n");

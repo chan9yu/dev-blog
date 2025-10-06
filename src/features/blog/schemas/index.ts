@@ -1,2 +1,2 @@
-export type { Frontmatter, LegacyFrontmatter } from "./frontmatter";
-export { FrontmatterSchema, LegacyFrontmatterSchema, migrateLegacyFrontmatter } from "./frontmatter";
+export type { Frontmatter } from "./frontmatter";
+export { FrontmatterSchema } from "./frontmatter";

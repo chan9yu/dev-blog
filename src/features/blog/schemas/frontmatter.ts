@@ -23,35 +23,3 @@ export const FrontmatterSchema = z.object({
 });
 
 export type Frontmatter = z.infer<typeof FrontmatterSchema>;
-
-/**
- * 하위 호환성을 위한 레거시 스키마
- * - 기존 필드명: title, publishedAt, summary, image
- */
-export const LegacyFrontmatterSchema = z.object({
-	title: z.string().min(1),
-	publishedAt: z.string(),
-	summary: z.string().min(1),
-	image: z.string().optional()
-});
-
-export type LegacyFrontmatter = z.infer<typeof LegacyFrontmatterSchema>;
-
-/**
- * 레거시 Frontmatter를 새 스키마로 변환
- */
-export function migrateLegacyFrontmatter(legacy: LegacyFrontmatter): Frontmatter {
-	return {
-		title: legacy.title,
-		short_description: legacy.summary,
-		url_slug: "", // 파일명에서 추출 필요
-		released_at: legacy.publishedAt,
-		updated_at: legacy.publishedAt,
-		is_private: false,
-		tags: [], // 기본값
-		thumbnail: legacy.image,
-		series: undefined,
-		index: undefined,
-		id: undefined
-	};
-}

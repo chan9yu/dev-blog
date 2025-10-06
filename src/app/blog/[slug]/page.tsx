@@ -1,27 +1,26 @@
 import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
-import { baseUrl } from "@/app/sitemap";
-import { formatDate, getBlogPosts } from "@/features/blog";
-import { CustomMdx } from "@/shared/components/mdx";
+import { formatDate, getAllPosts, getPostDetail } from "@/features/blog";
+import { baseUrl } from "@/shared/constants";
 
 export async function generateStaticParams() {
-	const posts = await getBlogPosts();
+	const posts = await getAllPosts();
 
 	return posts.map((post) => ({
-		slug: post.slug
+		slug: post.url_slug
 	}));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const posts = await getBlogPosts();
-	const post = posts.find((post) => post.slug === slug);
+	const post = await getPostDetail(slug);
 	if (!post) {
 		return;
 	}
 
-	const { title, publishedAt: publishedTime, summary: description, image } = post.metadata;
-	const ogImage = image ? image : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+	const { title, released_at: publishedTime, short_description: description, thumbnail } = post;
+	const ogImage = thumbnail ? thumbnail : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
 
 	return {
 		title,
@@ -31,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 			description,
 			type: "article",
 			publishedTime,
-			url: `${baseUrl}/blog/${post.slug}`,
+			url: `${baseUrl}/blog/${post.url_slug}`,
 			images: [
 				{
 					url: ogImage
@@ -49,8 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Blog({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const posts = await getBlogPosts();
-	const post = posts.find((post) => post.slug === slug);
+	const post = await getPostDetail(slug);
 
 	if (!post) {
 		notFound();
@@ -65,14 +63,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					__html: JSON.stringify({
 						"@context": "https://schema.org",
 						"@type": "BlogPosting",
-						headline: post.metadata.title,
-						datePublished: post.metadata.publishedAt,
-						dateModified: post.metadata.publishedAt,
-						description: post.metadata.summary,
-						image: post.metadata.image
-							? `${baseUrl}${post.metadata.image}`
-							: `/og?title=${encodeURIComponent(post.metadata.title)}`,
-						url: `${baseUrl}/blog/${post.slug}`,
+						headline: post.title,
+						datePublished: post.released_at,
+						dateModified: post.updated_at,
+						description: post.short_description,
+						image: post.thumbnail ? `${baseUrl}${post.thumbnail}` : `/og?title=${encodeURIComponent(post.title)}`,
+						url: `${baseUrl}/blog/${post.url_slug}`,
 						author: {
 							"@type": "Person",
 							name: "My Portfolio"
@@ -80,12 +76,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					})
 				}}
 			/>
-			<h1 className="title text-2xl font-semibold tracking-tighter">{post.metadata.title}</h1>
+			<h1 className="title text-2xl font-semibold tracking-tighter">{post.title}</h1>
 			<div className="mt-2 mb-8 flex items-center justify-between text-sm">
-				<p className="text-sm text-neutral-600 dark:text-neutral-400">{formatDate(post.metadata.publishedAt)}</p>
+				<p className="text-sm text-neutral-600 dark:text-neutral-400">{formatDate(post.released_at)}</p>
 			</div>
 			<article className="prose">
-				<CustomMdx source={post.content} />
+				<MDXRemote source={post.content} />
 			</article>
 		</section>
 	);

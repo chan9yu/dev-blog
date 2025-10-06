@@ -2,14 +2,14 @@
 export { BlogPosts } from "./components";
 
 // Services
-export { getBlogPosts } from "./services";
+export { getAllPosts, getPostDetail } from "./services";
 
 // Schemas
-export type { Frontmatter, LegacyFrontmatter } from "./schemas";
-export { FrontmatterSchema, LegacyFrontmatterSchema } from "./schemas";
+export type { Frontmatter } from "./schemas";
+export { FrontmatterSchema } from "./schemas";
 
-// Types (레거시 + 새 타입)
-export type { BlogPost, Metadata, PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
+// Types
+export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
 
 // Utils
 export {
@@ -18,7 +18,6 @@ export {
 	isPublic,
 	isScheduled,
 	parseFrontmatter,
-	parseLegacyFrontmatter,
 	validateSeriesIndex,
 	validateSlugConsistency
 } from "./utils";
