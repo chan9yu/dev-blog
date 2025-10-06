@@ -1,5 +1,5 @@
 // Components
-export { BlogPosts, FilteredBlogPosts, TagList } from "./components";
+export { BlogPosts, FilteredBlogPosts, TableOfContents, TagList } from "./components";
 
 // Services
 export { getAllPosts, getPostDetail } from "./services";
@@ -13,8 +13,10 @@ export { FrontmatterSchema } from "./schemas";
 export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
 
 // Utils
+export type { TocItem } from "./utils";
 export {
 	extractFrontmatter,
+	extractTocFromMarkdown,
 	formatDate,
 	isPublic,
 	isScheduled,

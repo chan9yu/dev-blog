@@ -92,6 +92,7 @@ html {
 	min-width: 360px;
 	background-color: rgb(var(--color-bg-primary));
 	color: rgb(var(--color-text-primary));
+	scroll-behavior: smooth;
 	transition:
 		background-color var(--transition-base),
 		color var(--transition-base);
@@ -301,4 +302,14 @@ table {
 
 .title {
 	text-wrap: balance;
+}
+
+/* TOC scroll offset */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	scroll-margin-top: 120px;
 }

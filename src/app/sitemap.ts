@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getAllPosts } from "@/features/posts";
+import { getAllPosts } from "@/features/blog";
 import { baseUrl } from "@/shared/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
