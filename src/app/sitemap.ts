@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getAllPosts } from "@/features/blog";
 import { getAllSeries } from "@/features/series";
+import { getTagCounts } from "@/features/tags";
 import { baseUrl } from "@/shared/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -17,10 +18,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		lastModified: s.updated_at
 	}));
 
-	const routes = ["", "/posts", "/series"].map((route) => ({
+	const tagCounts = await getTagCounts();
+	const tagPages = Object.keys(tagCounts).map((tag) => ({
+		url: `${baseUrl}/tags/${encodeURIComponent(tag)}`,
+		lastModified: new Date().toISOString().split("T")[0]
+	}));
+
+	const routes = ["", "/posts", "/series", "/tags"].map((route) => ({
 		url: `${baseUrl}${route}`,
 		lastModified: new Date().toISOString().split("T")[0]
 	}));
 
-	return [...routes, ...blogs, ...seriesPages];
+	return [...routes, ...blogs, ...seriesPages, ...tagPages];
 }

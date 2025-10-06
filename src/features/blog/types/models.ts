@@ -20,11 +20,3 @@ export interface PostSummary {
 export interface PostDetail extends PostSummary {
 	content: string;
 }
-
-/**
- * 태그 집계 정보
- */
-export interface TagCount {
-	tag: string;
-	count: number;
-}

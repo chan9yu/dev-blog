@@ -3,6 +3,7 @@ import type { SeriesBucket } from "@/features/series";
 /**
  * URL slug와 파일명 일치 검증
  * @throws {Error} slug 불일치 시 에러 발생
+ * @deprecated 현재 사용되지 않음. 추후 빌드 타임 검증에 필요할 수 있음.
  */
 export function validateSlugConsistency(filename: string, urlSlug: string): void {
 	const fileSlug = filename.replace(".mdx", "");
@@ -15,6 +16,7 @@ export function validateSlugConsistency(filename: string, urlSlug: string): void
 /**
  * 시리즈 index 중복 검증
  * @throws {Error} index 중복 시 에러 발생
+ * @deprecated 현재 사용되지 않음. 추후 빌드 타임 검증에 필요할 수 있음.
  */
 export function validateSeriesIndex(series: SeriesBucket): void {
 	const indices = series.posts
@@ -40,6 +42,7 @@ export function validateSeriesIndex(series: SeriesBucket): void {
 
 /**
  * 예약 발행 여부 확인
+ * @deprecated 현재 사용되지 않음. 추후 비공개/예약 발행 기능에 필요할 수 있음.
  */
 export function isScheduled(releasedAt: string): boolean {
 	return new Date(releasedAt) > new Date();
@@ -47,6 +50,7 @@ export function isScheduled(releasedAt: string): boolean {
 
 /**
  * 공개 여부 확인
+ * @deprecated 현재 사용되지 않음. 추후 비공개/예약 발행 기능에 필요할 수 있음.
  */
 export function isPublic(isPrivate: boolean, releasedAt: string): boolean {
 	return !isPrivate && !isScheduled(releasedAt);

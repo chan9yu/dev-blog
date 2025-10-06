@@ -1,17 +1,22 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+
+import type { TagCount } from "../types";
 
 type TagListProps = {
-	tagCounts: Record<string, number>;
+	tagCounts: TagCount;
+	currentTag?: string;
+	variant?: "filter" | "navigation"; // filter: 쿼리 파라미터, navigation: 라우트
 };
 
-export function TagList({ tagCounts }: TagListProps) {
-	const searchParams = useSearchParams();
-	const selectedTag = searchParams.get("tag");
-
+export function TagList({ tagCounts, currentTag, variant = "navigation" }: TagListProps) {
 	const sortedTags = Object.entries(tagCounts).sort(([, a], [, b]) => b - a);
+
+	const getTagHref = (tag: string) => {
+		if (variant === "filter") {
+			return `/posts?tag=${encodeURIComponent(tag)}`;
+		}
+		return `/tags/${encodeURIComponent(tag)}`;
+	};
 
 	return (
 		<div className="space-y-4">
@@ -22,10 +27,10 @@ export function TagList({ tagCounts }: TagListProps) {
 				<Link
 					href="/posts"
 					className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[rgb(var(--color-bg-secondary))] ${
-						!selectedTag ? "bg-[rgb(var(--color-bg-secondary))]" : ""
+						!currentTag ? "bg-[rgb(var(--color-bg-secondary))]" : ""
 					}`}
 					style={{
-						color: !selectedTag ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
+						color: !currentTag ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
 					}}
 				>
 					전체
@@ -33,12 +38,12 @@ export function TagList({ tagCounts }: TagListProps) {
 				{sortedTags.map(([tag, count]) => (
 					<Link
 						key={tag}
-						href={`/posts?tag=${encodeURIComponent(tag)}`}
+						href={getTagHref(tag)}
 						className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-[rgb(var(--color-bg-secondary))] ${
-							selectedTag === tag ? "bg-[rgb(var(--color-bg-secondary))]" : ""
+							currentTag === tag ? "bg-[rgb(var(--color-bg-secondary))]" : ""
 						}`}
 						style={{
-							color: selectedTag === tag ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
+							color: currentTag === tag ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
 						}}
 					>
 						{tag} ({count})

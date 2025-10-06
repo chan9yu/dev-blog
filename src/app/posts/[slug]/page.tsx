@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
@@ -153,8 +154,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					{post.tags && post.tags.length > 0 && (
 						<div className="flex flex-wrap gap-2">
 							{post.tags.map((tag) => (
-								<span
+								<Link
 									key={tag}
+									href={`/tags/${encodeURIComponent(tag)}`}
 									className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
 									style={{
 										backgroundColor: "rgb(var(--color-bg-secondary))",
@@ -171,7 +173,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 										/>
 									</svg>
 									{tag}
-								</span>
+								</Link>
 							))}
 						</div>
 					)}

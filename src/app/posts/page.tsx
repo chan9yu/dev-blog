@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { FilteredBlogPosts, getAllPosts, getTagCounts, TagList } from "@/features/blog";
+import { FilteredBlogPosts, getAllPosts } from "@/features/blog";
+import { getTagCounts, TagList } from "@/features/tags";
 
 export const metadata: Metadata = {
 	title: "블로그",
 	description: "개발 관련 글을 작성합니다."
 };
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
 	const [posts, tagCounts] = await Promise.all([getAllPosts(), getTagCounts()]);
+	const { tag } = await searchParams;
 
 	return (
 		<div className="space-y-8">
@@ -30,7 +32,7 @@ export default async function Page() {
 			<div className="grid gap-8 lg:grid-cols-[220px_1fr]">
 				{/* Sidebar - Tags */}
 				<aside className="lg:sticky lg:top-24 lg:h-fit">
-					<TagList tagCounts={tagCounts} />
+					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
 				</aside>
 
 				{/* Main - Posts */}
@@ -42,7 +44,7 @@ export default async function Page() {
 							</div>
 						}
 					>
-						<FilteredBlogPosts posts={posts} />
+						<FilteredBlogPosts posts={posts} selectedTag={tag} />
 					</Suspense>
 				</main>
 			</div>

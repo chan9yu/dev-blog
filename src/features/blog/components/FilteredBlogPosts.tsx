@@ -1,19 +1,14 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 import type { PostSummary } from "../types";
 import { formatDate } from "../utils";
 
 type FilteredBlogPostsProps = {
 	posts: PostSummary[];
+	selectedTag?: string;
 };
 
-export function FilteredBlogPosts({ posts }: FilteredBlogPostsProps) {
-	const searchParams = useSearchParams();
-	const selectedTag = searchParams.get("tag");
-
+export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps) {
 	const filteredPosts = selectedTag ? posts.filter((post) => post.tags.includes(selectedTag)) : posts;
 
 	const sortedPosts = filteredPosts.sort((a, b) => {
