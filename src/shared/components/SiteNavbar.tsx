@@ -10,6 +10,9 @@ const navItems = {
 	},
 	"/posts": {
 		name: "블로그"
+	},
+	"/series": {
+		name: "시리즈"
 	}
 } as const;
 

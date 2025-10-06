@@ -1,4 +1,4 @@
-import type { SeriesBucket } from "@/features/blog/types";
+import type { SeriesBucket } from "@/features/series";
 
 /**
  * URL slug와 파일명 일치 검증
@@ -19,11 +19,11 @@ export function validateSlugConsistency(filename: string, urlSlug: string): void
 export function validateSeriesIndex(series: SeriesBucket): void {
 	const indices = series.posts
 		.map((p) => p.index)
-		.filter((i) => i !== undefined)
-		.sort((a, b) => a! - b!);
+		.filter((i): i is number => i !== undefined)
+		.sort((a, b) => a - b);
 
 	// 중복 검사
-	const duplicates = indices.filter((v, i, arr) => arr.indexOf(v) !== i);
+	const duplicates = indices.filter((v: number, i: number, arr: number[]) => arr.indexOf(v) !== i);
 
 	if (duplicates.length > 0) {
 		throw new Error(`[시리즈: ${series.name}] index 중복: ${duplicates.join(", ")}`);
@@ -31,7 +31,7 @@ export function validateSeriesIndex(series: SeriesBucket): void {
 
 	// 연속성 경고 (빌드는 통과)
 	if (indices.length > 0) {
-		const hasGaps = indices.some((v, i) => v !== i + 1);
+		const hasGaps = indices.some((v: number, i: number) => v !== i + 1);
 		if (hasGaps) {
 			console.warn(`⚠️  [시리즈: ${series.name}] index가 연속적이지 않습니다`);
 		}

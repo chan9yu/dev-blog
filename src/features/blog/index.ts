@@ -3,14 +3,14 @@ export { BlogPosts, FilteredBlogPosts, TableOfContents, TagList } from "./compon
 
 // Services
 export { getAllPosts, getPostDetail } from "./services";
-export { getAllTags, getTagCounts } from "./services/tags";
+export { getTagCounts } from "./services/tags";
 
 // Schemas
 export type { Frontmatter } from "./schemas";
 export { FrontmatterSchema } from "./schemas";
 
 // Types
-export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
+export type { PostDetail, PostSummary, TagCount } from "./types";
 
 // Utils
 export type { TocItem } from "./utils";

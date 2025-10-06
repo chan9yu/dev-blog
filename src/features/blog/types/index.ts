@@ -1,1 +1,1 @@
-export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./models";
+export type { PostDetail, PostSummary, TagCount } from "./models";

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
+import { getAllSeries, SeriesNavigation } from "@/features/series";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
@@ -73,6 +74,11 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	}
 
 	const tocItems = extractTocFromMarkdown(post.content);
+
+	// 시리즈 포스트 정보 가져오기
+	const allSeries = post.series && post.index !== undefined ? await getAllSeries() : [];
+	const currentSeries = allSeries.find((s) => s.name === post.series);
+	const seriesPosts = currentSeries?.posts || [];
 
 	return (
 		<div className="relative grid grid-cols-1 xl:grid-cols-[1fr_256px] xl:gap-16">
@@ -172,6 +178,13 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 					<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
 				</header>
+
+				{/* Series Navigation */}
+				{post.series && post.index !== undefined && seriesPosts.length > 0 && (
+					<div className="mb-8">
+						<SeriesNavigation seriesName={post.series} currentIndex={post.index} allPosts={seriesPosts} />
+					</div>
+				)}
 
 				{/* Content */}
 				<div className="prose prose-lg">
