@@ -1,16 +1,16 @@
 import type { MetadataRoute } from "next";
 
-import { getAllPosts } from "@/features/blog";
+import { getAllPosts } from "@/features/posts";
 import { baseUrl } from "@/shared/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const posts = await getAllPosts();
 	const blogs = posts.map((post) => ({
-		url: `${baseUrl}/blog/${post.url_slug}`,
+		url: `${baseUrl}/posts/${post.url_slug}`,
 		lastModified: post.updated_at
 	}));
 
-	const routes = ["", "/blog"].map((route) => ({
+	const routes = ["", "/posts"].map((route) => ({
 		url: `${baseUrl}${route}`,
 		lastModified: new Date().toISOString().split("T")[0]
 	}));

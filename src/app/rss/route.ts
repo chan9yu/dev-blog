@@ -15,7 +15,7 @@ export async function GET() {
 			(post) =>
 				`<item>
           <title>${post.title}</title>
-          <link>${baseUrl}/blog/${post.url_slug}</link>
+          <link>${baseUrl}/posts/${post.url_slug}</link>
           <description>${post.short_description || ""}</description>
           <pubDate>${new Date(post.released_at).toUTCString()}</pubDate>
         </item>`

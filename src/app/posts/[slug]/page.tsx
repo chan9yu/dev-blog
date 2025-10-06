@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 			description,
 			type: "article",
 			publishedTime,
-			url: `${baseUrl}/blog/${post.url_slug}`,
+			url: `${baseUrl}/posts/${post.url_slug}`,
 			images: [
 				{
 					url: ogImage
@@ -68,7 +68,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						dateModified: post.updated_at,
 						description: post.short_description,
 						image: post.thumbnail ? `${baseUrl}${post.thumbnail}` : `/og?title=${encodeURIComponent(post.title)}`,
-						url: `${baseUrl}/blog/${post.url_slug}`,
+						url: `${baseUrl}/posts/${post.url_slug}`,
 						author: {
 							"@type": "Person",
 							name: "My Portfolio"

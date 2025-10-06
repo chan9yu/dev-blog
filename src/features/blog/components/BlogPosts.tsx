@@ -18,7 +18,7 @@ export async function BlogPosts() {
 				.map((post) => (
 					<Link
 						key={post.url_slug}
-						href={`/blog/${post.url_slug}`}
+						href={`/posts/${post.url_slug}`}
 						className="group block rounded-lg border px-4 py-4 transition-all hover:shadow-md sm:rounded-xl sm:px-6 sm:py-5"
 						style={{
 							backgroundColor: "rgb(var(--color-bg-primary))",

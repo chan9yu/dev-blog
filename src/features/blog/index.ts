@@ -1,8 +1,9 @@
 // Components
-export { BlogPosts } from "./components";
+export { BlogPosts, FilteredBlogPosts, TagList } from "./components";
 
 // Services
 export { getAllPosts, getPostDetail } from "./services";
+export { getAllTags, getTagCounts } from "./services/tags";
 
 // Schemas
 export type { Frontmatter } from "./schemas";
