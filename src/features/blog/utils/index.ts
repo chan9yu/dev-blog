@@ -1,2 +1,3 @@
 export { formatDate } from "./date";
-export { parseFrontmatter } from "./parser";
+export { extractFrontmatter, parseFrontmatter, parseLegacyFrontmatter } from "./parser";
+export { isPublic, isScheduled, validateSeriesIndex, validateSlugConsistency } from "./validation";

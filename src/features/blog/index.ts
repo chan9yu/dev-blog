@@ -4,8 +4,21 @@ export { BlogPosts } from "./components";
 // Services
 export { getBlogPosts } from "./services";
 
-// Types
-export type { BlogPost, Metadata } from "./types";
+// Schemas
+export type { Frontmatter, LegacyFrontmatter } from "./schemas";
+export { FrontmatterSchema, LegacyFrontmatterSchema } from "./schemas";
+
+// Types (레거시 + 새 타입)
+export type { BlogPost, Metadata, PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
 
 // Utils
-export { formatDate, parseFrontmatter } from "./utils";
+export {
+	extractFrontmatter,
+	formatDate,
+	isPublic,
+	isScheduled,
+	parseFrontmatter,
+	parseLegacyFrontmatter,
+	validateSeriesIndex,
+	validateSlugConsistency
+} from "./utils";
