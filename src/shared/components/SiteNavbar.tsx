@@ -6,10 +6,10 @@ import { ThemeSwitcher } from ".";
 
 const navItems = {
 	"/": {
-		name: "home"
+		name: "홈"
 	},
 	"/blog": {
-		name: "blog"
+		name: "블로그"
 	}
 } as const;
 
@@ -18,26 +18,37 @@ export async function SiteNavbar() {
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
 
 	return (
-		<aside className="mb-16 -ml-[8px] tracking-tight">
-			<div className="lg:sticky lg:top-20">
-				<nav
-					className="fade relative flex scroll-pr-6 flex-row items-start px-0 pb-0 md:relative md:overflow-auto"
-					id="nav"
-				>
-					<div className="flex flex-row space-x-0 pr-10">
-						{Object.entries(navItems).map(([path, { name }]) => (
-							<Link
-								key={path}
-								href={path}
-								className="relative m-1 flex px-2 py-1 align-middle transition-all hover:text-neutral-800 dark:hover:text-neutral-200"
-							>
-								{name}
-							</Link>
-						))}
+		<header
+			className="sticky top-0 z-50 backdrop-blur-lg"
+			style={{ backgroundColor: "rgb(var(--color-bg-primary) / 0.8)" }}
+		>
+			<nav className="flex items-center justify-between py-6">
+				<div className="flex items-center gap-1">
+					<Link
+						href="/"
+						className="text-xl font-bold tracking-tight transition-colors"
+						style={{ color: "rgb(var(--color-text-primary))" }}
+					>
+						Blog9yu
+					</Link>
+				</div>
+
+				<div className="flex items-center gap-1">
+					{Object.entries(navItems).map(([path, { name }]) => (
+						<Link
+							key={path}
+							href={path}
+							className="rounded-lg px-4 py-2 text-sm font-medium transition-all hover:bg-[rgb(var(--color-bg-secondary))]"
+							style={{ color: "rgb(var(--color-text-secondary))" }}
+						>
+							{name}
+						</Link>
+					))}
+					<div className="ml-2">
 						<ThemeSwitcher initialTheme={theme} />
 					</div>
-				</nav>
-			</div>
-		</aside>
+				</div>
+			</nav>
+		</header>
 	);
 }

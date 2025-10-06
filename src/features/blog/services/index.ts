@@ -1,1 +1,1 @@
-export { getBlogPosts } from "./api";
+export { getAllPosts, getPostDetail } from "./api";

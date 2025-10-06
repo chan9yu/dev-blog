@@ -2,10 +2,22 @@
 export { BlogPosts } from "./components";
 
 // Services
-export { getBlogPosts } from "./services";
+export { getAllPosts, getPostDetail } from "./services";
+
+// Schemas
+export type { Frontmatter } from "./schemas";
+export { FrontmatterSchema } from "./schemas";
 
 // Types
-export type { BlogPost, Metadata } from "./types";
+export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./types";
 
 // Utils
-export { formatDate, parseFrontmatter } from "./utils";
+export {
+	extractFrontmatter,
+	formatDate,
+	isPublic,
+	isScheduled,
+	parseFrontmatter,
+	validateSeriesIndex,
+	validateSlugConsistency
+} from "./utils";

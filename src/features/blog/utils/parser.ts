@@ -1,24 +1,29 @@
-import type { Metadata } from "@/features/blog/types";
+import matter from "gray-matter";
 
+import type { Frontmatter } from "@/features/blog/schemas";
+import { FrontmatterSchema } from "@/features/blog/schemas";
+
+/**
+ * MDX 파일 내용 파싱 및 Frontmatter 검증
+ */
 export function parseFrontmatter(fileContent: string) {
-	const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-	const match = frontmatterRegex.exec(fileContent);
+	const { data, content } = matter(fileContent);
 
-	if (!match) {
-		throw new Error("Invalid frontmatter format");
+	const result = FrontmatterSchema.safeParse(data);
+	if (!result.success) {
+		throw new Error(`Frontmatter 검증 실패:\n${JSON.stringify(result.error.issues, null, 2)}`);
 	}
 
-	const frontMatterBlock = match[1];
-	const content = fileContent.replace(frontmatterRegex, "").trim();
-	const frontMatterLines = frontMatterBlock.trim().split("\n");
-	const metadata: Partial<Metadata> = {};
+	return {
+		metadata: result.data,
+		content
+	};
+}
 
-	frontMatterLines.forEach((line) => {
-		const [key, ...valueArr] = line.split(": ");
-		let value = valueArr.join(": ").trim();
-		value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-		metadata[key.trim() as keyof Metadata] = value;
-	});
-
-	return { metadata: metadata as Metadata, content };
+/**
+ * Frontmatter만 추출 (내용 불필요한 경우)
+ */
+export function extractFrontmatter(fileContent: string): Frontmatter {
+	const { metadata } = parseFrontmatter(fileContent);
+	return metadata;
 }

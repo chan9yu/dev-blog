@@ -6,9 +6,10 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import Script from "next/script";
 
-import { baseUrl } from "@/app/sitemap";
 import { SiteFooter, SiteNavbar } from "@/shared/components";
+import { baseUrl } from "@/shared/constants";
 import { type Theme, themeInitScript } from "@/shared/utils";
 
 export const metadata: Metadata = {
@@ -51,21 +52,21 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
 	return (
 		<html lang="ko" className={htmlClassName}>
-			<head>
-				<script
+			<body className="antialiased">
+				<Script
+					id="theme-init"
+					strategy="beforeInteractive"
 					dangerouslySetInnerHTML={{
 						__html: themeInitScript
 					}}
 				/>
-			</head>
-			<body className="mx-4 mt-8 max-w-xl antialiased lg:mx-auto">
-				<main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">
+				<div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:px-12">
 					<SiteNavbar />
-					{children}
+					<main className="mt-16">{children}</main>
 					<SiteFooter />
-					<Analytics />
-					<SpeedInsights />
-				</main>
+				</div>
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);

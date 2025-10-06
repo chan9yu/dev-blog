@@ -1,1 +1,1 @@
-export type { BlogPost, Metadata } from "./models";
+export type { PostDetail, PostSummary, SeriesBucket, TagCount } from "./models";
