@@ -4,12 +4,13 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
+import { CommentsSection } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxTable } from "@/shared/components/mdx/MdxTable";
-import { baseUrl } from "@/shared/constants";
+import { baseUrl, utterancesRepo } from "@/shared/constants";
 
 const components = {
 	h1: createHeading(1),
@@ -192,6 +193,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				<div className="prose prose-lg">
 					<MDXRemote source={post.content} components={components} />
 				</div>
+
+				{/* Comments */}
+				<CommentsSection repo={utterancesRepo} />
 			</article>
 
 			{/* TOC - Desktop Only */}
