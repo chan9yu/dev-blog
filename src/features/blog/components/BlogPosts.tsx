@@ -13,7 +13,7 @@ export async function BlogPosts() {
 	});
 
 	return (
-		<div className="grid gap-4 sm:gap-6">
+		<div className="flex flex-col gap-4 sm:gap-6">
 			{sortedPosts.map((post) => (
 				<BlogPostCard key={post.url_slug} post={post} />
 			))}

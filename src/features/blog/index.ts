@@ -1,5 +1,5 @@
 // Components
-export { BlogPosts, FilteredBlogPosts, TableOfContents } from "./components";
+export { BlogPosts, FilteredBlogPosts, TableOfContents, TrendingPosts, TrendingTags } from "./components";
 
 // Services
 export { getAllPosts, getPostDetail } from "./services";

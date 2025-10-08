@@ -109,14 +109,14 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 			</header>
 
 			{/* Content */}
-			<div className="grid gap-8 lg:grid-cols-[220px_1fr]">
+			<div className="flex gap-8">
 				{/* Sidebar - Tags */}
-				<aside className="lg:sticky lg:top-24 lg:h-fit">
+				<aside className="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[220px]">
 					<TagList tagCounts={tagCounts} currentTag={decodedTag} />
 				</aside>
 
 				{/* Main - Posts */}
-				<main className="space-y-2 sm:space-y-3">
+				<main className="flex-1 space-y-2 sm:space-y-3">
 					{tagPosts.map((post) => (
 						<Link
 							key={post.url_slug}

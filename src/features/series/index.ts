@@ -1,5 +1,5 @@
 // Components
-export { SeriesNavigation } from "./components";
+export { PopularSeries, SeriesNavigation } from "./components";
 
 // Services
 export { getAllSeries, getSeriesDetail, getSeriesStats } from "./services";

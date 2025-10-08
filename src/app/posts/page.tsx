@@ -29,14 +29,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 			</header>
 
 			{/* Content */}
-			<div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
+			<div className="flex gap-8">
 				{/* Sidebar - Tags */}
-				<aside className="lg:sticky lg:top-24 lg:h-fit">
+				<aside className="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[220px]">
 					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
 				</aside>
 
 				{/* Main - Posts */}
-				<main className="min-w-0">
+				<main className="min-w-0 flex-1">
 					<Suspense
 						fallback={
 							<div className="flex items-center justify-center py-12">
