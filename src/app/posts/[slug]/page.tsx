@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -9,8 +10,10 @@ import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
+import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable } from "@/shared/components/mdx/MdxTable";
 import { baseUrl, utterancesRepo } from "@/shared/constants";
+import type { Theme } from "@/shared/utils";
 
 const components = {
 	h1: createHeading(1),
@@ -21,6 +24,7 @@ const components = {
 	h6: createHeading(6),
 	Image: MdxImage,
 	a: MdxLink,
+	pre: MdxPre,
 	code: MdxCode,
 	Table: MdxTable
 };
@@ -82,9 +86,14 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const currentSeries = allSeries.find((s) => s.name === post.series);
 	const seriesPosts = currentSeries?.posts || [];
 
+	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
+	const cookieStore = await cookies();
+	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+	const utterancesTheme = theme === "dark" ? "github-dark" : "github-light";
+
 	return (
-		<div className="relative grid grid-cols-1 xl:grid-cols-[1fr_256px] xl:gap-16">
-			<article className="pb-16">
+		<div className="relative flex xl:gap-16">
+			<article className="min-w-0 flex-1 pb-16">
 				<script
 					type="application/ld+json"
 					suppressHydrationWarning
@@ -195,12 +204,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				</div>
 
 				{/* Comments */}
-				<CommentsSection repo={utterancesRepo} />
+				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
 			</article>
 
 			{/* TOC - Desktop Only */}
 			{tocItems.length > 0 && (
-				<aside className="hidden xl:block">
+				<aside className="hidden w-3xs flex-none xl:block">
 					<div className="sticky top-24">
 						<TableOfContents items={tocItems} />
 					</div>

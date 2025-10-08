@@ -2,31 +2,34 @@
 
 import { useEffect, useState } from "react";
 
-import { getStoredTheme } from "../utils";
 import { Comments } from "./Comments";
 
 type CommentsSectionProps = {
 	repo: string;
+	initialTheme?: "github-light" | "github-dark";
 };
 
-export function CommentsSection({ repo }: CommentsSectionProps) {
-	const [theme, setTheme] = useState<"github-light" | "github-dark">("github-light");
+export function CommentsSection({ repo, initialTheme = "github-light" }: CommentsSectionProps) {
+	const [theme, setTheme] = useState<"github-light" | "github-dark">(initialTheme);
 
 	useEffect(() => {
+		// 현재 테마 확인 함수
+		const getCurrentTheme = (): "github-light" | "github-dark" => {
+			return document.documentElement.classList.contains("dark") ? "github-dark" : "github-light";
+		};
+
 		// 초기 테마 설정
-		const currentTheme = getStoredTheme();
-		setTheme(currentTheme === "dark" ? "github-dark" : "github-light");
+		setTheme(getCurrentTheme());
 
 		// 테마 변경 감지
 		const handleThemeChange = () => {
-			const newTheme = getStoredTheme();
-			setTheme(newTheme === "dark" ? "github-dark" : "github-light");
+			setTheme(getCurrentTheme());
 		};
 
-		// MutationObserver로 data-theme 속성 변경 감지
+		// MutationObserver로 class 속성 변경 감지 (dark 클래스)
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
-				if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+				if (mutation.type === "attributes" && mutation.attributeName === "class") {
 					handleThemeChange();
 				}
 			});
@@ -34,7 +37,7 @@ export function CommentsSection({ repo }: CommentsSectionProps) {
 
 		observer.observe(document.documentElement, {
 			attributes: true,
-			attributeFilter: ["data-theme"]
+			attributeFilter: ["class"]
 		});
 
 		return () => {

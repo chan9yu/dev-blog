@@ -9,7 +9,7 @@ const navItems = {
 		name: "홈"
 	},
 	"/posts": {
-		name: "블로그"
+		name: "포스트"
 	},
 	"/series": {
 		name: "시리즈"

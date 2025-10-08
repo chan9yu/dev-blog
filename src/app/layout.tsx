@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Script from "next/script";
 
-import { SiteFooter, SiteNavbar } from "@/shared/components";
+import { ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
 import { baseUrl } from "@/shared/constants";
 import { type Theme, themeInitScript } from "@/shared/utils";
 
@@ -60,11 +60,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 						__html: themeInitScript
 					}}
 				/>
-				<div className="mx-auto max-w-4xl px-6 py-12 sm:px-8 lg:px-12">
+				<ScrollReset />
+				<div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-12">
 					<SiteNavbar />
 					<main className="mt-16">{children}</main>
 					<SiteFooter />
 				</div>
+				<ScrollToTop />
 				<Analytics />
 				<SpeedInsights />
 			</body>
