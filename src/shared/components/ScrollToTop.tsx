@@ -2,51 +2,27 @@
 
 import { useEffect, useState } from "react";
 
-const SCROLL_THRESHOLD = 300; // 버튼 표시 기준 스크롤 위치 (px)
-const THROTTLE_DELAY = 100; // 스크롤 이벤트 스로틀링 지연 시간 (ms)
+const SCROLL_THRESHOLD = 300;
 
 export function ScrollToTop() {
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
-		let timeoutId: NodeJS.Timeout | null = null;
-
-		const toggleVisibility = () => {
-			if (timeoutId) return;
-
-			timeoutId = setTimeout(() => {
-				setIsVisible(window.scrollY > SCROLL_THRESHOLD);
-				timeoutId = null;
-			}, THROTTLE_DELAY);
+		const handleScroll = () => {
+			setIsVisible(window.scrollY > SCROLL_THRESHOLD);
 		};
 
-		window.addEventListener("scroll", toggleVisibility, { passive: true });
-
-		return () => {
-			window.removeEventListener("scroll", toggleVisibility);
-			if (timeoutId) clearTimeout(timeoutId);
-		};
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
-	const scrollToTop = (e: React.MouseEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// URL에서 해시 제거 (스크롤 전에)
-		if (window.location.hash) {
-			window.history.replaceState(null, "", window.location.pathname + window.location.search);
-		}
-
-		// Smooth scroll to top
-		window.scrollTo({
-			top: 0,
-			behavior: "smooth"
-		});
+	const handleClick = () => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
 	return (
 		<button
-			onClick={scrollToTop}
+			onClick={handleClick}
 			className={`fixed right-8 bottom-8 z-50 rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110 ${
 				isVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-16 opacity-0"
 			}`}
