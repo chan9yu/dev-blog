@@ -9,35 +9,71 @@ import { cookies } from "next/headers";
 import Script from "next/script";
 
 import { ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
-import { baseUrl } from "@/shared/constants";
+import { SITE } from "@/shared/config";
 import { type Theme, themeInitScript } from "@/shared/utils";
 
+const baseUrl = new URL(SITE.url);
+
 export const metadata: Metadata = {
-	metadataBase: new URL(baseUrl),
+	metadataBase: baseUrl,
+	applicationName: SITE.name,
 	title: {
-		default: "Next.js Portfolio Starter",
-		template: "%s | Next.js Portfolio Starter"
+		default: SITE.title,
+		template: `%s · ${SITE.authorName}`
 	},
-	description: "This is my portfolio.",
+	description: SITE.description,
+	keywords: ["프론트엔드", "Frontend", "React", "Next.js", "TypeScript", "UI/UX", "개발 블로그", "chan9yu"],
+	authors: [{ name: SITE.authorName, url: SITE.url }],
+	creator: SITE.authorName,
+	publisher: SITE.authorName,
+	alternates: {
+		canonical: SITE.url,
+		languages: {
+			"ko-KR": SITE.url
+		}
+	},
 	openGraph: {
-		title: "My Portfolio",
-		description: "This is my portfolio.",
-		url: baseUrl,
-		siteName: "My Portfolio",
-		locale: "en_US",
-		type: "website"
+		title: SITE.title,
+		description: SITE.description,
+		url: SITE.url,
+		siteName: SITE.name,
+		locale: SITE.locale,
+		type: "website",
+		images: [
+			{
+				url: SITE.defaultOG,
+				width: 1200,
+				height: 630,
+				alt: SITE.title
+			}
+		]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: SITE.title,
+		description: SITE.description,
+		images: [SITE.defaultOG]
 	},
 	robots: {
-		index: true,
+		index: process.env.VERCEL_ENV === "production",
 		follow: true,
 		googleBot: {
-			index: true,
+			index: process.env.VERCEL_ENV === "production",
 			follow: true,
 			"max-video-preview": -1,
 			"max-image-preview": "large",
 			"max-snippet": -1
 		}
-	}
+	},
+	icons: {
+		icon: [
+			{ url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+			{ url: "/favicon-96.png", sizes: "96x96", type: "image/png" }
+		],
+		apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+		other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#22C55E" }]
+	},
+	category: "technology"
 };
 
 type RootLayoutProps = {

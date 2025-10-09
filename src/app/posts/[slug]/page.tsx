@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,36 +45,76 @@ export async function generateStaticParams() {
 	}));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+	params
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const post = await getPostDetail(slug);
-	if (!post) {
-		return;
-	}
 
-	const { title, released_at: publishedTime, short_description: description, thumbnail } = post;
-	const ogImage = thumbnail ? thumbnail : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+	const post = await getPostDetail(slug);
+	if (!post) return;
+
+	const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog9yu.dev";
+	const IS_PROD = process.env.VERCEL_ENV === "production";
+	const SITE_NAME = "blog9yu.dev";
+	const LOCALE = "ko_KR";
+
+	const {
+		title,
+		released_at: publishedTime,
+		updated_at: modifiedTime,
+		short_description: description,
+		thumbnail,
+		url_slug,
+		tags,
+		is_private
+	} = post;
+
+	const canonical = `${BASE_URL}/posts/${url_slug}`;
+	const ogImage = thumbnail || `${BASE_URL}/og?title=${encodeURIComponent(title)}`;
+
+	const allowIndex =
+		IS_PROD &&
+		!is_private &&
+		((): boolean => {
+			if (!publishedTime) return true;
+			const ts = Date.parse(publishedTime);
+			return Number.isFinite(ts) ? ts <= Date.now() : true;
+		})();
 
 	return {
 		title,
 		description,
+		alternates: { canonical },
 		openGraph: {
 			title,
 			description,
 			type: "article",
+			url: canonical,
+			siteName: SITE_NAME,
+			locale: LOCALE,
 			publishedTime,
-			url: `${baseUrl}/posts/${post.url_slug}`,
-			images: [
-				{
-					url: ogImage
-				}
-			]
+			modifiedTime,
+			tags,
+			images: [{ url: ogImage, width: 1200, height: 630, alt: title }]
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
 			images: [ogImage]
+		},
+		robots: {
+			index: allowIndex,
+			follow: true,
+			googleBot: {
+				index: allowIndex,
+				follow: true,
+				"max-image-preview": "large",
+				"max-video-preview": -1,
+				"max-snippet": -1
+			}
 		}
 	};
 }
