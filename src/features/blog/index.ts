@@ -12,4 +12,11 @@ export type { PostDetail, PostSummary } from "./types";
 
 // Utils
 export type { TocItem } from "./utils";
-export { extractTocFromMarkdown, formatDate } from "./utils";
+export {
+	extractTocFromMarkdown,
+	formatDate,
+	isPublic,
+	isScheduled,
+	validateSeriesIndex,
+	validateSlugConsistency
+} from "./utils";

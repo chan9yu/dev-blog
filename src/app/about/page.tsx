@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import profileImage from "@/assets/profile.webp";
 import { baseUrl } from "@/shared/constants";
 
 export const metadata = {
@@ -37,8 +36,14 @@ export default function AboutPage() {
 
 				{/* Profile Section */}
 				<div className="not-prose mb-12 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-					<div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-full">
-						<Image src={profileImage} alt="Profile" fill className="object-cover" priority />
+					<div className="relative h-32 w-32 flex-shrink-0 rounded-full">
+						<Image
+							src="https://avatars.githubusercontent.com/u/80776262?v=4"
+							alt="Profile"
+							fill
+							className="object-cover"
+							priority
+						/>
 					</div>
 					<div className="flex-1 text-center sm:text-left">
 						<h2 className="mb-2 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>

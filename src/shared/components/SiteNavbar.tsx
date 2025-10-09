@@ -16,6 +16,9 @@ const navItems = {
 	},
 	"/tags": {
 		name: "태그"
+	},
+	"/about": {
+		name: "About"
 	}
 } as const;
 
