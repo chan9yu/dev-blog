@@ -1,0 +1,91 @@
+/* ============================================
+  Design Tokens - 2025 Modern Blog System
+============================================ */
+
+:root {
+	/* Brand Colors */
+	--color-primary: 59 130 246; /* blue-500 */
+	--color-primary-hover: 37 99 235; /* blue-600 */
+
+	/* Light Theme Colors */
+	--color-bg-primary: 255 255 255;
+	--color-bg-secondary: 249 250 251; /* gray-50 */
+	--color-bg-tertiary: 243 244 246; /* gray-100 */
+	--color-bg-hover: 241 245 249; /* slate-50 */
+
+	--color-text-primary: 15 23 42; /* slate-900 */
+	--color-text-secondary: 71 85 105; /* slate-600 */
+	--color-text-tertiary: 100 116 139; /* slate-500 */
+
+	--color-border-primary: 226 232 240; /* slate-200 */
+	--color-border-secondary: 241 245 249; /* slate-100 */
+
+	--color-accent: 99 102 241; /* indigo-500 */
+	--color-accent-hover: 79 70 229; /* indigo-600 */
+
+	/* Code Syntax Highlighting - Light */
+	--sh-class: #2d5e9d;
+	--sh-identifier: #354150;
+	--sh-sign: #8996a3;
+	--sh-string: #007f7a;
+	--sh-keyword: #e02518;
+	--sh-comment: #a19595;
+	--sh-jsxliterals: #6266d1;
+	--sh-property: #e25a1c;
+	--sh-entity: #e25a1c;
+
+	/* Spacing Scale */
+	--space-section: 6rem;
+	--space-section-mobile: 3rem;
+
+	/* Border Radius */
+	--radius-sm: 0.5rem;
+	--radius-md: 0.75rem;
+	--radius-lg: 1rem;
+	--radius-xl: 1.5rem;
+
+	/* Shadows */
+	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+	/* Transitions */
+	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+	/* Scrollbar */
+	--scrollbar-width: 14px;
+	--scrollbar-track: 226 232 240; /* slate-200 */
+	--scrollbar-thumb: 148 163 184; /* slate-400 */
+	--scrollbar-thumb-hover: 100 116 139; /* slate-500 */
+}
+
+html.dark {
+	/* Dark Theme Colors */
+	--color-bg-primary: 9 9 11; /* zinc-950 */
+	--color-bg-secondary: 24 24 27; /* zinc-900 */
+	--color-bg-tertiary: 39 39 42; /* zinc-800 */
+	--color-bg-hover: 28 25 23; /* stone-900 */
+
+	--color-text-primary: 250 250 250; /* zinc-50 */
+	--color-text-secondary: 161 161 170; /* zinc-400 */
+	--color-text-tertiary: 113 113 122; /* zinc-500 */
+
+	--color-border-primary: 39 39 42; /* zinc-800 */
+	--color-border-secondary: 24 24 27; /* zinc-900 */
+
+	--color-accent: 129 140 248; /* indigo-400 */
+	--color-accent-hover: 165 180 252; /* indigo-300 */
+
+	/* Code Syntax Highlighting - Dark */
+	--sh-class: #4c97f8;
+	--sh-identifier: white;
+	--sh-keyword: #f47067;
+	--sh-string: #0fa295;
+
+	/* Scrollbar - Dark */
+	--scrollbar-track: 24 24 27; /* zinc-900 */
+	--scrollbar-thumb: 82 82 91; /* zinc-600 */
+	--scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
+}
