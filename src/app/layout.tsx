@@ -2,9 +2,8 @@ import "@/shared/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import Script from "next/script";
 
@@ -81,15 +80,25 @@ type RootLayoutProps = {
 	readonly children: React.ReactNode;
 };
 
+const pretendard = localFont({
+	src: "../../public/fonts/PretendardVariable.woff2",
+	display: "swap",
+	weight: "45 920",
+	variable: "--font-pretendard",
+	preload: true,
+	fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+	adjustFontFallback: "Arial"
+});
+
 export default async function RootLayout({ children }: RootLayoutProps) {
 	const cookieStore = await cookies();
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
 
-	const htmlClassName = `${theme === "dark" ? "dark" : ""} ${GeistSans.variable} ${GeistMono.variable}`.trim();
+	const htmlClassName = `${theme === "dark" ? "dark" : ""} ${pretendard.variable}`.trim();
 
 	return (
 		<html lang="ko" className={htmlClassName}>
-			<body className="antialiased">
+			<body className="font-sans antialiased">
 				<Script
 					id="theme-init"
 					strategy="beforeInteractive"

@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+	--font-sans: var(--font-pretendard);
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================
-   Design Tokens - 2025 Modern Blog System
-   ============================================ */
+  Design Tokens - 2025 Modern Blog System
+============================================ */
 
 :root {
 	/* Brand Colors */
