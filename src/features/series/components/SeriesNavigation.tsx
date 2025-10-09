@@ -68,11 +68,11 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 			</div>
 
 			{/* Navigation Buttons */}
-			<div className="grid grid-cols-2 gap-3">
+			<div className="flex gap-3">
 				{prevPost ? (
 					<Link
 						href={`/posts/${prevPost.url_slug}`}
-						className="group flex flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
+						className="group flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
 						style={{
 							backgroundColor: "rgb(var(--color-bg-primary))",
 							borderColor: "rgb(var(--color-border-primary))"
@@ -96,7 +96,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 					</Link>
 				) : (
 					<div
-						className="flex flex-col gap-1 rounded-lg border p-3"
+						className="flex flex-1 flex-col gap-1 rounded-lg border p-3"
 						style={{
 							backgroundColor: "rgb(var(--color-bg-primary))",
 							borderColor: "rgb(var(--color-border-primary))",
@@ -115,7 +115,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 				{nextPost ? (
 					<Link
 						href={`/posts/${nextPost.url_slug}`}
-						className="group flex flex-col gap-1 rounded-lg border p-3 text-right transition-all hover:shadow-sm"
+						className="group flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right transition-all hover:shadow-sm"
 						style={{
 							backgroundColor: "rgb(var(--color-bg-primary))",
 							borderColor: "rgb(var(--color-border-primary))"
@@ -139,7 +139,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 					</Link>
 				) : (
 					<div
-						className="flex flex-col gap-1 rounded-lg border p-3 text-right"
+						className="flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right"
 						style={{
 							backgroundColor: "rgb(var(--color-bg-primary))",
 							borderColor: "rgb(var(--color-border-primary))",

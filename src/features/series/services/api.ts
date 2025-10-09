@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/features/blog";
+import { getAllPosts, validateSeriesIndex } from "@/features/blog";
 import { slugifyUrlSafe } from "@/shared/utils";
 
 import type { SeriesBucket } from "../types";
@@ -34,13 +34,18 @@ export async function getAllSeries(): Promise<SeriesBucket[]> {
 		}
 	});
 
-	// 각 시리즈의 포스트를 index 순서로 정렬
-	seriesMap.forEach((series) => {
+	// 각 시리즈의 포스트를 index 순서로 정렬 및 검증
+	const allSeries = Array.from(seriesMap.values());
+
+	allSeries.forEach((series) => {
 		series.posts.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+
+		// 빌드 타임 검증: 시리즈 index 중복 및 연속성 검사
+		validateSeriesIndex(series);
 	});
 
 	// 최근 업데이트된 순서로 정렬
-	return Array.from(seriesMap.values()).sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+	return allSeries.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
 }
 
 /**

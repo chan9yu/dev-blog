@@ -1,0 +1,54 @@
+import Link from "next/link";
+
+import { getAllPosts } from "../services";
+import { formatDate } from "../utils";
+
+const MAX_POSTS_DISPLAY = 5;
+
+export async function TrendingPosts() {
+	const allPosts = await getAllPosts();
+
+	// TODO: 조회수 기능 추가 시 조회수 기준으로 정렬
+	// 현재는 최신순으로 정렬
+	const trendingPosts = allPosts
+		.sort((a, b) => {
+			return new Date(b.released_at).getTime() - new Date(a.released_at).getTime();
+		})
+		.slice(0, MAX_POSTS_DISPLAY);
+
+	if (trendingPosts.length === 0) {
+		return (
+			<div className="py-4 text-center">
+				<p className="text-sm" style={{ color: "rgb(var(--color-text-tertiary))" }}>
+					아직 포스트가 없습니다
+				</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="space-y-4">
+			{trendingPosts.map((post) => (
+				<Link
+					key={post.url_slug}
+					href={`/posts/${post.url_slug}`}
+					className="group block space-y-1 transition-transform hover:translate-x-1"
+				>
+					<h3
+						className="line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]"
+						style={{ color: "rgb(var(--color-text-primary))" }}
+					>
+						{post.title}
+					</h3>
+					<time
+						className="block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
+						dateTime={post.released_at}
+						style={{ color: "rgb(var(--color-text-muted))" }}
+					>
+						{formatDate(post.released_at, false)}
+					</time>
+				</Link>
+			))}
+		</div>
+	);
+}

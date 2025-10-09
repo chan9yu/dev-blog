@@ -57,6 +57,12 @@
 	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+	/* Scrollbar */
+	--scrollbar-width: 14px;
+	--scrollbar-track: 226 232 240; /* slate-200 */
+	--scrollbar-thumb: 148 163 184; /* slate-400 */
+	--scrollbar-thumb-hover: 100 116 139; /* slate-500 */
 }
 
 html.dark {
@@ -81,6 +87,11 @@ html.dark {
 	--sh-identifier: white;
 	--sh-keyword: #f47067;
 	--sh-string: #0fa295;
+
+	/* Scrollbar - Dark */
+	--scrollbar-track: 24 24 27; /* zinc-900 */
+	--scrollbar-thumb: 82 82 91; /* zinc-600 */
+	--scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
 }
 
 ::selection {
@@ -92,7 +103,6 @@ html {
 	min-width: 360px;
 	background-color: rgb(var(--color-bg-primary));
 	color: rgb(var(--color-text-primary));
-	scroll-behavior: smooth;
 	transition:
 		background-color var(--transition-base),
 		color var(--transition-base);
@@ -312,4 +322,69 @@ table {
 .prose h5,
 .prose h6 {
 	scroll-margin-top: 120px;
+}
+
+/* ============================================
+  Modern Scrollbar Styles - Minimal & Elegant
+============================================ */
+
+/* Webkit (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(148, 163, 184, 0.4);
+	border-radius: 100px;
+	transition: background-color 200ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(100, 116, 139, 0.7);
+}
+
+/* Dark mode scrollbar */
+html.dark ::-webkit-scrollbar-thumb {
+	background-color: rgba(113, 113, 122, 0.4);
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(161, 161, 170, 0.7);
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+html.dark * {
+	scrollbar-color: rgba(113, 113, 122, 0.4) transparent;
+}
+
+/* 코드 블록 스크롤바는 더 얇고 미니멀하게 */
+.prose pre::-webkit-scrollbar {
+	height: 6px;
+}
+
+.prose pre::-webkit-scrollbar-thumb {
+	background-color: rgba(148, 163, 184, 0.3);
+	border-radius: 100px;
+}
+
+.prose pre::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(100, 116, 139, 0.6);
+}
+
+html.dark .prose pre::-webkit-scrollbar-thumb {
+	background-color: rgba(113, 113, 122, 0.3);
+}
+
+html.dark .prose pre::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(161, 161, 170, 0.6);
 }

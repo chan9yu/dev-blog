@@ -1,15 +1,21 @@
+import { cookies } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
+import { CommentsSection, ReadingProgress } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
-import { MdxTable } from "@/shared/components/mdx/MdxTable";
-import { baseUrl } from "@/shared/constants";
+import { MdxPre } from "@/shared/components/mdx/MdxPre";
+import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
+import { baseUrl, utterancesRepo } from "@/shared/constants";
+import type { Theme } from "@/shared/utils";
 
 const components = {
 	h1: createHeading(1),
@@ -20,8 +26,14 @@ const components = {
 	h6: createHeading(6),
 	Image: MdxImage,
 	a: MdxLink,
+	pre: MdxPre,
 	code: MdxCode,
-	Table: MdxTable
+	table: MdxTable,
+	thead: MdxThead,
+	tbody: MdxTbody,
+	tr: MdxTr,
+	th: MdxTh,
+	td: MdxTd
 };
 
 export async function generateStaticParams() {
@@ -81,9 +93,15 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const currentSeries = allSeries.find((s) => s.name === post.series);
 	const seriesPosts = currentSeries?.posts || [];
 
+	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
+	const cookieStore = await cookies();
+	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+	const utterancesTheme = theme === "dark" ? "github-dark" : "github-light";
+
 	return (
-		<div className="relative grid grid-cols-1 xl:grid-cols-[1fr_256px] xl:gap-16">
-			<article className="pb-16">
+		<div className="relative flex xl:gap-16">
+			<ReadingProgress />
+			<article className="min-w-0 flex-1 pb-16">
 				<script
 					type="application/ld+json"
 					suppressHydrationWarning
@@ -188,15 +206,40 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					</div>
 				)}
 
+				{/* Thumbnail */}
+				{post.thumbnail && (
+					<div className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-2xl">
+						<Image
+							src={post.thumbnail}
+							alt={post.title}
+							fill
+							priority
+							className="object-cover"
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+						/>
+					</div>
+				)}
+
 				{/* Content */}
 				<div className="prose prose-lg">
-					<MDXRemote source={post.content} components={components} />
+					<MDXRemote
+						source={post.content}
+						components={components}
+						options={{
+							mdxOptions: {
+								remarkPlugins: [remarkGfm]
+							}
+						}}
+					/>
 				</div>
+
+				{/* Comments */}
+				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
 			</article>
 
 			{/* TOC - Desktop Only */}
 			{tocItems.length > 0 && (
-				<aside className="hidden xl:block">
+				<aside className="hidden w-3xs flex-none xl:block">
 					<div className="sticky top-24">
 						<TableOfContents items={tocItems} />
 					</div>

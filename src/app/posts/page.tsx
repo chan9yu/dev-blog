@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 					className="text-2xl font-bold tracking-tight sm:text-3xl"
 					style={{ color: "rgb(var(--color-text-primary))" }}
 				>
-					블로그
+					포스트
 				</h1>
 				<p className="text-sm leading-relaxed sm:text-base" style={{ color: "rgb(var(--color-text-secondary))" }}>
 					개발하면서 배운 것들을 기록합니다
@@ -29,14 +29,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 			</header>
 
 			{/* Content */}
-			<div className="grid gap-8 lg:grid-cols-[220px_1fr]">
+			<div className="flex gap-8">
 				{/* Sidebar - Tags */}
-				<aside className="lg:sticky lg:top-24 lg:h-fit">
+				<aside className="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[220px]">
 					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
 				</aside>
 
 				{/* Main - Posts */}
-				<main>
+				<main className="min-w-0 flex-1">
 					<Suspense
 						fallback={
 							<div className="flex items-center justify-center py-12">
