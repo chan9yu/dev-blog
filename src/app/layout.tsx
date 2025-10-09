@@ -97,8 +97,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 					}}
 				/>
 				<ScrollReset />
-				<div className="mx-auto max-w-6xl px-6 py-12 sm:px-8 lg:px-12">
-					<SiteNavbar />
+				<SiteNavbar />
+				<div className="mx-auto max-w-6xl px-6 pb-12 sm:px-8 lg:px-12">
 					<main className="mt-16">{children}</main>
 					<SiteFooter />
 				</div>

@@ -57,7 +57,7 @@ export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
 		<button
 			type="button"
 			onClick={handleToggle}
-			className="transition-opacity hover:opacity-70"
+			className="flex cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
 			aria-label={label}
 			title={label}
 		>

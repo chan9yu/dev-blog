@@ -50,7 +50,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 	}
 
 	return (
-		<div className="mx-auto max-w-4xl">
+		<div className="mx-auto">
 			{/* Header */}
 			<header className="mb-12 space-y-6">
 				<div className="space-y-4">

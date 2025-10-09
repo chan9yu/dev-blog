@@ -28,17 +28,17 @@ export async function SiteNavbar() {
 
 	return (
 		<header
-			className="sticky top-0 z-50 backdrop-blur-lg"
+			className="sticky top-0 z-50 mt-12 backdrop-blur-lg"
 			style={{ backgroundColor: "rgb(var(--color-bg-primary) / 0.8)" }}
 		>
-			<nav className="flex items-center justify-between py-6">
+			<nav className="mx-auto flex max-w-6xl items-center justify-between px-12 py-6">
 				<div className="flex items-center gap-1">
 					<Link
 						href="/"
 						className="text-xl font-bold tracking-tight transition-colors"
 						style={{ color: "rgb(var(--color-text-primary))" }}
 					>
-						Blog9yu
+						{"<chan9yu />"}
 					</Link>
 				</div>
 
@@ -48,7 +48,7 @@ export async function SiteNavbar() {
 							{name}
 						</NavLink>
 					))}
-					<div className="ml-2">
+					<div className="ml-2 flex items-center justify-center">
 						<ThemeSwitcher initialTheme={theme} />
 					</div>
 				</div>

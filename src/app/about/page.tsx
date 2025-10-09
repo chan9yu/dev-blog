@@ -21,7 +21,7 @@ export const metadata = {
 
 export default function AboutPage() {
 	return (
-		<div className="mx-auto max-w-4xl">
+		<div className="mx-auto">
 			<article className="prose prose-lg">
 				{/* Header */}
 				<header className="not-prose mb-12">

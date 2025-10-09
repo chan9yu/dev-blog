@@ -13,7 +13,7 @@ export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
 		const code = preRef.current.textContent || "";
 		await navigator.clipboard.writeText(code);
 		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
+		setTimeout(setCopied, 2000, false);
 	};
 
 	return (

@@ -17,24 +17,29 @@ export default function Page() {
 						>
 							안녕하세요 👋
 							<br />
-							<span style={{ color: "rgb(var(--color-accent))" }}>프론트엔드 개발자</span> 입니다
+							<span style={{ color: "rgb(var(--color-accent))" }}>프론트엔드 개발자</span> 여찬규입니다.
 						</h1>
 						<p
 							className="max-w-2xl text-base leading-relaxed sm:text-lg"
 							style={{ color: "rgb(var(--color-text-secondary))" }}
 						>
-							웹 기술과 사용자 경험에 관심이 많으며, 배운 것들을 기록하고 공유합니다.
+							사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 웹 프론트엔드 개발자입니다 디자인과
+							개발 사이에서 최적의 균형을 찾는 데 열정을 가지고 있습니다
+						</p>
+						<p
+							className="max-w-2xl text-base leading-relaxed sm:text-lg"
+							style={{ color: "rgb(var(--color-text-secondary))" }}
+						>
+							궁금하신 내용이 있으시면 편하게 연락주세요 🙂
 							<br className="hidden sm:block" />
-							<span className="hidden sm:inline">
-								React, TypeScript, Next.js를 주로 사용하며, 깨끗한 코드와 모던한 디자인을 추구합니다.
-							</span>
+							dev.cgyeo@gmail.com
 						</p>
 					</div>
 
 					{/* Quick Links */}
 					<div className="flex flex-wrap gap-3">
 						<a
-							href="https://github.com"
+							href="https://github.com/chan9yu"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all hover:shadow-md"
@@ -50,7 +55,7 @@ export default function Page() {
 							GitHub
 						</a>
 						<a
-							href="mailto:your@email.com"
+							href="mailto:dev.cgyeo@email.com"
 							className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all hover:shadow-md"
 							style={{
 								backgroundColor: "rgb(var(--color-bg-secondary))",
