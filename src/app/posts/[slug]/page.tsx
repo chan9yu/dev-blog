@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
@@ -11,7 +12,7 @@ import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxPre } from "@/shared/components/mdx/MdxPre";
-import { MdxTable } from "@/shared/components/mdx/MdxTable";
+import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
 import { baseUrl, utterancesRepo } from "@/shared/constants";
 import type { Theme } from "@/shared/utils";
 
@@ -26,7 +27,12 @@ const components = {
 	a: MdxLink,
 	pre: MdxPre,
 	code: MdxCode,
-	Table: MdxTable
+	table: MdxTable,
+	thead: MdxThead,
+	tbody: MdxTbody,
+	tr: MdxTr,
+	th: MdxTh,
+	td: MdxTd
 };
 
 export async function generateStaticParams() {
@@ -200,7 +206,15 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 				{/* Content */}
 				<div className="prose prose-lg">
-					<MDXRemote source={post.content} components={components} />
+					<MDXRemote
+						source={post.content}
+						components={components}
+						options={{
+							mdxOptions: {
+								remarkPlugins: [remarkGfm]
+							}
+						}}
+					/>
 				</div>
 
 				{/* Comments */}
