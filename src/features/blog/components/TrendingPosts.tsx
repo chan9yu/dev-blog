@@ -19,9 +19,7 @@ export async function TrendingPosts() {
 	if (trendingPosts.length === 0) {
 		return (
 			<div className="py-4 text-center">
-				<p className="text-sm" style={{ color: "rgb(var(--color-text-tertiary))" }}>
-					아직 포스트가 없습니다
-				</p>
+				<p className="text-tertiary text-sm">아직 포스트가 없습니다</p>
 			</div>
 		);
 	}
@@ -34,16 +32,12 @@ export async function TrendingPosts() {
 					href={`/posts/${post.url_slug}`}
 					className="group block space-y-1 transition-transform hover:translate-x-1"
 				>
-					<h3
-						className="line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]"
-						style={{ color: "rgb(var(--color-text-primary))" }}
-					>
+					<h3 className="text-primary line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">
 						{post.title}
 					</h3>
 					<time
-						className="block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
+						className="text-muted block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
 						dateTime={post.released_at}
-						style={{ color: "rgb(var(--color-text-muted))" }}
 					>
 						{formatDate(post.released_at, false)}
 					</time>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { cn } from "@/shared/utils";
+
 type NavLinkProps = {
 	href: string;
 	children: React.ReactNode;
@@ -15,12 +17,11 @@ export function NavLink({ href, children }: NavLinkProps) {
 	return (
 		<Link
 			href={href}
-			className={`rounded-lg px-4 py-2 text-sm font-medium transition-all hover:bg-[rgb(var(--color-bg-secondary))] ${
-				isActive ? "bg-[rgb(var(--color-bg-secondary))]" : ""
-			}`}
-			style={{
-				color: isActive ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
-			}}
+			className={cn(
+				"rounded-lg px-4 py-2 text-sm font-medium transition-all",
+				"hover:bg-secondary",
+				isActive ? "bg-secondary text-accent" : "text-secondary"
+			)}
 		>
 			{children}
 		</Link>

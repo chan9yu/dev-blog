@@ -59,16 +59,8 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 		<div className="mx-auto">
 			<header className="mb-12 space-y-6">
 				<div className="space-y-4">
-					<h1
-						className="title text-4xl font-bold tracking-tight sm:text-5xl"
-						style={{ color: "rgb(var(--color-text-primary))" }}
-					>
-						{series.name}
-					</h1>
-					<div
-						className="flex flex-wrap items-center gap-4 text-sm"
-						style={{ color: "rgb(var(--color-text-tertiary))" }}
-					>
+					<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{series.name}</h1>
+					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
 						<div className="flex items-center gap-2">
 							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -93,7 +85,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 						</div>
 					</div>
 				</div>
-				<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
+				<hr className="border-primary" />
 			</header>
 
 			<div className="space-y-4">
@@ -101,50 +93,22 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 					<Link
 						key={post.url_slug}
 						href={`/posts/${post.url_slug}`}
-						className="group block rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-						style={{
-							backgroundColor: "rgb(var(--color-bg-elevated))",
-							borderColor: "rgb(var(--color-border-primary))",
-							boxShadow: "var(--shadow-sm)"
-						}}
+						className="bg-elevated border-primary group block rounded-xl border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 					>
 						<div className="flex items-start gap-4">
-							<div
-								className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg font-bold"
-								style={{
-									backgroundColor: "rgb(var(--color-accent))",
-									color: "rgb(var(--color-bg-primary))"
-								}}
-							>
+							<div className="bg-accent flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg font-bold text-white">
 								{post.index}
 							</div>
 
 							<div className="flex-1 space-y-2">
-								<h2
-									className="text-xl font-bold transition-colors group-hover:text-[rgb(var(--color-accent))]"
-									style={{ color: "rgb(var(--color-text-primary))" }}
-								>
-									{post.title}
-								</h2>
-								<p
-									className="line-clamp-2 text-sm leading-relaxed"
-									style={{ color: "rgb(var(--color-text-secondary))" }}
-								>
-									{post.short_description}
-								</p>
-								<div className="flex items-center gap-4 text-xs" style={{ color: "rgb(var(--color-text-muted))" }}>
+								<h2 className="text-primary group-hover-accent text-xl font-bold transition-colors">{post.title}</h2>
+								<p className="text-secondary line-clamp-2 text-sm leading-relaxed">{post.short_description}</p>
+								<div className="text-muted flex items-center gap-4 text-xs">
 									<time dateTime={post.released_at}>{formatDate(post.released_at, false)}</time>
 									{post.tags && post.tags.length > 0 && (
 										<div className="flex flex-wrap gap-2">
 											{post.tags.slice(0, 3).map((tag) => (
-												<span
-													key={tag}
-													className="rounded px-2 py-0.5"
-													style={{
-														backgroundColor: "rgb(var(--color-bg-tertiary))",
-														color: "rgb(var(--color-text-tertiary))"
-													}}
-												>
+												<span key={tag} className="bg-tertiary text-tertiary rounded px-2 py-0.5">
 													{tag}
 												</span>
 											))}

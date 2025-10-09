@@ -177,22 +177,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				{/* Header */}
 				<header className="mb-12 space-y-6">
 					<div className="space-y-4">
-						<h1
-							className="title text-4xl font-bold tracking-tight sm:text-5xl"
-							style={{ color: "rgb(var(--color-text-primary))" }}
-						>
-							{post.title}
-						</h1>
-						<p className="text-lg leading-relaxed" style={{ color: "rgb(var(--color-text-secondary))" }}>
-							{post.short_description}
-						</p>
+						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{post.title}</h1>
+						<p className="text-secondary text-lg leading-relaxed">{post.short_description}</p>
 					</div>
 
 					{/* Meta Info */}
-					<div
-						className="flex flex-wrap items-center gap-4 text-sm"
-						style={{ color: "rgb(var(--color-text-tertiary))" }}
-					>
+					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
 						<time dateTime={post.released_at} className="flex items-center gap-2">
 							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -226,12 +216,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 								<Link
 									key={tag}
 									href={`/tags/${encodeURIComponent(tag)}`}
-									className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
-									style={{
-										backgroundColor: "rgb(var(--color-bg-secondary))",
-										color: "rgb(var(--color-text-secondary))",
-										border: "1px solid rgb(var(--color-border-primary))"
-									}}
+									className="bg-secondary text-secondary border-primary inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
 								>
 									<svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path
@@ -247,7 +232,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						</div>
 					)}
 
-					<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
+					<hr className="border-primary" />
 				</header>
 
 				{/* Series Navigation */}

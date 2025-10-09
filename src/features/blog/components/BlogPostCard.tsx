@@ -16,18 +16,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 	return (
 		<Link
 			href={`/posts/${post.url_slug}`}
-			className="group block overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1"
-			style={{
-				backgroundColor: "rgb(var(--color-bg-elevated))",
-				borderColor: "rgb(var(--color-border-primary))",
-				boxShadow: "var(--shadow-sm)"
-			}}
-			onMouseEnter={(e) => {
-				e.currentTarget.style.boxShadow = "var(--shadow-lg)";
-			}}
-			onMouseLeave={(e) => {
-				e.currentTarget.style.boxShadow = "var(--shadow-sm)";
-			}}
+			className="bg-elevated border-primary group block overflow-hidden rounded-xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 		>
 			{/* Thumbnail */}
 			{post.thumbnail && (
@@ -42,30 +31,22 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 				</div>
 			)}
 
-			<div
-				style={{
-					padding: "clamp(1.25rem, 2.5vw, 1.75rem)"
-				}}
-			>
+			<div style={{ padding: "clamp(1.25rem, 2.5vw, 1.75rem)" }}>
 				{/* Header: Title + Date */}
 				<div className="mb-3 flex items-start justify-between gap-4">
 					<h3
-						className="flex-1 font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]"
+						className="text-primary flex-1 font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]"
 						style={{
 							fontSize: "var(--font-xl)",
-							lineHeight: "var(--leading-snug)",
-							color: "rgb(var(--color-text-primary))"
+							lineHeight: "var(--leading-snug)"
 						}}
 					>
 						{post.title}
 					</h3>
 					<time
-						className="shrink-0 tabular-nums"
+						className="text-muted shrink-0 tabular-nums"
 						dateTime={post.released_at}
-						style={{
-							fontSize: "var(--font-sm)",
-							color: "rgb(var(--color-text-muted))"
-						}}
+						style={{ fontSize: "var(--font-sm)" }}
 					>
 						{formatDate(post.released_at, false)}
 					</time>
@@ -73,11 +54,10 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 
 				{/* Description */}
 				<p
-					className="mb-4 line-clamp-2"
+					className="text-secondary mb-4 line-clamp-2"
 					style={{
 						fontSize: "var(--font-base)",
-						lineHeight: "var(--leading-relaxed)",
-						color: "rgb(var(--color-text-secondary))"
+						lineHeight: "var(--leading-relaxed)"
 					}}
 				>
 					{post.short_description}
@@ -89,14 +69,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 					{post.tags && post.tags.length > 0 && (
 						<div className="flex flex-1 flex-wrap items-center gap-2">
 							{post.tags.map((tag) => (
-								<span
-									key={tag}
-									className="rounded px-2 py-0.5 text-xs font-medium"
-									style={{
-										backgroundColor: "rgb(var(--color-bg-tertiary))",
-										color: "rgb(var(--color-text-tertiary))"
-									}}
-								>
+								<span key={tag} className="bg-tertiary text-tertiary rounded px-2 py-0.5 text-xs font-medium">
 									{tag}
 								</span>
 							))}
@@ -104,13 +77,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 					)}
 
 					{/* Reading Time */}
-					<div
-						className="flex shrink-0 items-center gap-1.5"
-						style={{
-							fontSize: "var(--font-sm)",
-							color: "rgb(var(--color-text-muted))"
-						}}
-					>
+					<div className="text-muted flex shrink-0 items-center gap-1.5" style={{ fontSize: "var(--font-sm)" }}>
 						<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								strokeLinecap="round"

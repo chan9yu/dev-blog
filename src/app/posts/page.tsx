@@ -26,15 +26,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 	return (
 		<div className="space-y-8">
 			<header className="space-y-3">
-				<h1
-					className="text-2xl font-bold tracking-tight sm:text-3xl"
-					style={{ color: "rgb(var(--color-text-primary))" }}
-				>
-					포스트
-				</h1>
-				<p className="text-sm leading-relaxed sm:text-base" style={{ color: "rgb(var(--color-text-secondary))" }}>
-					개발하면서 배운 것들을 기록합니다
-				</p>
+				<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">포스트</h1>
+				<p className="text-secondary text-sm leading-relaxed sm:text-base">개발하면서 배운 것들을 기록합니다</p>
 			</header>
 
 			<div className="flex gap-8">

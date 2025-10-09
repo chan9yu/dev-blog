@@ -89,3 +89,67 @@ html.dark {
 	--scrollbar-thumb: 82 82 91; /* zinc-600 */
 	--scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
 }
+
+/* ============================================
+  Custom Utility Classes
+============================================ */
+
+@layer utilities {
+	/* Text Colors */
+	.text-primary {
+		color: rgb(var(--color-text-primary));
+	}
+	.text-secondary {
+		color: rgb(var(--color-text-secondary));
+	}
+	.text-tertiary {
+		color: rgb(var(--color-text-tertiary));
+	}
+	.text-muted {
+		color: rgb(var(--color-text-tertiary));
+	}
+	.text-accent {
+		color: rgb(var(--color-accent));
+	}
+
+	/* Background Colors */
+	.bg-primary {
+		background-color: rgb(var(--color-bg-primary));
+	}
+	.bg-secondary {
+		background-color: rgb(var(--color-bg-secondary));
+	}
+	.bg-tertiary {
+		background-color: rgb(var(--color-bg-tertiary));
+	}
+	.bg-elevated {
+		background-color: rgb(var(--color-bg-secondary));
+	}
+	.bg-hover:hover {
+		background-color: rgb(var(--color-bg-hover));
+	}
+	.bg-accent {
+		background-color: rgb(var(--color-accent));
+	}
+
+	/* Border Colors */
+	.border-primary {
+		border-color: rgb(var(--color-border-primary));
+	}
+	.border-secondary {
+		border-color: rgb(var(--color-border-secondary));
+	}
+
+	/* Hover Effects */
+	.hover-accent:hover {
+		color: rgb(var(--color-accent));
+	}
+	.hover-bg-accent:hover {
+		background-color: rgb(var(--color-accent-hover));
+	}
+
+	/* Group Hover */
+	.group:hover .group-hover-accent {
+		color: rgb(var(--color-accent));
+	}
+}

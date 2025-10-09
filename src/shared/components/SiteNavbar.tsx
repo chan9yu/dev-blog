@@ -27,17 +27,10 @@ export async function SiteNavbar() {
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
 
 	return (
-		<header
-			className="sticky top-0 z-50 mt-12 backdrop-blur-lg"
-			style={{ backgroundColor: "rgb(var(--color-bg-primary) / 0.8)" }}
-		>
+		<header className="bg-primary/80 sticky top-0 z-50 mt-12 backdrop-blur-lg">
 			<nav className="mx-auto flex max-w-6xl items-center justify-between px-12 py-6">
 				<div className="flex items-center gap-1">
-					<Link
-						href="/"
-						className="text-xl font-bold tracking-tight transition-colors"
-						style={{ color: "rgb(var(--color-text-primary))" }}
-					>
+					<Link href="/" className="text-primary text-xl font-bold tracking-tight transition-colors">
 						{"<chan9yu />"}
 					</Link>
 				</div>

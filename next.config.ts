@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "avatars.githubusercontent.com",
 				pathname: "/u/**"
+			},
+			// 임시 설정
+			{
+				protocol: "https",
+				hostname: "velog.velcdn.com",
+				pathname: "/images/chan9yu/post/**"
 			}
 		]
 	}

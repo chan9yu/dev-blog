@@ -24,22 +24,12 @@ export default async function SeriesPage() {
 	return (
 		<div className="space-y-8">
 			<header className="space-y-3">
-				<h1
-					className="text-2xl font-bold tracking-tight sm:text-3xl"
-					style={{ color: "rgb(var(--color-text-primary))" }}
-				>
-					시리즈
-				</h1>
-				<p className="text-sm leading-relaxed sm:text-base" style={{ color: "rgb(var(--color-text-secondary))" }}>
-					연재 중인 시리즈별로 포스트를 모아보세요
-				</p>
+				<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">시리즈</h1>
+				<p className="text-secondary text-sm leading-relaxed sm:text-base">연재 중인 시리즈별로 포스트를 모아보세요</p>
 			</header>
 
 			{series.length === 0 ? (
-				<div
-					className="flex flex-col items-center justify-center py-16 text-center"
-					style={{ color: "rgb(var(--color-text-tertiary))" }}
-				>
+				<div className="text-tertiary flex flex-col items-center justify-center py-16 text-center">
 					<svg className="mb-4 h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							strokeLinecap="round"
@@ -56,24 +46,11 @@ export default async function SeriesPage() {
 						<Link
 							key={s.url_slug}
 							href={`/series/${s.url_slug}`}
-							className="group rounded-xl border p-6 transition-all hover:shadow-md"
-							style={{
-								backgroundColor: "rgb(var(--color-bg-primary))",
-								borderColor: "rgb(var(--color-border-primary))"
-							}}
+							className="bg-primary border-primary group rounded-xl border p-6 transition-all hover:shadow-md"
 						>
 							<div className="space-y-4">
-								<div
-									className="flex h-12 w-12 items-center justify-center rounded-lg"
-									style={{ backgroundColor: "rgb(var(--color-bg-secondary))" }}
-								>
-									<svg
-										className="h-6 w-6"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-										style={{ color: "rgb(var(--color-accent))" }}
-									>
+								<div className="bg-secondary flex h-12 w-12 items-center justify-center rounded-lg">
+									<svg className="text-accent h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path
 											strokeLinecap="round"
 											strokeLinejoin="round"
@@ -84,42 +61,22 @@ export default async function SeriesPage() {
 								</div>
 
 								<div className="space-y-2">
-									<h2
-										className="text-lg font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]"
-										style={{ color: "rgb(var(--color-text-primary))" }}
-									>
+									<h2 className="text-primary group-hover-accent text-lg font-bold tracking-tight transition-colors">
 										{s.name}
 									</h2>
-									<p className="text-sm" style={{ color: "rgb(var(--color-text-tertiary))" }}>
-										총 {s.posts.length}개의 포스트
-									</p>
+									<p className="text-tertiary text-sm">총 {s.posts.length}개의 포스트</p>
 								</div>
 
 								<div className="space-y-1.5 pt-2">
 									{s.posts.slice(0, 3).map((post, idx) => (
 										<div key={post.url_slug} className="flex items-start gap-2 text-sm">
-											<span
-												className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs font-medium"
-												style={{
-													backgroundColor: "rgb(var(--color-bg-tertiary))",
-													color: "rgb(var(--color-text-tertiary))"
-												}}
-											>
+											<span className="bg-tertiary text-tertiary mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs font-medium">
 												{idx + 1}
 											</span>
-											<span
-												className="line-clamp-1 leading-relaxed"
-												style={{ color: "rgb(var(--color-text-secondary))" }}
-											>
-												{post.title}
-											</span>
+											<span className="text-secondary line-clamp-1 leading-relaxed">{post.title}</span>
 										</div>
 									))}
-									{s.posts.length > 3 && (
-										<p className="pl-7 text-xs" style={{ color: "rgb(var(--color-text-tertiary))" }}>
-											+{s.posts.length - 3}개 더보기
-										</p>
-									)}
+									{s.posts.length > 3 && <p className="text-tertiary pl-7 text-xs">+{s.posts.length - 3}개 더보기</p>}
 								</div>
 							</div>
 						</Link>

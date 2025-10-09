@@ -3,6 +3,8 @@
 import type { HTMLAttributes } from "react";
 import { useRef, useState } from "react";
 
+import { cn } from "@/shared/utils";
+
 export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
 	const preRef = useRef<HTMLPreElement>(null);
 	const [copied, setCopied] = useState(false);
@@ -18,26 +20,16 @@ export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
 
 	return (
 		<div className="relative my-6">
-			<pre
-				ref={preRef}
-				{...props}
-				className="overflow-x-auto rounded-lg border p-4"
-				style={{
-					backgroundColor: "rgb(var(--color-bg-secondary))",
-					borderColor: "rgb(var(--color-border-primary))"
-				}}
-			>
+			<pre ref={preRef} {...props} className="bg-secondary border-primary overflow-x-auto rounded-lg border p-4">
 				{children}
 			</pre>
 			<button
 				onClick={handleCopy}
-				className="absolute top-2 right-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:scale-105"
-				style={{
-					backgroundColor: copied ? "rgb(120, 146, 130)" : "rgb(var(--color-bg-secondary))",
-					color: copied ? "white" : "rgb(var(--color-text-secondary))",
-					border: copied ? "none" : "1px solid rgb(var(--color-border-primary))",
-					boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
-				}}
+				className={cn(
+					"absolute top-2 right-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:scale-105",
+					copied ? "border-0 bg-[rgb(120,146,130)] text-white" : "bg-secondary text-secondary border-primary border"
+				)}
+				style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
 				aria-label="Copy code to clipboard"
 			>
 				{copied ? (

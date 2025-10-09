@@ -22,10 +22,9 @@ export function ReadingProgress() {
 
 	return (
 		<div
-			className="fixed top-0 left-0 z-50 h-1 transition-all duration-150"
+			className="bg-accent fixed top-0 left-0 z-50 h-1 transition-all duration-150"
 			style={{
 				width: `${progress}vw`,
-				backgroundColor: "rgb(var(--color-accent))",
 				boxShadow: progress > 0 ? "0 0 10px rgba(var(--color-accent), 0.5)" : "none"
 			}}
 		/>
