@@ -1,9 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getAllTags, getPostsByTag } from "@/features/blog";
 import { BlogPostCard } from "@/features/blog/components/BlogPostCard";
-import { baseUrl } from "@/shared/constants";
+import { SITE } from "@/shared/config";
 
 export async function generateStaticParams() {
 	const allTags = await getAllTags();
@@ -13,29 +14,34 @@ export async function generateStaticParams() {
 	}));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }) {
+export async function generateMetadata({
+	params
+}: {
+	params: Promise<{ tag: string }>;
+}): Promise<Metadata | undefined> {
 	const { tag } = await params;
 	const posts = await getPostsByTag(tag);
 
-	if (posts.length === 0) {
-		return;
-	}
+	if (posts.length === 0) return;
 
-	const description = `${tag} 태그 관련 글 - 총 ${posts.length}개`;
+	const description = `${tag} 태그가 포함된 포스트 ${posts.length}개를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`;
 
 	return {
 		title: `#${tag}`,
 		description,
 		openGraph: {
-			title: `#${tag}`,
+			title: `#${tag} · chan9yu`,
 			description,
 			type: "website",
-			url: `${baseUrl}/tags/${encodeURIComponent(tag)}`
+			url: `${SITE.url}/tags/${encodeURIComponent(tag)}`
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: `#${tag}`,
+			title: `#${tag} · chan9yu`,
 			description
+		},
+		alternates: {
+			canonical: `${SITE.url}/tags/${encodeURIComponent(tag)}`
 		}
 	};
 }

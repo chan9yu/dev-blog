@@ -1,10 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getTagCounts } from "@/features/tags";
+import { SITE } from "@/shared/config";
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "태그",
-	description: "모든 태그 목록"
+	description:
+		"주제별 태그로 정리된 포스트를 탐색하세요. React, TypeScript, Next.js 등 다양한 기술 주제를 확인할 수 있습니다.",
+	openGraph: {
+		title: "태그 · chan9yu",
+		description: "주제별 태그로 정리된 포스트 모음",
+		type: "website",
+		url: `${SITE.url}/tags`
+	},
+	alternates: {
+		canonical: `${SITE.url}/tags`
+	}
 };
 
 export default async function TagsPage() {

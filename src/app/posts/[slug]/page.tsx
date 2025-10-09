@@ -15,7 +15,8 @@ import { MdxImage } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
-import { baseUrl, utterancesRepo } from "@/shared/constants";
+import { SITE } from "@/shared/config";
+import { utterancesRepo } from "@/shared/constants";
 import type { Theme } from "@/shared/utils";
 
 const components = {
@@ -55,10 +56,7 @@ export async function generateMetadata({
 	const post = await getPostDetail(slug);
 	if (!post) return;
 
-	const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog9yu.dev";
 	const IS_PROD = process.env.VERCEL_ENV === "production";
-	const SITE_NAME = "blog9yu.dev";
-	const LOCALE = "ko_KR";
 
 	const {
 		title,
@@ -71,8 +69,8 @@ export async function generateMetadata({
 		is_private
 	} = post;
 
-	const canonical = `${BASE_URL}/posts/${url_slug}`;
-	const ogImage = thumbnail || `${BASE_URL}/og?title=${encodeURIComponent(title)}`;
+	const canonical = `${SITE.url}/posts/${url_slug}`;
+	const ogImage = thumbnail || `${SITE.url}/og?title=${encodeURIComponent(title)}`;
 
 	const allowIndex =
 		IS_PROD &&
@@ -92,18 +90,20 @@ export async function generateMetadata({
 			description,
 			type: "article",
 			url: canonical,
-			siteName: SITE_NAME,
-			locale: LOCALE,
+			siteName: SITE.name,
+			locale: SITE.locale,
 			publishedTime,
 			modifiedTime,
 			tags,
-			images: [{ url: ogImage, width: 1200, height: 630, alt: title }]
+			images: [{ url: ogImage, width: 1200, height: 630, alt: title, type: "image/png" }],
+			authors: [SITE.author.name]
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
-			images: [ogImage]
+			images: [ogImage],
+			creator: SITE.social.twitter ?? undefined
 		},
 		robots: {
 			index: allowIndex,
@@ -115,7 +115,8 @@ export async function generateMetadata({
 				"max-video-preview": -1,
 				"max-snippet": -1
 			}
-		}
+		},
+		authors: [{ name: SITE.author.name, url: SITE.author.url }]
 	};
 }
 
@@ -154,12 +155,21 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 							datePublished: post.released_at,
 							dateModified: post.updated_at,
 							description: post.short_description,
-							image: post.thumbnail ? `${baseUrl}${post.thumbnail}` : `/og?title=${encodeURIComponent(post.title)}`,
-							url: `${baseUrl}/posts/${post.url_slug}`,
+							image: post.thumbnail
+								? `${SITE.url}${post.thumbnail}`
+								: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
+							url: `${SITE.url}/posts/${post.url_slug}`,
 							author: {
 								"@type": "Person",
-								name: "My Portfolio"
-							}
+								name: SITE.author.name,
+								url: SITE.author.url
+							},
+							publisher: {
+								"@type": "Person",
+								name: SITE.author.name
+							},
+							keywords: post.tags,
+							inLanguage: SITE.language
 						})
 					}}
 				/>

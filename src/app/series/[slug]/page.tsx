@@ -1,9 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { formatDate } from "@/features/blog";
 import { getAllSeries, getSeriesDetail } from "@/features/series";
-import { baseUrl } from "@/shared/constants";
+import { SITE } from "@/shared/config";
 
 export async function generateStaticParams() {
 	const allSeries = await getAllSeries();
@@ -13,30 +14,35 @@ export async function generateStaticParams() {
 	}));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+	params
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata | undefined> {
 	const { slug } = await params;
 	const series = await getSeriesDetail(slug);
 
-	if (!series) {
-		return;
-	}
+	if (!series) return;
 
 	const { name, posts } = series;
-	const description = `${name} 시리즈 - 총 ${posts.length}개의 글`;
+	const description = `${name} 시리즈 - 총 ${posts.length}개의 연재 글로 구성되어 있습니다`;
 
 	return {
 		title: name,
 		description,
 		openGraph: {
-			title: name,
+			title: `${name} · chan9yu`,
 			description,
 			type: "website",
-			url: `${baseUrl}/series/${slug}`
+			url: `${SITE.url}/series/${slug}`
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: name,
+			title: `${name} · chan9yu`,
 			description
+		},
+		alternates: {
+			canonical: `${SITE.url}/series/${slug}`
 		}
 	};
 }
@@ -51,7 +57,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 
 	return (
 		<div className="mx-auto">
-			{/* Header */}
 			<header className="mb-12 space-y-6">
 				<div className="space-y-4">
 					<h1
@@ -91,7 +96,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 				<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
 			</header>
 
-			{/* Posts List */}
 			<div className="space-y-4">
 				{series.posts.map((post) => (
 					<Link
@@ -105,7 +109,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 						}}
 					>
 						<div className="flex items-start gap-4">
-							{/* Index Badge */}
 							<div
 								className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg font-bold"
 								style={{
@@ -116,7 +119,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 								{post.index}
 							</div>
 
-							{/* Content */}
 							<div className="flex-1 space-y-2">
 								<h2
 									className="text-xl font-bold transition-colors group-hover:text-[rgb(var(--color-accent))]"

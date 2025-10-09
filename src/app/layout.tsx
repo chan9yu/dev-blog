@@ -18,17 +18,30 @@ export const metadata: Metadata = {
 	applicationName: SITE.name,
 	title: {
 		default: SITE.title,
-		template: `%s · ${SITE.authorName}`
+		template: SITE.titleTemplate
 	},
 	description: SITE.description,
-	keywords: ["프론트엔드", "Frontend", "React", "Next.js", "TypeScript", "UI/UX", "개발 블로그", "chan9yu"],
-	authors: [{ name: SITE.authorName, url: SITE.url }],
-	creator: SITE.authorName,
-	publisher: SITE.authorName,
+	keywords: [...SITE.keywords],
+	authors: [
+		{
+			name: SITE.author.name,
+			url: SITE.author.url
+		}
+	],
+	creator: SITE.author.nickname,
+	publisher: SITE.author.nickname,
+	formatDetection: {
+		telephone: false,
+		email: false,
+		address: false
+	},
 	alternates: {
 		canonical: SITE.url,
 		languages: {
 			"ko-KR": SITE.url
+		},
+		types: {
+			"application/rss+xml": `${SITE.url}/rss`
 		}
 	},
 	openGraph: {
@@ -43,7 +56,8 @@ export const metadata: Metadata = {
 				url: SITE.defaultOG,
 				width: 1200,
 				height: 630,
-				alt: SITE.title
+				alt: `${SITE.title} - ${SITE.shortDescription}`,
+				type: "image/png"
 			}
 		]
 	},
@@ -51,7 +65,8 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: SITE.title,
 		description: SITE.description,
-		images: [SITE.defaultOG]
+		images: [SITE.defaultOG],
+		creator: SITE.social.twitter ?? undefined
 	},
 	robots: {
 		index: process.env.VERCEL_ENV === "production",
@@ -64,6 +79,14 @@ export const metadata: Metadata = {
 			"max-snippet": -1
 		}
 	},
+	verification: {
+		google: SITE.verification.google ?? undefined,
+		...(SITE.verification.naver && {
+			other: {
+				"naver-site-verification": SITE.verification.naver
+			}
+		})
+	},
 	icons: {
 		icon: [
 			{ url: "/favicons/favicon.ico", sizes: "any" },
@@ -73,7 +96,8 @@ export const metadata: Metadata = {
 		apple: [{ url: "/favicons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
 		other: [{ rel: "mask-icon", url: "/favicons/favicon.ico" }]
 	},
-	category: "technology"
+	category: "technology",
+	classification: "Technology Blog"
 };
 
 type RootLayoutProps = {
@@ -98,6 +122,38 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
 	return (
 		<html lang="ko" className={htmlClassName}>
+			<head>
+				{/* JSON-LD Structured Data */}
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify({
+							"@context": "https://schema.org",
+							"@type": "WebSite",
+							name: SITE.title,
+							description: SITE.description,
+							url: SITE.url,
+							author: {
+								"@type": "Person",
+								name: SITE.author.name,
+								url: SITE.author.url,
+								jobTitle: "Frontend Developer",
+								knowsAbout: ["React", "TypeScript", "Next.js", "Web Development"]
+							},
+							publisher: {
+								"@type": "Person",
+								name: SITE.author.name
+							},
+							inLanguage: "ko-KR",
+							potentialAction: {
+								"@type": "SearchAction",
+								target: `${SITE.url}/search?q={search_term_string}`,
+								"query-input": "required name=search_term_string"
+							}
+						})
+					}}
+				/>
+			</head>
 			<body className="font-sans antialiased">
 				<Script
 					id="theme-init"

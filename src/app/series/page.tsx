@@ -1,10 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getAllSeries } from "@/features/series";
+import { SITE } from "@/shared/config";
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "시리즈",
-	description: "연재 중인 시리즈별 포스트 모음"
+	description: "연재 중인 시리즈별로 포스트를 모아보세요. 체계적으로 구성된 학습 콘텐츠를 확인할 수 있습니다.",
+	openGraph: {
+		title: "시리즈 · chan9yu",
+		description: "연재 중인 시리즈별 포스트 모음",
+		type: "website",
+		url: `${SITE.url}/series`
+	},
+	alternates: {
+		canonical: `${SITE.url}/series`
+	}
 };
 
 export default async function SeriesPage() {
@@ -12,7 +23,6 @@ export default async function SeriesPage() {
 
 	return (
 		<div className="space-y-8">
-			{/* Header */}
 			<header className="space-y-3">
 				<h1
 					className="text-2xl font-bold tracking-tight sm:text-3xl"
@@ -25,7 +35,6 @@ export default async function SeriesPage() {
 				</p>
 			</header>
 
-			{/* Series Grid */}
 			{series.length === 0 ? (
 				<div
 					className="flex flex-col items-center justify-center py-16 text-center"
@@ -54,7 +63,6 @@ export default async function SeriesPage() {
 							}}
 						>
 							<div className="space-y-4">
-								{/* Series Icon */}
 								<div
 									className="flex h-12 w-12 items-center justify-center rounded-lg"
 									style={{ backgroundColor: "rgb(var(--color-bg-secondary))" }}
@@ -75,7 +83,6 @@ export default async function SeriesPage() {
 									</svg>
 								</div>
 
-								{/* Series Info */}
 								<div className="space-y-2">
 									<h2
 										className="text-lg font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]"
@@ -88,7 +95,6 @@ export default async function SeriesPage() {
 									</p>
 								</div>
 
-								{/* Post Preview */}
 								<div className="space-y-1.5 pt-2">
 									{s.posts.slice(0, 3).map((post, idx) => (
 										<div key={post.url_slug} className="flex items-start gap-2 text-sm">

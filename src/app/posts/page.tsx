@@ -3,10 +3,20 @@ import { Suspense } from "react";
 
 import { FilteredBlogPosts, getAllPosts } from "@/features/blog";
 import { getTagCounts, TagList } from "@/features/tags";
+import { SITE } from "@/shared/config";
 
 export const metadata: Metadata = {
-	title: "블로그",
-	description: "개발 관련 글을 작성합니다."
+	title: "포스트",
+	description: "프론트엔드 개발 경험과 학습 내용을 기록합니다. React, TypeScript, Next.js 등 다양한 주제를 다룹니다.",
+	openGraph: {
+		title: "포스트 · chan9yu",
+		description: "프론트엔드 개발 경험과 학습 내용을 기록합니다",
+		type: "website",
+		url: `${SITE.url}/posts`
+	},
+	alternates: {
+		canonical: `${SITE.url}/posts`
+	}
 };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
@@ -15,7 +25,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 
 	return (
 		<div className="space-y-8">
-			{/* Header */}
 			<header className="space-y-3">
 				<h1
 					className="text-2xl font-bold tracking-tight sm:text-3xl"
@@ -28,14 +37,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 				</p>
 			</header>
 
-			{/* Content */}
 			<div className="flex gap-8">
-				{/* Sidebar - Tags */}
 				<aside className="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[220px]">
 					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
 				</aside>
 
-				{/* Main - Posts */}
 				<main className="min-w-0 flex-1">
 					<Suspense
 						fallback={
