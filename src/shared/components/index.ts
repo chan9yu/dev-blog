@@ -1,6 +1,7 @@
 export { Comments } from "./Comments";
 export { CommentsSection } from "./CommentsSection";
 export { NavLink } from "./NavLink";
+export { ReadingProgress } from "./ReadingProgress";
 export { ScrollReset } from "./ScrollReset";
 export { ScrollToTop } from "./ScrollToTop";
 export { SiteFooter } from "./SiteFooter";

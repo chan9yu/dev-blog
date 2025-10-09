@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -6,7 +7,7 @@ import remarkGfm from "remark-gfm";
 
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
-import { CommentsSection } from "@/shared/components";
+import { CommentsSection, ReadingProgress } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
@@ -99,6 +100,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 	return (
 		<div className="relative flex xl:gap-16">
+			<ReadingProgress />
 			<article className="min-w-0 flex-1 pb-16">
 				<script
 					type="application/ld+json"
@@ -201,6 +203,20 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				{post.series && post.index !== undefined && seriesPosts.length > 0 && (
 					<div className="mb-8">
 						<SeriesNavigation seriesName={post.series} currentIndex={post.index} allPosts={seriesPosts} />
+					</div>
+				)}
+
+				{/* Thumbnail */}
+				{post.thumbnail && (
+					<div className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-2xl">
+						<Image
+							src={post.thumbnail}
+							alt={post.title}
+							fill
+							priority
+							className="object-cover"
+							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+						/>
 					</div>
 				)}
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import type { PostSummary } from "../types";
@@ -28,6 +29,19 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 				e.currentTarget.style.boxShadow = "var(--shadow-sm)";
 			}}
 		>
+			{/* Thumbnail */}
+			{post.thumbnail && (
+				<div className="relative aspect-[2/1] w-full overflow-hidden">
+					<Image
+						src={post.thumbnail}
+						alt={post.title}
+						fill
+						className="object-cover transition-transform duration-500 group-hover:scale-105"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+					/>
+				</div>
+			)}
+
 			<div
 				style={{
 					padding: "clamp(1.25rem, 2.5vw, 1.75rem)"
