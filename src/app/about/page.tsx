@@ -1,0 +1,159 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import profileImage from "@/assets/profile.webp";
+import { baseUrl } from "@/shared/constants";
+
+export const metadata = {
+	title: "About",
+	description: "프론트엔드 개발자 찬규의 기술 블로그입니다.",
+	openGraph: {
+		title: "About",
+		description: "프론트엔드 개발자 찬규의 기술 블로그입니다.",
+		type: "website",
+		url: `${baseUrl}/about`
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "About",
+		description: "프론트엔드 개발자 찬규의 기술 블로그입니다."
+	}
+};
+
+export default function AboutPage() {
+	return (
+		<div className="mx-auto max-w-4xl">
+			<article className="prose prose-lg">
+				{/* Header */}
+				<header className="not-prose mb-12">
+					<h1
+						className="title mb-6 text-4xl font-bold tracking-tight sm:text-5xl"
+						style={{ color: "rgb(var(--color-text-primary))" }}
+					>
+						About
+					</h1>
+					<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
+				</header>
+
+				{/* Profile Section */}
+				<div className="not-prose mb-12 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+					<div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-full">
+						<Image src={profileImage} alt="Profile" fill className="object-cover" priority />
+					</div>
+					<div className="flex-1 text-center sm:text-left">
+						<h2 className="mb-2 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>
+							찬규 (Chan9yu)
+						</h2>
+						<p className="mb-4 text-lg" style={{ color: "rgb(var(--color-text-secondary))" }}>
+							프론트엔드 개발자
+						</p>
+						<div className="flex flex-wrap justify-center gap-3 sm:justify-start">
+							<Link
+								href="https://github.com/chan9yu"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+								style={{
+									backgroundColor: "rgb(var(--color-bg-secondary))",
+									color: "rgb(var(--color-text-primary))",
+									border: "1px solid rgb(var(--color-border-primary))"
+								}}
+							>
+								<svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+								</svg>
+								GitHub
+							</Link>
+							<Link
+								href="mailto:cgw981009@gmail.com"
+								className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+								style={{
+									backgroundColor: "rgb(var(--color-bg-secondary))",
+									color: "rgb(var(--color-text-primary))",
+									border: "1px solid rgb(var(--color-border-primary))"
+								}}
+							>
+								<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+									/>
+								</svg>
+								Email
+							</Link>
+						</div>
+					</div>
+				</div>
+
+				{/* Content */}
+				<div className="space-y-6" style={{ color: "rgb(var(--color-text-secondary))" }}>
+					<section>
+						<h2 className="mb-4 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>
+							👋 안녕하세요
+						</h2>
+						<p className="leading-relaxed">
+							프론트엔드 개발을 하고 있는 찬규입니다.
+							<br />이 블로그는 개발하면서 배운 것들, 경험한 것들, 그리고 생각한 것들을 기록하는 공간입니다.
+						</p>
+					</section>
+
+					<section>
+						<h2 className="mb-4 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>
+							💻 관심사
+						</h2>
+						<ul className="list-disc space-y-2 pl-6 leading-relaxed">
+							<li>React, Next.js를 활용한 웹 애플리케이션 개발</li>
+							<li>TypeScript 기반의 타입 안정성 있는 코드 작성</li>
+							<li>사용자 경험(UX)을 개선하는 인터페이스 설계</li>
+							<li>성능 최적화 및 웹 접근성</li>
+							<li>개발 생산성을 높이는 도구와 방법론</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2 className="mb-4 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>
+							📝 블로그 소개
+						</h2>
+						<p className="leading-relaxed">
+							이 블로그는 Next.js 15와 MDX를 기반으로 만들어졌습니다.
+							<br />
+							마크다운으로 글을 작성하고, GitHub을 통해 관리하며, Vercel을 통해 배포됩니다.
+							<br />
+							코드는{" "}
+							<Link
+								href="https://github.com/chan9yu/blog9yu.dev"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="font-medium underline"
+								style={{ color: "rgb(var(--color-accent))" }}
+							>
+								GitHub
+							</Link>
+							에서 확인하실 수 있습니다.
+						</p>
+					</section>
+
+					<section>
+						<h2 className="mb-4 text-2xl font-bold" style={{ color: "rgb(var(--color-text-primary))" }}>
+							📬 연락
+						</h2>
+						<p className="leading-relaxed">
+							궁금한 점이나 피드백이 있으시다면 언제든 연락 주세요!
+							<br />
+							이메일:{" "}
+							<a
+								href="mailto:cgw981009@gmail.com"
+								className="font-medium underline"
+								style={{ color: "rgb(var(--color-accent))" }}
+							>
+								cgw981009@gmail.com
+							</a>
+						</p>
+					</section>
+				</div>
+			</article>
+		</div>
+	);
+}

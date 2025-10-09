@@ -2,7 +2,7 @@
 export { BlogPosts, FilteredBlogPosts, TableOfContents, TrendingPosts, TrendingTags } from "./components";
 
 // Services
-export { getAllPosts, getPostDetail } from "./services";
+export { getAllPosts, getAllTags, getPostDetail, getPostsByTag, getTrendingTags } from "./services";
 
 // Schemas
 export type { Frontmatter } from "./schemas";
