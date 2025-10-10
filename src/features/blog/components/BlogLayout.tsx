@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
+import XIcon from "@/shared/assets/icons/x.svg";
 import { cn } from "@/shared/utils";
 
 import type { TocItem } from "../utils";
@@ -26,32 +27,47 @@ export function BlogLayout({ tocItems, children }: BlogLayoutProps) {
 					className={cn("hidden flex-none transition-all duration-300 xl:block", isTocOpen ? "xl:w-3xs" : "xl:w-0")}
 				>
 					<div className="sticky top-24">
-						{/* Toggle Button - Always visible */}
-						<button
-							onClick={() => setIsTocOpen(!isTocOpen)}
-							className={cn(
-								"group absolute top-0 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300",
-								"bg-secondary/80 hover:bg-tertiary backdrop-blur-sm",
-								"shadow-lg hover:shadow-xl",
-								"hover:scale-110 active:scale-95",
-								isTocOpen ? "-left-12" : "left-0"
-							)}
-							aria-label={isTocOpen ? "목차 접기" : "목차 펼치기"}
-						>
-							<ChevronRightIcon
-								className={cn(
-									"h-5 w-5 transition-all duration-300",
-									"text-tertiary group-hover:text-primary",
-									!isTocOpen && "rotate-180"
-								)}
-							/>
-						</button>
-
 						{/* TOC Content */}
 						{isTocOpen && (
-							<div className="w-3xs">
+							<div className="relative w-3xs">
+								{/* Close Button */}
+								<button
+									onClick={() => setIsTocOpen(!isTocOpen)}
+									className={cn(
+										"group absolute -top-3 -right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full transition-all duration-300",
+										"bg-secondary/80 hover:bg-tertiary backdrop-blur-sm",
+										"shadow-lg hover:shadow-xl",
+										"hover:scale-110 active:scale-95"
+									)}
+									aria-label="목차 접기"
+								>
+									<XIcon
+										className={cn("h-4 w-4 transition-all duration-300", "text-tertiary group-hover:text-primary")}
+									/>
+								</button>
 								<TableOfContents items={tocItems} />
 							</div>
+						)}
+
+						{/* Toggle Button - When closed */}
+						{!isTocOpen && (
+							<button
+								onClick={() => setIsTocOpen(!isTocOpen)}
+								className={cn(
+									"group flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300",
+									"bg-secondary/80 hover:bg-tertiary backdrop-blur-sm",
+									"shadow-lg hover:shadow-xl",
+									"hover:scale-110 active:scale-95"
+								)}
+								aria-label="목차 펼치기"
+							>
+								<ChevronRightIcon
+									className={cn(
+										"h-5 w-5 rotate-180 transition-all duration-300",
+										"text-tertiary group-hover:text-primary"
+									)}
+								/>
+							</button>
 						)}
 					</div>
 				</aside>

@@ -62,7 +62,7 @@
 }
 
 .prose img {
-	@apply my-8 rounded-xl;
+	@apply my-8;
 }
 
 .prose p {

@@ -6,14 +6,21 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
-import { BlogLayout, extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail } from "@/features/blog";
+import {
+	BlogLayout,
+	extractTocFromMarkdown,
+	formatDate,
+	getAllPosts,
+	getPostDetail,
+	PostNavigation
+} from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
-import { MdxImage } from "@/shared/components/mdx/MdxImage";
+import { MdxImage, MdxImg } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
@@ -29,6 +36,7 @@ const components = {
 	h5: createHeading(5),
 	h6: createHeading(6),
 	Image: MdxImage,
+	img: MdxImg,
 	a: MdxLink,
 	pre: MdxPre,
 	code: MdxCode,
@@ -127,6 +135,14 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 		post.series && post.seriesOrder !== undefined && post.seriesOrder !== null ? await getAllSeries() : [];
 	const currentSeries = allSeries.find((s) => s.name === post.series);
 	const seriesPosts = currentSeries?.posts || [];
+
+	// 이전글/다음글 찾기 (날짜 순으로 정렬 - 최신순)
+	const allPosts = await getAllPosts();
+	const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	const currentIndex = sortedPosts.findIndex((p) => p.slug === slug);
+	// 이전글 = 더 오래된 글, 다음글 = 더 최신 글
+	const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+	const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 
 	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
 	const cookieStore = await cookies();
@@ -237,6 +253,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						}}
 					/>
 				</div>
+
+				{/* Post Navigation */}
+				<PostNavigation prevPost={prevPost} nextPost={nextPost} />
 
 				{/* Comments */}
 				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />

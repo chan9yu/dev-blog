@@ -1,5 +1,13 @@
 // Components
-export { BlogLayout, BlogPosts, FilteredBlogPosts, TableOfContents, TrendingPosts, TrendingTags } from "./components";
+export {
+	BlogLayout,
+	BlogPosts,
+	FilteredBlogPosts,
+	PostNavigation,
+	TableOfContents,
+	TrendingPosts,
+	TrendingTags
+} from "./components";
 
 // Services
 export { getAllPosts, getAllTags, getPostDetail, getPostsByTag, getTrendingTags } from "./services";
