@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
-import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
+import { BlogLayout, extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
@@ -134,7 +134,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const utterancesTheme = theme === "dark" ? "github-dark" : "github-light";
 
 	return (
-		<div className="relative flex xl:gap-16">
+		<BlogLayout tocItems={tocItems}>
 			<ReadingProgress />
 			<article className="min-w-0 flex-1 pb-16">
 				<script
@@ -237,15 +237,6 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				{/* Comments */}
 				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
 			</article>
-
-			{/* TOC - Desktop Only */}
-			{tocItems.length > 0 && (
-				<aside className="hidden w-3xs flex-none xl:block">
-					<div className="sticky top-24">
-						<TableOfContents items={tocItems} />
-					</div>
-				</aside>
-			)}
-		</div>
+		</BlogLayout>
 	);
 }

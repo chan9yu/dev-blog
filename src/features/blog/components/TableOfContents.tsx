@@ -71,7 +71,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 	return (
 		<nav className="space-y-4">
 			<h2 className="text-tertiary text-sm font-bold tracking-wider uppercase">목차</h2>
-			<ul className="space-y-2.5">
+			<ul className="max-h-[calc(100vh-24rem)] space-y-2.5 overflow-y-auto pr-2">
 				{items.map((item, index) => {
 					const isActive = activeId === item.id;
 					return (
