@@ -1,7 +1,9 @@
 export { Comments } from "./Comments";
 export { CommentsSection } from "./CommentsSection";
+export { Drawer } from "./Drawer";
 export { FadeInWhenVisible } from "./FadeInWhenVisible";
 export { CustomMDX } from "./mdx";
+export { MobileMenu } from "./MobileMenu";
 export { MotionProvider } from "./MotionProvider";
 export { NavLink } from "./NavLink";
 export { PageTransition } from "./PageTransition";

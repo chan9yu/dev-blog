@@ -11,7 +11,7 @@ type ViewToggleProps = {
 
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
 	return (
-		<div className="bg-secondary/50 flex items-center gap-1 rounded-lg p-1 backdrop-blur-sm">
+		<div className="bg-secondary/50 hidden items-center gap-1 rounded-lg p-1 backdrop-blur-sm sm:flex">
 			<button
 				onClick={() => onViewChange("list")}
 				className={cn(

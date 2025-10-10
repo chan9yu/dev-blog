@@ -38,11 +38,11 @@ export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
 		<button
 			type="button"
 			onClick={handleToggle}
-			className="flex cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
+			className="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
 			aria-label={label}
 			title={label}
 		>
-			{isDark ? <SunIcon className="size-5" /> : <MoonIcon className="size-5" />}
+			{isDark ? <SunIcon className="size-5 sm:size-6" /> : <MoonIcon className="size-5 sm:size-6" />}
 		</button>
 	);
 }

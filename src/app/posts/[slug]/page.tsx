@@ -152,7 +152,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	return (
 		<BlogLayout tocItems={tocItems}>
 			<ReadingProgress />
-			<article className="min-w-0 flex-1 pb-16">
+			<article className="min-w-0 flex-1 pb-12 sm:pb-16">
 				<script
 					type="application/ld+json"
 					suppressHydrationWarning
@@ -183,31 +183,33 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				/>
 
 				{/* Header */}
-				<header className="mb-12 space-y-6">
-					<div className="space-y-4">
-						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{post.title}</h1>
-						<p className="text-secondary text-lg leading-relaxed">{post.description}</p>
+				<header className="mb-8 space-y-4 sm:mb-12 sm:space-y-6">
+					<div className="space-y-3 sm:space-y-4">
+						<h1 className="title text-primary text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+							{post.title}
+						</h1>
+						<p className="text-secondary text-base leading-relaxed sm:text-lg">{post.description}</p>
 					</div>
 
 					{/* Meta Info */}
-					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
-						<time dateTime={post.date} className="flex items-center gap-2">
-							<CalendarIcon className="size-4" />
+					<div className="text-tertiary flex flex-wrap items-center gap-3 text-xs sm:gap-4 sm:text-sm">
+						<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
+							<CalendarIcon className="size-3.5 sm:size-4" />
 							{formatDate(post.date)}
 						</time>
 					</div>
 
 					{/* Tags & Share */}
-					<div className="flex flex-wrap items-center justify-between gap-4">
+					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
 						{post.tags && post.tags.length > 0 && (
-							<div className="flex flex-wrap gap-2">
+							<div className="flex flex-wrap gap-1.5 sm:gap-2">
 								{post.tags.map((tag) => (
 									<Link
 										key={tag}
 										href={`/tags/${encodeURIComponent(tag)}`}
-										className="bg-secondary text-secondary border-primary inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
+										className="bg-secondary text-secondary border-primary inline-flex min-h-[44px] items-center gap-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors hover:shadow-sm sm:min-h-0 sm:py-1.5 sm:text-sm"
 									>
-										<TagIcon className="size-3.5" />
+										<TagIcon className="size-3 sm:size-3.5" />
 										{tag}
 									</Link>
 								))}
@@ -222,27 +224,27 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 				{/* Series Navigation */}
 				{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
-					<div className="mb-8">
+					<div className="mb-6 sm:mb-8">
 						<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
 					</div>
 				)}
 
 				{/* Thumbnail */}
 				{post.thumbnail && (
-					<div className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-2xl">
+					<div className="relative mb-6 aspect-[2/1] w-full overflow-hidden rounded-xl sm:mb-8 sm:rounded-2xl">
 						<Image
 							src={post.thumbnail}
 							alt={post.title}
 							fill
 							priority
 							className="object-cover"
-							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+							sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
 						/>
 					</div>
 				)}
 
 				{/* Content */}
-				<div className="prose prose-lg">
+				<div className="prose prose-sm sm:prose-base md:prose-lg">
 					<MDXRemote
 						source={post.content}
 						components={components}

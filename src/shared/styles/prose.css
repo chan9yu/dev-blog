@@ -38,13 +38,13 @@
 }
 
 .prose pre {
-	@apply my-6 overflow-x-auto rounded-xl border px-4 py-4 text-sm leading-relaxed;
+	@apply my-4 overflow-x-auto rounded-lg border px-3 py-3 text-xs leading-relaxed sm:my-6 sm:rounded-xl sm:px-4 sm:py-4 sm:text-sm;
 	background-color: rgb(var(--color-bg-secondary));
 	border-color: rgb(var(--color-border-primary));
 }
 
 .prose code {
-	@apply rounded-md px-1.5 py-0.5 font-mono text-sm;
+	@apply rounded px-1 py-0.5 font-mono text-xs sm:rounded-md sm:px-1.5 sm:text-sm;
 	background-color: rgb(var(--color-bg-tertiary));
 	color: rgb(var(--color-text-primary));
 	font-weight: 500;
@@ -66,41 +66,48 @@
 }
 
 .prose p {
-	@apply my-6 leading-relaxed;
+	@apply my-4 leading-relaxed sm:my-6;
 	color: rgb(var(--color-text-secondary));
-	font-size: 1.0625rem;
-	line-height: 1.75;
+	font-size: 0.9375rem;
+	line-height: 1.7;
+}
+
+@media (min-width: 640px) {
+	.prose p {
+		font-size: 1.0625rem;
+		line-height: 1.75;
+	}
 }
 
 .prose h1 {
-	@apply mt-12 mb-6 text-4xl font-bold tracking-tight sm:text-5xl;
+	@apply mt-8 mb-4 text-2xl font-bold tracking-tight sm:mt-12 sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl;
 	color: rgb(var(--color-text-primary));
 	line-height: 1.2;
 }
 
 .prose h2 {
-	@apply mt-12 mb-4 text-3xl font-bold tracking-tight;
+	@apply mt-8 mb-3 text-xl font-bold tracking-tight sm:mt-12 sm:mb-4 sm:text-2xl md:text-3xl;
 	color: rgb(var(--color-text-primary));
 	line-height: 1.3;
 }
 
 .prose h3 {
-	@apply mt-10 mb-4 text-2xl font-semibold tracking-tight;
+	@apply mt-6 mb-3 text-lg font-semibold tracking-tight sm:mt-10 sm:mb-4 sm:text-xl md:text-2xl;
 	color: rgb(var(--color-text-primary));
 }
 
 .prose h4 {
-	@apply mt-8 mb-3 text-xl font-semibold tracking-tight;
+	@apply mt-6 mb-2 text-base font-semibold tracking-tight sm:mt-8 sm:mb-3 sm:text-lg md:text-xl;
 	color: rgb(var(--color-text-primary));
 }
 
 .prose h5 {
-	@apply mt-6 mb-2 text-lg font-semibold;
+	@apply mt-4 mb-2 text-base font-semibold sm:mt-6 sm:text-lg;
 	color: rgb(var(--color-text-primary));
 }
 
 .prose h6 {
-	@apply mt-6 mb-2 text-base font-semibold;
+	@apply mt-4 mb-2 text-sm font-semibold sm:mt-6 sm:text-base;
 	color: rgb(var(--color-text-primary));
 }
 
@@ -115,13 +122,27 @@
 }
 
 .prose ul {
-	@apply my-6 list-disc space-y-2 pl-6;
+	@apply my-4 list-disc space-y-1.5 pl-5 sm:my-6 sm:space-y-2 sm:pl-6;
 	color: rgb(var(--color-text-secondary));
+	font-size: 0.9375rem;
+}
+
+@media (min-width: 640px) {
+	.prose ul {
+		font-size: 1rem;
+	}
 }
 
 .prose ol {
-	@apply my-6 list-decimal space-y-2 pl-6;
+	@apply my-4 list-decimal space-y-1.5 pl-5 sm:my-6 sm:space-y-2 sm:pl-6;
 	color: rgb(var(--color-text-secondary));
+	font-size: 0.9375rem;
+}
+
+@media (min-width: 640px) {
+	.prose ol {
+		font-size: 1rem;
+	}
 }
 
 .prose li {
@@ -133,18 +154,26 @@
 }
 
 .prose blockquote {
-	@apply my-6 border-l-4 pl-6 italic;
+	@apply my-4 border-l-4 pl-4 italic sm:my-6 sm:pl-6;
 	border-color: rgb(var(--color-border-primary));
 	color: rgb(var(--color-text-secondary));
+	font-size: 0.9375rem;
+}
+
+@media (min-width: 640px) {
+	.prose blockquote {
+		font-size: 1rem;
+	}
 }
 
 .prose hr {
-	@apply my-12 border-0 border-t;
+	@apply my-8 border-0 border-t sm:my-12;
 	border-color: rgb(var(--color-border-primary));
 }
 
 .prose table {
-	@apply my-6 w-full text-sm;
+	@apply my-4 w-full overflow-x-auto text-xs sm:my-6 sm:text-sm;
+	display: block;
 }
 
 .prose thead {
@@ -152,12 +181,12 @@
 }
 
 .prose th {
-	@apply px-4 py-3 text-left font-semibold;
+	@apply px-2 py-2 text-left font-semibold sm:px-4 sm:py-3;
 	color: rgb(var(--color-text-primary));
 }
 
 .prose td {
-	@apply px-4 py-3;
+	@apply px-2 py-2 sm:px-4 sm:py-3;
 	color: rgb(var(--color-text-secondary));
 	border-top: 1px solid rgb(var(--color-border-secondary));
 }

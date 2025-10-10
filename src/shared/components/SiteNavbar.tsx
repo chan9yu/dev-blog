@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 
 import type { Theme } from "../utils";
-import { NavLink, ThemeSwitcher } from ".";
+import { MobileMenu, NavLink, ThemeSwitcher } from ".";
 
 const navItems = {
 	"/": {
@@ -27,15 +27,16 @@ export async function SiteNavbar() {
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
 
 	return (
-		<header className="bg-primary/80 sticky top-0 z-50 mt-12 backdrop-blur-lg">
-			<nav className="mx-auto flex max-w-6xl items-center justify-between px-12 py-6">
+		<header className="bg-primary/80 sticky top-0 z-50 backdrop-blur-lg md:mt-12">
+			<nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 md:px-8 md:py-6 lg:px-12">
 				<div className="flex items-center gap-1">
-					<Link href="/" className="text-primary text-xl font-bold tracking-tight transition-colors">
+					<Link href="/" className="text-primary text-lg font-bold tracking-tight transition-colors md:text-xl">
 						{"<chan9yu />"}
 					</Link>
 				</div>
 
-				<div className="flex items-center gap-1">
+				{/* Desktop Navigation */}
+				<div className="hidden items-center gap-1 md:flex">
 					{Object.entries(navItems).map(([path, { name }]) => (
 						<NavLink key={path} href={path}>
 							{name}
@@ -44,6 +45,12 @@ export async function SiteNavbar() {
 					<div className="ml-2 flex items-center justify-center">
 						<ThemeSwitcher initialTheme={theme} />
 					</div>
+				</div>
+
+				{/* Mobile Navigation */}
+				<div className="flex items-center gap-2 md:hidden">
+					<ThemeSwitcher initialTheme={theme} />
+					<MobileMenu />
 				</div>
 			</nav>
 		</header>

@@ -1,8 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
 import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
+import MenuIcon from "@/shared/assets/icons/menu.svg";
 import XIcon from "@/shared/assets/icons/x.svg";
 import { cn } from "@/shared/utils";
 
@@ -16,12 +18,13 @@ type BlogLayoutProps = {
 
 export function BlogLayout({ tocItems, children }: BlogLayoutProps) {
 	const [isTocOpen, setIsTocOpen] = useState(true);
+	const [isMobileTocOpen, setIsMobileTocOpen] = useState(false);
 
 	return (
 		<div className="relative flex xl:gap-8">
 			{children}
 
-			{/* TOC - Desktop Only */}
+			{/* TOC - Desktop Only (XL+) */}
 			{tocItems.length > 0 && (
 				<aside
 					className={cn("hidden flex-none transition-all duration-300 xl:block", isTocOpen ? "xl:w-3xs" : "xl:w-0")}
@@ -71,6 +74,62 @@ export function BlogLayout({ tocItems, children }: BlogLayoutProps) {
 						)}
 					</div>
 				</aside>
+			)}
+
+			{/* Mobile TOC Button (Mobile only) */}
+			{tocItems.length > 0 && (
+				<>
+					<button
+						onClick={() => setIsMobileTocOpen(true)}
+						className={cn(
+							"fixed right-6 bottom-6 z-40 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 xl:hidden",
+							"bg-accent shadow-lg hover:shadow-xl",
+							"hover:scale-110 active:scale-95"
+						)}
+						aria-label="목차 열기"
+					>
+						<MenuIcon className="size-6 text-white" />
+					</button>
+
+					{/* Mobile TOC Bottom Sheet */}
+					<AnimatePresence>
+						{isMobileTocOpen && (
+							<>
+								{/* Backdrop */}
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									exit={{ opacity: 0 }}
+									onClick={() => setIsMobileTocOpen(false)}
+									className="bg-primary/80 fixed inset-0 z-50 backdrop-blur-sm xl:hidden"
+								/>
+
+								{/* Bottom Sheet */}
+								<motion.div
+									initial={{ y: "100%" }}
+									animate={{ y: 0 }}
+									exit={{ y: "100%" }}
+									transition={{ type: "spring", damping: 30, stiffness: 300 }}
+									className="bg-elevated fixed right-0 bottom-0 left-0 z-50 max-h-[80vh] overflow-y-auto rounded-t-2xl shadow-2xl xl:hidden"
+								>
+									<div className="sticky top-0 z-10 flex items-center justify-between border-b px-6 py-4 backdrop-blur-sm">
+										<h2 className="text-primary text-lg font-bold">목차</h2>
+										<button
+											onClick={() => setIsMobileTocOpen(false)}
+											className="text-secondary hover:text-primary hover:bg-secondary flex h-10 w-10 items-center justify-center rounded-lg transition-colors"
+											aria-label="목차 닫기"
+										>
+											<XIcon className="size-5" />
+										</button>
+									</div>
+									<div className="p-6" onClick={() => setIsMobileTocOpen(false)}>
+										<TableOfContents items={tocItems} />
+									</div>
+								</motion.div>
+							</>
+						)}
+					</AnimatePresence>
+				</>
 			)}
 		</div>
 	);

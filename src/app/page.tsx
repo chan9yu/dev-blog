@@ -10,18 +10,18 @@ export default async function Page() {
 
 	return (
 		<PageTransition>
-			<div className="flex gap-8">
+			<div className="flex flex-col gap-8 lg:flex-row">
 				{/* Main Content */}
-				<div className="min-w-0 flex-1 space-y-12">
+				<div className="min-w-0 flex-1 space-y-8 sm:space-y-12">
 					{/* Hero Section */}
 					<section className="space-y-4 sm:space-y-6">
 						<div className="space-y-3 sm:space-y-4">
-							<h1 className="text-primary text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+							<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
 								안녕하세요 👋
 								<br />
 								<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
 							</h1>
-							<div className="text-secondary max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
+							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-relaxed sm:space-y-4 sm:text-base md:text-lg">
 								<p>
 									사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
 									<br />
@@ -42,8 +42,11 @@ export default async function Page() {
 					{/* Recent Posts */}
 					<section className="space-y-4 sm:space-y-6">
 						<div className="flex items-center justify-between">
-							<h2 className="text-primary text-xl font-bold tracking-tight sm:text-2xl">최근 포스트</h2>
-							<Link href="/posts" className="text-accent text-sm font-medium transition-colors hover:underline">
+							<h2 className="text-primary text-lg font-bold tracking-tight sm:text-xl md:text-2xl">최근 포스트</h2>
+							<Link
+								href="/posts"
+								className="text-accent text-xs font-medium transition-colors hover:underline sm:text-sm"
+							>
 								전체 보기 →
 							</Link>
 						</div>
@@ -51,7 +54,7 @@ export default async function Page() {
 					</section>
 				</div>
 
-				{/* Sidebar */}
+				{/* Sidebar - Hidden on mobile/tablet */}
 				<aside className="hidden w-64 lg:block">
 					<div className="sticky top-24 space-y-6">
 						{/* Popular Posts */}

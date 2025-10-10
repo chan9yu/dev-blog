@@ -49,18 +49,18 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
 		<>
 			<button
 				onClick={handleShare}
-				className="bg-secondary/50 text-secondary hover:bg-secondary hover:text-primary group flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 backdrop-blur-sm transition-all duration-200"
+				className="bg-secondary/50 text-secondary hover:bg-secondary hover:text-primary group flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 backdrop-blur-sm transition-all duration-200 sm:gap-2 sm:px-4"
 				aria-label="공유하기"
 			>
 				<ShareIcon className="size-4 transition-transform group-hover:scale-110" />
-				<span className="text-sm font-medium">공유</span>
+				<span className="text-xs font-medium sm:text-sm">공유</span>
 			</button>
 
 			{/* Toast Notification */}
 			{showToast && (
-				<div className="animate-fade-in fixed bottom-8 left-1/2 z-50 -translate-x-1/2">
-					<div className="bg-elevated border-primary text-primary rounded-lg border px-6 py-3 shadow-lg backdrop-blur-sm">
-						<p className="text-sm font-medium">링크가 복사되었습니다</p>
+				<div className="animate-fade-in fixed bottom-20 left-1/2 z-50 -translate-x-1/2 sm:bottom-8">
+					<div className="bg-elevated border-primary text-primary rounded-lg border px-4 py-2 shadow-lg backdrop-blur-sm sm:px-6 sm:py-3">
+						<p className="text-xs font-medium sm:text-sm">링크가 복사되었습니다</p>
 					</div>
 				</div>
 			)}
