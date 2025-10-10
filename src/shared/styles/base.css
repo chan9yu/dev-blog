@@ -1,0 +1,46 @@
+/* ============================================
+  Base Styles - Global HTML/Body Styles
+============================================ */
+
+::selection {
+	background-color: rgb(var(--color-primary));
+	color: rgb(var(--color-bg-primary));
+}
+
+html {
+	min-width: 360px;
+	background-color: rgb(var(--color-bg-primary));
+	color: rgb(var(--color-text-primary));
+	transition:
+		background-color var(--transition-base),
+		color var(--transition-base);
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not(.light) {
+		color-scheme: dark;
+	}
+}
+
+a {
+	text-decoration: none;
+}
+
+/* Remove Safari input shadow on mobile */
+input[type="text"],
+input[type="email"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+table {
+	display: block;
+	max-width: fit-content;
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+.title {
+	text-wrap: balance;
+}

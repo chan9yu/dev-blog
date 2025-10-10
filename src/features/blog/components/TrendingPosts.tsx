@@ -12,16 +12,14 @@ export async function TrendingPosts() {
 	// 현재는 최신순으로 정렬
 	const trendingPosts = allPosts
 		.sort((a, b) => {
-			return new Date(b.released_at).getTime() - new Date(a.released_at).getTime();
+			return new Date(b.date).getTime() - new Date(a.date).getTime();
 		})
 		.slice(0, MAX_POSTS_DISPLAY);
 
 	if (trendingPosts.length === 0) {
 		return (
 			<div className="py-4 text-center">
-				<p className="text-sm" style={{ color: "rgb(var(--color-text-tertiary))" }}>
-					아직 포스트가 없습니다
-				</p>
+				<p className="text-tertiary text-sm">아직 포스트가 없습니다</p>
 			</div>
 		);
 	}
@@ -30,22 +28,18 @@ export async function TrendingPosts() {
 		<div className="space-y-4">
 			{trendingPosts.map((post) => (
 				<Link
-					key={post.url_slug}
-					href={`/posts/${post.url_slug}`}
+					key={post.slug}
+					href={`/posts/${post.slug}`}
 					className="group block space-y-1 transition-transform hover:translate-x-1"
 				>
-					<h3
-						className="line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]"
-						style={{ color: "rgb(var(--color-text-primary))" }}
-					>
+					<h3 className="text-primary line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">
 						{post.title}
 					</h3>
 					<time
-						className="block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
-						dateTime={post.released_at}
-						style={{ color: "rgb(var(--color-text-muted))" }}
+						className="text-muted block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
+						dateTime={post.date}
 					>
-						{formatDate(post.released_at, false)}
+						{formatDate(post.date, false)}
 					</time>
 				</Link>
 			))}

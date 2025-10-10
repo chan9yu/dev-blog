@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,16 +6,26 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
-import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
+import {
+	BlogLayout,
+	extractTocFromMarkdown,
+	formatDate,
+	getAllPosts,
+	getPostDetail,
+	PostNavigation
+} from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
-import { CommentsSection, ReadingProgress } from "@/shared/components";
+import CalendarIcon from "@/shared/assets/icons/calendar.svg";
+import TagIcon from "@/shared/assets/icons/tag.svg";
+import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
-import { MdxImage } from "@/shared/components/mdx/MdxImage";
+import { MdxImage, MdxImg } from "@/shared/components/mdx/MdxImage";
 import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
-import { baseUrl, utterancesRepo } from "@/shared/constants";
+import { SITE } from "@/shared/config";
+import { utterancesRepo } from "@/shared/constants";
 import type { Theme } from "@/shared/utils";
 
 const components = {
@@ -25,6 +36,7 @@ const components = {
 	h5: createHeading(5),
 	h6: createHeading(6),
 	Image: MdxImage,
+	img: MdxImg,
 	a: MdxLink,
 	pre: MdxPre,
 	code: MdxCode,
@@ -40,41 +52,71 @@ export async function generateStaticParams() {
 	const posts = await getAllPosts();
 
 	return posts.map((post) => ({
-		slug: post.url_slug
+		slug: post.slug
 	}));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+	params
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const post = await getPostDetail(slug);
-	if (!post) {
-		return;
-	}
 
-	const { title, released_at: publishedTime, short_description: description, thumbnail } = post;
-	const ogImage = thumbnail ? thumbnail : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+	const post = await getPostDetail(slug);
+	if (!post) return;
+
+	const IS_PROD = process.env.VERCEL_ENV === "production";
+
+	const { title, date: publishedTime, description, thumbnail, slug: postSlug, tags, private: isPrivate } = post;
+
+	const canonical = `${SITE.url}/posts/${postSlug}`;
+	const ogImage = thumbnail || `${SITE.url}/og?title=${encodeURIComponent(title)}`;
+
+	const allowIndex =
+		IS_PROD &&
+		!isPrivate &&
+		((): boolean => {
+			if (!publishedTime) return true;
+			const ts = Date.parse(publishedTime);
+			return Number.isFinite(ts) ? ts <= Date.now() : true;
+		})();
 
 	return {
 		title,
 		description,
+		alternates: { canonical },
 		openGraph: {
 			title,
 			description,
 			type: "article",
+			url: canonical,
+			siteName: SITE.name,
+			locale: SITE.locale,
 			publishedTime,
-			url: `${baseUrl}/posts/${post.url_slug}`,
-			images: [
-				{
-					url: ogImage
-				}
-			]
+			tags,
+			images: [{ url: ogImage, width: 1200, height: 630, alt: title, type: "image/png" }],
+			authors: [SITE.author.name]
 		},
 		twitter: {
 			card: "summary_large_image",
 			title,
 			description,
-			images: [ogImage]
-		}
+			images: [ogImage],
+			creator: SITE.social.twitter ?? undefined
+		},
+		robots: {
+			index: allowIndex,
+			follow: true,
+			googleBot: {
+				index: allowIndex,
+				follow: true,
+				"max-image-preview": "large",
+				"max-video-preview": -1,
+				"max-snippet": -1
+			}
+		},
+		authors: [{ name: SITE.author.name, url: SITE.author.url }]
 	};
 }
 
@@ -89,9 +131,18 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const tocItems = extractTocFromMarkdown(post.content);
 
 	// 시리즈 포스트 정보 가져오기
-	const allSeries = post.series && post.index !== undefined ? await getAllSeries() : [];
+	const allSeries =
+		post.series && post.seriesOrder !== undefined && post.seriesOrder !== null ? await getAllSeries() : [];
 	const currentSeries = allSeries.find((s) => s.name === post.series);
 	const seriesPosts = currentSeries?.posts || [];
+
+	// 이전글/다음글 찾기 (날짜 순으로 정렬 - 최신순)
+	const allPosts = await getAllPosts();
+	const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	const currentIndex = sortedPosts.findIndex((p) => p.slug === slug);
+	// 이전글 = 더 오래된 글, 다음글 = 더 최신 글
+	const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+	const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 
 	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
 	const cookieStore = await cookies();
@@ -99,9 +150,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const utterancesTheme = theme === "dark" ? "github-dark" : "github-light";
 
 	return (
-		<div className="relative flex xl:gap-16">
+		<BlogLayout tocItems={tocItems}>
 			<ReadingProgress />
-			<article className="min-w-0 flex-1 pb-16">
+			<article className="min-w-0 flex-1 pb-12 sm:pb-16">
 				<script
 					type="application/ld+json"
 					suppressHydrationWarning
@@ -110,118 +161,90 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 							"@context": "https://schema.org",
 							"@type": "BlogPosting",
 							headline: post.title,
-							datePublished: post.released_at,
-							dateModified: post.updated_at,
-							description: post.short_description,
-							image: post.thumbnail ? `${baseUrl}${post.thumbnail}` : `/og?title=${encodeURIComponent(post.title)}`,
-							url: `${baseUrl}/posts/${post.url_slug}`,
+							datePublished: post.date,
+							description: post.description,
+							image: post.thumbnail
+								? `${SITE.url}${post.thumbnail}`
+								: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
+							url: `${SITE.url}/posts/${post.slug}`,
 							author: {
 								"@type": "Person",
-								name: "My Portfolio"
-							}
+								name: SITE.author.name,
+								url: SITE.author.url
+							},
+							publisher: {
+								"@type": "Person",
+								name: SITE.author.name
+							},
+							keywords: post.tags,
+							inLanguage: SITE.language
 						})
 					}}
 				/>
 
 				{/* Header */}
-				<header className="mb-12 space-y-6">
-					<div className="space-y-4">
-						<h1
-							className="title text-4xl font-bold tracking-tight sm:text-5xl"
-							style={{ color: "rgb(var(--color-text-primary))" }}
-						>
+				<header className="mb-8 space-y-4 sm:mb-12 sm:space-y-6">
+					<div className="space-y-3 sm:space-y-4">
+						<h1 className="title text-primary text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
 							{post.title}
 						</h1>
-						<p className="text-lg leading-relaxed" style={{ color: "rgb(var(--color-text-secondary))" }}>
-							{post.short_description}
-						</p>
+						<p className="text-secondary text-base leading-relaxed sm:text-lg">{post.description}</p>
 					</div>
 
 					{/* Meta Info */}
-					<div
-						className="flex flex-wrap items-center gap-4 text-sm"
-						style={{ color: "rgb(var(--color-text-tertiary))" }}
-					>
-						<time dateTime={post.released_at} className="flex items-center gap-2">
-							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-								/>
-							</svg>
-							{formatDate(post.released_at)}
+					<div className="text-tertiary flex flex-wrap items-center gap-3 text-xs sm:gap-4 sm:text-sm">
+						<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
+							<CalendarIcon className="size-3.5 sm:size-4" />
+							{formatDate(post.date)}
 						</time>
-						{post.updated_at !== post.released_at && (
-							<span className="flex items-center gap-2">
-								<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-									/>
-								</svg>
-								업데이트: {formatDate(post.updated_at)}
-							</span>
-						)}
 					</div>
 
-					{/* Tags */}
-					{post.tags && post.tags.length > 0 && (
-						<div className="flex flex-wrap gap-2">
-							{post.tags.map((tag) => (
-								<Link
-									key={tag}
-									href={`/tags/${encodeURIComponent(tag)}`}
-									className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
-									style={{
-										backgroundColor: "rgb(var(--color-bg-secondary))",
-										color: "rgb(var(--color-text-secondary))",
-										border: "1px solid rgb(var(--color-border-primary))"
-									}}
-								>
-									<svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-										/>
-									</svg>
-									{tag}
-								</Link>
-							))}
-						</div>
-					)}
+					{/* Tags & Share */}
+					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+						{post.tags && post.tags.length > 0 && (
+							<div className="flex flex-wrap gap-1.5 sm:gap-2">
+								{post.tags.map((tag) => (
+									<Link
+										key={tag}
+										href={`/tags/${encodeURIComponent(tag)}`}
+										className="bg-secondary text-secondary border-primary inline-flex min-h-[44px] items-center gap-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors hover:shadow-sm sm:min-h-0 sm:py-1.5 sm:text-sm"
+									>
+										<TagIcon className="size-3 sm:size-3.5" />
+										{tag}
+									</Link>
+								))}
+							</div>
+						)}
 
-					<hr style={{ borderColor: "rgb(var(--color-border-primary))" }} />
+						<ShareButton title={post.title} text={post.description} url={`${SITE.url}/posts/${post.slug}`} />
+					</div>
+
+					<hr className="border-primary" />
 				</header>
 
 				{/* Series Navigation */}
-				{post.series && post.index !== undefined && seriesPosts.length > 0 && (
-					<div className="mb-8">
-						<SeriesNavigation seriesName={post.series} currentIndex={post.index} allPosts={seriesPosts} />
+				{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
+					<div className="mb-6 sm:mb-8">
+						<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
 					</div>
 				)}
 
 				{/* Thumbnail */}
 				{post.thumbnail && (
-					<div className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-2xl">
+					<div className="relative mb-6 aspect-[2/1] w-full overflow-hidden rounded-xl sm:mb-8 sm:rounded-2xl">
 						<Image
 							src={post.thumbnail}
 							alt={post.title}
 							fill
 							priority
 							className="object-cover"
-							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+							sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
 						/>
 					</div>
 				)}
 
 				{/* Content */}
-				<div className="prose prose-lg">
+				<div className="prose prose-sm sm:prose-base md:prose-lg">
 					<MDXRemote
 						source={post.content}
 						components={components}
@@ -233,18 +256,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					/>
 				</div>
 
+				{/* Post Navigation */}
+				<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+
 				{/* Comments */}
 				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
 			</article>
-
-			{/* TOC - Desktop Only */}
-			{tocItems.length > 0 && (
-				<aside className="hidden w-3xs flex-none xl:block">
-					<div className="sticky top-24">
-						<TableOfContents items={tocItems} />
-					</div>
-				</aside>
-			)}
-		</div>
+		</BlogLayout>
 	);
 }

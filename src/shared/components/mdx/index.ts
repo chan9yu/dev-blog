@@ -1,3 +1,4 @@
+export { CustomMDX } from "./CustomMDX";
 export { MdxCode } from "./MdxCode";
 export { createHeading } from "./MdxHeading";
 export { MdxImage } from "./MdxImage";

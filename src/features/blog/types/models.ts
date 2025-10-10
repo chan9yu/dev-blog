@@ -3,15 +3,14 @@
  */
 export interface PostSummary {
 	title: string;
-	short_description: string;
-	url_slug: string;
-	released_at: string;
-	updated_at: string;
-	is_private: boolean;
+	description: string;
+	slug: string;
+	date: string;
+	private: boolean;
 	tags: string[];
-	thumbnail?: string;
-	series?: string;
-	index?: number;
+	thumbnail: string | null;
+	series: string | null;
+	seriesOrder: number | null;
 }
 
 /**

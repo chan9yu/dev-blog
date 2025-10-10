@@ -1,1 +1,1 @@
-export { getGitHubFileContent, getGitHubFileContentRaw, getGitHubMDXFiles } from "./github";
+export { getAboutContent, getGitHubFileContent, getGitHubFileContentRaw, getGitHubMDXFiles } from "./github";

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { cn } from "@/shared/utils";
+
 import type { TocItem } from "../utils";
 
 type TableOfContentsProps = {
@@ -68,10 +70,8 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 
 	return (
 		<nav className="space-y-4">
-			<h2 className="text-sm font-bold tracking-wider uppercase" style={{ color: "rgb(var(--color-text-tertiary))" }}>
-				목차
-			</h2>
-			<ul className="space-y-2.5">
+			<h2 className="text-tertiary text-sm font-bold tracking-wider uppercase">목차</h2>
+			<ul className="max-h-[calc(100vh-24rem)] space-y-2.5 overflow-y-auto pr-2">
 				{items.map((item, index) => {
 					const isActive = activeId === item.id;
 					return (
@@ -79,12 +79,10 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 							<a
 								href={`#${item.id}`}
 								onClick={(e) => handleClick(e, item.id)}
-								className={`block text-sm transition-all duration-200 hover:translate-x-1 ${
-									isActive ? "font-semibold" : "font-normal"
-								}`}
-								style={{
-									color: isActive ? "rgb(var(--color-accent))" : "rgb(var(--color-text-secondary))"
-								}}
+								className={cn(
+									"block text-sm transition-all duration-200 hover:translate-x-1",
+									isActive ? "text-accent font-semibold" : "text-secondary font-normal"
+								)}
 							>
 								{item.title}
 							</a>

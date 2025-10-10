@@ -46,10 +46,8 @@ export function CommentsSection({ repo, initialTheme = "github-light" }: Comment
 	}, []);
 
 	return (
-		<section className="mt-16 border-t pt-8" style={{ borderColor: "rgb(var(--color-border-primary))" }}>
-			<h2 className="mb-6 text-xl font-bold tracking-tight" style={{ color: "rgb(var(--color-text-primary))" }}>
-				댓글
-			</h2>
+		<section className="border-primary mt-16 border-t pt-8">
+			<h2 className="text-primary mb-6 text-xl font-bold tracking-tight">댓글</h2>
 			<Comments repo={repo} theme={theme} />
 		</section>
 	);
