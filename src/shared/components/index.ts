@@ -6,4 +6,5 @@ export { ScrollReset } from "./ScrollReset";
 export { ScrollToTop } from "./ScrollToTop";
 export { SiteFooter } from "./SiteFooter";
 export { SiteNavbar } from "./SiteNavbar";
+export { SocialLinks } from "./SocialLinks";
 export { ThemeSwitcher } from "./ThemeSwitcher";
