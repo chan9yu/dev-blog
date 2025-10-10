@@ -19,7 +19,8 @@ export async function generateMetadata({
 }: {
 	params: Promise<{ tag: string }>;
 }): Promise<Metadata | undefined> {
-	const { tag } = await params;
+	const { tag: encodedTag } = await params;
+	const tag = decodeURIComponent(encodedTag);
 	const posts = await getPostsByTag(tag);
 
 	if (posts.length === 0) return;
@@ -47,7 +48,8 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
-	const { tag } = await params;
+	const { tag: encodedTag } = await params;
+	const tag = decodeURIComponent(encodedTag);
 	const posts = await getPostsByTag(tag);
 
 	if (posts.length === 0) {
