@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
 import { cn } from "@/shared/utils";
@@ -30,13 +31,28 @@ export function BlogPosts({ posts }: BlogPostsProps) {
 			</div>
 
 			{/* Posts Grid/List */}
-			<div
+			<motion.div
+				layout
 				className={cn(view === "list" ? "flex flex-col gap-4 sm:gap-6" : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3")}
 			>
-				{sortedPosts.map((post) => (
-					<BlogPostCard key={post.slug} post={post} variant={view} />
-				))}
-			</div>
+				<AnimatePresence mode="popLayout">
+					{sortedPosts.map((post) => (
+						<motion.div
+							key={post.slug}
+							layout
+							initial={{ opacity: 0, scale: 0.95 }}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 0.95 }}
+							transition={{
+								duration: 0.3,
+								ease: [0.4, 0, 0.2, 1]
+							}}
+						>
+							<BlogPostCard post={post} variant={view} />
+						</motion.div>
+					))}
+				</AnimatePresence>
+			</motion.div>
 		</div>
 	);
 }

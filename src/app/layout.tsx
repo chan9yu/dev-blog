@@ -7,7 +7,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import Script from "next/script";
 
-import { ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
+import { MotionProvider, ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
 import { SITE } from "@/shared/config";
 import { type Theme, themeInitScript } from "@/shared/utils";
 
@@ -162,13 +162,15 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 						__html: themeInitScript
 					}}
 				/>
-				<ScrollReset />
-				<SiteNavbar />
-				<div className="mx-auto max-w-6xl px-6 pb-12 sm:px-8 lg:px-12">
-					<main className="mt-16">{children}</main>
-					<SiteFooter />
-				</div>
-				<ScrollToTop />
+				<MotionProvider>
+					<ScrollReset />
+					<SiteNavbar />
+					<div className="mx-auto max-w-6xl px-6 pb-12 sm:px-8 lg:px-12">
+						<main className="mt-16">{children}</main>
+						<SiteFooter />
+					</div>
+					<ScrollToTop />
+				</MotionProvider>
 				<Analytics />
 				<SpeedInsights />
 			</body>

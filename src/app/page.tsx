@@ -2,80 +2,82 @@ import Link from "next/link";
 
 import { BlogPosts, getAllPosts, TrendingPosts, TrendingTags } from "@/features/blog";
 import { PopularSeries } from "@/features/series";
-import { SocialLinks } from "@/shared/components";
+import { PageTransition, SocialLinks } from "@/shared/components";
 
 export default async function Page() {
 	const allPosts = await getAllPosts();
 	const recentPosts = allPosts.slice(0, 6);
 
 	return (
-		<div className="flex gap-8">
-			{/* Main Content */}
-			<div className="min-w-0 flex-1 space-y-12">
-				{/* Hero Section */}
-				<section className="space-y-4 sm:space-y-6">
-					<div className="space-y-3 sm:space-y-4">
-						<h1 className="text-primary text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-							안녕하세요 👋
-							<br />
-							<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
-						</h1>
-						<div className="text-secondary max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
-							<p>
-								사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
+		<PageTransition>
+			<div className="flex gap-8">
+				{/* Main Content */}
+				<div className="min-w-0 flex-1 space-y-12">
+					{/* Hero Section */}
+					<section className="space-y-4 sm:space-y-6">
+						<div className="space-y-3 sm:space-y-4">
+							<h1 className="text-primary text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+								안녕하세요 👋
 								<br />
-								디자인과 개발 사이에서 최적의 균형을 찾는 데 열정을 가지고 있습니다.
-							</p>
-							<p>
-								이 블로그는 프론트엔드 개발 과정에서 배운 것들과 경험을 기록하고 공유하는 공간입니다.
-								<br />
-								React, TypeScript, 웹 성능 최적화 등 실무에서 마주하는 다양한 주제를 다룹니다.
-							</p>
+								<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
+							</h1>
+							<div className="text-secondary max-w-2xl space-y-4 text-base leading-relaxed sm:text-lg">
+								<p>
+									사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
+									<br />
+									디자인과 개발 사이에서 최적의 균형을 찾는 데 열정을 가지고 있습니다.
+								</p>
+								<p>
+									이 블로그는 프론트엔드 개발 과정에서 배운 것들과 경험을 기록하고 공유하는 공간입니다.
+									<br />
+									React, TypeScript, 웹 성능 최적화 등 실무에서 마주하는 다양한 주제를 다룹니다.
+								</p>
+							</div>
 						</div>
-					</div>
 
-					{/* Quick Links */}
-					<SocialLinks />
-				</section>
-
-				{/* Recent Posts */}
-				<section className="space-y-4 sm:space-y-6">
-					<div className="flex items-center justify-between">
-						<h2 className="text-primary text-xl font-bold tracking-tight sm:text-2xl">최근 포스트</h2>
-						<Link href="/posts" className="text-accent text-sm font-medium transition-colors hover:underline">
-							전체 보기 →
-						</Link>
-					</div>
-					<BlogPosts posts={recentPosts} />
-				</section>
-			</div>
-
-			{/* Sidebar */}
-			<aside className="hidden w-64 lg:block">
-				<div className="sticky top-24 space-y-6">
-					{/* Popular Posts */}
-					<section className="space-y-3">
-						<h2 className="text-secondary text-sm font-semibold">Popular Posts</h2>
-						<TrendingPosts />
+						{/* Quick Links */}
+						<SocialLinks />
 					</section>
 
-					<hr className="border-primary" />
-
-					{/* Popular Series */}
-					<section className="space-y-3">
-						<h2 className="text-secondary text-sm font-semibold">Popular Series</h2>
-						<PopularSeries />
-					</section>
-
-					<hr className="border-primary" />
-
-					{/* Popular Tags */}
-					<section className="space-y-3">
-						<h2 className="text-secondary text-sm font-semibold">Popular Tags</h2>
-						<TrendingTags />
+					{/* Recent Posts */}
+					<section className="space-y-4 sm:space-y-6">
+						<div className="flex items-center justify-between">
+							<h2 className="text-primary text-xl font-bold tracking-tight sm:text-2xl">최근 포스트</h2>
+							<Link href="/posts" className="text-accent text-sm font-medium transition-colors hover:underline">
+								전체 보기 →
+							</Link>
+						</div>
+						<BlogPosts posts={recentPosts} />
 					</section>
 				</div>
-			</aside>
-		</div>
+
+				{/* Sidebar */}
+				<aside className="hidden w-64 lg:block">
+					<div className="sticky top-24 space-y-6">
+						{/* Popular Posts */}
+						<section className="space-y-3">
+							<h2 className="text-secondary text-sm font-semibold">Popular Posts</h2>
+							<TrendingPosts />
+						</section>
+
+						<hr className="border-primary" />
+
+						{/* Popular Series */}
+						<section className="space-y-3">
+							<h2 className="text-secondary text-sm font-semibold">Popular Series</h2>
+							<PopularSeries />
+						</section>
+
+						<hr className="border-primary" />
+
+						{/* Popular Tags */}
+						<section className="space-y-3">
+							<h2 className="text-secondary text-sm font-semibold">Popular Tags</h2>
+							<TrendingTags />
+						</section>
+					</div>
+				</aside>
+			</div>
+		</PageTransition>
 	);
 }

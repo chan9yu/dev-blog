@@ -1,7 +1,10 @@
 export { Comments } from "./Comments";
 export { CommentsSection } from "./CommentsSection";
+export { FadeInWhenVisible } from "./FadeInWhenVisible";
 export { CustomMDX } from "./mdx";
+export { MotionProvider } from "./MotionProvider";
 export { NavLink } from "./NavLink";
+export { PageTransition } from "./PageTransition";
 export { ReadingProgress } from "./ReadingProgress";
 export { ScrollReset } from "./ScrollReset";
 export { ScrollToTop } from "./ScrollToTop";
