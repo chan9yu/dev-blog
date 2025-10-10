@@ -5,6 +5,7 @@ export { NavLink } from "./NavLink";
 export { ReadingProgress } from "./ReadingProgress";
 export { ScrollReset } from "./ScrollReset";
 export { ScrollToTop } from "./ScrollToTop";
+export { ShareButton } from "./ShareButton";
 export { SiteFooter } from "./SiteFooter";
 export { SiteNavbar } from "./SiteNavbar";
 export { SocialLinks } from "./SocialLinks";

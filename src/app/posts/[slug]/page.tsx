@@ -10,7 +10,7 @@ import { BlogLayout, extractTocFromMarkdown, formatDate, getAllPosts, getPostDet
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
-import { CommentsSection, ReadingProgress } from "@/shared/components";
+import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";
 import { MdxImage } from "@/shared/components/mdx/MdxImage";
@@ -181,21 +181,25 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						</time>
 					</div>
 
-					{/* Tags */}
-					{post.tags && post.tags.length > 0 && (
-						<div className="flex flex-wrap gap-2">
-							{post.tags.map((tag) => (
-								<Link
-									key={tag}
-									href={`/tags/${encodeURIComponent(tag)}`}
-									className="bg-secondary text-secondary border-primary inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
-								>
-									<TagIcon className="size-3.5" />
-									{tag}
-								</Link>
-							))}
-						</div>
-					)}
+					{/* Tags & Share */}
+					<div className="flex flex-wrap items-center justify-between gap-4">
+						{post.tags && post.tags.length > 0 && (
+							<div className="flex flex-wrap gap-2">
+								{post.tags.map((tag) => (
+									<Link
+										key={tag}
+										href={`/tags/${encodeURIComponent(tag)}`}
+										className="bg-secondary text-secondary border-primary inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
+									>
+										<TagIcon className="size-3.5" />
+										{tag}
+									</Link>
+								))}
+							</div>
+						)}
+
+						<ShareButton title={post.title} text={post.description} url={`${SITE.url}/posts/${post.slug}`} />
+					</div>
 
 					<hr className="border-primary" />
 				</header>
