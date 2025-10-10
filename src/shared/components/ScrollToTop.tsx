@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import ArrowUpIcon from "@/assets/icons/arrow-up.svg";
+
 const SCROLL_THRESHOLD = 300;
 
 export function ScrollToTop() {
@@ -29,9 +31,7 @@ export function ScrollToTop() {
 			style={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)" }}
 			aria-label="Scroll to top"
 		>
-			<svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-			</svg>
+			<ArrowUpIcon className="size-6" />
 		</button>
 	);
 }

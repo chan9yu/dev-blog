@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import BookOpenIcon from "@/assets/icons/book-open.svg";
 import { formatDate } from "@/features/blog";
 import { getAllSeries, getSeriesDetail } from "@/features/series";
 import { SITE } from "@/shared/config";
@@ -62,25 +63,10 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 					<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{series.name}</h1>
 					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
 						<div className="flex items-center gap-2">
-							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-								/>
-							</svg>
-							총 {series.posts.length}개의 글
+							<BookOpenIcon className="size-4" />총 {series.posts.length}개의 글
 						</div>
 						<div className="flex items-center gap-2">
-							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-								/>
-							</svg>
+							<BookOpenIcon className="size-4" />
 							시리즈
 						</div>
 					</div>

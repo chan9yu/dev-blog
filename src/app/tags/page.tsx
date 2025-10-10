@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import ChevronRightIcon from "@/assets/icons/chevron-right.svg";
+import TagIcon from "@/assets/icons/tag.svg";
 import { getTagCounts } from "@/features/tags";
 import { SITE } from "@/shared/config";
 
@@ -34,14 +36,7 @@ export default async function TagsPage() {
 			{/* Tags Grid */}
 			{sortedTags.length === 0 ? (
 				<div className="text-tertiary flex flex-col items-center justify-center py-16 text-center">
-					<svg className="mb-4 h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={1.5}
-							d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-						/>
-					</svg>
+					<TagIcon className="mb-4 size-16" />
 					<p className="text-lg font-medium">아직 태그가 없습니다</p>
 				</div>
 			) : (
@@ -55,28 +50,14 @@ export default async function TagsPage() {
 							<div className="flex items-start justify-between gap-3">
 								<div className="flex-1 space-y-2">
 									<div className="flex items-center gap-2">
-										<svg className="text-accent h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-											/>
-										</svg>
+										<TagIcon className="text-accent size-5 shrink-0" />
 										<h2 className="text-primary group-hover-accent font-semibold tracking-tight transition-colors">
 											{tag}
 										</h2>
 									</div>
 									<p className="text-tertiary text-sm">{count}개의 포스트</p>
 								</div>
-								<svg
-									className="text-tertiary h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-								</svg>
+								<ChevronRightIcon className="text-tertiary size-5 shrink-0 transition-transform group-hover:translate-x-1" />
 							</div>
 						</Link>
 					))}

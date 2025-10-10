@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
 				pathname: "/images/chan9yu/post/**"
 			}
 		]
+	},
+	webpack(config) {
+		// SVG를 React 컴포넌트로 import 가능하도록 설정
+		config.module.rules.push({
+			test: /\.svg$/i,
+			use: ["@svgr/webpack"]
+		});
+
+		return config;
 	}
 };
 

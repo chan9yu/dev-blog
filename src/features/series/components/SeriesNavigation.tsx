@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+import BookOpenIcon from "@/assets/icons/book-open.svg";
+import ChevronLeftIcon from "@/assets/icons/chevron-left.svg";
+import ChevronRightIcon from "@/assets/icons/chevron-right.svg";
+import ListIcon from "@/assets/icons/list.svg";
 import type { PostSummary } from "@/features/blog";
 import { slugifyUrlSafe } from "@/shared/utils";
 
@@ -22,14 +26,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-						<svg className="text-accent h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-							/>
-						</svg>
+						<BookOpenIcon className="text-accent size-4" />
 					</div>
 					<div>
 						<p className="text-tertiary text-xs font-medium tracking-wider uppercase">시리즈</p>
@@ -54,9 +51,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
 					>
 						<span className="text-tertiary flex items-center gap-1 text-xs font-medium">
-							<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-							</svg>
+							<ChevronLeftIcon className="size-3" />
 							이전 글
 						</span>
 						<span className="text-secondary line-clamp-1 text-sm font-medium transition-colors group-hover:text-[rgb(var(--color-accent))]">
@@ -77,9 +72,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 					>
 						<span className="text-tertiary flex items-center justify-end gap-1 text-xs font-medium">
 							다음 글
-							<svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-							</svg>
+							<ChevronRightIcon className="size-3" />
 						</span>
 						<span className="text-secondary line-clamp-1 text-sm font-medium transition-colors group-hover:text-[rgb(var(--color-accent))]">
 							{nextPost.title}
@@ -98,9 +91,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 				href={`/series/${seriesSlug}`}
 				className="bg-primary border-primary text-secondary flex items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium transition-all hover:shadow-sm"
 			>
-				<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-				</svg>
+				<ListIcon className="size-4" />
 				시리즈 전체 보기
 			</Link>
 		</div>

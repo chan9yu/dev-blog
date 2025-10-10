@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
+import CalendarIcon from "@/assets/icons/calendar.svg";
+import TagIcon from "@/assets/icons/tag.svg";
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import { CommentsSection, ReadingProgress } from "@/shared/components";
@@ -174,14 +176,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					{/* Meta Info */}
 					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
 						<time dateTime={post.date} className="flex items-center gap-2">
-							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-								/>
-							</svg>
+							<CalendarIcon className="size-4" />
 							{formatDate(post.date)}
 						</time>
 					</div>
@@ -195,14 +190,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 									href={`/tags/${encodeURIComponent(tag)}`}
 									className="bg-secondary text-secondary border-primary inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:shadow-sm"
 								>
-									<svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-										/>
-									</svg>
+									<TagIcon className="size-3.5" />
 									{tag}
 								</Link>
 							))}

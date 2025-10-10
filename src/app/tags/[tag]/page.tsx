@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
+import TagIcon from "@/assets/icons/tag.svg";
 import { getAllTags, getPostsByTag } from "@/features/blog";
 import { BlogPostCard } from "@/features/blog/components/BlogPostCard";
 import { SITE } from "@/shared/config";
@@ -60,14 +62,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 			<header className="mb-12 space-y-6">
 				<div className="space-y-4">
 					<div className="flex items-center gap-3">
-						<svg className="text-accent h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-							/>
-						</svg>
+						<TagIcon className="text-accent size-8" />
 						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">#{tag}</h1>
 					</div>
 					<p className="text-secondary text-lg">총 {posts.length}개의 글</p>
@@ -88,9 +83,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 					href="/"
 					className="bg-secondary text-primary border-primary inline-flex items-center gap-2 rounded-lg border px-6 py-3 font-medium transition-colors"
 				>
-					<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-					</svg>
+					<ArrowLeftIcon className="size-5" />
 					홈으로 돌아가기
 				</Link>
 			</div>
