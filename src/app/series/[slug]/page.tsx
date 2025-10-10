@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import BookOpenIcon from "@/assets/icons/book-open.svg";
 import { formatDate } from "@/features/blog";
 import { getAllSeries, getSeriesDetail } from "@/features/series";
+import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
 import { SITE } from "@/shared/config";
 
 export async function generateStaticParams() {

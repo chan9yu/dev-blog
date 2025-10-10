@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
-import TagIcon from "@/assets/icons/tag.svg";
 import { getAllTags, getPostsByTag } from "@/features/blog";
 import { BlogPostCard } from "@/features/blog/components/BlogPostCard";
+import ArrowLeftIcon from "@/shared/assets/icons/arrow-left.svg";
+import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
 
 export async function generateStaticParams() {

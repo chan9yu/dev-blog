@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import BookOpenIcon from "@/assets/icons/book-open.svg";
-import ChevronLeftIcon from "@/assets/icons/chevron-left.svg";
-import ChevronRightIcon from "@/assets/icons/chevron-right.svg";
-import ListIcon from "@/assets/icons/list.svg";
 import type { PostSummary } from "@/features/blog";
+import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
+import ChevronLeftIcon from "@/shared/assets/icons/chevron-left.svg";
+import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
+import ListIcon from "@/shared/assets/icons/list.svg";
 import { slugifyUrlSafe } from "@/shared/utils";
 
 type SeriesNavigationProps = {

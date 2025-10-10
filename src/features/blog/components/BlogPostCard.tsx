@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import ClockIcon from "@/assets/icons/clock.svg";
+import ClockIcon from "@/shared/assets/icons/clock.svg";
 
 import type { PostSummary } from "../types";
 import { calculateReadingTime, formatDate } from "../utils";

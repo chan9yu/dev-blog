@@ -6,10 +6,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 
-import CalendarIcon from "@/assets/icons/calendar.svg";
-import TagIcon from "@/assets/icons/tag.svg";
 import { extractTocFromMarkdown, formatDate, getAllPosts, getPostDetail, TableOfContents } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
+import CalendarIcon from "@/shared/assets/icons/calendar.svg";
+import TagIcon from "@/shared/assets/icons/tag.svg";
 import { CommentsSection, ReadingProgress } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
 import { createHeading } from "@/shared/components/mdx/MdxHeading";

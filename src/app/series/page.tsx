@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import ArchiveIcon from "@/assets/icons/archive.svg";
-import BookOpenIcon from "@/assets/icons/book-open.svg";
 import { getAllSeries } from "@/features/series";
+import ArchiveIcon from "@/shared/assets/icons/archive.svg";
+import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
 import { SITE } from "@/shared/config";
 
 export const metadata: Metadata = {

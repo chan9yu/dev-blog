@@ -1,6 +1,6 @@
-import EmailIcon from "@/assets/icons/email.svg";
-import GithubIcon from "@/assets/icons/github.svg";
-import LinkedinIcon from "@/assets/icons/linkedin.svg";
+import EmailIcon from "@/shared/assets/icons/email.svg";
+import GithubIcon from "@/shared/assets/icons/github.svg";
+import LinkedinIcon from "@/shared/assets/icons/linkedin.svg";
 
 export function SocialLinks() {
 	return (

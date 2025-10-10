@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import ChevronRightIcon from "@/assets/icons/chevron-right.svg";
-import TagIcon from "@/assets/icons/tag.svg";
 import { getTagCounts } from "@/features/tags";
+import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
+import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
 
 export const metadata: Metadata = {

@@ -3,8 +3,8 @@
 import type { HTMLAttributes } from "react";
 import { useRef, useState } from "react";
 
-import CheckIcon from "@/assets/icons/check.svg";
-import CopyIcon from "@/assets/icons/copy.svg";
+import CheckIcon from "@/shared/assets/icons/check.svg";
+import CopyIcon from "@/shared/assets/icons/copy.svg";
 import { cn } from "@/shared/utils";
 
 export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {

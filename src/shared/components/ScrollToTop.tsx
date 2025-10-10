@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import ArrowUpIcon from "@/assets/icons/arrow-up.svg";
+import ArrowUpIcon from "@/shared/assets/icons/arrow-up.svg";
 
 const SCROLL_THRESHOLD = 300;
 

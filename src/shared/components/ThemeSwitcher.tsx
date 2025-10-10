@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import MoonIcon from "@/assets/icons/moon.svg";
-import SunIcon from "@/assets/icons/sun.svg";
+import MoonIcon from "@/shared/assets/icons/moon.svg";
+import SunIcon from "@/shared/assets/icons/sun.svg";
 
 import { initTheme, setTheme, type Theme } from "../utils";
 
