@@ -9,10 +9,11 @@ import { cn } from "@/shared/utils";
 
 type SeriesPostsProps = {
 	posts: PostSummary[];
+	defaultView?: "list" | "grid";
 };
 
-export function SeriesPosts({ posts }: SeriesPostsProps) {
-	const [view, setView] = useState<"list" | "grid">("list");
+export function SeriesPosts({ posts, defaultView = "grid" }: SeriesPostsProps) {
+	const [view, setView] = useState<"list" | "grid">(defaultView);
 
 	return (
 		<div className="space-y-6">

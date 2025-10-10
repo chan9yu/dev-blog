@@ -21,10 +21,10 @@ export function formatDate(date: string, includeRelative = false) {
 		formattedDate = "Today";
 	}
 
-	const fullDate = targetDate.toLocaleString("en-us", {
+	const fullDate = targetDate.toLocaleString("ko-KR", {
+		year: "numeric",
 		month: "long",
-		day: "numeric",
-		year: "numeric"
+		day: "numeric"
 	});
 
 	if (!includeRelative) {

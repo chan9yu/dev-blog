@@ -5,7 +5,9 @@ import { PopularSeries } from "@/features/series";
 import { SocialLinks } from "@/shared/components";
 
 export default async function Page() {
-	const posts = await getAllPosts();
+	const allPosts = await getAllPosts();
+	const recentPosts = allPosts.slice(0, 6);
+
 	return (
 		<div className="flex gap-8">
 			{/* Main Content */}
@@ -44,7 +46,7 @@ export default async function Page() {
 							전체 보기 →
 						</Link>
 					</div>
-					<BlogPosts posts={posts} />
+					<BlogPosts posts={recentPosts} />
 				</section>
 			</div>
 

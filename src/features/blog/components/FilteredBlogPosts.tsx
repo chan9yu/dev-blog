@@ -11,10 +11,11 @@ import { ViewToggle } from "./ViewToggle";
 type FilteredBlogPostsProps = {
 	posts: PostSummary[];
 	selectedTag?: string;
+	defaultView?: "list" | "grid";
 };
 
-export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps) {
-	const [view, setView] = useState<"list" | "grid">("list");
+export function FilteredBlogPosts({ posts, selectedTag, defaultView = "list" }: FilteredBlogPostsProps) {
+	const [view, setView] = useState<"list" | "grid">(defaultView);
 
 	const filteredPosts = selectedTag ? posts.filter((post) => post.tags.includes(selectedTag)) : posts;
 

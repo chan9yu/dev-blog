@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getAllTags, getPostsByTag } from "@/features/blog";
 import { FilteredBlogPosts } from "@/features/blog/components/FilteredBlogPosts";
-import ArrowLeftIcon from "@/shared/assets/icons/arrow-left.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
 
@@ -71,18 +69,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 			</header>
 
 			{/* Posts with View Toggle */}
-			<FilteredBlogPosts posts={posts} />
-
-			{/* Back to All Tags */}
-			<div className="mt-12 text-center">
-				<Link
-					href="/"
-					className="bg-secondary text-primary border-primary inline-flex items-center gap-2 rounded-lg border px-6 py-3 font-medium transition-colors"
-				>
-					<ArrowLeftIcon className="size-5" />
-					홈으로 돌아가기
-				</Link>
-			</div>
+			<FilteredBlogPosts posts={posts} defaultView="grid" />
 		</div>
 	);
 }
