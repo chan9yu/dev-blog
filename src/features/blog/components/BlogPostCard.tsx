@@ -4,15 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 import ClockIcon from "@/shared/assets/icons/clock.svg";
+import { cn } from "@/shared/utils";
 
 import type { PostSummary } from "../types";
 import { calculateReadingTime, formatDate } from "../utils";
 
 type BlogPostCardProps = {
 	post: PostSummary;
+	variant?: "list" | "grid";
 };
 
-export function BlogPostCard({ post }: BlogPostCardProps) {
+export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
 	const readingTime = calculateReadingTime(post.description);
 
 	return (
@@ -37,7 +39,10 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 				{/* Header: Title + Date */}
 				<div className="mb-3 flex items-start justify-between gap-4">
 					<h3
-						className="text-primary flex-1 font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]"
+						className={cn(
+							"text-primary flex-1 font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))]",
+							variant === "grid" && "line-clamp-2"
+						)}
 						style={{
 							fontSize: "var(--font-xl)",
 							lineHeight: "var(--leading-snug)"
@@ -56,7 +61,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 
 				{/* Description */}
 				<p
-					className="text-secondary mb-4 line-clamp-2"
+					className={cn("text-secondary mb-4", variant === "list" ? "line-clamp-2" : "line-clamp-3")}
 					style={{
 						fontSize: "var(--font-base)",
 						lineHeight: "var(--leading-relaxed)"
@@ -70,18 +75,21 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 					{/* Tags */}
 					{post.tags && post.tags.length > 0 && (
 						<div className="flex flex-1 flex-wrap items-center gap-2">
-							{post.tags.map((tag) => (
+							{post.tags.slice(0, variant === "grid" ? 2 : post.tags.length).map((tag) => (
 								<span key={tag} className="bg-tertiary text-tertiary rounded px-2 py-0.5 text-xs font-medium">
 									{tag}
 								</span>
 							))}
+							{variant === "grid" && post.tags.length > 2 && (
+								<span className="text-muted text-xs">+{post.tags.length - 2}</span>
+							)}
 						</div>
 					)}
 
 					{/* Reading Time */}
 					<div className="text-muted flex shrink-0 items-center gap-1.5" style={{ fontSize: "var(--font-sm)" }}>
 						<ClockIcon className="size-4" />
-						<span>{readingTime}분 읽기</span>
+						<span>{readingTime}분</span>
 					</div>
 				</div>
 			</div>

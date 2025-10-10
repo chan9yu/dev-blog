@@ -1,10 +1,11 @@
 import Link from "next/link";
 
-import { BlogPosts, TrendingPosts, TrendingTags } from "@/features/blog";
+import { BlogPosts, getAllPosts, TrendingPosts, TrendingTags } from "@/features/blog";
 import { PopularSeries } from "@/features/series";
 import { SocialLinks } from "@/shared/components";
 
-export default function Page() {
+export default async function Page() {
+	const posts = await getAllPosts();
 	return (
 		<div className="flex gap-8">
 			{/* Main Content */}
@@ -43,7 +44,7 @@ export default function Page() {
 							전체 보기 →
 						</Link>
 					</div>
-					<BlogPosts />
+					<BlogPosts posts={posts} />
 				</section>
 			</div>
 

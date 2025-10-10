@@ -2,28 +2,17 @@
 
 import { useState } from "react";
 
+import { BlogPostCard } from "@/features/blog/components/BlogPostCard";
+import { ViewToggle } from "@/features/blog/components/ViewToggle";
+import type { PostSummary } from "@/features/blog/types";
 import { cn } from "@/shared/utils";
 
-import type { PostSummary } from "../types";
-import { BlogPostCard } from "./BlogPostCard";
-import { ViewToggle } from "./ViewToggle";
-
-type FilteredBlogPostsProps = {
+type SeriesPostsProps = {
 	posts: PostSummary[];
-	selectedTag?: string;
 };
 
-export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps) {
+export function SeriesPosts({ posts }: SeriesPostsProps) {
 	const [view, setView] = useState<"list" | "grid">("list");
-
-	const filteredPosts = selectedTag ? posts.filter((post) => post.tags.includes(selectedTag)) : posts;
-
-	const sortedPosts = filteredPosts.sort((a, b) => {
-		if (new Date(a.date) > new Date(b.date)) {
-			return -1;
-		}
-		return 1;
-	});
 
 	return (
 		<div className="space-y-6">
@@ -36,7 +25,7 @@ export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps
 			<div
 				className={cn(view === "list" ? "flex flex-col gap-4 sm:gap-6" : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3")}
 			>
-				{sortedPosts.map((post) => (
+				{posts.map((post) => (
 					<BlogPostCard key={post.slug} post={post} variant={view} />
 				))}
 			</div>

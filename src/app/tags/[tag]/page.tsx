@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getAllTags, getPostsByTag } from "@/features/blog";
-import { BlogPostCard } from "@/features/blog/components/BlogPostCard";
+import { FilteredBlogPosts } from "@/features/blog/components/FilteredBlogPosts";
 import ArrowLeftIcon from "@/shared/assets/icons/arrow-left.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
@@ -70,12 +70,8 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 				<hr className="border-primary" />
 			</header>
 
-			{/* Posts Grid */}
-			<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{posts.map((post) => (
-					<BlogPostCard key={post.slug} post={post} />
-				))}
-			</div>
+			{/* Posts with View Toggle */}
+			<FilteredBlogPosts posts={posts} />
 
 			{/* Back to All Tags */}
 			<div className="mt-12 text-center">
