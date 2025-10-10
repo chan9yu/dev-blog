@@ -11,11 +11,11 @@ type BlogPostCardProps = {
 };
 
 export function BlogPostCard({ post }: BlogPostCardProps) {
-	const readingTime = calculateReadingTime(post.short_description);
+	const readingTime = calculateReadingTime(post.description);
 
 	return (
 		<Link
-			href={`/posts/${post.url_slug}`}
+			href={`/posts/${post.slug}`}
 			className="bg-elevated border-primary group block overflow-hidden rounded-xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 		>
 			{/* Thumbnail */}
@@ -45,10 +45,10 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 					</h3>
 					<time
 						className="text-muted shrink-0 tabular-nums"
-						dateTime={post.released_at}
+						dateTime={post.date}
 						style={{ fontSize: "var(--font-sm)" }}
 					>
-						{formatDate(post.released_at, false)}
+						{formatDate(post.date, false)}
 					</time>
 				</div>
 
@@ -60,7 +60,7 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
 						lineHeight: "var(--leading-relaxed)"
 					}}
 				>
-					{post.short_description}
+					{post.description}
 				</p>
 
 				{/* Footer: Tags + Reading Time */}

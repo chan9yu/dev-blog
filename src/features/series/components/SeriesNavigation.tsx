@@ -11,8 +11,8 @@ type SeriesNavigationProps = {
 
 export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesNavigationProps) {
 	const seriesSlug = slugifyUrlSafe(seriesName);
-	const sortedPosts = [...allPosts].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-	const currentPostIndex = sortedPosts.findIndex((p) => p.index === currentIndex);
+	const sortedPosts = [...allPosts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
+	const currentPostIndex = sortedPosts.findIndex((p) => p.seriesOrder === currentIndex);
 	const prevPost = currentPostIndex > 0 ? sortedPosts[currentPostIndex - 1] : null;
 	const nextPost = currentPostIndex < sortedPosts.length - 1 ? sortedPosts[currentPostIndex + 1] : null;
 
@@ -50,7 +50,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 			<div className="flex gap-3">
 				{prevPost ? (
 					<Link
-						href={`/posts/${prevPost.url_slug}`}
+						href={`/posts/${prevPost.slug}`}
 						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
 					>
 						<span className="text-tertiary flex items-center gap-1 text-xs font-medium">
@@ -72,7 +72,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 
 				{nextPost ? (
 					<Link
-						href={`/posts/${nextPost.url_slug}`}
+						href={`/posts/${nextPost.slug}`}
 						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right transition-all hover:shadow-sm"
 					>
 						<span className="text-tertiary flex items-center justify-end gap-1 text-xs font-medium">

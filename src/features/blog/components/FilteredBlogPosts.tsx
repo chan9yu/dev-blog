@@ -10,7 +10,7 @@ export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps
 	const filteredPosts = selectedTag ? posts.filter((post) => post.tags.includes(selectedTag)) : posts;
 
 	const sortedPosts = filteredPosts.sort((a, b) => {
-		if (new Date(a.released_at) > new Date(b.released_at)) {
+		if (new Date(a.date) > new Date(b.date)) {
 			return -1;
 		}
 		return 1;
@@ -19,7 +19,7 @@ export function FilteredBlogPosts({ posts, selectedTag }: FilteredBlogPostsProps
 	return (
 		<div className="flex flex-col gap-4 sm:gap-6">
 			{sortedPosts.map((post) => (
-				<BlogPostCard key={post.url_slug} post={post} />
+				<BlogPostCard key={post.slug} post={post} />
 			))}
 		</div>
 	);

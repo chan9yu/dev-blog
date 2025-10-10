@@ -44,8 +44,8 @@ export default async function SeriesPage() {
 				<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{series.map((s) => (
 						<Link
-							key={s.url_slug}
-							href={`/series/${s.url_slug}`}
+							key={s.slug}
+							href={`/series/${s.slug}`}
 							className="bg-primary border-primary group rounded-xl border p-6 transition-all hover:shadow-md"
 						>
 							<div className="space-y-4">
@@ -69,7 +69,7 @@ export default async function SeriesPage() {
 
 								<div className="space-y-1.5 pt-2">
 									{s.posts.slice(0, 3).map((post, idx) => (
-										<div key={post.url_slug} className="flex items-start gap-2 text-sm">
+										<div key={post.slug} className="flex items-start gap-2 text-sm">
 											<span className="bg-tertiary text-tertiary mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs font-medium">
 												{idx + 1}
 											</span>

@@ -8,18 +8,16 @@ import { z } from "zod";
 export const FrontmatterSchema = z.object({
 	// 필수 필드
 	title: z.string().min(1, "제목은 필수입니다"),
-	short_description: z.string().min(1, "요약은 필수입니다"),
-	url_slug: z.string().min(1, "URL slug는 필수입니다"),
-	released_at: z.string().datetime("ISO 8601 형식의 날짜가 필요합니다"),
-	updated_at: z.string().datetime("ISO 8601 형식의 날짜가 필요합니다"),
-	is_private: z.boolean().default(false),
-	tags: z.array(z.string()).min(1, "최소 1개 이상의 태그가 필요합니다"),
+	description: z.string().min(1, "설명은 필수입니다"),
+	slug: z.string().min(1, "Slug는 필수입니다"),
+	date: z.string().datetime("ISO 8601 형식의 날짜가 필요합니다"),
+	private: z.boolean().default(false),
 
 	// 선택 필드
-	thumbnail: z.string().optional(), // 로컬 경로(/images/...) 또는 URL
-	series: z.string().optional(),
-	index: z.number().int().positive().optional(),
-	id: z.string().uuid().optional()
+	tags: z.array(z.string()).default([]),
+	thumbnail: z.string().nullable().default(null),
+	series: z.string().nullable().default(null),
+	seriesOrder: z.number().int().positive().nullable().default(null)
 });
 
 export type Frontmatter = z.infer<typeof FrontmatterSchema>;

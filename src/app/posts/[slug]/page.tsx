@@ -42,7 +42,7 @@ export async function generateStaticParams() {
 	const posts = await getAllPosts();
 
 	return posts.map((post) => ({
-		slug: post.url_slug
+		slug: post.slug
 	}));
 }
 
@@ -58,23 +58,14 @@ export async function generateMetadata({
 
 	const IS_PROD = process.env.VERCEL_ENV === "production";
 
-	const {
-		title,
-		released_at: publishedTime,
-		updated_at: modifiedTime,
-		short_description: description,
-		thumbnail,
-		url_slug,
-		tags,
-		is_private
-	} = post;
+	const { title, date: publishedTime, description, thumbnail, slug: postSlug, tags, private: isPrivate } = post;
 
-	const canonical = `${SITE.url}/posts/${url_slug}`;
+	const canonical = `${SITE.url}/posts/${postSlug}`;
 	const ogImage = thumbnail || `${SITE.url}/og?title=${encodeURIComponent(title)}`;
 
 	const allowIndex =
 		IS_PROD &&
-		!is_private &&
+		!isPrivate &&
 		((): boolean => {
 			if (!publishedTime) return true;
 			const ts = Date.parse(publishedTime);
@@ -93,7 +84,6 @@ export async function generateMetadata({
 			siteName: SITE.name,
 			locale: SITE.locale,
 			publishedTime,
-			modifiedTime,
 			tags,
 			images: [{ url: ogImage, width: 1200, height: 630, alt: title, type: "image/png" }],
 			authors: [SITE.author.name]
@@ -131,7 +121,8 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const tocItems = extractTocFromMarkdown(post.content);
 
 	// 시리즈 포스트 정보 가져오기
-	const allSeries = post.series && post.index !== undefined ? await getAllSeries() : [];
+	const allSeries =
+		post.series && post.seriesOrder !== undefined && post.seriesOrder !== null ? await getAllSeries() : [];
 	const currentSeries = allSeries.find((s) => s.name === post.series);
 	const seriesPosts = currentSeries?.posts || [];
 
@@ -152,13 +143,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 							"@context": "https://schema.org",
 							"@type": "BlogPosting",
 							headline: post.title,
-							datePublished: post.released_at,
-							dateModified: post.updated_at,
-							description: post.short_description,
+							datePublished: post.date,
+							description: post.description,
 							image: post.thumbnail
 								? `${SITE.url}${post.thumbnail}`
 								: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
-							url: `${SITE.url}/posts/${post.url_slug}`,
+							url: `${SITE.url}/posts/${post.slug}`,
 							author: {
 								"@type": "Person",
 								name: SITE.author.name,
@@ -178,12 +168,12 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				<header className="mb-12 space-y-6">
 					<div className="space-y-4">
 						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{post.title}</h1>
-						<p className="text-secondary text-lg leading-relaxed">{post.short_description}</p>
+						<p className="text-secondary text-lg leading-relaxed">{post.description}</p>
 					</div>
 
 					{/* Meta Info */}
 					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
-						<time dateTime={post.released_at} className="flex items-center gap-2">
+						<time dateTime={post.date} className="flex items-center gap-2">
 							<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
 									strokeLinecap="round"
@@ -192,21 +182,8 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 									d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
 								/>
 							</svg>
-							{formatDate(post.released_at)}
+							{formatDate(post.date)}
 						</time>
-						{post.updated_at !== post.released_at && (
-							<span className="flex items-center gap-2">
-								<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-									/>
-								</svg>
-								업데이트: {formatDate(post.updated_at)}
-							</span>
-						)}
 					</div>
 
 					{/* Tags */}
@@ -236,9 +213,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				</header>
 
 				{/* Series Navigation */}
-				{post.series && post.index !== undefined && seriesPosts.length > 0 && (
+				{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
 					<div className="mb-8">
-						<SeriesNavigation seriesName={post.series} currentIndex={post.index} allPosts={seriesPosts} />
+						<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
 					</div>
 				)}
 

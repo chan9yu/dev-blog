@@ -19,8 +19,8 @@ export async function PopularSeries() {
 		<div className="space-y-3">
 			{popularSeries.map((series) => (
 				<Link
-					key={series.url_slug}
-					href={`/series/${series.url_slug}`}
+					key={series.slug}
+					href={`/series/${series.slug}`}
 					className="group flex items-center justify-between transition-all hover:translate-x-1"
 				>
 					<span className="text-primary text-sm font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">

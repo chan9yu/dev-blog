@@ -6,7 +6,7 @@ export async function GET() {
 
 	const itemsXml = allBlogs
 		.sort((a, b) => {
-			if (new Date(a.released_at) > new Date(b.released_at)) {
+			if (new Date(a.date) > new Date(b.date)) {
 				return -1;
 			}
 			return 1;
@@ -15,9 +15,9 @@ export async function GET() {
 			(post) =>
 				`<item>
           <title>${post.title}</title>
-          <link>${baseUrl}/posts/${post.url_slug}</link>
-          <description>${post.short_description || ""}</description>
-          <pubDate>${new Date(post.released_at).toUTCString()}</pubDate>
+          <link>${baseUrl}/posts/${post.slug}</link>
+          <description>${post.description || ""}</description>
+          <pubDate>${new Date(post.date).toUTCString()}</pubDate>
         </item>`
 		)
 		.join("\n");

@@ -12,7 +12,7 @@ export async function TrendingPosts() {
 	// 현재는 최신순으로 정렬
 	const trendingPosts = allPosts
 		.sort((a, b) => {
-			return new Date(b.released_at).getTime() - new Date(a.released_at).getTime();
+			return new Date(b.date).getTime() - new Date(a.date).getTime();
 		})
 		.slice(0, MAX_POSTS_DISPLAY);
 
@@ -28,8 +28,8 @@ export async function TrendingPosts() {
 		<div className="space-y-4">
 			{trendingPosts.map((post) => (
 				<Link
-					key={post.url_slug}
-					href={`/posts/${post.url_slug}`}
+					key={post.slug}
+					href={`/posts/${post.slug}`}
 					className="group block space-y-1 transition-transform hover:translate-x-1"
 				>
 					<h3 className="text-primary line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">
@@ -37,9 +37,9 @@ export async function TrendingPosts() {
 					</h3>
 					<time
 						className="text-muted block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
-						dateTime={post.released_at}
+						dateTime={post.date}
 					>
-						{formatDate(post.released_at, false)}
+						{formatDate(post.date, false)}
 					</time>
 				</Link>
 			))}

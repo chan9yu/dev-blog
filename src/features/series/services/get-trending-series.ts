@@ -3,7 +3,7 @@ import { getAllSeries } from "./api";
 
 type SeriesCount = {
 	name: string;
-	url_slug: string;
+	slug: string;
 	count: number;
 };
 
@@ -19,7 +19,7 @@ export async function getTrendingSeries(limit: number = 5): Promise<SeriesCount[
 	const trendingSeries = allSeries
 		.map((series: SeriesBucket) => ({
 			name: series.name,
-			url_slug: series.url_slug,
+			slug: series.slug,
 			count: series.posts.length
 		}))
 		.sort((a, b) => b.count - a.count)
