@@ -1,5 +1,6 @@
 export { Comments } from "./Comments";
 export { CommentsSection } from "./CommentsSection";
+export { CustomMDX } from "./mdx";
 export { NavLink } from "./NavLink";
 export { ReadingProgress } from "./ReadingProgress";
 export { ScrollReset } from "./ScrollReset";

@@ -97,3 +97,21 @@ export async function getGitHubFileContentRaw(slug: string): Promise<string> {
 
 	return response.text();
 }
+
+/**
+ * about 페이지 마크다운 컨텐츠를 가져옵니다.
+ * 빌드 타임에만 생성되며, 변경 시 재배포가 필요합니다.
+ */
+export async function getAboutContent(): Promise<string> {
+	const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/about/index.md`;
+
+	const response = await fetch(url, {
+		cache: "force-cache" // SSG: 빌드 타임에만 fetch
+	});
+
+	if (!response.ok) {
+		throw new Error(`Failed to fetch about content: ${response.statusText}`);
+	}
+
+	return response.text();
+}
