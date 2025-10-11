@@ -4,14 +4,14 @@
 	"version": "1.0.0",
 	"description": "프론트엔드 개발의 아이디어와 경험을 기록하는 개발 블로그. 코드와 디자인, 사용자 경험을 아우르는 인사이트를 담습니다.",
 	"type": "module",
-	"packageManager": "pnpm@10.17.1",
+	"packageManager": "pnpm@10.18.2",
 	"author": "chan9yu <dev.cgyeo@gmail.com>",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/chan9yu/blog9yu.dev"
 	},
 	"scripts": {
-		"dev": "next dev -p 3035",
+		"dev": "next dev -p 3036",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",

@@ -6,7 +6,9 @@ import { PageTransition, SocialLinks } from "@/shared/components";
 
 export default async function Page() {
 	const allPosts = await getAllPosts();
-	const recentPosts = allPosts.slice(0, 6);
+	const recentPosts = allPosts
+		.sort((a, b) => (Date.parse(b.date ?? "") || -Infinity) - (Date.parse(a.date ?? "") || -Infinity))
+		.slice(0, 6);
 
 	return (
 		<PageTransition>

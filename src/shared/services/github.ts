@@ -1,6 +1,7 @@
 const GITHUB_OWNER = "chan9yu";
 const GITHUB_REPO = "blog9yu-content";
 const GITHUB_POSTS_PATH = "posts";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 type GitHubFile = {
 	name: string;
@@ -24,6 +25,21 @@ type GitHubFileContent = {
 };
 
 /**
+ * GitHub API 요청에 사용할 공통 헤더를 생성합니다.
+ */
+function getGitHubHeaders(): HeadersInit {
+	const headers: HeadersInit = {
+		Accept: "application/vnd.github+json"
+	};
+
+	if (GITHUB_TOKEN) {
+		headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+	}
+
+	return headers;
+}
+
+/**
  * GitHub API를 통해 posts 디렉토리의 포스트 목록을 가져옵니다.
  * posts/{slug}/index.mdx 구조를 가정합니다.
  */
@@ -31,9 +47,7 @@ export async function getGitHubMDXFiles(): Promise<GitHubFile[]> {
 	const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_POSTS_PATH}`;
 
 	const response = await fetch(url, {
-		headers: {
-			Accept: "application/vnd.github+json"
-		},
+		headers: getGitHubHeaders(),
 		next: {
 			revalidate: 3600 // ISR: 1시간마다 재검증
 		}
@@ -56,9 +70,7 @@ export async function getGitHubFileContent(path: string): Promise<string> {
 	const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
 
 	const response = await fetch(url, {
-		headers: {
-			Accept: "application/vnd.github+json"
-		},
+		headers: getGitHubHeaders(),
 		next: {
 			revalidate: 3600 // ISR: 1시간마다 재검증
 		}
