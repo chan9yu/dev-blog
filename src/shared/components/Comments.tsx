@@ -48,8 +48,6 @@ export function Comments({ repo, theme }: CommentsProps) {
 		scriptElement.setAttribute("issue-term", "pathname");
 		scriptElement.setAttribute("theme", theme);
 		scriptElement.setAttribute("label", "comment");
-		// 명시적으로 URL 지정 (Vercel 다중 도메인 문제 해결)
-		scriptElement.setAttribute("url", window.location.href);
 
 		commentsElement.appendChild(scriptElement);
 	}, [repo, theme]);

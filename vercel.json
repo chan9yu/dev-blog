@@ -1,0 +1,26 @@
+{
+	"redirects": [
+		{
+			"source": "/:path*",
+			"has": [
+				{
+					"type": "host",
+					"value": "blog9yu.dev"
+				}
+			],
+			"destination": "https://www.chan9yu.dev/:path*",
+			"permanent": true
+		},
+		{
+			"source": "/:path*",
+			"has": [
+				{
+					"type": "host",
+					"value": "chan9yu.dev"
+				}
+			],
+			"destination": "https://www.chan9yu.dev/:path*",
+			"permanent": true
+		}
+	]
+}
