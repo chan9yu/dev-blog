@@ -82,7 +82,7 @@ export function BlogLayout({ tocItems, children }: BlogLayoutProps) {
 					<button
 						onClick={() => setIsMobileTocOpen(true)}
 						className={cn(
-							"fixed right-6 bottom-6 z-40 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 xl:hidden",
+							"fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 xl:hidden",
 							"bg-accent shadow-lg hover:shadow-xl",
 							"hover:scale-110 active:scale-95"
 						)}
