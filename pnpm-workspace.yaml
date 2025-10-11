@@ -1,2 +1,6 @@
 onlyBuiltDependencies:
+  - "@tailwindcss/oxide"
+  - "@vercel/speed-insights"
   - lefthook
+  - sharp
+  - unrs-resolver
