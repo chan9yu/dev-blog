@@ -28,6 +28,10 @@ cd chan9yu-blog
 # 의존성 설치
 pnpm install
 
+# 환경 변수 설정
+cp .env.example .env
+# .env 파일을 열어 GITHUB_TOKEN을 설정하세요
+
 # 개발 서버 시작 (localhost:3035)
 pnpm dev
 
@@ -38,6 +42,30 @@ pnpm type-check
 # 프로덕션 빌드
 pnpm build
 ```
+
+### Environment Variables
+
+프로젝트 실행 전 환경 변수를 설정해야 합니다.
+
+```bash
+# .env 파일 생성
+cp .env.example .env
+```
+
+**필수 환경 변수:**
+
+| 변수명         | 설명                                                                                                                                                                                                                                | 필수 여부   |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `GITHUB_TOKEN` | GitHub Personal Access Token<br/>- GitHub REST API 호출 시 Rate Limit 증가 (60/h → 5,000/h)<br/>- 토큰 생성: [GitHub Settings > Tokens](https://github.com/settings/tokens)<br/>- 필요 권한: `public_repo` (public repository 읽기) | 선택 (권장) |
+
+**토큰 생성 방법:**
+
+1. [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens) 접속
+2. "Generate new token (classic)" 클릭
+3. Note: `blog9yu.dev` (또는 원하는 이름)
+4. Scopes: `public_repo` 체크
+5. "Generate token" 클릭 후 토큰 복사
+6. `.env` 파일에 `GITHUB_TOKEN=your_token_here` 추가
 
 ### Available Scripts
 
@@ -365,3 +393,47 @@ plugins:
 ## License
 
 이 프로젝트는 MIT 라이선스 하에 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+```sequenceDiagram
+    participant A as ObjectA (sender)
+    participant S as Signaling Server
+    participant B as ObjectB (receiver)
+
+    %% --- Room creation ---
+    A->>S: make a room
+    S-->>A: roomId
+    S->>S: save room id
+
+    %% --- Sender: create offer ---
+    A->>A: getUserMedia()
+    A->>A: new RTCPeerConnection()
+    A->>A: pc.setLocalDescription(offer)
+    A->>S: send { roomId, offer }
+    A-->>S: onicecandidate → send ICE
+
+    %% --- Receiver: join & answer ---
+    B->>S: join call(roomId)
+    S-->>B: offer
+    B->>B: getUserMedia()
+    B->>B: new RTCPeerConnection()
+    B->>B: pc.setRemoteDescription(offer)
+    B->>B: pc.setLocalDescription(answer)
+    B->>S: send { roomId, answer }
+    B-->>S: onicecandidate → send ICE
+
+    %% --- Exchange answer & ICE ---
+    S-->>A: answer
+    A->>A: pc.setRemoteDescription(answer)
+
+    S-->>A: remote ICE
+    A->>A: pc.addIceCandidate()
+
+    S-->>B: remote ICE
+    B->>B: pc.addIceCandidate()
+
+    %% --- Media established ---
+    A-->>B: media/rtp flows
+    B-->>A: media/rtp flows
+    Note over A,B: success
+
+```
