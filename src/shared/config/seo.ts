@@ -22,7 +22,7 @@ export const SITE = {
 	},
 
 	// URL 설정
-	url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog9yu.dev",
+	url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.chan9yu.dev",
 	repoUrl: "https://github.com/chan9yu/blog9yu.dev",
 
 	// 소셜 미디어
