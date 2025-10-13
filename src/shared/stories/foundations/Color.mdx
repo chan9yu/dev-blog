@@ -1,0 +1,341 @@
+import { ColorPalette, ColorItem, Meta } from "@storybook/addon-docs/blocks";
+import { primitiveColors, semanticColors } from "../../styles/foundations/colors";
+
+<Meta title="Foundation/Color" />
+
+# Color System
+
+blog9yu.dev의 색상 시스템은 **실제 서비스에서 사용 중인 색상**을 기반으로 체계화되었습니다.
+
+## Architecture
+
+```
+Primitive Colors (원시 색상 팔레트)
+  ↓
+Semantic Colors (시맨틱 토큰 - Light/Dark 테마)
+```
+
+- **Primitive Colors**: Tailwind CSS 기본 팔레트 (Gray, Slate, Zinc, Stone, Blue, Indigo)
+- **Semantic Colors**: 실제 `tokens.css`에서 사용 중인 시맨틱 매핑 (text, background, border, primary, accent, scrollbar)
+
+---
+
+## Primitive Colors
+
+### Gray (Light Theme 배경)
+
+<ColorPalette>
+	<ColorItem
+		title="Gray"
+		subtitle="Light Theme 배경색"
+		colors={{
+			"50": primitiveColors.gray[50],
+			"100": primitiveColors.gray[100],
+			"200": primitiveColors.gray[200],
+			"300": primitiveColors.gray[300],
+			"400": primitiveColors.gray[400],
+			"500": primitiveColors.gray[500],
+			"600": primitiveColors.gray[600],
+			"700": primitiveColors.gray[700],
+			"800": primitiveColors.gray[800],
+			"900": primitiveColors.gray[900]
+		}}
+	/>
+</ColorPalette>
+
+**사용 위치:**
+
+- `50`: bg-secondary (light)
+- `100`: bg-tertiary (light)
+- `300`: border-gray-300
+
+### Slate (Light Theme 텍스트/테두리)
+
+<ColorPalette>
+	<ColorItem
+		title="Slate"
+		subtitle="Light Theme 텍스트 및 테두리"
+		colors={{
+			"50": primitiveColors.slate[50],
+			"100": primitiveColors.slate[100],
+			"200": primitiveColors.slate[200],
+			"300": primitiveColors.slate[300],
+			"400": primitiveColors.slate[400],
+			"500": primitiveColors.slate[500],
+			"600": primitiveColors.slate[600],
+			"700": primitiveColors.slate[700],
+			"800": primitiveColors.slate[800],
+			"900": primitiveColors.slate[900]
+		}}
+	/>
+</ColorPalette>
+
+**사용 위치:**
+
+- `50`: bg-hover (light)
+- `100`: border-secondary (light)
+- `200`: border-primary (light), scrollbar-track
+- `400`: scrollbar-thumb
+- `500`: text-tertiary (light), scrollbar-thumb-hover
+- `600`: text-secondary (light)
+- `900`: text-primary (light)
+
+### Zinc (Dark Theme)
+
+<ColorPalette>
+	<ColorItem
+		title="Zinc"
+		subtitle="Dark Theme 전반"
+		colors={{
+			"50": primitiveColors.zinc[50],
+			"100": primitiveColors.zinc[100],
+			"200": primitiveColors.zinc[200],
+			"300": primitiveColors.zinc[300],
+			"400": primitiveColors.zinc[400],
+			"500": primitiveColors.zinc[500],
+			"600": primitiveColors.zinc[600],
+			"700": primitiveColors.zinc[700],
+			"800": primitiveColors.zinc[800],
+			"900": primitiveColors.zinc[900],
+			"950": primitiveColors.zinc[950]
+		}}
+	/>
+</ColorPalette>
+
+**사용 위치:**
+
+- `50`: text-primary (dark)
+- `400`: text-secondary (dark)
+- `500`: text-tertiary (dark), scrollbar-thumb-hover
+- `600`: scrollbar-thumb (dark)
+- `800`: bg-tertiary (dark), border-primary (dark)
+- `900`: bg-secondary (dark), border-secondary (dark), scrollbar-track
+- `950`: bg-primary (dark)
+
+---
+
+## Brand Colors
+
+### Primary (Blue)
+
+<ColorPalette>
+	<ColorItem
+		title="Primary (Blue)"
+		subtitle="주요 브랜드 색상 - CTA, 링크"
+		colors={{
+			"50": primitiveColors.blue[50],
+			"100": primitiveColors.blue[100],
+			"200": primitiveColors.blue[200],
+			"300": primitiveColors.blue[300],
+			"400": primitiveColors.blue[400],
+			"500": primitiveColors.blue[500],
+			"600": primitiveColors.blue[600],
+			"700": primitiveColors.blue[700],
+			"800": primitiveColors.blue[800],
+			"900": primitiveColors.blue[900]
+		}}
+	/>
+</ColorPalette>
+
+**사용 위치:**
+
+- `500`: --color-primary (Light/Dark 공통)
+- `600`: --color-primary-hover
+
+### Accent (Indigo)
+
+<ColorPalette>
+	<ColorItem
+		title="Accent (Indigo)"
+		subtitle="보조 브랜드 색상 - 강조, 하이라이트"
+		colors={{
+			"50": primitiveColors.indigo[50],
+			"100": primitiveColors.indigo[100],
+			"200": primitiveColors.indigo[200],
+			"300": primitiveColors.indigo[300],
+			"400": primitiveColors.indigo[400],
+			"500": primitiveColors.indigo[500],
+			"600": primitiveColors.indigo[600],
+			"700": primitiveColors.indigo[700],
+			"800": primitiveColors.indigo[800],
+			"900": primitiveColors.indigo[900]
+		}}
+	/>
+</ColorPalette>
+
+**사용 위치:**
+
+- `500`: --color-accent (light)
+- `600`: --color-accent-hover (light)
+- `400`: --color-accent (dark)
+- `300`: --color-accent-hover (dark)
+
+---
+
+## Semantic Colors
+
+현재 `tokens.css`에서 정의된 시맨틱 컬러 토큰:
+
+### Text Colors
+
+<table>
+	<thead>
+		<tr>
+			<th>토큰</th>
+			<th>Light</th>
+			<th>Dark</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>text-primary</code>
+			</td>
+			<td>Slate 900</td>
+			<td>Zinc 50</td>
+		</tr>
+		<tr>
+			<td>
+				<code>text-secondary</code>
+			</td>
+			<td>Slate 600</td>
+			<td>Zinc 400</td>
+		</tr>
+		<tr>
+			<td>
+				<code>text-tertiary</code>
+			</td>
+			<td>Slate 500</td>
+			<td>Zinc 500</td>
+		</tr>
+	</tbody>
+</table>
+
+### Background Colors
+
+<table>
+	<thead>
+		<tr>
+			<th>토큰</th>
+			<th>Light</th>
+			<th>Dark</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>bg-primary</code>
+			</td>
+			<td>White</td>
+			<td>Zinc 950</td>
+		</tr>
+		<tr>
+			<td>
+				<code>bg-secondary</code>
+			</td>
+			<td>Gray 50</td>
+			<td>Zinc 900</td>
+		</tr>
+		<tr>
+			<td>
+				<code>bg-tertiary</code>
+			</td>
+			<td>Gray 100</td>
+			<td>Zinc 800</td>
+		</tr>
+		<tr>
+			<td>
+				<code>bg-elevated</code>
+			</td>
+			<td>Gray 50</td>
+			<td>Zinc 900</td>
+		</tr>
+	</tbody>
+</table>
+
+### Border Colors
+
+<table>
+	<thead>
+		<tr>
+			<th>토큰</th>
+			<th>Light</th>
+			<th>Dark</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>border-primary</code>
+			</td>
+			<td>Slate 200</td>
+			<td>Zinc 800</td>
+		</tr>
+		<tr>
+			<td>
+				<code>border-secondary</code>
+			</td>
+			<td>Slate 100</td>
+			<td>Zinc 900</td>
+		</tr>
+	</tbody>
+</table>
+
+---
+
+## CSS Variables
+
+실제 `tokens.css`에서 정의된 CSS 변수:
+
+```css
+:root {
+	/* Brand */
+	--color-primary: 59 130 246; /* blue-500 */
+	--color-primary-hover: 37 99 235; /* blue-600 */
+
+	/* Light Theme */
+	--color-bg-primary: 255 255 255;
+	--color-bg-secondary: 249 250 251; /* gray-50 */
+	--color-text-primary: 15 23 42; /* slate-900 */
+	--color-text-secondary: 71 85 105; /* slate-600 */
+
+	/* Accent */
+	--color-accent: 99 102 241; /* indigo-500 */
+	--color-accent-hover: 79 70 229; /* indigo-600 */
+}
+
+html.dark {
+	/* Dark Theme */
+	--color-bg-primary: 9 9 11; /* zinc-950 */
+	--color-text-primary: 250 250 250; /* zinc-50 */
+	--color-accent: 129 140 248; /* indigo-400 */
+}
+```
+
+---
+
+## 사용 방법
+
+### Tailwind Utility Classes
+
+```tsx
+<div className="bg-primary text-primary border-primary">Content</div>
+```
+
+### CSS Variables
+
+```css
+.custom {
+	background: rgb(var(--color-bg-primary));
+	color: rgb(var(--color-text-primary));
+}
+```
+
+---
+
+## Accessibility
+
+모든 색상 조합은 **WCAG 2.1 AA 기준**을 준수합니다.
+
+- Text (primary on bg-primary): 4.5:1 이상
+- Interactive Elements: 3:1 이상

@@ -1,29 +1,65 @@
 /* ============================================
-  Design Tokens - 2025 Modern Blog System
+  Semantic Tokens - Purpose-based Design Tokens
+
+  2025 Tailwind CSS 4 Best Practice:
+  - Use :root for semantic tokens (not @theme)
+  - Reference @theme primitive colors using var()
+  - Create aliased tokens for UI elements
+
+  Layer Structure:
+  @theme (Primitive) → :root (Semantic) → @layer utilities (Custom Classes)
 ============================================ */
 
 :root {
-	/* Brand Colors */
-	--color-primary: 59 130 246; /* blue-500 */
-	--color-primary-hover: 37 99 235; /* blue-600 */
+	/* ========================================
+	   Text Colors - Semantic Tokens
+	======================================== */
+	--text-primary: var(--color-slate-900);
+	--text-secondary: var(--color-slate-600);
+	--text-tertiary: var(--color-slate-500);
+	--text-muted: var(--color-slate-500);
 
-	/* Light Theme Colors */
-	--color-bg-primary: 255 255 255;
-	--color-bg-secondary: 249 250 251; /* gray-50 */
-	--color-bg-tertiary: 243 244 246; /* gray-100 */
-	--color-bg-hover: 241 245 249; /* slate-50 */
+	/* ========================================
+	   Background Colors - Semantic Tokens
+	======================================== */
+	--bg-primary: var(--color-white);
+	--bg-secondary: var(--color-gray-50);
+	--bg-tertiary: var(--color-gray-100);
+	--bg-elevated: var(--color-gray-50);
+	--bg-hover: var(--color-slate-50);
 
-	--color-text-primary: 15 23 42; /* slate-900 */
-	--color-text-secondary: 71 85 105; /* slate-600 */
-	--color-text-tertiary: 100 116 139; /* slate-500 */
+	/* ========================================
+	   Border Colors - Semantic Tokens
+	======================================== */
+	--border-primary: var(--color-slate-200);
+	--border-secondary: var(--color-slate-100);
 
-	--color-border-primary: 226 232 240; /* slate-200 */
-	--color-border-secondary: 241 245 249; /* slate-100 */
+	/* ========================================
+	   Brand Colors - Semantic Tokens
+	======================================== */
+	--brand-primary: var(--color-blue-500);
+	--brand-primary-hover: var(--color-blue-600);
+	--brand-accent: var(--color-indigo-500);
+	--brand-accent-hover: var(--color-indigo-600);
 
-	--color-accent: 99 102 241; /* indigo-500 */
-	--color-accent-hover: 79 70 229; /* indigo-600 */
+	/* ========================================
+	   Interactive Colors - Semantic Tokens
+	======================================== */
+	--interactive-primary: var(--color-blue-500);
+	--interactive-primary-hover: var(--color-blue-600);
+	--interactive-accent: var(--color-indigo-500);
+	--interactive-accent-hover: var(--color-indigo-600);
 
-	/* Code Syntax Highlighting - Light */
+	/* ========================================
+	   Scrollbar Colors - Semantic Tokens
+	======================================== */
+	--scrollbar-track: var(--color-slate-200);
+	--scrollbar-thumb: var(--color-slate-400);
+	--scrollbar-thumb-hover: var(--color-slate-500);
+
+	/* ========================================
+	   Code Syntax Highlighting - Light Theme
+	======================================== */
 	--sh-class: #2d5e9d;
 	--sh-identifier: #354150;
 	--sh-sign: #8996a3;
@@ -34,122 +70,324 @@
 	--sh-property: #e25a1c;
 	--sh-entity: #e25a1c;
 
-	/* Spacing Scale */
+	/* ========================================
+	   Typography - Font Families
+	======================================== */
+	--font-sans: var(--font-pretendard);
+	--font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+	/* ========================================
+	   Typography - Font Sizes
+	======================================== */
+	/* Display - 큰 제목용 (Hero, Landing) */
+	--font-size-display-lg: 3.75rem; /* 60px */
+	--font-size-display-md: 3rem; /* 48px */
+	--font-size-display-sm: 2.25rem; /* 36px */
+
+	/* Heading - 일반 제목용 (H1-H6) */
+	--font-size-heading-xl: 2rem; /* 32px */
+	--font-size-heading-lg: 1.5rem; /* 24px */
+	--font-size-heading-md: 1.25rem; /* 20px */
+	--font-size-heading-sm: 1.125rem; /* 18px */
+	--font-size-heading-xs: 1rem; /* 16px */
+
+	/* Body - 본문 텍스트용 */
+	--font-size-body-lg: 1.125rem; /* 18px */
+	--font-size-body-md: 1rem; /* 16px */
+	--font-size-body-sm: 0.875rem; /* 14px */
+	--font-size-body-xs: 0.75rem; /* 12px */
+
+	/* Label - 라벨/캡션용 */
+	--font-size-label-lg: 0.875rem; /* 14px */
+	--font-size-label-md: 0.75rem; /* 12px */
+	--font-size-label-sm: 0.6875rem; /* 11px */
+
+	/* ========================================
+	   Typography - Font Weights
+	======================================== */
+	--font-weight-regular: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+
+	/* ========================================
+	   Typography - Line Heights
+	======================================== */
+	--line-height-tight: 1.25;
+	--line-height-snug: 1.375;
+	--line-height-normal: 1.5;
+	--line-height-relaxed: 1.625;
+	--line-height-loose: 2;
+
+	/* ========================================
+	   Typography - Letter Spacing
+	======================================== */
+	--letter-spacing-tighter: -0.05em;
+	--letter-spacing-tight: -0.025em;
+	--letter-spacing-normal: 0em;
+	--letter-spacing-wide: 0.025em;
+	--letter-spacing-wider: 0.05em;
+
+	/* ========================================
+	   Spacing Scale - Semantic Tokens
+	======================================== */
 	--space-section: 6rem;
 	--space-section-mobile: 3rem;
 
-	/* Border Radius */
+	/* ========================================
+	   Border Radius - Semantic Tokens
+	======================================== */
 	--radius-sm: 0.5rem;
 	--radius-md: 0.75rem;
 	--radius-lg: 1rem;
 	--radius-xl: 1.5rem;
 
-	/* Shadows */
+	/* ========================================
+	   Shadows - Semantic Tokens
+	======================================== */
 	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 
-	/* Transitions */
+	/* ========================================
+	   Transitions - Semantic Tokens
+	======================================== */
 	--transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 	--transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-	/* Scrollbar */
+	/* ========================================
+	   Scrollbar Width
+	======================================== */
 	--scrollbar-width: 14px;
-	--scrollbar-track: 226 232 240; /* slate-200 */
-	--scrollbar-thumb: 148 163 184; /* slate-400 */
-	--scrollbar-thumb-hover: 100 116 139; /* slate-500 */
 }
 
+/* ============================================
+  Dark Theme - Semantic Token Overrides
+============================================ */
 html.dark {
-	/* Dark Theme Colors */
-	--color-bg-primary: 9 9 11; /* zinc-950 */
-	--color-bg-secondary: 24 24 27; /* zinc-900 */
-	--color-bg-tertiary: 39 39 42; /* zinc-800 */
-	--color-bg-hover: 28 25 23; /* stone-900 */
+	/* Text Colors - Dark Theme */
+	--text-primary: var(--color-zinc-50);
+	--text-secondary: var(--color-zinc-400);
+	--text-tertiary: var(--color-zinc-500);
+	--text-muted: var(--color-zinc-500);
 
-	--color-text-primary: 250 250 250; /* zinc-50 */
-	--color-text-secondary: 161 161 170; /* zinc-400 */
-	--color-text-tertiary: 113 113 122; /* zinc-500 */
+	/* Background Colors - Dark Theme */
+	--bg-primary: var(--color-zinc-950);
+	--bg-secondary: var(--color-zinc-900);
+	--bg-tertiary: var(--color-zinc-800);
+	--bg-elevated: var(--color-zinc-900);
+	--bg-hover: var(--color-stone-900);
 
-	--color-border-primary: 39 39 42; /* zinc-800 */
-	--color-border-secondary: 24 24 27; /* zinc-900 */
+	/* Border Colors - Dark Theme */
+	--border-primary: var(--color-zinc-800);
+	--border-secondary: var(--color-zinc-900);
 
-	--color-accent: 129 140 248; /* indigo-400 */
-	--color-accent-hover: 165 180 252; /* indigo-300 */
+	/* Brand Colors - Dark Theme */
+	--brand-accent: var(--color-indigo-400);
+	--brand-accent-hover: var(--color-indigo-300);
 
-	/* Code Syntax Highlighting - Dark */
+	/* Interactive Colors - Dark Theme */
+	--interactive-accent: var(--color-indigo-400);
+	--interactive-accent-hover: var(--color-indigo-300);
+
+	/* Scrollbar - Dark Theme */
+	--scrollbar-track: var(--color-zinc-900);
+	--scrollbar-thumb: var(--color-zinc-600);
+	--scrollbar-thumb-hover: var(--color-zinc-500);
+
+	/* Code Syntax Highlighting - Dark Theme */
 	--sh-class: #4c97f8;
 	--sh-identifier: white;
 	--sh-keyword: #f47067;
 	--sh-string: #0fa295;
-
-	/* Scrollbar - Dark */
-	--scrollbar-track: 24 24 27; /* zinc-900 */
-	--scrollbar-thumb: 82 82 91; /* zinc-600 */
-	--scrollbar-thumb-hover: 113 113 122; /* zinc-500 */
 }
 
 /* ============================================
-  Custom Utility Classes
+  @layer utilities - Custom Utility Classes
+
+  Map semantic tokens to Tailwind-style classes.
+  These follow Tailwind naming conventions.
 ============================================ */
-
 @layer utilities {
-	/* Text Colors */
+	/* Text Color Utilities */
 	.text-primary {
-		color: rgb(var(--color-text-primary));
+		color: var(--text-primary);
 	}
+
 	.text-secondary {
-		color: rgb(var(--color-text-secondary));
+		color: var(--text-secondary);
 	}
+
 	.text-tertiary {
-		color: rgb(var(--color-text-tertiary));
+		color: var(--text-tertiary);
 	}
+
 	.text-muted {
-		color: rgb(var(--color-text-tertiary));
+		color: var(--text-muted);
 	}
+
 	.text-accent {
-		color: rgb(var(--color-accent));
+		color: var(--brand-accent);
 	}
 
-	/* Background Colors */
+	/* Background Color Utilities */
 	.bg-primary {
-		background-color: rgb(var(--color-bg-primary));
-	}
-	.bg-secondary {
-		background-color: rgb(var(--color-bg-secondary));
-	}
-	.bg-tertiary {
-		background-color: rgb(var(--color-bg-tertiary));
-	}
-	.bg-elevated {
-		background-color: rgb(var(--color-bg-secondary));
-	}
-	.bg-hover:hover {
-		background-color: rgb(var(--color-bg-hover));
-	}
-	.bg-accent {
-		background-color: rgb(var(--color-accent));
+		background-color: var(--bg-primary);
 	}
 
-	/* Border Colors */
-	.border-primary {
-		border-color: rgb(var(--color-border-primary));
+	.bg-secondary {
+		background-color: var(--bg-secondary);
 	}
+
+	.bg-tertiary {
+		background-color: var(--bg-tertiary);
+	}
+
+	.bg-elevated {
+		background-color: var(--bg-elevated);
+	}
+
+	.bg-hover:hover {
+		background-color: var(--bg-hover);
+	}
+
+	.bg-accent {
+		background-color: var(--brand-accent);
+	}
+
+	/* Border Color Utilities */
+	.border-primary {
+		border-color: var(--border-primary);
+	}
+
 	.border-secondary {
-		border-color: rgb(var(--color-border-secondary));
+		border-color: var(--border-secondary);
 	}
 
 	/* Hover Effects */
 	.hover-accent:hover {
-		color: rgb(var(--color-accent));
+		color: var(--brand-accent);
 	}
+
 	.hover-bg-accent:hover {
-		background-color: rgb(var(--color-accent-hover));
+		background-color: var(--brand-accent-hover);
 	}
 
 	/* Group Hover */
 	.group:hover .group-hover-accent {
-		color: rgb(var(--color-accent));
+		color: var(--brand-accent);
+	}
+
+	/* ========================================
+	   Typography - Display Styles
+	======================================== */
+	.text-display-lg {
+		font-size: var(--font-size-display-lg);
+		line-height: var(--line-height-tight);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.text-display-md {
+		font-size: var(--font-size-display-md);
+		line-height: var(--line-height-tight);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.text-display-sm {
+		font-size: var(--font-size-display-sm);
+		line-height: var(--line-height-tight);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	/* ========================================
+	   Typography - Heading Styles
+	======================================== */
+	.text-heading-xl {
+		font-size: var(--font-size-heading-xl);
+		line-height: var(--line-height-tight);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.text-heading-lg {
+		font-size: var(--font-size-heading-lg);
+		line-height: var(--line-height-snug);
+		font-weight: var(--font-weight-bold);
+		letter-spacing: var(--letter-spacing-tight);
+	}
+
+	.text-heading-md {
+		font-size: var(--font-size-heading-md);
+		line-height: var(--line-height-snug);
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: var(--letter-spacing-normal);
+	}
+
+	.text-heading-sm {
+		font-size: var(--font-size-heading-sm);
+		line-height: var(--line-height-snug);
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: var(--letter-spacing-normal);
+	}
+
+	.text-heading-xs {
+		font-size: var(--font-size-heading-xs);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: var(--letter-spacing-normal);
+	}
+
+	/* ========================================
+	   Typography - Body Styles
+	======================================== */
+	.text-body-lg {
+		font-size: var(--font-size-body-lg);
+		line-height: var(--line-height-relaxed);
+		font-weight: var(--font-weight-regular);
+	}
+
+	.text-body-md {
+		font-size: var(--font-size-body-md);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-regular);
+	}
+
+	.text-body-sm {
+		font-size: var(--font-size-body-sm);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-regular);
+	}
+
+	.text-body-xs {
+		font-size: var(--font-size-body-xs);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-regular);
+	}
+
+	/* ========================================
+	   Typography - Label Styles
+	======================================== */
+	.text-label-lg {
+		font-size: var(--font-size-label-lg);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-medium);
+	}
+
+	.text-label-md {
+		font-size: var(--font-size-label-md);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-medium);
+	}
+
+	.text-label-sm {
+		font-size: var(--font-size-label-sm);
+		line-height: var(--line-height-normal);
+		font-weight: var(--font-weight-medium);
+		text-transform: uppercase;
+		letter-spacing: var(--letter-spacing-wide);
 	}
 }
