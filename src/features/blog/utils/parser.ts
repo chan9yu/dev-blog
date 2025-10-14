@@ -25,8 +25,9 @@ export function parseFrontmatter(fileContent: string) {
 	let fixedContent = content;
 
 	// 모든 단일 줄바꿈 끝에 두 스페이스 추가 (마크다운 hard line break)
-	// 단, 이미 빈 줄(연속된 줄바꿈)이거나 마크다운 특수 문자로 시작하는 줄은 제외
-	fixedContent = fixedContent.replace(/([^\n])\n(?=[^\n#\-*>`|])/g, "$1  \n");
+	// 단, 이미 빈 줄(연속된 줄바꿈)이거나 마크다운 블록 요소로 시작하는 줄은 제외
+	// 블록 요소: # (헤딩), - (리스트), * (리스트), > (인용), | (테이블)
+	fixedContent = fixedContent.replace(/([^\n])\n(?=[^\n#\-*>|])/g, "$1  \n");
 
 	// 인라인 볼드 마크다운을 HTML로 변환
 	// next-mdx-remote가 특정 컨텍스트에서 **텍스트**를 파싱하지 못하는 버그 우회
