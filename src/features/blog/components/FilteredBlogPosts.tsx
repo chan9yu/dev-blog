@@ -40,7 +40,7 @@ export function FilteredBlogPosts({ posts, selectedTag, defaultView = "list" }: 
 				className={cn(view === "list" ? "flex flex-col gap-4 sm:gap-6" : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3")}
 			>
 				<AnimatePresence mode="popLayout">
-					{sortedPosts.map((post) => (
+					{sortedPosts.map((post, index) => (
 						<motion.div
 							key={post.slug}
 							layout
@@ -52,7 +52,7 @@ export function FilteredBlogPosts({ posts, selectedTag, defaultView = "list" }: 
 								ease: [0.4, 0, 0.2, 1]
 							}}
 						>
-							<BlogPostCard post={post} variant={view} />
+							<BlogPostCard post={post} variant={view} priority={index === 0} />
 						</motion.div>
 					))}
 				</AnimatePresence>
