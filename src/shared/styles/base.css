@@ -3,17 +3,28 @@
 ============================================ */
 
 ::selection {
-	background-color: rgb(var(--color-primary));
-	color: rgb(var(--color-bg-primary));
+	background-color: var(--brand-accent);
+	color: var(--bg-primary);
 }
 
 html {
 	min-width: 360px;
-	background-color: rgb(var(--color-bg-primary));
-	color: rgb(var(--color-text-primary));
-	transition:
-		background-color var(--transition-base),
-		color var(--transition-base);
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+}
+
+/* View Transitions API for smooth theme switching */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 0.3s;
+}
+
+::view-transition-old(root) {
+	z-index: 1;
+}
+
+::view-transition-new(root) {
+	z-index: 999;
 }
 
 @media (prefers-color-scheme: dark) {
