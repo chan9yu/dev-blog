@@ -43,6 +43,24 @@
 	--brand-accent-hover: var(--color-indigo-600);
 
 	/* ========================================
+	   Text on Accent/Interactive - Semantic Tokens
+	======================================== */
+	--text-on-accent: var(--color-white);
+	--text-on-primary: var(--color-white);
+
+	/* ========================================
+	   Status Colors - Semantic Tokens
+	======================================== */
+	--status-success: var(--color-green-600);
+	--status-success-text: var(--color-white);
+	--status-error: var(--color-red-600);
+	--status-error-text: var(--color-white);
+	--status-warning: var(--color-amber-500);
+	--status-warning-text: var(--color-zinc-900);
+	--status-info: var(--color-blue-500);
+	--status-info-text: var(--color-white);
+
+	/* ========================================
 	   Interactive Colors - Semantic Tokens
 	======================================== */
 	--interactive-primary: var(--color-blue-500);
@@ -187,6 +205,20 @@ html.dark {
 	--brand-accent: var(--color-indigo-400);
 	--brand-accent-hover: var(--color-indigo-300);
 
+	/* Text on Accent/Interactive - Dark Theme */
+	--text-on-accent: var(--color-zinc-950);
+	--text-on-primary: var(--color-zinc-950);
+
+	/* Status Colors - Dark Theme */
+	--status-success: var(--color-green-500);
+	--status-success-text: var(--color-zinc-950);
+	--status-error: var(--color-red-500);
+	--status-error-text: var(--color-zinc-950);
+	--status-warning: var(--color-amber-400);
+	--status-warning-text: var(--color-zinc-950);
+	--status-info: var(--color-blue-400);
+	--status-info-text: var(--color-zinc-950);
+
 	/* Interactive Colors - Dark Theme */
 	--interactive-accent: var(--color-indigo-400);
 	--interactive-accent-hover: var(--color-indigo-300);
@@ -254,6 +286,49 @@ html.dark {
 
 	.bg-accent {
 		background-color: var(--brand-accent);
+	}
+
+	/* Text on Interactive Backgrounds */
+	.text-on-accent {
+		color: var(--text-on-accent);
+	}
+
+	.text-on-primary {
+		color: var(--text-on-primary);
+	}
+
+	/* Status Background Colors */
+	.bg-success {
+		background-color: var(--status-success);
+	}
+
+	.bg-error {
+		background-color: var(--status-error);
+	}
+
+	.bg-warning {
+		background-color: var(--status-warning);
+	}
+
+	.bg-info {
+		background-color: var(--status-info);
+	}
+
+	/* Status Text Colors */
+	.text-success {
+		color: var(--status-success-text);
+	}
+
+	.text-error {
+		color: var(--status-error-text);
+	}
+
+	.text-warning {
+		color: var(--status-warning-text);
+	}
+
+	.text-info {
+		color: var(--status-info-text);
 	}
 
 	/* Border Color Utilities */
