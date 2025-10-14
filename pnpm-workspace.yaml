@@ -1,6 +1,8 @@
 onlyBuiltDependencies:
   - "@tailwindcss/oxide"
   - "@vercel/speed-insights"
+  - core-js-pure
+  - esbuild
   - lefthook
   - sharp
   - unrs-resolver
