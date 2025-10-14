@@ -48,10 +48,10 @@ export default async function TagsPage() {
 							className="bg-primary border-primary group rounded-xl border p-6 transition-all hover:shadow-md"
 						>
 							<div className="flex items-start justify-between gap-3">
-								<div className="flex-1 space-y-2">
-									<div className="flex items-center gap-2">
+								<div className="min-w-0 flex-1 space-y-2">
+									<div className="flex min-w-0 items-center gap-2">
 										<TagIcon className="text-accent size-5 shrink-0" />
-										<h2 className="text-primary group-hover-accent font-semibold tracking-tight transition-colors">
+										<h2 className="text-primary group-hover-accent min-w-0 flex-1 truncate font-semibold tracking-tight transition-colors">
 											{tag}
 										</h2>
 									</div>
