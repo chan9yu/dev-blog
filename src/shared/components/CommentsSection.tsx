@@ -21,27 +21,16 @@ export function CommentsSection({ repo, initialTheme = "github-light" }: Comment
 		// 초기 테마 설정
 		setTheme(getCurrentTheme());
 
-		// 테마 변경 감지
+		// 테마 변경 핸들러 (Custom event에서 호출)
 		const handleThemeChange = () => {
 			setTheme(getCurrentTheme());
 		};
 
-		// MutationObserver로 class 속성 변경 감지 (dark 클래스)
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.type === "attributes" && mutation.attributeName === "class") {
-					handleThemeChange();
-				}
-			});
-		});
-
-		observer.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ["class"]
-		});
+		// Listen to custom theme change event (fired by ThemeSwitcher)
+		window.addEventListener("themeChange", handleThemeChange);
 
 		return () => {
-			observer.disconnect();
+			window.removeEventListener("themeChange", handleThemeChange);
 		};
 	}, []);
 

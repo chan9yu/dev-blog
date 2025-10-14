@@ -32,11 +32,11 @@ export async function TrendingPosts() {
 					href={`/posts/${post.slug}`}
 					className="group block space-y-1 transition-transform hover:translate-x-1"
 				>
-					<h3 className="text-primary line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">
+					<h3 className="text-primary line-clamp-2 text-sm leading-tight font-medium transition-colors group-hover:!text-[var(--brand-accent)]">
 						{post.title}
 					</h3>
 					<time
-						className="text-muted block text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]"
+						className="text-muted block text-xs transition-colors group-hover:!text-[var(--brand-accent)]"
 						dateTime={post.date}
 					>
 						{formatDate(post.date, false)}

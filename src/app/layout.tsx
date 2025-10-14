@@ -122,7 +122,15 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
 	return (
 		<html lang="ko" className={htmlClassName}>
-			<head>
+			<body className="font-sans antialiased">
+				{/* Theme initialization script - must run before React hydration */}
+				<Script
+					id="theme-init"
+					strategy="beforeInteractive"
+					dangerouslySetInnerHTML={{
+						__html: themeInitScript
+					}}
+				/>
 				{/* JSON-LD Structured Data */}
 				<script
 					type="application/ld+json"
@@ -151,15 +159,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 								"query-input": "required name=search_term_string"
 							}
 						})
-					}}
-				/>
-			</head>
-			<body className="font-sans antialiased">
-				<Script
-					id="theme-init"
-					strategy="beforeInteractive"
-					dangerouslySetInnerHTML={{
-						__html: themeInitScript
 					}}
 				/>
 				<MotionProvider>

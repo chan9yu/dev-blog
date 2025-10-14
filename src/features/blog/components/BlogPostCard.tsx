@@ -11,9 +11,10 @@ import { calculateReadingTime, formatDate } from "../utils";
 type BlogPostCardProps = {
 	post: PostSummary;
 	variant?: "list" | "grid";
+	priority?: boolean;
 };
 
-export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
+export function BlogPostCard({ post, variant = "list", priority = false }: BlogPostCardProps) {
 	const readingTime = calculateReadingTime(post.description);
 
 	return (
@@ -28,6 +29,7 @@ export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
 						src={post.thumbnail}
 						alt={post.title}
 						fill
+						priority={priority}
 						className="object-cover transition-transform duration-500 group-hover:scale-105"
 						sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
 					/>
@@ -39,7 +41,7 @@ export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
 					<>
 						{/* List Layout: Horizontal */}
 						<div className="mb-2 flex flex-col gap-2 sm:mb-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-							<h3 className="text-primary flex-1 text-base font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))] sm:text-lg md:text-xl">
+							<h3 className="text-primary group-hover-accent flex-1 text-base font-bold tracking-tight transition-colors sm:text-lg md:text-xl">
 								{post.title}
 							</h3>
 							<time className="text-muted shrink-0 text-xs tabular-nums sm:text-sm" dateTime={post.date}>
@@ -78,7 +80,7 @@ export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
 					<>
 						{/* Grid Layout: Vertical */}
 						<div className="mb-2 space-y-1.5 sm:mb-3 sm:space-y-2">
-							<h3 className="text-primary line-clamp-2 text-base font-bold tracking-tight transition-colors group-hover:text-[rgb(var(--color-accent))] sm:text-lg md:text-xl">
+							<h3 className="text-primary group-hover-accent line-clamp-2 text-base font-bold tracking-tight transition-colors sm:text-lg md:text-xl">
 								{post.title}
 							</h3>
 							<time className="text-muted block text-xs tabular-nums" dateTime={post.date}>
@@ -93,15 +95,18 @@ export function BlogPostCard({ post, variant = "list" }: BlogPostCardProps) {
 
 						{/* Footer: Tags + Reading Time (Vertical) */}
 						<div className="space-y-2 sm:space-y-3">
-							{/* Tags */}
+							{/* Tags - 1줄 고정 (최대 2개 태그, 길면 말줄임) */}
 							{post.tags && post.tags.length > 0 && (
-								<div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+								<div className="flex min-w-0 items-center gap-1.5 overflow-hidden sm:gap-2">
 									{post.tags.slice(0, 2).map((tag) => (
-										<span key={tag} className="bg-tertiary text-tertiary rounded px-2 py-0.5 text-xs font-medium">
+										<span
+											key={tag}
+											className="bg-tertiary text-tertiary max-w-[45%] truncate rounded px-2 py-0.5 text-xs font-medium"
+										>
 											{tag}
 										</span>
 									))}
-									{post.tags.length > 2 && <span className="text-muted text-xs">+{post.tags.length - 2}</span>}
+									{post.tags.length > 2 && <span className="text-muted shrink-0 text-xs">+{post.tags.length - 2}</span>}
 								</div>
 							)}
 

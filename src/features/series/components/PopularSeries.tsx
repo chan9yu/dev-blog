@@ -23,10 +23,10 @@ export async function PopularSeries() {
 					href={`/series/${series.slug}`}
 					className="group flex items-center justify-between transition-all hover:translate-x-1"
 				>
-					<span className="text-primary text-sm font-medium transition-colors group-hover:!text-[rgb(var(--color-accent))]">
+					<span className="text-primary text-sm font-medium transition-colors group-hover:!text-[var(--brand-accent)]">
 						{series.name}
 					</span>
-					<span className="text-muted text-xs transition-colors group-hover:!text-[rgb(var(--color-accent))]">
+					<span className="text-muted text-xs transition-colors group-hover:!text-[var(--brand-accent)]">
 						{series.count}개
 					</span>
 				</Link>

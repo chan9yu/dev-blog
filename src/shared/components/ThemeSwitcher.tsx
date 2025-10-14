@@ -27,8 +27,25 @@ export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
 
 	const handleToggle = () => {
 		const nextTheme: Theme = currentTheme === "dark" ? "light" : "dark";
-		setCurrentTheme(nextTheme);
-		setTheme(nextTheme);
+
+		const applyTheme = () => {
+			setCurrentTheme(nextTheme);
+			setTheme(nextTheme);
+		};
+
+		// Use View Transitions API if supported
+		if (document.startViewTransition) {
+			const transition = document.startViewTransition(applyTheme);
+			// DOM 업데이트가 완료된 후 custom event 발생
+			transition.updateCallbackDone.then(() => {
+				window.dispatchEvent(new CustomEvent("themeChange", { detail: { theme: nextTheme } }));
+			});
+		} else {
+			// Fallback for browsers that don't support View Transitions
+			applyTheme();
+			// 즉시 custom event 발생
+			window.dispatchEvent(new CustomEvent("themeChange", { detail: { theme: nextTheme } }));
+		}
 	};
 
 	const isDark = currentTheme === "dark";

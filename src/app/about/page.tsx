@@ -40,7 +40,7 @@ export default async function AboutPage() {
 		<div className="mx-auto">
 			{/* Header */}
 			<header className="not-prose mb-12">
-				<h1 className="title text-primary mb-6 text-4xl font-bold tracking-tight sm:text-5xl">About</h1>
+				<h1 className="text-primary mb-6 text-4xl font-bold tracking-tight sm:text-5xl">About</h1>
 				<hr className="border-primary" />
 			</header>
 

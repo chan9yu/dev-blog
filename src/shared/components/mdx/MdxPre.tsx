@@ -29,7 +29,7 @@ export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
 				onClick={handleCopy}
 				className={cn(
 					"absolute top-2 right-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:scale-105",
-					copied ? "border-0 bg-[rgb(120,146,130)] text-white" : "bg-secondary text-secondary border-primary border"
+					copied ? "bg-success text-success border-0" : "bg-secondary text-secondary border-primary border"
 				)}
 				style={{ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}
 				aria-label="Copy code to clipboard"

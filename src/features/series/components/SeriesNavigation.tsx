@@ -30,10 +30,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 					</div>
 					<div>
 						<p className="text-tertiary text-xs font-medium tracking-wider uppercase">시리즈</p>
-						<Link
-							href={`/series/${seriesSlug}`}
-							className="text-primary font-semibold transition-colors hover:text-[rgb(var(--color-accent))]"
-						>
+						<Link href={`/series/${seriesSlug}`} className="text-primary hover-accent font-semibold transition-colors">
 							{seriesName}
 						</Link>
 					</div>
@@ -54,7 +51,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 							<ChevronLeftIcon className="size-3" />
 							이전 글
 						</span>
-						<span className="text-secondary line-clamp-1 text-sm font-medium transition-colors group-hover:text-[rgb(var(--color-accent))]">
+						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
 							{prevPost.title}
 						</span>
 					</Link>
@@ -74,7 +71,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 							다음 글
 							<ChevronRightIcon className="size-3" />
 						</span>
-						<span className="text-secondary line-clamp-1 text-sm font-medium transition-colors group-hover:text-[rgb(var(--color-accent))]">
+						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
 							{nextPost.title}
 						</span>
 					</Link>

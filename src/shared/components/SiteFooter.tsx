@@ -24,7 +24,7 @@ export function SiteFooter() {
 							href={link.href}
 							target={link.external ? "_blank" : undefined}
 							rel={link.external ? "noopener noreferrer" : undefined}
-							className="text-secondary text-sm font-medium transition-colors hover:text-[rgb(var(--color-accent))]"
+							className="text-secondary hover-accent text-sm font-medium transition-colors"
 						>
 							{link.label}
 						</a>

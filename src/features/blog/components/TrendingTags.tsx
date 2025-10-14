@@ -21,7 +21,7 @@ export async function TrendingTags() {
 				<Link
 					key={tag.name}
 					href={`/tags/${encodeURIComponent(tag.name)}`}
-					className="bg-secondary text-secondary inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all hover:scale-105 hover:!bg-[rgb(var(--color-bg-secondary))] hover:!text-[rgb(var(--color-accent))]"
+					className="bg-secondary text-secondary inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all hover:scale-105 hover:!bg-[var(--bg-secondary)] hover:!text-[var(--brand-accent)]"
 				>
 					{tag.name}
 					<span className="text-muted text-[10px]">{tag.count}</span>

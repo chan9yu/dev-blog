@@ -88,7 +88,7 @@ export function BlogLayout({ tocItems, children }: BlogLayoutProps) {
 						)}
 						aria-label="목차 열기"
 					>
-						<MenuIcon className="size-6 text-white" />
+						<MenuIcon className="text-on-accent size-6" />
 					</button>
 
 					{/* Mobile TOC Bottom Sheet */}
