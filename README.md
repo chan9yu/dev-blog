@@ -3,7 +3,7 @@
 > A personal blog built with Next.js 15, TypeScript, and TailwindCSS.
 
 [![Node.js](https://img.shields.io/badge/Node.js-22+-green.svg)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-10%2B-orange?logo=pnpm&logoColor=white)](https://pnpm.io)
+[![pnpm](https://img.shields.io/badge/pnpm-10.18.2-orange?logo=pnpm&logoColor=white)](https://pnpm.io)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -16,7 +16,7 @@ Next.js 15 App Router와 MDX 기반으로 구축된 개인 개발 블로그입�
 ### Prerequisites
 
 - Node.js 22+
-- PNPM 10+
+- pnpm 10.18.2+
 
 ### Installation
 
@@ -32,7 +32,7 @@ pnpm install
 cp .env.example .env
 # .env 파일을 열어 GITHUB_TOKEN을 설정하세요
 
-# 개발 서버 시작 (localhost:3035)
+# 개발 서버 시작 (localhost:3036)
 pnpm dev
 
 # 코드 품질 검사
@@ -70,8 +70,11 @@ cp .env.example .env
 ### Available Scripts
 
 ```bash
-# 개발 서버 (localhost:3035)
+# 개발 서버 (localhost:3036)
 pnpm dev
+
+# Storybook (localhost:6006)
+pnpm storybook
 
 # 프로덕션 빌드
 pnpm build
@@ -120,10 +123,11 @@ pnpm format
 
 ### Development Tools
 
-- **Package Manager**: pnpm 10.17.1
+- **Package Manager**: pnpm 10.18.2
 - **Linting**: ESLint 9 (Flat Config)
 - **Formatting**: Prettier 3
 - **Git Hooks**: Lefthook
+- **Component Dev**: Storybook 9.1.10
 
 <br />
 
@@ -393,47 +397,3 @@ plugins:
 ## License
 
 이 프로젝트는 MIT 라이선스 하에 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
-```sequenceDiagram
-    participant A as ObjectA (sender)
-    participant S as Signaling Server
-    participant B as ObjectB (receiver)
-
-    %% --- Room creation ---
-    A->>S: make a room
-    S-->>A: roomId
-    S->>S: save room id
-
-    %% --- Sender: create offer ---
-    A->>A: getUserMedia()
-    A->>A: new RTCPeerConnection()
-    A->>A: pc.setLocalDescription(offer)
-    A->>S: send { roomId, offer }
-    A-->>S: onicecandidate → send ICE
-
-    %% --- Receiver: join & answer ---
-    B->>S: join call(roomId)
-    S-->>B: offer
-    B->>B: getUserMedia()
-    B->>B: new RTCPeerConnection()
-    B->>B: pc.setRemoteDescription(offer)
-    B->>B: pc.setLocalDescription(answer)
-    B->>S: send { roomId, answer }
-    B-->>S: onicecandidate → send ICE
-
-    %% --- Exchange answer & ICE ---
-    S-->>A: answer
-    A->>A: pc.setRemoteDescription(answer)
-
-    S-->>A: remote ICE
-    A->>A: pc.addIceCandidate()
-
-    S-->>B: remote ICE
-    B->>B: pc.addIceCandidate()
-
-    %% --- Media established ---
-    A-->>B: media/rtp flows
-    B-->>A: media/rtp flows
-    Note over A,B: success
-
-```
