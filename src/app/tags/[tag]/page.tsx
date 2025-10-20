@@ -20,42 +20,45 @@ export async function generateMetadata({
 }: {
 	params: Promise<{ tag: string }>;
 }): Promise<Metadata | undefined> {
-	const { tag: encodedTag } = await params;
-	const tag = decodeURIComponent(encodedTag);
-	const posts = await getPostsByTag(tag);
+	const { tag: tagSlug } = await params;
+	const posts = await getPostsByTag(tagSlug);
 
 	if (posts.length === 0) return;
 
-	const description = `${tag} 태그가 포함된 포스트 ${posts.length}개를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`;
+	// 원본 태그명 추출 (첫 번째 포스트의 태그에서)
+	const originalTag = posts[0]?.tags.find((tag) => slugify(tag) === tagSlug) || tagSlug;
+	const description = `${originalTag} 태그가 포함된 포스트 ${posts.length}개를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`;
 
 	return {
-		title: `#${tag}`,
+		title: `#${originalTag}`,
 		description,
 		openGraph: {
-			title: `#${tag} · chan9yu`,
+			title: `#${originalTag} · chan9yu`,
 			description,
 			type: "website",
-			url: `${SITE.url}/tags/${slugify(tag)}`
+			url: `${SITE.url}/tags/${tagSlug}`
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: `#${tag} · chan9yu`,
+			title: `#${originalTag} · chan9yu`,
 			description
 		},
 		alternates: {
-			canonical: `${SITE.url}/tags/${slugify(tag)}`
+			canonical: `${SITE.url}/tags/${tagSlug}`
 		}
 	};
 }
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
-	const { tag: encodedTag } = await params;
-	const tag = decodeURIComponent(encodedTag);
-	const posts = await getPostsByTag(tag);
+	const { tag: tagSlug } = await params;
+	const posts = await getPostsByTag(tagSlug);
 
 	if (posts.length === 0) {
 		notFound();
 	}
+
+	// 원본 태그명 추출 (첫 번째 포스트의 태그에서)
+	const originalTag = posts[0]?.tags.find((tag) => slugify(tag) === tagSlug) || tagSlug;
 
 	return (
 		<div className="mx-auto max-w-6xl">
@@ -64,7 +67,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 				<div className="space-y-4">
 					<div className="flex items-center gap-3">
 						<TagIcon className="text-accent size-8" />
-						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">#{tag}</h1>
+						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">#{originalTag}</h1>
 					</div>
 					<p className="text-secondary text-lg">총 {posts.length}개의 글</p>
 				</div>

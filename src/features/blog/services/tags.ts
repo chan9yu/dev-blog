@@ -1,3 +1,5 @@
+import { slugify } from "@/shared/utils";
+
 import { getAllPosts } from "./api";
 
 /**
@@ -21,8 +23,9 @@ export async function getAllTags(): Promise<Array<{ tag: string; count: number }
 
 /**
  * 특정 태그가 포함된 게시글 목록 가져오기
+ * @param tagSlug - slugified된 태그 (예: "항해-플러스-프론트엔드-6기")
  */
-export async function getPostsByTag(tag: string) {
+export async function getPostsByTag(tagSlug: string) {
 	const posts = await getAllPosts();
-	return posts.filter((post) => post.tags.includes(tag));
+	return posts.filter((post) => post.tags.some((tag) => slugify(tag) === tagSlug));
 }
