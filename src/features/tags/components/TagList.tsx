@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { cn } from "@/shared/utils";
+import { cn, slugify } from "@/shared/utils";
 
 import type { TagCount } from "../types";
 
@@ -17,7 +17,7 @@ export function TagList({ tagCounts, currentTag, variant = "navigation" }: TagLi
 		if (variant === "filter") {
 			return `/posts?tag=${encodeURIComponent(tag)}`;
 		}
-		return `/tags/${encodeURIComponent(tag)}`;
+		return `/tags/${slugify(tag)}`;
 	};
 
 	return (

@@ -5,12 +5,13 @@ import { getAllTags, getPostsByTag } from "@/features/blog";
 import { FilteredBlogPosts } from "@/features/blog/components/FilteredBlogPosts";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
+import { slugify } from "@/shared/utils";
 
 export async function generateStaticParams() {
 	const allTags = await getAllTags();
 
 	return allTags.map((item) => ({
-		tag: item.tag
+		tag: slugify(item.tag)
 	}));
 }
 
@@ -34,7 +35,7 @@ export async function generateMetadata({
 			title: `#${tag} · chan9yu`,
 			description,
 			type: "website",
-			url: `${SITE.url}/tags/${encodeURIComponent(tag)}`
+			url: `${SITE.url}/tags/${slugify(tag)}`
 		},
 		twitter: {
 			card: "summary_large_image",
@@ -42,7 +43,7 @@ export async function generateMetadata({
 			description
 		},
 		alternates: {
-			canonical: `${SITE.url}/tags/${encodeURIComponent(tag)}`
+			canonical: `${SITE.url}/tags/${slugify(tag)}`
 		}
 	};
 }

@@ -26,7 +26,7 @@ import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
 import { SITE } from "@/shared/config";
 import { utterancesRepo } from "@/shared/constants";
-import type { Theme } from "@/shared/utils";
+import { slugify, type Theme } from "@/shared/utils";
 
 const components = {
 	h1: createHeading(1),
@@ -206,7 +206,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 								{post.tags.map((tag) => (
 									<Link
 										key={tag}
-										href={`/tags/${encodeURIComponent(tag)}`}
+										href={`/tags/${slugify(tag)}`}
 										className="bg-secondary text-secondary border-primary inline-flex min-h-[44px] items-center gap-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors hover:shadow-sm sm:min-h-0 sm:py-1.5 sm:text-sm"
 									>
 										<TagIcon className="size-3 sm:size-3.5" />

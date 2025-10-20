@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { slugify } from "@/shared/utils";
+
 import { getTrendingTags } from "../services";
 
 const MAX_TAGS_DISPLAY = 10;
@@ -20,7 +22,7 @@ export async function TrendingTags() {
 			{trendingTags.map((tag) => (
 				<Link
 					key={tag.name}
-					href={`/tags/${encodeURIComponent(tag.name)}`}
+					href={`/tags/${slugify(tag.name)}`}
 					className="bg-secondary text-secondary inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-all hover:scale-105 hover:!bg-[var(--bg-secondary)] hover:!text-[var(--brand-accent)]"
 				>
 					{tag.name}
