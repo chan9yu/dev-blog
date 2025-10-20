@@ -5,7 +5,7 @@ import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
 import ChevronLeftIcon from "@/shared/assets/icons/chevron-left.svg";
 import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
 import ListIcon from "@/shared/assets/icons/list.svg";
-import { slugifyUrlSafe } from "@/shared/utils";
+import { slugify } from "@/shared/utils";
 
 type SeriesNavigationProps = {
 	seriesName: string;
@@ -14,7 +14,7 @@ type SeriesNavigationProps = {
 };
 
 export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesNavigationProps) {
-	const seriesSlug = slugifyUrlSafe(seriesName);
+	const seriesSlug = slugify(seriesName);
 	const sortedPosts = [...allPosts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 	const currentPostIndex = sortedPosts.findIndex((p) => p.seriesOrder === currentIndex);
 	const prevPost = currentPostIndex > 0 ? sortedPosts[currentPostIndex - 1] : null;

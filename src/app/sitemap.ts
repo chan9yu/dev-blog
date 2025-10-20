@@ -4,6 +4,7 @@ import { getAllPosts } from "@/features/blog";
 import { getAllSeries } from "@/features/series";
 import { getTagCounts } from "@/features/tags";
 import { baseUrl } from "@/shared/constants";
+import { slugify } from "@/shared/utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const posts = await getAllPosts();
@@ -20,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const tagCounts = await getTagCounts();
 	const tagPages = Object.keys(tagCounts).map((tag) => ({
-		url: `${baseUrl}/tags/${encodeURIComponent(tag)}`,
+		url: `${baseUrl}/tags/${slugify(tag)}`,
 		lastModified: new Date().toISOString().split("T")[0]
 	}));
 

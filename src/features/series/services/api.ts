@@ -1,5 +1,5 @@
 import { getAllPosts, validateSeriesIndex } from "@/features/blog";
-import { slugifyUrlSafe } from "@/shared/utils";
+import { slugify } from "@/shared/utils";
 
 import type { SeriesBucket } from "../types";
 
@@ -13,7 +13,7 @@ export async function getAllSeries(): Promise<SeriesBucket[]> {
 
 	posts.forEach((post) => {
 		if (post.series && post.seriesOrder !== undefined) {
-			const seriesSlug = slugifyUrlSafe(post.series);
+			const seriesSlug = slugify(post.series);
 
 			if (!seriesMap.has(seriesSlug)) {
 				seriesMap.set(seriesSlug, {

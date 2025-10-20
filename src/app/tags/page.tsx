@@ -5,6 +5,7 @@ import { getTagCounts } from "@/features/tags";
 import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
+import { slugify } from "@/shared/utils";
 
 export const metadata: Metadata = {
 	title: "태그",
@@ -44,7 +45,7 @@ export default async function TagsPage() {
 					{sortedTags.map(([tag, count]) => (
 						<Link
 							key={tag}
-							href={`/tags/${encodeURIComponent(tag)}`}
+							href={`/tags/${slugify(tag)}`}
 							className="bg-primary border-primary group rounded-xl border p-6 transition-all hover:shadow-md"
 						>
 							<div className="flex items-start justify-between gap-3">

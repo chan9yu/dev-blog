@@ -24,10 +24,3 @@ export function slugify(str: string): string {
 		.replace(/-+/g, "-") // 연속된 하이픈을 하나로
 		.replace(/^-+|-+$/g, ""); // 앞뒤 하이픈 제거
 }
-
-/**
- * @deprecated slugify()를 사용하세요 (동일한 기능)
- */
-export function slugifyUrlSafe(str: string): string {
-	return slugify(str);
-}
