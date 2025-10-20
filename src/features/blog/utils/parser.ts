@@ -31,9 +31,9 @@ export function parseFrontmatter(fileContent: string) {
 
 	// 모든 단일 줄바꿈 끝에 두 스페이스 추가 (마크다운 hard line break)
 	// 단, 이미 빈 줄(연속된 줄바꿈)이거나 마크다운 블록 요소로 시작하는 줄은 제외
-	// 블록 요소: # (헤딩), - (리스트), * (리스트), > (인용), | (테이블)
+	// 블록 요소: # (헤딩), - (리스트), * (리스트), | (테이블)
 	// HTML 태그(<strong> 등) 앞에서도 줄바꿈 허용
-	fixedContent = fixedContent.replace(/([^\n])\n(?=[^\n#\-*>|])/g, "$1  \n");
+	fixedContent = fixedContent.replace(/([^\n])\n(?=[^\n#\-*|])/g, "$1  \n");
 
 	const result = FrontmatterSchema.safeParse(data);
 	if (!result.success) {
