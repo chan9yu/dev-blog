@@ -20,7 +20,9 @@ export async function generateMetadata({
 }: {
 	params: Promise<{ tag: string }>;
 }): Promise<Metadata | undefined> {
-	const { tag: tagSlug } = await params;
+	const { tag: encodedTag } = await params;
+	// URL 디코딩 (한글 처리)
+	const tagSlug = decodeURIComponent(encodedTag);
 	const posts = await getPostsByTag(tagSlug);
 
 	if (posts.length === 0) return;
@@ -50,7 +52,9 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
-	const { tag: tagSlug } = await params;
+	const { tag: encodedTag } = await params;
+	// URL 디코딩 (한글 처리)
+	const tagSlug = decodeURIComponent(encodedTag);
 	const posts = await getPostsByTag(tagSlug);
 
 	if (posts.length === 0) {
