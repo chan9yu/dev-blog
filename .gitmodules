@@ -1,0 +1,3 @@
+[submodule "content"]
+	path = content
+	url = https://github.com/chan9yu/blog9yu-content.git

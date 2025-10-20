@@ -15,7 +15,7 @@ jobs:
   notify-blog:
     runs-on: ubuntu-latest
     steps:
-      - name: Send repository dispatch to blog
+      - name: Trigger blog submodule update
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.BLOG_REPO_PAT }}

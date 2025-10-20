@@ -1,21 +1,21 @@
 import type { PostDetail, PostSummary } from "@/features/blog/types";
 import { parseFrontmatter } from "@/features/blog/utils";
-import { getGitHubFileContentRaw, getGitHubMDXFiles } from "@/shared/services";
+import { getContentFileContentRaw, getContentMDXFiles } from "@/shared/services";
 
 /**
- * GitHub Repository에서 모든 블로그 포스트를 가져옵니다
+ * 서브모듈 content에서 모든 블로그 포스트를 가져옵니다
  * @param includePrivate - private 포스트 포함 여부 (기본값: false)
  */
 export async function getAllPosts(includePrivate = false): Promise<PostSummary[]> {
 	try {
-		// 1. GitHub에서 포스트 디렉토리 목록 가져오기
-		const directories = await getGitHubMDXFiles();
+		// 1. content/posts 디렉토리 목록 가져오기
+		const directories = await getContentMDXFiles();
 
 		// 2. 각 디렉토리의 index.mdx 내용 가져오기 및 파싱
 		const posts = await Promise.all(
 			directories.map(async (dir) => {
 				const slug = dir.name;
-				const rawContent = await getGitHubFileContentRaw(slug);
+				const rawContent = await getContentFileContentRaw(slug);
 				const { metadata } = parseFrontmatter(rawContent);
 
 				// slug 검증 (디렉토리명과 일치해야 함)
@@ -33,7 +33,7 @@ export async function getAllPosts(includePrivate = false): Promise<PostSummary[]
 		// 3. private 포스트 필터링
 		return includePrivate ? posts : posts.filter((post) => !post.private);
 	} catch (error) {
-		console.error("Failed to fetch blog posts from GitHub:", error);
+		console.error("Failed to fetch blog posts from content:", error);
 		return [];
 	}
 }
@@ -45,7 +45,7 @@ export async function getAllPosts(includePrivate = false): Promise<PostSummary[]
  */
 export async function getPostDetail(slug: string, includePrivate = false): Promise<PostDetail | null> {
 	try {
-		const rawContent = await getGitHubFileContentRaw(slug);
+		const rawContent = await getContentFileContentRaw(slug);
 		const { metadata, content } = parseFrontmatter(rawContent);
 
 		// private 포스트 접근 제한

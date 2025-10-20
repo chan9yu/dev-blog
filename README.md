@@ -21,16 +21,15 @@ Next.js 15 App Router와 MDX 기반으로 구축된 개인 개발 블로그입�
 ### Installation
 
 ```bash
-# 저장소 클론
-git clone https://github.com/chan9yu/chan9yu-blog.git
-cd chan9yu-blog
+# 저장소 클론 (서브모듈 포함)
+git clone --recurse-submodules https://github.com/chan9yu/blog9yu.dev.git
+cd blog9yu.dev
+
+# 이미 클론한 경우 서브모듈 초기화
+git submodule update --init --recursive
 
 # 의존성 설치
 pnpm install
-
-# 환경 변수 설정
-cp .env.example .env
-# .env 파일을 열어 GITHUB_TOKEN을 설정하세요
 
 # 개발 서버 시작 (localhost:3036)
 pnpm dev
@@ -45,27 +44,7 @@ pnpm build
 
 ### Environment Variables
 
-프로젝트 실행 전 환경 변수를 설정해야 합니다.
-
-```bash
-# .env 파일 생성
-cp .env.example .env
-```
-
-**필수 환경 변수:**
-
-| 변수명         | 설명                                                                                                                                                                                                                                | 필수 여부   |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `GITHUB_TOKEN` | GitHub Personal Access Token<br/>- GitHub REST API 호출 시 Rate Limit 증가 (60/h → 5,000/h)<br/>- 토큰 생성: [GitHub Settings > Tokens](https://github.com/settings/tokens)<br/>- 필요 권한: `public_repo` (public repository 읽기) | 선택 (권장) |
-
-**토큰 생성 방법:**
-
-1. [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens) 접속
-2. "Generate new token (classic)" 클릭
-3. Note: `blog9yu.dev` (또는 원하는 이름)
-4. Scopes: `public_repo` 체크
-5. "Generate token" 클릭 후 토큰 복사
-6. `.env` 파일에 `GITHUB_TOKEN=your_token_here` 추가
+별도의 환경 변수 설정이 필요 없습니다. 블로그 컨텐츠는 git 서브모듈(`content/`)로 관리됩니다.
 
 ### Available Scripts
 
@@ -213,14 +192,14 @@ import { GitHubClient } from "@/shared/services";
 
 ## Blog Content Management
 
-### GitHub Repository 기반 컨텐츠 시스템
+### Git 서브모듈 기반 컨텐츠 시스템
 
-블로그 포스트는 별도의 GitHub Repository에서 관리됩니다:
+블로그 컨텐츠는 git 서브모듈로 관리됩니다:
 
 - **Repository**: [chan9yu/blog9yu-content](https://github.com/chan9yu/blog9yu-content)
-- **경로**: `posts/*.mdx`
-- **빌드 방식**: SSG (빌드 타임에 정적 생성)
-- **업데이트**: 컨텐츠 저장소 업데이트 시 자동 배포 (GitHub Actions)
+- **로컬 경로**: `content/posts/*.mdx`, `content/about/index.md`
+- **빌드 방식**: SSG (빌드 타임에 로컬 파일 시스템에서 읽기)
+- **업데이트**: 컨텐츠 저장소 업데이트 시 서브모듈 자동 갱신 (GitHub Actions)
 
 ### MDX Frontmatter 스키마
 
@@ -241,36 +220,36 @@ image?: string # 선택: OG 이미지 경로
 - **Code**: sugar-high 코드 하이라이팅
 - **Table**: 모바일 최적화된 테이블 렌더링
 
+### 컨텐츠 서브모듈 업데이트
+
+로컬에서 컨텐츠 업데이트:
+
+```bash
+# 서브모듈을 최신 버전으로 업데이트
+git submodule update --remote --merge content
+
+# 변경사항 커밋 및 푸시
+git add content
+git commit -m "chore: update content submodule"
+git push
+```
+
 ### 자동 배포 설정
 
-블로그 컨텐츠 업데이트 시 자동으로 Vercel 배포가 트리거되도록 설정할 수 있습니다.
+블로그 컨텐츠 업데이트 시 자동으로 서브모듈이 갱신되고 Vercel 배포가 트리거되도록 설정할 수 있습니다.
 
-#### 1. Vercel Deploy Hook 생성
-
-1. [Vercel Dashboard](https://vercel.com/dashboard) 접속
-2. 프로젝트 선택 → Settings → Git
-3. "Deploy Hooks" 섹션에서 "Create Hook" 클릭
-4. Hook Name: `content-update`
-5. Branch: `main`
-6. 생성된 URL 복사 (예: `https://api.vercel.com/v1/integrations/deploy/...`)
-
-#### 2. GitHub Secrets 설정
-
-**blog9yu.dev 저장소에서:**
-
-1. Settings → Secrets and variables → Actions
-2. "New repository secret" 클릭
-3. Name: `VERCEL_DEPLOY_HOOK_URL`
-4. Value: 위에서 복사한 Vercel Deploy Hook URL
+#### 1. GitHub Secrets 설정
 
 **blog9yu-content 저장소에서:**
 
 1. Settings → Secrets and variables → Actions
 2. "New repository secret" 클릭
 3. Name: `BLOG_REPO_PAT`
-4. Value: [GitHub Personal Access Token](https://github.com/settings/tokens) (repo 권한 필요)
+4. Value: [GitHub Personal Access Token](https://github.com/settings/tokens)
+   - 필요 권한: `repo` (private repository) 또는 `public_repo` (public만)
+   - Workflow 권한 포함 필요
 
-#### 3. GitHub Actions 워크플로우 추가
+#### 2. GitHub Actions 워크플로우 추가
 
 `blog9yu-content` 저장소에 다음 파일을 추가:
 
@@ -291,7 +270,7 @@ jobs:
   notify-blog:
     runs-on: ubuntu-latest
     steps:
-      - name: Send repository dispatch to blog
+      - name: Trigger blog submodule update
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.BLOG_REPO_PAT }}
@@ -300,12 +279,12 @@ jobs:
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
 ```
 
-#### 4. 동작 흐름
+#### 3. 동작 흐름
 
 1. `blog9yu-content` 저장소에 포스트 업데이트 (push to main)
 2. GitHub Actions가 `blog9yu.dev`에 repository dispatch 이벤트 전송
-3. `blog9yu.dev`에서 Vercel Deploy Hook 호출
-4. Vercel이 최신 컨텐츠로 빌드 및 배포
+3. `blog9yu.dev`의 GitHub Actions가 서브모듈 업데이트 커밋 생성
+4. Vercel이 커밋 감지하여 자동으로 빌드 및 배포
 5. 새로운 포스트 즉시 반영 완료
 
 <br />
