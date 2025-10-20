@@ -1,4 +1,0 @@
-{
-	"buildCommand": "git submodule update --init --recursive && pnpm build",
-	"installCommand": "pnpm install"
-}
