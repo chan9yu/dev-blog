@@ -7,7 +7,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Next.js 15 App Router와 MDX 기반으로 구축된 개인 개발 블로그입니다. GitHub Repository를 컨텐츠 저장소로 사용하여 ISR(Incremental Static Regeneration) 방식으로 블로그 포스트를 제공합니다.
+Next.js 15 App Router와 MDX 기반으로 구축된 개인 개발 블로그입니다. GitHub Repository를 컨텐츠 저장소로 사용하여 SSG(Static Site Generation) 방식으로 블로그 포스트를 제공합니다.
 
 <br />
 
@@ -219,7 +219,8 @@ import { GitHubClient } from "@/shared/services";
 
 - **Repository**: [chan9yu/blog9yu-content](https://github.com/chan9yu/blog9yu-content)
 - **경로**: `posts/*.mdx`
-- **업데이트**: ISR을 통해 1시간마다 자동 반영 (revalidate: 3600초)
+- **빌드 방식**: SSG (빌드 타임에 정적 생성)
+- **업데이트**: 컨텐츠 저장소 업데이트 시 자동 배포 (GitHub Actions)
 
 ### MDX Frontmatter 스키마
 
@@ -239,6 +240,73 @@ image?: string # 선택: OG 이미지 경로
 - **Link**: 내부/외부 링크 자동 구분
 - **Code**: sugar-high 코드 하이라이팅
 - **Table**: 모바일 최적화된 테이블 렌더링
+
+### 자동 배포 설정
+
+블로그 컨텐츠 업데이트 시 자동으로 Vercel 배포가 트리거되도록 설정할 수 있습니다.
+
+#### 1. Vercel Deploy Hook 생성
+
+1. [Vercel Dashboard](https://vercel.com/dashboard) 접속
+2. 프로젝트 선택 → Settings → Git
+3. "Deploy Hooks" 섹션에서 "Create Hook" 클릭
+4. Hook Name: `content-update`
+5. Branch: `main`
+6. 생성된 URL 복사 (예: `https://api.vercel.com/v1/integrations/deploy/...`)
+
+#### 2. GitHub Secrets 설정
+
+**blog9yu.dev 저장소에서:**
+
+1. Settings → Secrets and variables → Actions
+2. "New repository secret" 클릭
+3. Name: `VERCEL_DEPLOY_HOOK_URL`
+4. Value: 위에서 복사한 Vercel Deploy Hook URL
+
+**blog9yu-content 저장소에서:**
+
+1. Settings → Secrets and variables → Actions
+2. "New repository secret" 클릭
+3. Name: `BLOG_REPO_PAT`
+4. Value: [GitHub Personal Access Token](https://github.com/settings/tokens) (repo 권한 필요)
+
+#### 3. GitHub Actions 워크플로우 추가
+
+`blog9yu-content` 저장소에 다음 파일을 추가:
+
+**`.github/workflows/notify-blog.yml`**:
+
+```yaml
+name: Notify Blog on Content Update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "posts/**"
+      - "about/**"
+
+jobs:
+  notify-blog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send repository dispatch to blog
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.BLOG_REPO_PAT }}
+          repository: chan9yu/blog9yu.dev
+          event-type: content-updated
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+```
+
+#### 4. 동작 흐름
+
+1. `blog9yu-content` 저장소에 포스트 업데이트 (push to main)
+2. GitHub Actions가 `blog9yu.dev`에 repository dispatch 이벤트 전송
+3. `blog9yu.dev`에서 Vercel Deploy Hook 호출
+4. Vercel이 최신 컨텐츠로 빌드 및 배포
+5. 새로운 포스트 즉시 반영 완료
 
 <br />
 
@@ -344,11 +412,11 @@ plugins:
 
 ### 최적화
 
-- **SSG**: 모든 블로그 페이지 빌드 타임 생성
-- **ISR**: 1시간마다 컨텐츠 재검증
+- **SSG**: 모든 블로그 페이지 빌드 타임 정적 생성
 - **Font Optimization**: Pretendard Variable 폰트 최적화
 - **Code Splitting**: 자동 코드 분할
 - **Image Optimization**: Next.js Image 컴포넌트 활용
+- **GitHub Actions**: 컨텐츠 업데이트 시 자동 배포
 
 ### 추가 기능
 

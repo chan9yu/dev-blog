@@ -48,9 +48,7 @@ export async function getGitHubMDXFiles(): Promise<GitHubFile[]> {
 
 	const response = await fetch(url, {
 		headers: getGitHubHeaders(),
-		next: {
-			revalidate: 3600 // ISR: 1시간마다 재검증
-		}
+		cache: "force-cache" // SSG: 빌드 타임에만 fetch
 	});
 
 	if (!response.ok) {
@@ -71,9 +69,7 @@ export async function getGitHubFileContent(path: string): Promise<string> {
 
 	const response = await fetch(url, {
 		headers: getGitHubHeaders(),
-		next: {
-			revalidate: 3600 // ISR: 1시간마다 재검증
-		}
+		cache: "force-cache" // SSG: 빌드 타임에만 fetch
 	});
 
 	if (!response.ok) {
@@ -98,9 +94,7 @@ export async function getGitHubFileContentRaw(slug: string): Promise<string> {
 	const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${GITHUB_POSTS_PATH}/${slug}/index.mdx`;
 
 	const response = await fetch(url, {
-		next: {
-			revalidate: 3600 // ISR: 1시간마다 재검증
-		}
+		cache: "force-cache" // SSG: 빌드 타임에만 fetch
 	});
 
 	if (!response.ok) {
