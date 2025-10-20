@@ -178,11 +178,11 @@ pnpm format:check
 
 ## 블로그 시스템 아키텍처
 
-### MDX 기반 컨텐츠 관리
+### Git 서브모듈 기반 컨텐츠 관리
 
-- **저장 위치**: GitHub Repository (`https://github.com/chan9yu/blog9yu-content/`)
-- **빌드 타임 처리**: Static Site Generation (SSG) + ISR (Incremental Static Regeneration)
-- **재검증 주기**: 3600초 (1시간)
+- **저장 위치**: Git Submodule (`content/` → `https://github.com/chan9yu/blog9yu-content/`)
+- **빌드 타임 처리**: Static Site Generation (SSG) - 로컬 파일 시스템에서 읽기
+- **업데이트 방식**: 서브모듈 갱신 → Vercel 자동 배포
 - **Frontmatter 스키마**:
   ```yaml
   ---
@@ -195,24 +195,27 @@ pnpm format:check
 
 ### 핵심 유틸리티
 
-**src/lib/github.ts** - GitHub API 클라이언트
+**src/shared/services/content.ts** - 로컬 파일 시스템 기반 컨텐츠 클라이언트
 
 ```typescript
-// GitHub Repository에서 MDX 파일 목록 가져오기
-getGitHubMDXFiles(): Promise<GitHubFile[]>
+// content/posts 디렉토리에서 MDX 파일 목록 가져오기
+getContentMDXFiles(): Promise<ContentFile[]>
 
-// MDX 파일 내용 가져오기 (Raw URL 방식)
-getGitHubFileContentRaw(fileName: string): Promise<string>
+// MDX 파일 내용 가져오기 (fs.readFile)
+getContentFileContentRaw(slug: string): Promise<string>
+
+// about 페이지 마크다운 가져오기
+getAboutContent(): Promise<string>
 ```
 
-**src/lib/blog.ts** - 블로그 데이터 처리
+**src/features/blog/services/api.ts** - 블로그 데이터 처리
 
 ```typescript
-// GitHub에서 블로그 포스트 가져오기 (ISR 적용)
-getBlogPosts(): Promise<Array<{ metadata: Metadata; slug: string; content: string }>>
+// 모든 블로그 포스트 가져오기
+getAllPosts(includePrivate?: boolean): Promise<PostSummary[]>
 
-// 날짜 포맷팅 (상대/절대)
-formatDate(date: string, includeRelative?: boolean): string
+// 포스트 상세 정보 가져오기
+getPostDetail(slug: string, includePrivate?: boolean): Promise<PostDetail | null>
 ```
 
 ### MDX 커스텀 컴포넌트 (src/components/mdx.tsx)
@@ -846,29 +849,30 @@ async function loadPostPage(slug: string) {
 
 - 모든 블로그 페이지는 빌드 타임에 생성 (SSG)
 - `generateStaticParams()`로 동적 라우트 미리 생성
-- ISR 미사용 (컨텐츠 업데이트 시 재배포)
+- 서브모듈 업데이트 시 Vercel 자동 배포
 
 ### 최적화
 
-- Geist 폰트 최적화 (next/font)
+- Pretendard Variable 폰트 최적화 (next/font)
 - 이미지 최적화 (next/image)
 - 코드 스플리팅 자동 적용
 - Vercel Analytics로 성능 모니터링
+- 로컬 파일 시스템 읽기 (GitHub API 호출 없음)
 
 ## 주의사항
 
-- 블로그 포스트는 GitHub Repository (`chan9yu/blog9yu-content`)의 `posts/` 디렉토리에 위치
+- 블로그 포스트는 Git 서브모듈 (`content/posts/`)에 위치
 - MDX frontmatter는 반드시 검증 후 사용
-- GitHub API Rate Limit: 인증 없이 시간당 60회 (충분함)
-- ISR을 통해 1시간마다 새로운 포스트 자동 반영
+- 서브모듈 클론 시 `--recurse-submodules` 필요
 - baseUrl은 프로덕션 배포 시 변경 필요 (`src/app/sitemap.ts`)
 
-## GitHub 컨텐츠 레포지토리
+## Git 서브모듈 컨텐츠 관리
 
 - **Repository**: https://github.com/chan9yu/blog9yu-content
-- **구조**: `posts/*.mdx`
-- **접근 방식**: GitHub Raw URL을 통한 직접 fetch
-- **캐싱**: Next.js ISR (revalidate: 3600초)
+- **로컬 경로**: `content/posts/*.mdx`, `content/about/index.md`
+- **접근 방식**: Node.js fs 모듈을 통한 로컬 파일 읽기
+- **업데이트**: `git submodule update --remote --merge content`
+- **자동화**: GitHub Actions로 서브모듈 자동 갱신
 
 ## Import 경로 규칙
 
