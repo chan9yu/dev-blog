@@ -8,15 +8,20 @@ export function slugify(str: string): string {
 }
 
 /**
- * URL-safe slug 생성 (한글 제거, 영문/숫자만)
+ * URL-safe slug 생성 (한글 유지, 특수문자만 제거)
  * 시리즈 URL 등에 사용
+ *
+ * 예시:
+ * - "항해 플러스 프론트엔드 6기" → "항해-플러스-프론트엔드-6기"
+ * - "WebRTC 박살내기!" → "webrtc-박살내기"
  */
 export function slugifyUrlSafe(str: string): string {
 	return str
 		.toString()
 		.toLowerCase()
 		.trim()
-		.replace(/[^a-z0-9\s-]/g, "") // 한글 제거
-		.replace(/\s+/g, "-")
+		.replace(/[^\w가-힣\s-]/g, "") // 영문, 숫자, 한글, 공백, 하이픈만 허용
+		.replace(/\s+/g, "-") // 공백을 하이픈으로
+		.replace(/-+/g, "-") // 연속된 하이픈을 하나로
 		.replace(/^-+|-+$/g, ""); // 앞뒤 하이픈 제거
 }
