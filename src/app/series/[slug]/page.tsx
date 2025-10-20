@@ -20,7 +20,9 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
 	const { slug } = await params;
-	const series = await getSeriesDetail(slug);
+	// URL 디코딩 (한글 slug 처리)
+	const decodedSlug = decodeURIComponent(slug);
+	const series = await getSeriesDetail(decodedSlug);
 
 	if (!series) return;
 
@@ -49,7 +51,9 @@ export async function generateMetadata({
 
 export default async function SeriesPage({ params }: { params: Promise<{ slug: string }> }) {
 	const { slug } = await params;
-	const series = await getSeriesDetail(slug);
+	// URL 디코딩 (한글 slug 처리)
+	const decodedSlug = decodeURIComponent(slug);
+	const series = await getSeriesDetail(decodedSlug);
 
 	if (!series) {
 		notFound();
