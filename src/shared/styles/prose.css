@@ -157,7 +157,7 @@
 }
 
 .prose blockquote {
-	@apply my-4 border-l-4 pl-4 italic sm:my-6 sm:pl-6;
+	@apply my-4 border-l-4 pl-4 sm:my-6 sm:pl-6;
 	border-color: var(--border-primary);
 	color: var(--text-secondary);
 	font-size: 0.9375rem;
