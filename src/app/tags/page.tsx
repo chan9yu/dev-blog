@@ -15,7 +15,21 @@ export const metadata: Metadata = {
 		title: "태그 · chan9yu",
 		description: "주제별 태그로 정리된 포스트 모음",
 		type: "website",
-		url: `${SITE.url}/tags`
+		url: `${SITE.url}/tags`,
+		images: [
+			{
+				url: SITE.defaultOG,
+				width: 1200,
+				height: 630,
+				alt: "태그 · chan9yu"
+			}
+		]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "태그 · chan9yu",
+		description: "주제별 태그로 정리된 포스트 모음",
+		images: [SITE.defaultOG]
 	},
 	alternates: {
 		canonical: `${SITE.url}/tags`

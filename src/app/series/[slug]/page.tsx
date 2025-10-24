@@ -36,12 +36,21 @@ export async function generateMetadata({
 			title: `${name} · chan9yu`,
 			description,
 			type: "website",
-			url: `${SITE.url}/series/${slug}`
+			url: `${SITE.url}/series/${slug}`,
+			images: [
+				{
+					url: SITE.defaultOG,
+					width: 1200,
+					height: 630,
+					alt: `${name} · chan9yu`
+				}
+			]
 		},
 		twitter: {
 			card: "summary_large_image",
 			title: `${name} · chan9yu`,
-			description
+			description,
+			images: [SITE.defaultOG]
 		},
 		alternates: {
 			canonical: `${SITE.url}/series/${slug}`

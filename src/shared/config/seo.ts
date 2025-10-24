@@ -33,7 +33,7 @@ export const SITE = {
 	},
 
 	// 이미지
-	defaultOG: "/og-template.png", // 1200x630
+	defaultOG: "/images/default-og-image.png", // 1200x630
 	logo: "/favicons/android-chrome-192x192.png",
 
 	// 언어 & 지역

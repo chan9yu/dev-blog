@@ -13,7 +13,21 @@ export const metadata: Metadata = {
 		title: "시리즈 · chan9yu",
 		description: "연재 중인 시리즈별 포스트 모음",
 		type: "website",
-		url: `${SITE.url}/series`
+		url: `${SITE.url}/series`,
+		images: [
+			{
+				url: SITE.defaultOG,
+				width: 1200,
+				height: 630,
+				alt: "시리즈 · chan9yu"
+			}
+		]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "시리즈 · chan9yu",
+		description: "연재 중인 시리즈별 포스트 모음",
+		images: [SITE.defaultOG]
 	},
 	alternates: {
 		canonical: `${SITE.url}/series`

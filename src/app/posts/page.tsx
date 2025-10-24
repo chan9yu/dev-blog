@@ -12,7 +12,21 @@ export const metadata: Metadata = {
 		title: "포스트 · chan9yu",
 		description: "프론트엔드 개발 경험과 학습 내용을 기록합니다",
 		type: "website",
-		url: `${SITE.url}/posts`
+		url: `${SITE.url}/posts`,
+		images: [
+			{
+				url: SITE.defaultOG,
+				width: 1200,
+				height: 630,
+				alt: "포스트 · chan9yu"
+			}
+		]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "포스트 · chan9yu",
+		description: "프론트엔드 개발 경험과 학습 내용을 기록합니다",
+		images: [SITE.defaultOG]
 	},
 	alternates: {
 		canonical: `${SITE.url}/posts`
