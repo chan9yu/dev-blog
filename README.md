@@ -236,6 +236,41 @@ git commit -m "chore: update content submodule"
 git push
 ```
 
+### Vercel Private Submodule 설정
+
+Vercel에서 Private 서브모듈을 사용하는 경우 추가 설정이 필요합니다.
+
+#### 1. GitHub Personal Access Token 생성
+
+1. GitHub → Settings → Developer settings → [Personal access tokens (classic)](https://github.com/settings/tokens)
+2. "Generate new token (classic)" 클릭
+3. Note: `Vercel Submodule Access`
+4. Expiration: `No expiration` (권장) 또는 적절한 기간 선택
+5. Select scopes: `repo` (Full control of private repositories) 체크
+6. "Generate token" 클릭 후 토큰 복사 (한 번만 표시됨!)
+
+#### 2. Vercel Environment Variables 설정
+
+1. Vercel 프로젝트 → Settings → Environment Variables
+2. 새 변수 추가:
+   - **Name**: `GITHUB_REPO_CLONE_TOKEN`
+   - **Value**: (위에서 생성한 Personal Access Token)
+   - **Environments**: Production, Preview, Development 모두 선택
+3. "Save" 클릭
+
+#### 3. Vercel Build Settings 설정
+
+1. Vercel 프로젝트 → Settings → General → Build & Development Settings
+2. **Install Command** 수정:
+   ```bash
+   bash ./scripts/vercel-submodule-workaround.sh && pnpm install
+   ```
+3. "Save" 클릭
+
+#### 4. 배포 확인
+
+설정 완료 후 다음 배포부터 자동으로 서브모듈이 정상적으로 클론됩니다.
+
 ### 자동 배포 설정
 
 블로그 컨텐츠 업데이트 시 자동으로 서브모듈이 갱신되고 Vercel 배포가 트리거되도록 설정할 수 있습니다.
