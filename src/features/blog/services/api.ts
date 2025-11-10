@@ -3,12 +3,12 @@ import { parseFrontmatter } from "@/features/blog/utils";
 import { getContentFileContentRaw, getContentMDXFiles } from "@/shared/services";
 
 /**
- * 서브모듈 content에서 모든 블로그 포스트를 가져옵니다
+ * 서브모듈 contents에서 모든 블로그 포스트를 가져옵니다
  * @param includePrivate - private 포스트 포함 여부 (기본값: false)
  */
 export async function getAllPosts(includePrivate = false): Promise<PostSummary[]> {
 	try {
-		// 1. content/posts 디렉토리 목록 가져오기
+		// 1. contents/posts 디렉토리 목록 가져오기
 		const directories = await getContentMDXFiles();
 
 		// 2. 각 디렉토리의 index.mdx 내용 가져오기 및 파싱
@@ -33,7 +33,7 @@ export async function getAllPosts(includePrivate = false): Promise<PostSummary[]
 		// 3. private 포스트 필터링
 		return includePrivate ? posts : posts.filter((post) => !post.private);
 	} catch (error) {
-		console.error("Failed to fetch blog posts from content:", error);
+		console.error("Failed to fetch blog posts from contents:", error);
 		return [];
 	}
 }

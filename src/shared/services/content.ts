@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
-const CONTENT_DIR = path.join(process.cwd(), "content");
+const CONTENT_DIR = path.join(process.cwd(), "contents");
 const POSTS_DIR = path.join(CONTENT_DIR, "posts");
 const ABOUT_DIR = path.join(CONTENT_DIR, "about");
 

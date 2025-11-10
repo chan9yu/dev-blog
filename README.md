@@ -44,7 +44,7 @@ pnpm build
 
 ### Environment Variables
 
-별도의 환경 변수 설정이 필요 없습니다. 블로그 컨텐츠는 git 서브모듈(`content/`)로 관리됩니다.
+별도의 환경 변수 설정이 필요 없습니다. 블로그 컨텐츠는 git 서브모듈(`contents/`)로 관리됩니다.
 
 ### Available Scripts
 
@@ -197,7 +197,7 @@ import { GitHubClient } from "@/shared/services";
 블로그 컨텐츠는 git 서브모듈로 관리됩니다:
 
 - **Repository**: [chan9yu/blog9yu-content](https://github.com/chan9yu/blog9yu-content)
-- **로컬 경로**: `content/posts/*.mdx`, `content/about/index.md`
+- **로컬 경로**: `contents/posts/*.mdx`, `contents/about/index.md`
 - **빌드 방식**: SSG (빌드 타임에 로컬 파일 시스템에서 읽기)
 - **업데이트**: 컨텐츠 저장소 업데이트 시 서브모듈 자동 갱신 (GitHub Actions)
 

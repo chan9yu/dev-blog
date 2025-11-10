@@ -180,7 +180,7 @@ pnpm format:check
 
 ### Git 서브모듈 기반 컨텐츠 관리
 
-- **저장 위치**: Git Submodule (`content/` → `https://github.com/chan9yu/blog9yu-content/`)
+- **저장 위치**: Git Submodule (`contents/` → `https://github.com/chan9yu/blog9yu-content/`)
 - **빌드 타임 처리**: Static Site Generation (SSG) - 로컬 파일 시스템에서 읽기
 - **업데이트 방식**: 서브모듈 갱신 → Vercel 자동 배포
 - **Frontmatter 스키마**:
@@ -198,7 +198,7 @@ pnpm format:check
 **src/shared/services/content.ts** - 로컬 파일 시스템 기반 컨텐츠 클라이언트
 
 ```typescript
-// content/posts 디렉토리에서 MDX 파일 목록 가져오기
+// contents/posts 디렉토리에서 MDX 파일 목록 가져오기
 getContentMDXFiles(): Promise<ContentFile[]>
 
 // MDX 파일 내용 가져오기 (fs.readFile)
@@ -861,7 +861,7 @@ async function loadPostPage(slug: string) {
 
 ## 주의사항
 
-- 블로그 포스트는 Git 서브모듈 (`content/posts/`)에 위치
+- 블로그 포스트는 Git 서브모듈 (`contents/posts/`)에 위치
 - MDX frontmatter는 반드시 검증 후 사용
 - 서브모듈 클론 시 `--recurse-submodules` 필요
 - baseUrl은 프로덕션 배포 시 변경 필요 (`src/app/sitemap.ts`)
@@ -869,9 +869,9 @@ async function loadPostPage(slug: string) {
 ## Git 서브모듈 컨텐츠 관리
 
 - **Repository**: https://github.com/chan9yu/blog9yu-content
-- **로컬 경로**: `content/posts/*.mdx`, `content/about/index.md`
+- **로컬 경로**: `contents/posts/*.mdx`, `contents/about/index.md`
 - **접근 방식**: Node.js fs 모듈을 통한 로컬 파일 읽기
-- **업데이트**: `git submodule update --remote --merge content`
+- **업데이트**: `git submodule update --remote --merge contents`
 - **자동화**: GitHub Actions로 서브모듈 자동 갱신
 
 ## Import 경로 규칙
