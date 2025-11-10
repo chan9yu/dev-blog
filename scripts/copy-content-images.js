@@ -5,6 +5,8 @@
 /**
  * 빌드 시 contents 서브모듈의 이미지를 public 폴더로 복사
  * contents/posts/[slug]/images/ → public/posts/[slug]/images/
+ *
+ * Next.js Image 컴포넌트가 Sharp를 사용하여 자동으로 최적화합니다.
  */
 
 import fs from "fs/promises";
