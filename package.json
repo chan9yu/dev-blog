@@ -17,8 +17,9 @@
 		"pnpm": ">=10.0.0"
 	},
 	"scripts": {
-		"dev": "next dev -p 3036",
-		"build": "next build",
+		"copy:images": "node scripts/copy-content-images.js",
+		"dev": "pnpm copy:images && next dev -p 3036",
+		"build": "pnpm copy:images && next build",
 		"start": "next start",
 		"lint": "eslint",
 		"lint:fix": "eslint --fix",

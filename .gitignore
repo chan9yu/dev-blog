@@ -20,6 +20,9 @@
 # production
 /build
 
+# build-time copied images (from contents submodule)
+/public/posts
+
 # misc
 .DS_Store
 *.pem
