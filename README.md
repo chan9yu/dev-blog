@@ -92,6 +92,7 @@ pnpm format
 
 - **Content**: MDX via next-mdx-remote 5.0.0
 - **Code Highlighting**: sugar-high 0.9.3
+- **Image Optimization**: Sharp 0.34.5
 - **Fonts**: Pretendard Variable
 - **Animation**: framer-motion 12.23.22
 
@@ -198,6 +199,7 @@ import { GitHubClient } from "@/shared/services";
 
 - **Repository**: [chan9yu/blog9yu-content](https://github.com/chan9yu/blog9yu-content)
 - **로컬 경로**: `contents/posts/*.mdx`, `contents/about/index.md`
+- **이미지 처리**: 빌드 시 `contents/` → `public/posts/` 복사, Next.js Image로 자동 최적화
 - **빌드 방식**: SSG (빌드 타임에 로컬 파일 시스템에서 읽기)
 - **업데이트**: 컨텐츠 저장소 업데이트 시 서브모듈 자동 갱신 (GitHub Actions)
 
@@ -394,7 +396,7 @@ plugins:
 - **SSG**: 모든 블로그 페이지 빌드 타임 정적 생성
 - **Font Optimization**: Pretendard Variable 폰트 최적화
 - **Code Splitting**: 자동 코드 분할
-- **Image Optimization**: Next.js Image 컴포넌트 활용
+- **Image Optimization**: Next.js Image + Sharp (온디맨드 WebP/AVIF 생성)
 - **GitHub Actions**: 컨텐츠 업데이트 시 자동 배포
 
 ### 추가 기능
