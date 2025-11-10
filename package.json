@@ -1,14 +1,20 @@
 {
 	"name": "blog9yu.dev",
-	"private": true,
 	"version": "1.0.0",
+	"private": true,
 	"description": "프론트엔드 개발의 아이디어와 경험을 기록하는 개발 블로그. 코드와 디자인, 사용자 경험을 아우르는 인사이트를 담습니다.",
 	"type": "module",
-	"packageManager": "pnpm@10.19.0",
 	"author": "chan9yu <dev.cgyeo@gmail.com>",
+	"homepage": "https://www.chan9yu.dev",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/chan9yu/blog9yu.dev"
+	},
+	"packageManager": "pnpm@10.19.0",
+	"engines": {
+		"node": ">=24.0.0",
+		"pnpm": ">=10.0.0"
 	},
 	"scripts": {
 		"dev": "next dev -p 3036",
