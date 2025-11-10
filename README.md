@@ -263,7 +263,7 @@ Vercel에서 Private 서브모듈을 사용하는 경우 추가 설정이 필요
 1. Vercel 프로젝트 → Settings → General → Build & Development Settings
 2. **Install Command** 수정:
    ```bash
-   bash ./scripts/vercel-submodule-workaround.sh && pnpm install
+   pnpm install:vercel
    ```
 3. "Save" 클릭
 
