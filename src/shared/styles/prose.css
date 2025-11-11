@@ -220,3 +220,73 @@ pre {
 .prose h6 {
 	scroll-margin-top: 120px;
 }
+
+/* ============================================
+  Sugar-High Syntax Highlighting - Accessible & Readable
+============================================ */
+
+/* Light Mode - Muted & Accessible Colors */
+.prose code .sh__keyword {
+	color: #0969da; /* Blue */
+}
+
+.prose code .sh__string {
+	color: #116329; /* Green */
+}
+
+.prose code .sh__comment {
+	color: #57606a; /* Gray */
+	font-style: italic;
+}
+
+.prose code .sh__class,
+.prose code .sh__title {
+	color: #8250df; /* Purple */
+}
+
+.prose code .sh__property {
+	color: #953800; /* Orange */
+}
+
+.prose code .sh__entity,
+.prose code .sh__value {
+	color: #0550ae; /* Dark Blue */
+}
+
+.prose code .sh__sign {
+	color: #24292f; /* Near Black */
+}
+
+/* Dark Mode - Softer & Eye-friendly Colors */
+@media (prefers-color-scheme: dark) {
+	.prose code .sh__keyword {
+		color: #6cb6ff; /* Soft Blue */
+	}
+
+	.prose code .sh__string {
+		color: #7ee787; /* Soft Green */
+	}
+
+	.prose code .sh__comment {
+		color: #8b949e; /* Soft Gray */
+		font-style: italic;
+	}
+
+	.prose code .sh__class,
+	.prose code .sh__title {
+		color: #d2a8ff; /* Soft Purple */
+	}
+
+	.prose code .sh__property {
+		color: #ffa657; /* Soft Orange */
+	}
+
+	.prose code .sh__entity,
+	.prose code .sh__value {
+		color: #79c0ff; /* Soft Cyan */
+	}
+
+	.prose code .sh__sign {
+		color: #c9d1d9; /* Soft White */
+	}
+}
