@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { FilteredBlogPosts, getAllPosts } from "@/features/blog";
+import { BlogPostCardSkeleton, FilteredBlogPosts, getAllPosts } from "@/features/blog";
 import { getTagCounts, TagList } from "@/features/tags";
 import { SITE } from "@/shared/config";
 
@@ -52,8 +52,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 				<main className="min-w-0 flex-1">
 					<Suspense
 						fallback={
-							<div className="flex items-center justify-center py-12">
-								<div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
+							<div className="space-y-6">
+								{Array.from({ length: 6 }).map((_, i) => (
+									<BlogPostCardSkeleton key={i} variant="list" />
+								))}
 							</div>
 						}
 					>
