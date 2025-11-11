@@ -209,7 +209,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 									<Link
 										key={tag}
 										href={`/tags/${slugify(tag)}`}
-										className="bg-secondary text-secondary border-primary inline-flex min-h-[44px] items-center gap-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors hover:shadow-sm sm:min-h-0 sm:py-1.5 sm:text-sm"
+										className="bg-secondary text-secondary border-primary inline-flex min-h-[44px] items-center gap-1 rounded-lg border px-3 py-2 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md sm:min-h-0 sm:py-1.5 sm:text-sm"
 									>
 										<TagIcon className="size-3 sm:size-3.5" />
 										{tag}

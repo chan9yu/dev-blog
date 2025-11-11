@@ -60,7 +60,10 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 							{post.tags && post.tags.length > 0 && (
 								<div className="flex flex-1 flex-wrap items-center gap-1.5 sm:gap-2">
 									{post.tags.slice(0, 3).map((tag) => (
-										<span key={tag} className="bg-tertiary text-tertiary rounded px-2 py-0.5 text-xs font-medium">
+										<span
+											key={tag}
+											className="bg-tertiary text-tertiary rounded px-2 py-0.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105"
+										>
 											{tag}
 										</span>
 									))}
@@ -101,7 +104,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 									{post.tags.slice(0, 2).map((tag) => (
 										<span
 											key={tag}
-											className="bg-tertiary text-tertiary max-w-[45%] truncate rounded px-2 py-0.5 text-xs font-medium"
+											className="bg-tertiary text-tertiary max-w-[45%] truncate rounded px-2 py-0.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105"
 										>
 											{tag}
 										</span>
