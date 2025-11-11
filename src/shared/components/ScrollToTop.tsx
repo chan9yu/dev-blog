@@ -10,7 +10,7 @@ const SCROLL_THRESHOLD = 300;
 const scrollToTopButton = tv({
 	base: [
 		"fixed right-8 bottom-8 z-50",
-		"rounded-full p-3",
+		"cursor-pointer rounded-full p-3",
 		"bg-accent text-on-accent",
 		"shadow-lg shadow-black/15",
 		"transition-all duration-300",
@@ -33,11 +33,17 @@ export function ScrollToTop() {
 		};
 
 		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
+
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
 	}, []);
 
 	const handleClick = () => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
 	};
 
 	return (
