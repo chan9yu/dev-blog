@@ -41,7 +41,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 					<>
 						{/* List Layout: Horizontal */}
 						<div className="mb-2 flex flex-col gap-2 sm:mb-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-							<h3 className="text-primary group-hover-accent flex-1 text-base font-bold tracking-tight transition-colors sm:text-lg md:text-xl">
+							<h3 className="text-primary group-hover-accent flex-1 text-base leading-snug font-bold tracking-tight text-balance transition-colors sm:text-lg md:text-xl">
 								{post.title}
 							</h3>
 							<time className="text-muted shrink-0 text-xs tabular-nums sm:text-sm" dateTime={post.date}>
@@ -80,7 +80,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 					<>
 						{/* Grid Layout: Vertical */}
 						<div className="mb-2 space-y-1.5 sm:mb-3 sm:space-y-2">
-							<h3 className="text-primary group-hover-accent line-clamp-2 text-base font-bold tracking-tight transition-colors sm:text-lg md:text-xl">
+							<h3 className="text-primary group-hover-accent line-clamp-2 text-base leading-snug font-bold tracking-tight text-balance transition-colors sm:text-lg md:text-xl">
 								{post.title}
 							</h3>
 							<time className="text-muted block text-xs tabular-nums" dateTime={post.date}>
