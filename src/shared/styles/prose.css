@@ -202,13 +202,27 @@
 	margin-bottom: 0 !important;
 }
 
+/* Custom scrollbar for code blocks */
 pre::-webkit-scrollbar {
-	display: none;
+	height: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+	background: var(--border-primary);
+	border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+	background: var(--text-tertiary);
 }
 
 pre {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	scrollbar-width: thin; /* Firefox */
+	scrollbar-color: var(--border-primary) transparent;
 }
 
 /* TOC scroll offset */
