@@ -38,14 +38,14 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ t
 	const { tag } = await searchParams;
 
 	return (
-		<div className="space-y-8">
-			<header className="space-y-3">
+		<div className="space-y-10">
+			<header className="space-y-4">
 				<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">포스트</h1>
 				<p className="text-secondary text-sm leading-relaxed sm:text-base">개발하면서 배운 것들을 기록합니다</p>
 			</header>
 
 			<div className="flex gap-8">
-				<aside className="hidden lg:sticky lg:top-24 lg:block lg:h-fit lg:w-[220px]">
+				<aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:w-[220px] lg:overflow-y-auto">
 					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
 				</aside>
 
