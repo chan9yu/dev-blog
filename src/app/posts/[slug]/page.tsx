@@ -12,7 +12,8 @@ import {
 	formatDate,
 	getAllPosts,
 	getPostDetail,
-	PostNavigation
+	PostNavigation,
+	RelatedPosts
 } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
@@ -144,6 +145,19 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 	const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 
+	// 관련 포스트 찾기 (같은 태그 기반)
+	const relatedPosts = allPosts
+		.filter((p) => p.slug !== slug) // 현재 포스트 제외
+		.map((p) => {
+			// 태그 매칭 개수 계산
+			const matchingTags = p.tags?.filter((tag) => post.tags?.includes(tag)) || [];
+			return { post: p, matchCount: matchingTags.length };
+		})
+		.filter((item) => item.matchCount > 0) // 매칭되는 태그가 있는 포스트만
+		.sort((a, b) => b.matchCount - a.matchCount) // 매칭 개수 많은 순
+		.slice(0, 3) // 최대 3개
+		.map((item) => item.post);
+
 	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
 	const cookieStore = await cookies();
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
@@ -260,6 +274,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 				{/* Post Navigation */}
 				<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+
+				{/* Related Posts */}
+				<RelatedPosts posts={relatedPosts} />
 
 				{/* Comments */}
 				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
