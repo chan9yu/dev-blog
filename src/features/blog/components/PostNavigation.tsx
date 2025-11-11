@@ -27,7 +27,7 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
 						<ChevronLeftIcon className="size-3.5 sm:size-4" />
 						<span>이전 글</span>
 					</div>
-					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold transition-colors sm:text-base">
+					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold text-balance break-keep transition-colors sm:text-base">
 						{prevPost.title}
 					</h3>
 				</Link>
@@ -45,7 +45,7 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
 						<span>다음 글</span>
 						<ChevronRightIcon className="size-3.5 sm:size-4" />
 					</div>
-					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold transition-colors sm:text-base">
+					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold text-balance break-keep transition-colors sm:text-base">
 						{nextPost.title}
 					</h3>
 				</Link>
