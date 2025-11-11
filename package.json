@@ -12,10 +12,6 @@
 		"url": "https://github.com/chan9yu/blog9yu.dev"
 	},
 	"packageManager": "pnpm@10.21.0",
-	"engines": {
-		"node": "22.x",
-		"pnpm": ">=10.0.0"
-	},
 	"scripts": {
 		"dev": "pnpm copy:images && next dev -p 3036",
 		"build": "pnpm copy:images && next build",
