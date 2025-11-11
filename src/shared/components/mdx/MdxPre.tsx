@@ -11,7 +11,7 @@ export function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
 	const preRef = useRef<HTMLPreElement>(null);
 	const [copied, setCopied] = useState(false);
 
-	const childElement = children as ReactElement;
+	const childElement = children as ReactElement<{ className?: string }>;
 	const hasLanguage = childElement?.props?.className?.startsWith("language-");
 
 	const handleCopy = async () => {
