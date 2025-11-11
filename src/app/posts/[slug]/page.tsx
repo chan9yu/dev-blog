@@ -188,7 +188,9 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						<h1 className="title text-primary text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl md:text-4xl lg:text-5xl">
 							{post.title}
 						</h1>
-						<p className="text-secondary text-base leading-relaxed sm:text-lg">{post.description}</p>
+						<p className="text-secondary text-base leading-relaxed text-pretty break-keep sm:text-lg">
+							{post.description}
+						</p>
 					</div>
 
 					{/* Meta Info */}

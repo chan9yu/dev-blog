@@ -50,7 +50,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 						</div>
 
 						{/* Description */}
-						<p className="text-secondary mb-3 line-clamp-2 text-sm leading-relaxed sm:mb-4 sm:text-base">
+						<p className="text-secondary mb-3 line-clamp-2 text-sm leading-relaxed text-pretty break-keep sm:mb-4 sm:text-base">
 							{post.description}
 						</p>
 
@@ -89,7 +89,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 						</div>
 
 						{/* Description */}
-						<p className="text-secondary mb-3 line-clamp-2 text-xs leading-relaxed sm:mb-4 sm:line-clamp-3 sm:text-sm">
+						<p className="text-secondary mb-3 line-clamp-2 text-xs leading-relaxed text-pretty break-keep sm:mb-4 sm:line-clamp-3 sm:text-sm">
 							{post.description}
 						</p>
 
