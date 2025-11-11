@@ -185,7 +185,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				{/* Header */}
 				<header className="mb-8 space-y-4 sm:mb-12 sm:space-y-6">
 					<div className="space-y-3 sm:space-y-4">
-						<h1 className="title text-primary text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+						<h1 className="title text-primary text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl md:text-4xl lg:text-5xl">
 							{post.title}
 						</h1>
 						<p className="text-secondary text-base leading-relaxed sm:text-lg">{post.description}</p>
