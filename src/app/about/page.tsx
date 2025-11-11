@@ -8,10 +8,10 @@ import { getAboutContent } from "@/shared/services";
 export const metadata: Metadata = {
 	title: "About",
 	description:
-		"사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 웹 프론트엔드 개발자 여찬규입니다. React, TypeScript, Next.js를 활용한 개발 경험과 철학을 소개합니다.",
+		"3년 경력 프론트엔드 개발자 여찬규입니다. React, TypeScript, Next.js, WebRTC를 활용한 실시간 통신 서비스 개발 경험이 있습니다. 복잡한 문제를 단순하고 명확한 코드로 풀어내는 것을 좋아합니다.",
 	openGraph: {
 		title: "About · chan9yu",
-		description: "프론트엔드 개발자 여찬규의 소개 페이지. 기술 스택, 관심사, 개발 철학을 확인하세요.",
+		description: "프론트엔드 개발자 여찬규의 소개. 실시간 통신 서비스 개발 경험, 기술 스택, 개발 철학을 확인하세요.",
 		type: "profile",
 		url: `${SITE.url}/about`,
 		images: [
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 				url: SITE.defaultOG,
 				width: 1200,
 				height: 630,
-				alt: "About chan9yu"
+				alt: "About chan9yu - Frontend Developer"
 			}
 		]
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "About · chan9yu",
-		description: "프론트엔드 개발자 여찬규의 소개 페이지"
+		description: "프론트엔드 개발자 여찬규의 소개 - React, TypeScript, WebRTC"
 	},
 	alternates: {
 		canonical: `${SITE.url}/about`
