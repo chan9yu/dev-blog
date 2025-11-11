@@ -23,7 +23,7 @@ export default async function Page() {
 								<br />
 								<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
 							</h1>
-							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-loose sm:space-y-4 sm:text-base md:text-lg">
+							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-relaxed sm:space-y-4 sm:text-base md:text-lg">
 								<p>
 									사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
 									<br />
@@ -44,7 +44,10 @@ export default async function Page() {
 					{/* Recent Posts */}
 					<section className="space-y-4 sm:space-y-6">
 						<div className="flex items-center justify-between">
-							<h2 className="text-primary text-lg font-bold tracking-tight sm:text-xl md:text-2xl">최근 포스트</h2>
+							<h2 className="text-primary flex items-center gap-2 text-lg font-bold tracking-tight sm:gap-3 sm:text-xl md:text-2xl">
+								<span className="bg-accent h-6 w-1 rounded-full sm:h-7" />
+								최근 포스트
+							</h2>
 							<Link
 								href="/posts"
 								className="text-accent text-xs font-medium transition-colors hover:underline sm:text-sm"
@@ -61,7 +64,10 @@ export default async function Page() {
 					<div className="sticky top-24 space-y-6">
 						{/* Popular Posts */}
 						<section className="space-y-3">
-							<h2 className="text-secondary text-sm font-semibold">Popular Posts</h2>
+							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
+								<span className="bg-accent size-1.5 rounded-full" />
+								Popular Posts
+							</h2>
 							<TrendingPosts />
 						</section>
 
@@ -69,7 +75,10 @@ export default async function Page() {
 
 						{/* Popular Series */}
 						<section className="space-y-3">
-							<h2 className="text-secondary text-sm font-semibold">Popular Series</h2>
+							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
+								<span className="bg-accent size-1.5 rounded-full" />
+								Popular Series
+							</h2>
 							<PopularSeries />
 						</section>
 
@@ -77,7 +86,10 @@ export default async function Page() {
 
 						{/* Popular Tags */}
 						<section className="space-y-3">
-							<h2 className="text-secondary text-sm font-semibold">Popular Tags</h2>
+							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
+								<span className="bg-accent size-1.5 rounded-full" />
+								Popular Tags
+							</h2>
 							<TrendingTags />
 						</section>
 					</div>
