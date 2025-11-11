@@ -145,12 +145,25 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 								"@type": "Person",
 								name: SITE.author.name,
 								url: SITE.author.url,
+								email: SITE.author.email,
 								jobTitle: "Frontend Developer",
-								knowsAbout: ["React", "TypeScript", "Next.js", "Web Development"]
+								description: SITE.author.bio,
+								knowsAbout: [
+									"React",
+									"TypeScript",
+									"Next.js",
+									"WebRTC",
+									"WebSocket",
+									"Real-time Communication",
+									"Web Development",
+									"Frontend Development"
+								],
+								sameAs: [SITE.social.github, SITE.social.linkedin].filter(Boolean)
 							},
 							publisher: {
 								"@type": "Person",
-								name: SITE.author.name
+								name: SITE.author.name,
+								url: SITE.author.url
 							},
 							inLanguage: "ko-KR",
 							potentialAction: {
