@@ -1,4 +1,5 @@
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 import { MdxCode } from "./MdxCode";
@@ -39,7 +40,7 @@ export function CustomMDX({ source, components: customComponents }: CustomMDXPro
 			components={{ ...components, ...customComponents }}
 			options={{
 				mdxOptions: {
-					remarkPlugins: [remarkGfm]
+					remarkPlugins: [remarkGfm, remarkBreaks]
 				}
 			}}
 		/>

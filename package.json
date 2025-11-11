@@ -33,6 +33,7 @@
 		"next": "^15.5.4",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
+		"remark-breaks": "^4.0.0",
 		"remark-gfm": "^4.0.1",
 		"sharp": "^0.34.5",
 		"tailwind-merge": "^3.3.1",

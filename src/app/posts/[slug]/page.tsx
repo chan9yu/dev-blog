@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
 import {
@@ -266,7 +267,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						components={components}
 						options={{
 							mdxOptions: {
-								remarkPlugins: [remarkGfm]
+								remarkPlugins: [remarkGfm, remarkBreaks]
 							}
 						}}
 					/>
