@@ -12,9 +12,9 @@ export default async function Page() {
 
 	return (
 		<PageTransition>
-			<div className="flex flex-col gap-8 lg:flex-row">
+			<div className="flex flex-col gap-10 lg:flex-row">
 				{/* Main Content */}
-				<div className="min-w-0 flex-1 space-y-8 sm:space-y-12">
+				<div className="min-w-0 flex-1 space-y-10 sm:space-y-14">
 					{/* Hero Section */}
 					<section className="space-y-4 sm:space-y-6">
 						<div className="space-y-3 sm:space-y-4">
@@ -23,7 +23,7 @@ export default async function Page() {
 								<br />
 								<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
 							</h1>
-							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-relaxed sm:space-y-4 sm:text-base md:text-lg">
+							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-loose sm:space-y-4 sm:text-base md:text-lg">
 								<p>
 									사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
 									<br />
