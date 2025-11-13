@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "../utils";
 
@@ -29,7 +30,10 @@ export function Drawer({ isOpen, onClose, children, position = "right", classNam
 	const slideDirection = position === "right" ? { x: "100%" } : { x: "-100%" };
 	const positionClass = position === "right" ? "right-0" : "left-0";
 
-	return (
+	// Portal을 사용하여 body에 직접 렌더링
+	if (typeof document === "undefined") return null;
+
+	return createPortal(
 		<AnimatePresence>
 			{isOpen && (
 				<>
@@ -39,7 +43,7 @@ export function Drawer({ isOpen, onClose, children, position = "right", classNam
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 						onClick={onClose}
-						className="bg-primary/80 fixed inset-0 z-40 backdrop-blur-sm"
+						className="fixed inset-0 z-[100] bg-black/50"
 					/>
 
 					{/* Drawer Panel */}
@@ -48,12 +52,13 @@ export function Drawer({ isOpen, onClose, children, position = "right", classNam
 						animate={{ x: 0 }}
 						exit={slideDirection}
 						transition={{ type: "spring", damping: 30, stiffness: 300 }}
-						className={cn("bg-elevated fixed top-0 z-50 h-screen w-64 shadow-2xl", positionClass, className)}
+						className={cn("bg-elevated fixed top-0 z-[110] h-screen w-64 shadow-2xl", positionClass, className)}
 					>
 						{children}
 					</motion.div>
 				</>
 			)}
-		</AnimatePresence>
+		</AnimatePresence>,
+		document.body
 	);
 }
