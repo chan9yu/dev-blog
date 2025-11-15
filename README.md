@@ -44,7 +44,32 @@ pnpm build
 
 ### Environment Variables
 
-별도의 환경 변수 설정이 필요 없습니다. 블로그 컨텐츠는 git 서브모듈(`contents/`)로 관리됩니다.
+로컬 개발을 위해 환경 변수 설정이 필요합니다.
+
+```bash
+# .env.local 파일 생성
+cp .env.example .env.local
+```
+
+`.env.local` 파일에 Giscus 댓글 시스템 설정값을 입력하세요:
+
+```env
+# Giscus 댓글 설정
+NEXT_PUBLIC_GISCUS_REPO=your-username/your-repo
+NEXT_PUBLIC_GISCUS_REPO_ID=your-repo-id
+NEXT_PUBLIC_GISCUS_CATEGORY=your-category
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id
+```
+
+#### Giscus 설정값 생성
+
+1. [giscus.app](https://giscus.app)에 접속
+2. 저장소 URL 입력 (예: `chan9yu/blog9yu.dev`)
+3. GitHub Discussions가 활성화되어 있는지 확인
+4. 카테고리 선택 (예: `Announcements`)
+5. 생성된 설정값을 `.env.local`에 복사
+
+> **참고**: 블로그 컨텐츠는 git 서브모듈(`contents/`)로 관리되며 별도 설정이 필요 없습니다.
 
 ### Available Scripts
 
@@ -181,8 +206,8 @@ TypeScript 경로 매핑을 통해 깔끔한 import 구조를 유지합니다:
 ```typescript
 // 절대 경로 사용 (@alias)
 import { getBlogPosts, formatDate } from "@/features/blog";
-import { CustomMdx } from "@/shared/components/mdx";
-import { GitHubClient } from "@/shared/services";
+import { CustomMDX } from "@/shared/components";
+import { formatDate, slugify } from "@/shared/utils";
 
 // 배럴 파일을 통한 간결한 import
 // ✅ Good: import { getBlogPosts } from "@/features/blog"
@@ -228,101 +253,28 @@ image?: string # 선택: OG 이미지 경로
 
 ```bash
 # 서브모듈을 최신 버전으로 업데이트
-git submodule update --remote --merge content
+git submodule update --remote --merge contents
 
 # 변경사항 커밋 및 푸시
-git add content
+git add contents
 git commit -m "chore: update content submodule"
 git push
 ```
 
-### Vercel Private Submodule 설정
+### Vercel 배포 설정
 
-Vercel에서 Private 서브모듈을 사용하는 경우 추가 설정이 필요합니다.
+#### Private 서브모듈 사용 시
 
-#### 1. GitHub Personal Access Token 생성
+Private 서브모듈을 사용하는 경우 Vercel 환경변수 설정이 필요합니다:
 
-1. GitHub → Settings → Developer settings → [Personal access tokens (classic)](https://github.com/settings/tokens)
-2. "Generate new token (classic)" 클릭
-3. Note: `Vercel Submodule Access`
-4. Expiration: `No expiration` (권장) 또는 적절한 기간 선택
-5. Select scopes: `repo` (Full control of private repositories) 체크
-6. "Generate token" 클릭 후 토큰 복사 (한 번만 표시됨!)
+1. [GitHub Personal Access Token](https://github.com/settings/tokens) 생성
+   - Scopes: `repo` (Full control of private repositories)
+2. Vercel 프로젝트 → Settings → Environment Variables
+   - Name: `GITHUB_REPO_CLONE_TOKEN`
+   - Value: 생성한 Personal Access Token
+3. Install Command: `pnpm install:vercel`
 
-#### 2. Vercel Environment Variables 설정
-
-1. Vercel 프로젝트 → Settings → Environment Variables
-2. 새 변수 추가:
-   - **Name**: `GITHUB_REPO_CLONE_TOKEN`
-   - **Value**: (위에서 생성한 Personal Access Token)
-   - **Environments**: Production, Preview, Development 모두 선택
-3. "Save" 클릭
-
-#### 3. Vercel Build Settings 설정
-
-1. Vercel 프로젝트 → Settings → General → Build & Development Settings
-2. **Install Command** 수정:
-   ```bash
-   pnpm install:vercel
-   ```
-3. "Save" 클릭
-
-#### 4. 배포 확인
-
-설정 완료 후 다음 배포부터 자동으로 서브모듈이 정상적으로 클론됩니다.
-
-### 자동 배포 설정
-
-블로그 컨텐츠 업데이트 시 자동으로 서브모듈이 갱신되고 Vercel 배포가 트리거되도록 설정할 수 있습니다.
-
-#### 1. GitHub Secrets 설정
-
-**blog9yu-content 저장소에서:**
-
-1. Settings → Secrets and variables → Actions
-2. "New repository secret" 클릭
-3. Name: `BLOG_REPO_PAT`
-4. Value: [GitHub Personal Access Token](https://github.com/settings/tokens)
-   - 필요 권한: `repo` (private repository) 또는 `public_repo` (public만)
-   - Workflow 권한 포함 필요
-
-#### 2. GitHub Actions 워크플로우 추가
-
-`blog9yu-content` 저장소에 다음 파일을 추가:
-
-**`.github/workflows/notify-blog.yml`**:
-
-```yaml
-name: Notify Blog on Content Update
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - "posts/**"
-      - "about/**"
-
-jobs:
-  notify-blog:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger blog submodule update
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.BLOG_REPO_PAT }}
-          repository: chan9yu/blog9yu.dev
-          event-type: content-updated
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-```
-
-#### 3. 동작 흐름
-
-1. `blog9yu-content` 저장소에 포스트 업데이트 (push to main)
-2. GitHub Actions가 `blog9yu.dev`에 repository dispatch 이벤트 전송
-3. `blog9yu.dev`의 GitHub Actions가 서브모듈 업데이트 커밋 생성
-4. Vercel이 커밋 감지하여 자동으로 빌드 및 배포
-5. 새로운 포스트 즉시 반영 완료
+> 자세한 내용은 `.env.example` 파일의 주석을 참고하세요.
 
 <br />
 
@@ -379,7 +331,7 @@ framer-motion 기반의 부드럽고 자연스러운 애니메이션이 적용�
 - **목차 (TOC)**: 자동 생성되는 헤딩 기반 목차
 - **이전/다음 글**: 포스트 간 빠른 이동
 - **공유 기능**: Web Share API + Clipboard fallback
-- **댓글**: Utterances 기반 GitHub Issues 연동
+- **댓글**: Giscus 기반 GitHub Discussions 연동 (테마 자동 동기화)
 
 #### 뷰 옵션
 
@@ -469,7 +421,7 @@ plugins:
 - **TableOfContents**: 자동 생성 목차
 - **PostNavigation**: 이전/다음 글 네비게이션
 - **SeriesNavigation**: 시리즈 내 포스트 네비게이션
-- **CommentsSection**: Utterances 댓글 시스템
+- **GiscusComments**: Giscus 댓글 시스템 (테마 모드 자동 연동)
 
 ### Animation Components
 

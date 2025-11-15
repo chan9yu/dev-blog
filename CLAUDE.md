@@ -14,6 +14,7 @@ blog9yu.dev - Next.js 15 기반의 개인 개발 블로그. MDX를 활용한 파
 - **Styling**: Tailwind CSS 4.1.13
 - **Content**: MDX (next-mdx-remote 5.0.0)
 - **Code Highlighting**: sugar-high 0.9.3
+- **Comments**: Giscus (@giscus/react 3.1.0)
 - **Fonts**: Geist (Sans & Mono)
 - **Analytics**: Vercel Analytics & Speed Insights
 - **Package Manager**: pnpm 10.17.1
@@ -175,6 +176,42 @@ pnpm lint:fix
 pnpm format
 pnpm format:check
 ```
+
+## 환경변수 설정
+
+### 로컬 개발 환경
+
+로컬 개발을 위해 `.env.local` 파일을 생성해야 합니다:
+
+```bash
+# .env.local 파일 생성
+cp .env.example .env.local
+```
+
+### 필수 환경변수
+
+#### Giscus 댓글 시스템
+
+```env
+NEXT_PUBLIC_GISCUS_REPO=your-username/your-repo
+NEXT_PUBLIC_GISCUS_REPO_ID=your-repo-id
+NEXT_PUBLIC_GISCUS_CATEGORY=your-category
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=your-category-id
+```
+
+- **설정값 생성**: https://giscus.app 에서 GitHub Discussions 설정 후 생성
+- **타입 정의**: `src/@types/env.d.ts`에 타입 정의됨
+- **사용 위치**: `src/shared/constants/index.ts`에서 사용
+
+#### Vercel 배포 (선택)
+
+```env
+GITHUB_REPO_CLONE_TOKEN=your-github-personal-access-token
+```
+
+- **용도**: Vercel에서 Private 서브모듈 클론 시 필요
+- **생성**: https://github.com/settings/tokens (repo 권한 필요)
+- **설정**: Vercel 프로젝트 Environment Variables에 추가
 
 ## 블로그 시스템 아키텍처
 
@@ -861,6 +898,9 @@ async function loadPostPage(slug: string) {
 
 ## 주의사항
 
+- **환경변수 설정 필수**: `.env.local` 파일 생성 필요 (`.env.example` 참고)
+  - `NEXT_PUBLIC_GISCUS_*`: Giscus 댓글 시스템 설정 (https://giscus.app에서 생성)
+  - `GITHUB_REPO_CLONE_TOKEN`: Vercel 배포용 (Private 서브모듈 클론)
 - 블로그 포스트는 Git 서브모듈 (`contents/posts/`)에 위치
 - MDX frontmatter는 반드시 검증 후 사용
 - 서브모듈 클론 시 `--recurse-submodules` 필요
