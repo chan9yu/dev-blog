@@ -27,6 +27,7 @@
 		"build-storybook": "storybook build"
 	},
 	"dependencies": {
+		"@giscus/react": "^3.1.0",
 		"clsx": "^2.1.1",
 		"framer-motion": "^12.23.22",
 		"gray-matter": "^4.0.3",
@@ -47,7 +48,6 @@
 		"@storybook/addon-a11y": "^9.1.10",
 		"@storybook/addon-docs": "^9.1.10",
 		"@storybook/addon-onboarding": "^9.1.10",
-		"@storybook/addon-vitest": "^9.1.10",
 		"@storybook/nextjs-vite": "^9.1.10",
 		"@svgr/webpack": "^8.1.0",
 		"@tailwindcss/postcss": "^4.1.13",
@@ -56,8 +56,6 @@
 		"@types/react-dom": "^19.1.9",
 		"@vercel/analytics": "^1.5.0",
 		"@vercel/speed-insights": "^1.2.0",
-		"@vitest/browser": "^3.2.4",
-		"@vitest/coverage-v8": "^3.2.4",
 		"eslint": "^9.36.0",
 		"eslint-config-next": "^15.5.4",
 		"eslint-config-prettier": "^10.1.8",
@@ -68,13 +66,11 @@
 		"geist": "^1.5.1",
 		"lefthook": "^1.13.5",
 		"next-mdx-remote": "^5.0.0",
-		"playwright": "^1.56.0",
 		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.6.14",
 		"storybook": "^9.1.10",
 		"sugar-high": "^0.9.3",
 		"tailwindcss": "^4.1.13",
-		"typescript": "^5.9.2",
-		"vitest": "^3.2.4"
+		"typescript": "^5.9.2"
 	}
 }

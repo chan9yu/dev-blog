@@ -1,7 +1,7 @@
-export { Comments } from "./Comments";
 export { CommentsSection } from "./CommentsSection";
 export { Drawer } from "./Drawer";
 export { FadeInWhenVisible } from "./FadeInWhenVisible";
+export { GiscusComments } from "./GiscusComments";
 export { CustomMDX } from "./mdx";
 export { MobileMenu } from "./MobileMenu";
 export { MotionProvider } from "./MotionProvider";

@@ -27,7 +27,6 @@ import { MdxLink } from "@/shared/components/mdx/MdxLink";
 import { MdxPre } from "@/shared/components/mdx/MdxPre";
 import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
 import { SITE } from "@/shared/config";
-import { utterancesRepo } from "@/shared/constants";
 import { slugify, type Theme } from "@/shared/utils";
 
 const components = {
@@ -162,7 +161,6 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
 	const cookieStore = await cookies();
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
-	const utterancesTheme = theme === "dark" ? "github-dark" : "github-light";
 
 	return (
 		<BlogLayout tocItems={tocItems}>
@@ -280,7 +278,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 				<RelatedPosts posts={relatedPosts} />
 
 				{/* Comments */}
-				<CommentsSection repo={utterancesRepo} initialTheme={utterancesTheme} />
+				<CommentsSection initialTheme={theme} />
 			</article>
 		</BlogLayout>
 	);
