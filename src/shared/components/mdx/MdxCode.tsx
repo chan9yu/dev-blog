@@ -1,13 +1,12 @@
 import type { HTMLAttributes } from "react";
-import { highlight } from "sugar-high";
 
 export function MdxCode({ children, ...props }: { children: string } & HTMLAttributes<HTMLElement>) {
-	const isCodeBlock = props.className?.startsWith("language-");
-
-	if (isCodeBlock) {
-		const codeHTML = highlight(children);
-		return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
-	}
-
-	return <code {...props}>{children}</code>;
+	return (
+		<code
+			{...props}
+			className="bg-secondary text-primary rounded-md px-1.5 py-0.5 font-mono text-[0.875em] before:content-none after:content-none"
+		>
+			{children}
+		</code>
+	);
 }

@@ -16,6 +16,7 @@
 @import "./prose.css";
 @import "./scrollbar.css";
 @import "./animations.css";
+@import "./shiki.css";
 
 /* ============================================
   @theme - Primitive Colors (Tailwind 4)

@@ -1,0 +1,13 @@
+/* Shiki Syntax Highlighting - Dual Theme Support */
+
+.shiki {
+	background-color: var(--bg-secondary) !important;
+}
+
+.shiki span {
+	color: var(--shiki-light, inherit);
+}
+
+.dark .shiki span {
+	color: var(--shiki-dark, inherit) !important;
+}
