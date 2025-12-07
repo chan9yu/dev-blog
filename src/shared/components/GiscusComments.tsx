@@ -9,24 +9,22 @@ type GiscusCommentsProps = {
 	initialTheme?: "light" | "dark";
 };
 
+const getCurrentTheme = (): "light" | "dark" => {
+	if (typeof window === "undefined") return "light";
+	return document.documentElement.classList.contains("dark") ? "dark" : "light";
+};
+
 export function GiscusComments({ initialTheme = "light" }: GiscusCommentsProps) {
-	const [theme, setTheme] = useState<"light" | "dark">(initialTheme);
+	const [theme, setTheme] = useState<"light" | "dark">(() => {
+		const current = getCurrentTheme();
+		return current !== "light" ? current : initialTheme;
+	});
 
 	useEffect(() => {
-		// 현재 테마 확인 함수
-		const getCurrentTheme = (): "light" | "dark" => {
-			return document.documentElement.classList.contains("dark") ? "dark" : "light";
-		};
-
-		// 초기 테마 설정
-		setTheme(getCurrentTheme());
-
-		// 테마 변경 핸들러
 		const handleThemeChange = () => {
 			setTheme(getCurrentTheme());
 		};
 
-		// Listen to custom theme change event (fired by ThemeSwitcher)
 		window.addEventListener("themeChange", handleThemeChange);
 
 		return () => {

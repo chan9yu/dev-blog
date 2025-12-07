@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import MenuIcon from "@/shared/assets/icons/menu.svg";
 import XIcon from "@/shared/assets/icons/x.svg";
@@ -22,31 +22,28 @@ export function MobileMenu() {
 	const [isOpen, setIsOpen] = useState(false);
 	const pathname = usePathname();
 
-	// 경로 변경 시 메뉴 닫기
-	useEffect(() => {
-		setIsOpen(false);
-	}, [pathname]);
+	const handleClose = () => setIsOpen(false);
 
 	return (
 		<>
 			{/* Hamburger Button */}
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className="text-primary hover:bg-secondary flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors md:hidden"
+				className="text-primary hover:bg-secondary flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-colors md:hidden"
 				aria-label="메뉴 열기"
 			>
 				<MenuIcon className="size-6" />
 			</button>
 
 			{/* Mobile Menu Drawer */}
-			<Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} className="md:hidden">
+			<Drawer isOpen={isOpen} onClose={handleClose} className="md:hidden">
 				<div className="flex h-full flex-col">
 					{/* Header */}
 					<div className="border-primary flex items-center justify-between border-b px-6 py-6">
 						<span className="text-primary text-lg font-bold">메뉴</span>
 						<button
-							onClick={() => setIsOpen(false)}
-							className="text-secondary hover:text-primary hover:bg-secondary flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg transition-colors"
+							onClick={handleClose}
+							className="text-secondary hover:text-primary hover:bg-secondary flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-colors"
 							aria-label="메뉴 닫기"
 						>
 							<XIcon className="size-5" />
@@ -62,8 +59,9 @@ export function MobileMenu() {
 									<li key={path}>
 										<Link
 											href={path}
+											onClick={handleClose}
 											className={cn(
-												"text-secondary hover:bg-secondary hover:text-primary block min-h-[44px] rounded-lg px-4 py-3 text-base font-medium transition-colors",
+												"text-secondary hover:bg-secondary hover:text-primary block min-h-11 rounded-lg px-4 py-3 text-base font-medium transition-colors",
 												isActive && "bg-secondary text-primary"
 											)}
 										>

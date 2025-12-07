@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import MoonIcon from "@/shared/assets/icons/moon.svg";
 import SunIcon from "@/shared/assets/icons/sun.svg";
@@ -16,14 +16,10 @@ type ThemeSwitcherProps = {
 };
 
 export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
-	const [currentTheme, setCurrentTheme] = useState<Theme>(initialTheme);
-
-	useEffect(() => {
-		// Sync with localStorage on client mount
-		// This handles cases where localStorage differs from cookie
-		const theme = initTheme();
-		setCurrentTheme(theme);
-	}, []);
+	const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+		if (typeof window === "undefined") return initialTheme;
+		return initTheme();
+	});
 
 	const handleToggle = () => {
 		const nextTheme: Theme = currentTheme === "dark" ? "light" : "dark";
@@ -55,7 +51,7 @@ export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
 		<button
 			type="button"
 			onClick={handleToggle}
-			className="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
+			className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
 			aria-label={label}
 			title={label}
 		>

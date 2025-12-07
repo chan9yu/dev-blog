@@ -1,6 +1,7 @@
 import nextPlugin from "@next/eslint-plugin-next";
 import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
 
@@ -37,12 +38,16 @@ const importSortConfig = {
 	}
 };
 
+/** @type {import('eslint').Linter.Config} */
+const reactHooksConfig = reactHooksPlugin.configs.flat.recommended;
+
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
 	...tseslint.configs.recommended,
 	nextConfig,
 	prettierLinterConfig,
 	importSortConfig,
+	reactHooksConfig,
 	{
 		rules: {
 			"@typescript-eslint/no-unused-vars": [
