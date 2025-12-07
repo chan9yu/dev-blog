@@ -1,29 +1,50 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import prettier from "eslint-plugin-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import nextPlugin from "@next/eslint-plugin-next";
+import prettierConfig from "eslint-config-prettier";
+import prettierPlugin from "eslint-plugin-prettier";
+import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
+import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+/** @type {import('eslint').Linter.Config} */
+const nextConfig = {
+	plugins: {
+		"@next/next": nextPlugin
+	},
+	rules: {
+		...nextPlugin.configs.recommended.rules,
+		...nextPlugin.configs["core-web-vitals"].rules
+	}
+};
 
-const compat = new FlatCompat({
-	baseDirectory: __dirname
-});
+/** @type {import('eslint').Linter.Config} */
+const prettierLinterConfig = {
+	plugins: {
+		prettier: prettierPlugin
+	},
+	rules: {
+		...prettierConfig.rules,
+		"prettier/prettier": "error"
+	}
+};
+
+/** @type {import('eslint').Linter.Config} */
+const importSortConfig = {
+	plugins: {
+		"simple-import-sort": simpleImportSortPlugin
+	},
+	rules: {
+		"simple-import-sort/imports": "error",
+		"simple-import-sort/exports": "error"
+	}
+};
 
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
-	...compat.extends("next/core-web-vitals", "next/typescript"),
-	...compat.extends("prettier"),
+	...tseslint.configs.recommended,
+	nextConfig,
+	prettierLinterConfig,
+	importSortConfig,
 	{
-		plugins: {
-			"simple-import-sort": simpleImportSort,
-			prettier: prettier
-		},
 		rules: {
-			"prettier/prettier": "error",
-			"simple-import-sort/imports": "error",
-			"simple-import-sort/exports": "error",
 			"@typescript-eslint/no-unused-vars": [
 				"error",
 				{
@@ -39,14 +60,17 @@ const eslintConfig = [
 					fixStyle: "separate-type-imports"
 				}
 			],
-			"no-console": ["warn", { allow: ["warn", "error"] }]
+			"no-console": [
+				"warn",
+				{
+					allow: ["warn", "error"]
+				}
+			]
 		}
 	},
 	{
 		ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"]
 	}
-	// Storybook 설정 임시 비활성화 (순환 참조 문제)
-	// ...storybook.configs["flat/recommended"]
 ];
 
 export default eslintConfig;
