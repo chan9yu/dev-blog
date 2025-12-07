@@ -5,9 +5,9 @@
  */
 export const SITE = {
 	// 기본 정보
-	name: "blog9yu.dev",
-	title: "chan9yu · dev blog",
-	titleTemplate: "%s · chan9yu",
+	name: "chan9yu 개발 블로그",
+	title: "chan9yu | 기술 개발 블로그 - React, TypeScript, WebRTC",
+	titleTemplate: "%s | chan9yu",
 	description:
 		"프론트엔드 개발자 여찬규의 기술 블로그. React, TypeScript, Next.js, WebRTC를 활용한 웹 개발 및 실시간 통신 경험을 공유합니다. 3년간의 실무 경험을 바탕으로 문제 해결 과정과 인사이트를 기록합니다.",
 	shortDescription: "프론트엔드 개발자의 실무 경험과 기술 인사이트",
