@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-import type { Theme } from "../utils";
-import { MobileMenu, NavLink, ThemeSwitcher } from ".";
+import { getAllPosts } from "@/features/blog/services";
+import { SearchButton } from "@/features/search";
+import { MobileMenu, NavLink, ThemeSwitcher } from "@/shared/components";
+import type { Theme } from "@/shared/utils";
 
 const navItems = {
 	"/": {
@@ -25,6 +27,7 @@ const navItems = {
 export async function SiteNavbar() {
 	const cookieStore = await cookies();
 	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+	const posts = await getAllPosts();
 
 	return (
 		<header className="bg-primary/80 sticky top-0 z-50 backdrop-blur-lg md:mt-12">
@@ -42,13 +45,15 @@ export async function SiteNavbar() {
 							{name}
 						</NavLink>
 					))}
-					<div className="ml-2 flex items-center justify-center">
+					<div className="ml-2 flex items-center justify-center gap-1">
+						<SearchButton posts={posts} />
 						<ThemeSwitcher initialTheme={theme} />
 					</div>
 				</div>
 
 				{/* Mobile Navigation */}
 				<div className="flex items-center gap-2 md:hidden">
+					<SearchButton posts={posts} />
 					<ThemeSwitcher initialTheme={theme} />
 					<MobileMenu />
 				</div>
