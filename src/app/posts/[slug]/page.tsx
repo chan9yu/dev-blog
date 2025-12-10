@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { Suspense } from "react";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 
@@ -17,7 +18,9 @@ import {
 	RelatedPosts
 } from "@/features/blog";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
+import { ViewCounter } from "@/features/views";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
+import EyeIcon from "@/shared/assets/icons/eye.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
 import { MdxCode } from "@/shared/components/mdx/MdxCode";
@@ -207,11 +210,21 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 					</div>
 
 					{/* Meta Info */}
-					<div className="text-tertiary flex flex-wrap items-center gap-3 text-xs sm:gap-4 sm:text-sm">
+					<div className="text-tertiary flex flex-wrap items-center justify-between gap-3 text-xs sm:gap-4 sm:text-sm">
 						<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
 							<CalendarIcon className="size-3.5 sm:size-4" />
 							{formatDate(post.date)}
 						</time>
+						<div className="flex items-center gap-1.5 px-4 sm:gap-2">
+							<EyeIcon className="size-3.5 sm:size-4" />
+							<Suspense
+								fallback={
+									<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
+								}
+							>
+								<ViewCounter slug={post.slug} />
+							</Suspense>
+						</div>
 					</div>
 
 					{/* Tags & Share */}
