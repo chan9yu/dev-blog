@@ -8,5 +8,12 @@ declare namespace NodeJS {
 
 		// Vercel Build Configuration (Server-side only)
 		readonly GITHUB_REPO_CLONE_TOKEN?: string;
+
+		// Vercel KV (Redis) Configuration
+		readonly KV_URL?: string;
+		readonly KV_REST_API_URL?: string;
+		readonly KV_REST_API_TOKEN?: string;
+		readonly KV_REST_API_READ_ONLY_TOKEN?: string;
+		readonly REDIS_URL?: string;
 	}
 }
