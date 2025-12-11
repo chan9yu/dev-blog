@@ -96,7 +96,7 @@ export function SearchModal({ isOpen, onClose, posts }: SearchModalProps) {
 								/>
 								<button
 									onClick={onClose}
-									className="text-secondary hover:bg-secondary hover:text-primary flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors"
+									className="text-secondary hover:bg-secondary hover:text-primary flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors"
 									aria-label="검색 닫기"
 								>
 									<XIcon className="size-4" />

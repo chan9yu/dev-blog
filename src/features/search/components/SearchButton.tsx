@@ -25,7 +25,7 @@ export function SearchButton({ posts, className }: SearchButtonProps) {
 			<button
 				onClick={() => setIsOpen(true)}
 				className={cn(
-					"text-secondary hover:bg-secondary hover:text-primary flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg transition-colors",
+					"flex min-h-11 min-w-11 cursor-pointer items-center justify-center transition-opacity hover:opacity-70",
 					className
 				)}
 				aria-label="검색"
