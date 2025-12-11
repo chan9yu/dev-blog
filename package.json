@@ -42,6 +42,7 @@
 		"shiki": "^3.19.0",
 		"tailwind-merge": "^3.4.0",
 		"tailwind-variants": "^3.2.2",
+		"yet-another-react-lightbox": "^3.27.0",
 		"zod": "^4.1.13"
 	},
 	"devDependencies": {

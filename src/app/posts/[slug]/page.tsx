@@ -17,6 +17,7 @@ import {
 	PostNavigation,
 	RelatedPosts
 } from "@/features/blog";
+import { LightboxProvider } from "@/features/lightbox";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
 import CalendarIcon from "@/shared/assets/icons/calendar.svg";
@@ -168,131 +169,133 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 	return (
 		<BlogLayout tocItems={tocItems}>
 			<ReadingProgress />
-			<article className="min-w-0 flex-1 pb-12 sm:pb-16">
-				<script
-					type="application/ld+json"
-					suppressHydrationWarning
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify({
-							"@context": "https://schema.org",
-							"@type": "BlogPosting",
-							headline: post.title,
-							datePublished: post.date,
-							description: post.description,
-							image: post.thumbnail
-								? `${SITE.url}${post.thumbnail}`
-								: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
-							url: `${SITE.url}/posts/${post.slug}`,
-							author: {
-								"@type": "Person",
-								name: SITE.author.name,
-								url: SITE.author.url
-							},
-							publisher: {
-								"@type": "Person",
-								name: SITE.author.name
-							},
-							keywords: post.tags,
-							inLanguage: SITE.language
-						})
-					}}
-				/>
-
-				{/* Header */}
-				<header className="mb-10 space-y-5 sm:mb-14 sm:space-y-7">
-					<div className="space-y-4 sm:space-y-5">
-						<h1 className="title text-primary text-2xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-3xl md:text-4xl lg:text-5xl">
-							{post.title}
-						</h1>
-						<p className="text-secondary text-base leading-relaxed text-pretty break-keep sm:text-lg">
-							{post.description}
-						</p>
-					</div>
-
-					{/* Meta Info */}
-					<div className="text-tertiary flex flex-wrap items-center justify-between gap-3 text-xs sm:gap-4 sm:text-sm">
-						<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
-							<CalendarIcon className="size-3.5 sm:size-4" />
-							{formatDate(post.date)}
-						</time>
-						<div className="flex items-center gap-1.5 px-4 sm:gap-2">
-							<EyeIcon className="size-3.5 sm:size-4" />
-							<Suspense
-								fallback={
-									<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
-								}
-							>
-								<ViewCounter slug={post.slug} />
-							</Suspense>
-						</div>
-					</div>
-
-					{/* Tags & Share */}
-					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-						{post.tags && post.tags.length > 0 && (
-							<div className="flex flex-wrap gap-1.5 sm:gap-2">
-								{post.tags.map((tag) => (
-									<Link
-										key={tag}
-										href={`/tags/${slugify(tag)}`}
-										className="bg-secondary text-secondary border-primary inline-flex min-h-[36px] items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md sm:min-h-0 sm:px-3 sm:py-1.5 sm:text-sm"
-									>
-										<TagIcon className="size-3 sm:size-3.5" />
-										{tag}
-									</Link>
-								))}
-							</div>
-						)}
-
-						<ShareButton title={post.title} text={post.description} url={`${SITE.url}/posts/${post.slug}`} />
-					</div>
-
-					<hr className="border-primary" />
-				</header>
-
-				{/* Series Navigation */}
-				{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
-					<div className="mb-6 sm:mb-8">
-						<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
-					</div>
-				)}
-
-				{/* Thumbnail */}
-				{post.thumbnail && (
-					<div className="relative mb-6 aspect-[2/1] w-full overflow-hidden rounded-xl sm:mb-8 sm:rounded-2xl">
-						<Image
-							src={post.thumbnail}
-							alt={post.title}
-							fill
-							priority
-							className="object-cover"
-							sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
-						/>
-					</div>
-				)}
-
-				{/* Content */}
-				<div className="prose prose-sm sm:prose-base md:prose-lg">
-					<MDXRemote
-						source={post.content}
-						components={components}
-						options={{
-							mdxOptions: {
-								remarkPlugins: [remarkGfm, remarkBreaks]
-							}
+			<LightboxProvider>
+				<article className="min-w-0 flex-1 pb-12 sm:pb-16">
+					<script
+						type="application/ld+json"
+						suppressHydrationWarning
+						dangerouslySetInnerHTML={{
+							__html: JSON.stringify({
+								"@context": "https://schema.org",
+								"@type": "BlogPosting",
+								headline: post.title,
+								datePublished: post.date,
+								description: post.description,
+								image: post.thumbnail
+									? `${SITE.url}${post.thumbnail}`
+									: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
+								url: `${SITE.url}/posts/${post.slug}`,
+								author: {
+									"@type": "Person",
+									name: SITE.author.name,
+									url: SITE.author.url
+								},
+								publisher: {
+									"@type": "Person",
+									name: SITE.author.name
+								},
+								keywords: post.tags,
+								inLanguage: SITE.language
+							})
 						}}
 					/>
-				</div>
 
-				{/* Post Navigation */}
-				<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+					{/* Header */}
+					<header className="mb-10 space-y-5 sm:mb-14 sm:space-y-7">
+						<div className="space-y-4 sm:space-y-5">
+							<h1 className="title text-primary text-2xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-3xl md:text-4xl lg:text-5xl">
+								{post.title}
+							</h1>
+							<p className="text-secondary text-base leading-relaxed text-pretty break-keep sm:text-lg">
+								{post.description}
+							</p>
+						</div>
 
-				{/* Related Posts */}
-				<RelatedPosts posts={relatedPosts} />
+						{/* Meta Info */}
+						<div className="text-tertiary flex flex-wrap items-center justify-between gap-3 text-xs sm:gap-4 sm:text-sm">
+							<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
+								<CalendarIcon className="size-3.5 sm:size-4" />
+								{formatDate(post.date)}
+							</time>
+							<div className="flex items-center gap-1.5 px-4 sm:gap-2">
+								<EyeIcon className="size-3.5 sm:size-4" />
+								<Suspense
+									fallback={
+										<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
+									}
+								>
+									<ViewCounter slug={post.slug} />
+								</Suspense>
+							</div>
+						</div>
 
-				{/* Comments */}
-				<CommentsSection initialTheme={theme} />
-			</article>
+						{/* Tags & Share */}
+						<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+							{post.tags && post.tags.length > 0 && (
+								<div className="flex flex-wrap gap-1.5 sm:gap-2">
+									{post.tags.map((tag) => (
+										<Link
+											key={tag}
+											href={`/tags/${slugify(tag)}`}
+											className="bg-secondary text-secondary border-primary inline-flex min-h-[36px] items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md sm:min-h-0 sm:px-3 sm:py-1.5 sm:text-sm"
+										>
+											<TagIcon className="size-3 sm:size-3.5" />
+											{tag}
+										</Link>
+									))}
+								</div>
+							)}
+
+							<ShareButton title={post.title} text={post.description} url={`${SITE.url}/posts/${post.slug}`} />
+						</div>
+
+						<hr className="border-primary" />
+					</header>
+
+					{/* Series Navigation */}
+					{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
+						<div className="mb-6 sm:mb-8">
+							<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
+						</div>
+					)}
+
+					{/* Thumbnail */}
+					{post.thumbnail && (
+						<div className="relative mb-6 aspect-[2/1] w-full overflow-hidden rounded-xl sm:mb-8 sm:rounded-2xl">
+							<Image
+								src={post.thumbnail}
+								alt={post.title}
+								fill
+								priority
+								className="object-cover"
+								sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
+							/>
+						</div>
+					)}
+
+					{/* Content */}
+					<div className="prose prose-sm sm:prose-base md:prose-lg">
+						<MDXRemote
+							source={post.content}
+							components={components}
+							options={{
+								mdxOptions: {
+									remarkPlugins: [remarkGfm, remarkBreaks]
+								}
+							}}
+						/>
+					</div>
+
+					{/* Post Navigation */}
+					<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+
+					{/* Related Posts */}
+					<RelatedPosts posts={relatedPosts} />
+
+					{/* Comments */}
+					<CommentsSection initialTheme={theme} />
+				</article>
+			</LightboxProvider>
 		</BlogLayout>
 	);
 }
