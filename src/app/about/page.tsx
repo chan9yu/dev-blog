@@ -46,9 +46,9 @@ export default async function AboutPage() {
 
 			{/* Profile Section */}
 			<div className="not-prose mb-12 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-				<div className="relative h-32 w-32 flex-shrink-0 rounded-full">
+				<div className="relative h-32 w-32 shrink-0 rounded-full">
 					<Image
-						src="https://avatars.githubusercontent.com/u/80776262?v=4"
+						src="/images/profile-image.jpg"
 						alt="Profile"
 						fill
 						sizes="128px"
@@ -57,8 +57,8 @@ export default async function AboutPage() {
 					/>
 				</div>
 				<div className="flex-1 text-center sm:text-left">
-					<h2 className="text-primary mb-2 text-2xl font-bold">찬규 (Chan9yu)</h2>
-					<p className="text-secondary mb-4 text-lg">프론트엔드 개발자</p>
+					<h2 className="text-primary mb-2 text-2xl font-bold">여찬규 (Chan9yu)</h2>
+					<p className="text-secondary mb-4 text-lg">Frontend Engineer</p>
 					<SocialLinks />
 				</div>
 			</div>
