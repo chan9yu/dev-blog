@@ -1,21 +1,21 @@
+min_version: 2.0.0
+
 pre-commit:
   parallel: true
   commands:
-    prettier:
-      glob: "*.{js,ts,jsx,tsx,json,yaml,yml,md,mdx,css}"
-      run: pnpm prettier --write {staged_files}
-      stage_fixed: true
     eslint:
-      glob: "*.{js,ts,jsx,tsx}"
-      run: pnpm eslint {staged_files} --fix --max-warnings=0
+      glob: "*.{js,ts,jsx,tsx,mjs}"
+      run: pnpm exec eslint {staged_files} --fix
       stage_fixed: true
+    prettier:
+      glob: "*.{js,ts,jsx,tsx,mjs,json,yaml,yml,md,css}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+    type-check:
+      glob: "*.{ts,tsx}"
+      run: pnpm exec tsc --noEmit
 
-commit-msg:
+prepare-commit-msg:
   commands:
     template:
       run: node scripts/commit-msg.js {1}
-
-pre-push:
-  commands:
-    validate:
-      run: pnpm build && pnpm type-check && pnpm lint
