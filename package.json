@@ -1,17 +1,15 @@
 {
-	"name": "blog9yu.dev",
+	"$schema": "https://json.schemastore.org/package.json",
+	"name": "dev-blog",
 	"version": "1.0.0",
 	"private": true,
-	"description": "프론트엔드 개발의 아이디어와 경험을 기록하는 개발 블로그. 코드와 디자인, 사용자 경험을 아우르는 인사이트를 담습니다.",
 	"type": "module",
-	"author": "chan9yu <dev.cgyeo@gmail.com>",
-	"homepage": "https://www.chan9yu.dev",
 	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/chan9yu/blog9yu.dev"
+	"engines": {
+		"node": ">=22.0.0",
+		"pnpm": ">=10.0.0"
 	},
-	"packageManager": "pnpm@10.26.0",
+	"packageManager": "pnpm@10.30.0",
 	"scripts": {
 		"dev": "pnpm copy:images && next dev -p 3036",
 		"build": "pnpm copy:images && next build",
@@ -20,7 +18,7 @@
 		"lint:fix": "eslint --fix",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
-		"type-check": "tsc --noEmit -p ./tsconfig.json",
+		"type:check": "tsc --noEmit -p ./tsconfig.json",
 		"copy:images": "node scripts/copy-content-images.js",
 		"install:vercel": "bash ./scripts/vercel-submodule-workaround.sh && pnpm install",
 		"storybook": "storybook dev -p 6006",
@@ -61,6 +59,7 @@
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
 		"eslint": "^9.39.2",
+		"eslint-config-next": "^16.1.6",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.4",
 		"eslint-plugin-react-hooks": "^7.0.1",
