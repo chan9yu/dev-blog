@@ -15,8 +15,13 @@ export function extractTocFromMarkdown(content: string): TocItem[] {
 	let match;
 
 	while ((match = headingRegex.exec(contentWithoutCodeBlocks)) !== null) {
-		const level = match[1].length;
-		const title = match[2].trim();
+		const levelStr = match[1];
+		const titleStr = match[2];
+
+		if (!levelStr || !titleStr) continue;
+
+		const level = levelStr.length;
+		const title = titleStr.trim();
 		const id = slugify(title);
 
 		// 빈 ID는 스킵
