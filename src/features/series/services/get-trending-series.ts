@@ -1,4 +1,5 @@
-import type { SeriesBucket } from "../types";
+import type { SeriesBucket } from "@/features/series/types";
+
 import { getAllSeries } from "./api";
 
 type SeriesCount = {

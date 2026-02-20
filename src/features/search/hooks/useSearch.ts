@@ -3,7 +3,7 @@
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
 
-import type { SearchablePost, SearchOptions, SearchResult } from "../types/search.types";
+import type { SearchablePost, SearchOptions, SearchResult } from "@/features/search/types";
 
 /**
  * Fuse.js 기반 블로그 포스트 검색 훅

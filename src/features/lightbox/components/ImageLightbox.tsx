@@ -4,7 +4,7 @@ import "yet-another-react-lightbox/styles.css";
 
 import Lightbox from "yet-another-react-lightbox";
 
-import type { LightboxImage } from "../types";
+import type { LightboxImage } from "@/features/lightbox/types";
 
 type ImageLightboxProps = {
 	isOpen: boolean;
