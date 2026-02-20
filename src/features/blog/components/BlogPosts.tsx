@@ -3,9 +3,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
+import type { PostSummary } from "@/features/blog/types";
 import { cn } from "@/shared/utils";
 
-import type { PostSummary } from "../types";
 import { BlogPostCard } from "./BlogPostCard";
 import { ViewToggle } from "./ViewToggle";
 

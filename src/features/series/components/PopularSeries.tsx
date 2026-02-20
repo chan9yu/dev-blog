@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { getTrendingSeries } from "../services";
+import { getTrendingSeries } from "@/features/series/services";
 
 const MAX_SERIES_DISPLAY = 5;
 

@@ -1,7 +1,6 @@
 import { getAllPosts, validateSeriesIndex } from "@/features/blog";
+import type { SeriesBucket } from "@/features/series/types";
 import { slugify } from "@/shared/utils";
-
-import type { SeriesBucket } from "../types";
 
 /**
  * 모든 시리즈 목록 가져오기

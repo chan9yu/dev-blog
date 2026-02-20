@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 
+import type { SearchResult } from "@/features/search/types";
 import { cn } from "@/shared/utils";
-
-import type { SearchResult } from "../types/search.types";
 
 type SearchResultItemProps = {
 	result: SearchResult;

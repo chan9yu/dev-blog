@@ -1,8 +1,7 @@
 import Link from "next/link";
 
+import type { TagCount } from "@/features/tags/types";
 import { cn, slugify } from "@/shared/utils";
-
-import type { TagCount } from "../types";
 
 type TagListProps = {
 	tagCounts: TagCount;
