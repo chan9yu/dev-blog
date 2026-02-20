@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { getAllPosts } from "../services";
-import { formatDate } from "../utils";
+import { getAllPosts } from "@/features/blog/services";
+import { formatDate, sortPostsByDateDescending } from "@/features/blog/utils";
 
 const MAX_POSTS_DISPLAY = 5;
 
@@ -10,11 +10,7 @@ export async function TrendingPosts() {
 
 	// TODO: 조회수 기능 추가 시 조회수 기준으로 정렬
 	// 현재는 최신순으로 정렬
-	const trendingPosts = allPosts
-		.sort((a, b) => {
-			return new Date(b.date).getTime() - new Date(a.date).getTime();
-		})
-		.slice(0, MAX_POSTS_DISPLAY);
+	const trendingPosts = sortPostsByDateDescending(allPosts).slice(0, MAX_POSTS_DISPLAY);
 
 	if (trendingPosts.length === 0) {
 		return (
