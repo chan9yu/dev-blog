@@ -1,4 +1,5 @@
-import type { PostSummary } from "../types";
+import type { PostSummary } from "@/features/blog/types";
+
 import { getAllPosts } from "./api";
 
 type TagCount = {

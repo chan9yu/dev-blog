@@ -6,6 +6,8 @@ import CheckIcon from "@/shared/assets/icons/check.svg";
 import CopyIcon from "@/shared/assets/icons/copy.svg";
 import { cn } from "@/shared/utils";
 
+const COPY_FEEDBACK_DURATION_MS = 2000;
+
 type ShikiCodeBlockProps = {
 	html: string;
 };
@@ -20,7 +22,7 @@ export function ShikiCodeBlock({ html }: ShikiCodeBlockProps) {
 		const code = codeRef.current.textContent || "";
 		await navigator.clipboard.writeText(code);
 		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
+		setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION_MS);
 	};
 
 	return (
@@ -41,12 +43,12 @@ export function ShikiCodeBlock({ html }: ShikiCodeBlockProps) {
 			>
 				{copied ? (
 					<span className="flex items-center gap-1.5">
-						<CheckIcon className="size-3.5" />
+						<CheckIcon className="size-3.5" aria-hidden="true" />
 						Copied!
 					</span>
 				) : (
 					<span className="flex items-center gap-1.5">
-						<CopyIcon className="size-3.5" />
+						<CopyIcon className="size-3.5" aria-hidden="true" />
 						Copy
 					</span>
 				)}

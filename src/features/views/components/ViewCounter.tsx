@@ -1,6 +1,6 @@
 "use client";
 
-import { useViews } from "../hooks";
+import { useViews } from "@/features/views/hooks";
 
 type ViewCounterProps = {
 	slug: string;

@@ -1,8 +1,8 @@
-onlyBuiltDependencies:
-  - "@tailwindcss/oxide"
-  - "@vercel/speed-insights"
-  - core-js-pure
-  - esbuild
-  - lefthook
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  "@tailwindcss/oxide": false
+  "@vercel/speed-insights": false
+  core-js-pure: false
+  esbuild: false
+  lefthook: true
+  sharp: false
+  unrs-resolver: false

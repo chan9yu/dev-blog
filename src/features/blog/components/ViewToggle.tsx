@@ -10,10 +10,13 @@ type ViewToggleProps = {
 };
 
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
+	const handleSelectList = () => onViewChange("list");
+	const handleSelectGrid = () => onViewChange("grid");
+
 	return (
 		<div className="bg-secondary/50 hidden items-center gap-1 rounded-lg p-1 backdrop-blur-sm sm:flex">
 			<button
-				onClick={() => onViewChange("list")}
+				onClick={handleSelectList}
 				className={cn(
 					"group flex cursor-pointer items-center justify-center rounded-md p-2 transition-all duration-200",
 					view === "list"
@@ -21,11 +24,12 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
 						: "text-tertiary hover:bg-tertiary/50 hover:text-secondary"
 				)}
 				aria-label="리스트 보기"
+				aria-pressed={view === "list"}
 			>
-				<ListIcon className="size-4 transition-transform group-hover:scale-110" />
+				<ListIcon className="size-4 transition-transform group-hover:scale-110" aria-hidden="true" />
 			</button>
 			<button
-				onClick={() => onViewChange("grid")}
+				onClick={handleSelectGrid}
 				className={cn(
 					"group flex cursor-pointer items-center justify-center rounded-md p-2 transition-all duration-200",
 					view === "grid"
@@ -33,8 +37,9 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
 						: "text-tertiary hover:bg-tertiary/50 hover:text-secondary"
 				)}
 				aria-label="격자 보기"
+				aria-pressed={view === "grid"}
 			>
-				<GridIcon className="size-4 transition-transform group-hover:scale-110" />
+				<GridIcon className="size-4 transition-transform group-hover:scale-110" aria-hidden="true" />
 			</button>
 		</div>
 	);

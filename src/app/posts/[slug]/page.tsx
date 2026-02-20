@@ -11,11 +11,14 @@ import remarkGfm from "remark-gfm";
 import {
 	BlogLayout,
 	extractTocFromMarkdown,
+	findAdjacentPosts,
+	findRelatedPostsByTags,
 	formatDate,
 	getAllPosts,
 	getPostDetail,
 	PostNavigation,
-	RelatedPosts
+	RelatedPosts,
+	sortPostsByDateDescending
 } from "@/features/blog";
 import { LightboxProvider } from "@/features/lightbox";
 import { getAllSeries, SeriesNavigation } from "@/features/series";
@@ -24,12 +27,20 @@ import CalendarIcon from "@/shared/assets/icons/calendar.svg";
 import EyeIcon from "@/shared/assets/icons/eye.svg";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
-import { MdxCode } from "@/shared/components/mdx/MdxCode";
-import { createHeading } from "@/shared/components/mdx/MdxHeading";
-import { MdxImage, MdxImg } from "@/shared/components/mdx/MdxImage";
-import { MdxLink } from "@/shared/components/mdx/MdxLink";
-import { MdxPre } from "@/shared/components/mdx/MdxPre";
-import { MdxTable, MdxTbody, MdxTd, MdxTh, MdxThead, MdxTr } from "@/shared/components/mdx/MdxTable";
+import {
+	createHeading,
+	MdxCode,
+	MdxImage,
+	MdxImg,
+	MdxLink,
+	MdxPre,
+	MdxTable,
+	MdxTbody,
+	MdxTd,
+	MdxTh,
+	MdxThead,
+	MdxTr
+} from "@/shared/components/mdx";
 import { SITE } from "@/shared/config";
 import { slugify, type Theme } from "@/shared/utils";
 
@@ -143,24 +154,11 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 
 	// 이전글/다음글 찾기 (날짜 순으로 정렬 - 최신순)
 	const allPosts = await getAllPosts();
-	const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-	const currentIndex = sortedPosts.findIndex((p) => p.slug === slug);
-	// 이전글 = 더 오래된 글, 다음글 = 더 최신 글
-	const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
-	const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+	const sortedPosts = sortPostsByDateDescending(allPosts);
+	const { prevPost, nextPost } = findAdjacentPosts(sortedPosts, slug);
 
 	// 관련 포스트 찾기 (같은 태그 기반)
-	const relatedPosts = allPosts
-		.filter((p) => p.slug !== slug) // 현재 포스트 제외
-		.map((p) => {
-			// 태그 매칭 개수 계산
-			const matchingTags = p.tags?.filter((tag) => post.tags?.includes(tag)) || [];
-			return { post: p, matchCount: matchingTags.length };
-		})
-		.filter((item) => item.matchCount > 0) // 매칭되는 태그가 있는 포스트만
-		.sort((a, b) => b.matchCount - a.matchCount) // 매칭 개수 많은 순
-		.slice(0, 3) // 최대 3개
-		.map((item) => item.post);
+	const relatedPosts = findRelatedPostsByTags(allPosts, slug, post.tags);
 
 	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
 	const cookieStore = await cookies();
@@ -214,11 +212,11 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 						{/* Meta Info */}
 						<div className="text-tertiary flex flex-wrap items-center justify-between gap-3 text-xs sm:gap-4 sm:text-sm">
 							<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
-								<CalendarIcon className="size-3.5 sm:size-4" />
+								<CalendarIcon className="size-3.5 sm:size-4" aria-hidden="true" />
 								{formatDate(post.date)}
 							</time>
 							<div className="flex items-center gap-1.5 px-4 sm:gap-2">
-								<EyeIcon className="size-3.5 sm:size-4" />
+								<EyeIcon className="size-3.5 sm:size-4" aria-hidden="true" />
 								<Suspense
 									fallback={
 										<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
@@ -239,7 +237,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
 											href={`/tags/${slugify(tag)}`}
 											className="bg-secondary text-secondary border-primary inline-flex min-h-[36px] items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md sm:min-h-0 sm:px-3 sm:py-1.5 sm:text-sm"
 										>
-											<TagIcon className="size-3 sm:size-3.5" />
+											<TagIcon className="size-3 sm:size-3.5" aria-hidden="true" />
 											{tag}
 										</Link>
 									))}

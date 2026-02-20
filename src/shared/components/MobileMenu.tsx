@@ -6,8 +6,8 @@ import { useState } from "react";
 
 import MenuIcon from "@/shared/assets/icons/menu.svg";
 import XIcon from "@/shared/assets/icons/x.svg";
+import { cn } from "@/shared/utils";
 
-import { cn } from "../utils";
 import { Drawer } from "./Drawer";
 
 const navItems = {
@@ -22,17 +22,19 @@ export function MobileMenu() {
 	const [isOpen, setIsOpen] = useState(false);
 	const pathname = usePathname();
 
+	const handleToggle = () => setIsOpen((prev) => !prev);
 	const handleClose = () => setIsOpen(false);
 
 	return (
 		<>
 			{/* Hamburger Button */}
 			<button
-				onClick={() => setIsOpen(!isOpen)}
+				onClick={handleToggle}
 				className="text-primary hover:bg-secondary flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-colors md:hidden"
 				aria-label="메뉴 열기"
+				aria-expanded={isOpen}
 			>
-				<MenuIcon className="size-6" />
+				<MenuIcon className="size-6" aria-hidden="true" />
 			</button>
 
 			{/* Mobile Menu Drawer */}
@@ -46,7 +48,7 @@ export function MobileMenu() {
 							className="text-secondary hover:text-primary hover:bg-secondary flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-colors"
 							aria-label="메뉴 닫기"
 						>
-							<XIcon className="size-5" />
+							<XIcon className="size-5" aria-hidden="true" />
 						</button>
 					</div>
 

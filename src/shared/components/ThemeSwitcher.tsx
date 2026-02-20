@@ -4,8 +4,7 @@ import { useState } from "react";
 
 import MoonIcon from "@/shared/assets/icons/moon.svg";
 import SunIcon from "@/shared/assets/icons/sun.svg";
-
-import { initTheme, setTheme, type Theme } from "../utils";
+import { initTheme, setTheme, type Theme } from "@/shared/utils";
 
 type ThemeSwitcherProps = {
 	/**
@@ -55,7 +54,11 @@ export function ThemeSwitcher({ initialTheme }: ThemeSwitcherProps) {
 			aria-label={label}
 			title={label}
 		>
-			{isDark ? <SunIcon className="size-5 sm:size-6" /> : <MoonIcon className="size-5 sm:size-6" />}
+			{isDark ? (
+				<SunIcon className="size-5 sm:size-6" aria-hidden="true" />
+			) : (
+				<MoonIcon className="size-5 sm:size-6" aria-hidden="true" />
+			)}
 		</button>
 	);
 }

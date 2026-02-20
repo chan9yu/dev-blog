@@ -949,15 +949,20 @@ async function loadPostPage(slug: string) {
    import { apiClient } from "@/shared/services";
    ```
 
-3. **같은 feature 내부**: 상대 경로 사용
+3. **같은 feature 내부**: `@/*` 절대 경로 사용 (상대 경로 금지)
 
    ```typescript
    // src/features/calendar/components/CalendarGrid.tsx
+   // ✅ 좋은 예
+   import { formatDate } from "@/features/calendar/utils";
+   import type { CalendarEvent } from "@/features/calendar/types";
+
+   // ❌ 나쁜 예: 상대 경로 사용
    import { formatDate } from "../utils";
    import type { CalendarEvent } from "../types";
    ```
 
-4. **App Router 페이지**: 절대 경로 사용
+4. **App Router 페이지**: `@/*` 절대 경로 사용
    ```typescript
    // src/app/blog/page.tsx
    import { BlogPostList } from "@/features/blog";

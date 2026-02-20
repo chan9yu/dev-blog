@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import ShareIcon from "@/shared/assets/icons/share.svg";
 
+const TOAST_DISPLAY_DURATION_MS = 2000;
+
 type ShareButtonProps = {
 	title: string;
 	text?: string;
@@ -39,7 +41,7 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
 		try {
 			await navigator.clipboard.writeText(url);
 			setShowToast(true);
-			setTimeout(() => setShowToast(false), 2000);
+			setTimeout(() => setShowToast(false), TOAST_DISPLAY_DURATION_MS);
 		} catch (error) {
 			console.error("Copy failed:", error);
 		}
@@ -52,7 +54,7 @@ export function ShareButton({ title, text, url }: ShareButtonProps) {
 				className="bg-secondary/50 text-secondary hover:bg-secondary hover:text-primary group flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 backdrop-blur-sm transition-all duration-200 sm:gap-2 sm:px-4"
 				aria-label="공유하기"
 			>
-				<ShareIcon className="size-4 transition-transform group-hover:scale-110" />
+				<ShareIcon className="size-4 transition-transform group-hover:scale-110" aria-hidden="true" />
 				<span className="text-xs font-medium sm:text-sm">공유</span>
 			</button>
 
