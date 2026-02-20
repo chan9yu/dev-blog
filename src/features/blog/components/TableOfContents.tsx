@@ -1,10 +1,14 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
+import type { TocItem } from "@/features/blog/utils";
 import { cn } from "@/shared/utils";
 
-import type { TocItem } from "../utils";
+const SCROLL_TOP_THRESHOLD_PX = 100;
+const INTERSECTION_ROOT_MARGIN = "-100px 0px -66% 0px";
+const HEADER_OFFSET_PX = 120;
 
 type TableOfContentsProps = {
 	items: TocItem[];
@@ -17,7 +21,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				// 최상단 근처면 activeId 초기화
-				if (window.scrollY < 100) {
+				if (window.scrollY < SCROLL_TOP_THRESHOLD_PX) {
 					setActiveId("");
 					return;
 				}
@@ -34,7 +38,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 				}
 			},
 			{
-				rootMargin: "-100px 0px -66% 0px",
+				rootMargin: INTERSECTION_ROOT_MARGIN,
 				threshold: [0, 0.5, 1]
 			}
 		);
@@ -49,7 +53,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 		return () => observer.disconnect();
 	}, [items]);
 
-	const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+	const handleClick = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
 		e.preventDefault();
 
 		const element = document.getElementById(id);
@@ -57,7 +61,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 
 		// 요소의 위치 계산 (헤더 오프셋 120px 고려)
 		const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-		const offsetPosition = elementPosition - 120;
+		const offsetPosition = elementPosition - HEADER_OFFSET_PX;
 
 		window.scrollTo({
 			top: offsetPosition,

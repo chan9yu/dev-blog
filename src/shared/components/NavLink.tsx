@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { cn } from "@/shared/utils";
 
 type NavLinkProps = {
 	href: string;
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 export function NavLink({ href, children }: NavLinkProps) {

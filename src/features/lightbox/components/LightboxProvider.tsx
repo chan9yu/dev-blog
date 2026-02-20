@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, type ReactNode, useContext } from "react";
+import { createContext, type ReactNode, use } from "react";
 
-import { useLightbox } from "../hooks";
-import type { LightboxImage } from "../types";
+import { useLightbox } from "@/features/lightbox/hooks";
+import type { LightboxImage } from "@/features/lightbox/types";
+
 import { ImageLightbox } from "./ImageLightbox";
 
 type LightboxContextValue = {
@@ -13,7 +14,7 @@ type LightboxContextValue = {
 const LightboxContext = createContext<LightboxContextValue | null>(null);
 
 export function useLightboxContext() {
-	const context = useContext(LightboxContext);
+	const context = use(LightboxContext);
 	if (!context) {
 		throw new Error("useLightboxContext must be used within LightboxProvider");
 	}
@@ -33,9 +34,9 @@ export function LightboxProvider({ children }: LightboxProviderProps) {
 	const { isOpen, currentIndex, images, openLightbox, closeLightbox } = useLightbox();
 
 	return (
-		<LightboxContext.Provider value={{ openLightbox }}>
+		<LightboxContext value={{ openLightbox }}>
 			{children}
 			<ImageLightbox isOpen={isOpen} onClose={closeLightbox} images={images} currentIndex={currentIndex} />
-		</LightboxContext.Provider>
+		</LightboxContext>
 	);
 }
