@@ -1,15 +1,16 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
-import { cn } from "../utils";
+import { cn } from "@/shared/utils";
 
 type DrawerProps = {
 	isOpen: boolean;
 	onClose: () => void;
-	children: React.ReactNode;
+	children: ReactNode;
 	position?: "left" | "right";
 	className?: string;
 };
@@ -48,6 +49,8 @@ export function Drawer({ isOpen, onClose, children, position = "right", classNam
 
 					{/* Drawer Panel */}
 					<motion.div
+						role="dialog"
+						aria-modal="true"
 						initial={slideDirection}
 						animate={{ x: 0 }}
 						exit={slideDirection}

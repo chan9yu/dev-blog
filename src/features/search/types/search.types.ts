@@ -1,4 +1,4 @@
-import type { PostSummary } from "@/features/blog/types";
+import type { PostSummary } from "@/features/blog";
 
 /**
  * 검색 가능한 포스트 정보 (PostSummary와 동일)

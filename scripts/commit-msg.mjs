@@ -10,10 +10,6 @@ const existingMessage = readFileSync(targetPath, "utf-8");
 const template = readFileSync(templatePath, "utf-8");
 
 const hasExistingMessage = existingMessage.split("\n").some((line) => line.trim() && !line.startsWith("#"));
-
 if (!hasExistingMessage) {
 	writeFileSync(targetPath, template);
-} else {
-	const typeGuide = template.split("################").pop();
-	writeFileSync(targetPath, `${existingMessage}\n${typeGuide}`);
 }

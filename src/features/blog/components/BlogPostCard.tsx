@@ -3,10 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import type { PostSummary } from "@/features/blog/types";
+import { calculateReadingTime, formatDate } from "@/features/blog/utils";
 import ClockIcon from "@/shared/assets/icons/clock.svg";
-
-import type { PostSummary } from "../types";
-import { calculateReadingTime, formatDate } from "../utils";
 
 type BlogPostCardProps = {
 	post: PostSummary;
@@ -73,7 +72,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 
 							{/* Reading Time */}
 							<div className="text-muted flex shrink-0 items-center gap-1 text-xs sm:gap-1.5 sm:text-sm">
-								<ClockIcon className="size-3.5 sm:size-4" />
+								<ClockIcon className="size-3.5 sm:size-4" aria-hidden="true" />
 								<span className="hidden sm:inline">{readingTime}분</span>
 								<span className="sm:hidden">{readingTime}분</span>
 							</div>
@@ -115,7 +114,7 @@ export function BlogPostCard({ post, variant = "list", priority = false }: BlogP
 
 							{/* Reading Time */}
 							<div className="text-muted flex items-center gap-1 text-xs sm:gap-1.5">
-								<ClockIcon className="size-3.5" />
+								<ClockIcon className="size-3.5" aria-hidden="true" />
 								<span>{readingTime}분</span>
 							</div>
 						</div>

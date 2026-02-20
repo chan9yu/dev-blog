@@ -1,16 +1,19 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { ChangeEvent, MouseEvent } from "react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+import { useSearch } from "@/features/search/hooks";
+import type { SearchablePost } from "@/features/search/types";
 import SearchIcon from "@/shared/assets/icons/search.svg";
 import XIcon from "@/shared/assets/icons/x.svg";
 import { cn } from "@/shared/utils";
 
-import { useSearch } from "../hooks/useSearch";
-import type { SearchablePost } from "../types/search.types";
 import { SearchResultItem } from "./SearchResultItem";
+
+const FOCUS_DELAY_MS = 100;
 
 type SearchModalProps = {
 	isOpen: boolean;
@@ -32,7 +35,7 @@ export function SearchModal({ isOpen, onClose, posts }: SearchModalProps) {
 			// 다음 틱에 포커스 (애니메이션 후)
 			setTimeout(() => {
 				inputRef.current?.focus();
-			}, 100);
+			}, FOCUS_DELAY_MS);
 		} else {
 			document.body.style.overflow = "";
 		}
@@ -54,6 +57,9 @@ export function SearchModal({ isOpen, onClose, posts }: SearchModalProps) {
 		return () => window.removeEventListener("keydown", handleEscape);
 	}, [isOpen, onClose]);
 
+	const handleContentClick = (e: MouseEvent<HTMLDivElement>) => e.stopPropagation();
+	const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value);
+
 	// Portal을 사용하여 body에 직접 렌더링
 	if (typeof document === "undefined") return null;
 
@@ -73,21 +79,24 @@ export function SearchModal({ isOpen, onClose, posts }: SearchModalProps) {
 					{/* Modal */}
 					<div className="fixed inset-0 z-110 flex items-start justify-center px-4 pt-[10vh]">
 						<motion.div
+							role="dialog"
+							aria-modal="true"
+							aria-label="검색"
 							initial={{ opacity: 0, scale: 0.95, y: -20 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: -20 }}
 							transition={{ type: "spring", damping: 30, stiffness: 300 }}
 							className="bg-elevated relative w-full max-w-2xl overflow-hidden rounded-xl shadow-2xl"
-							onClick={(e) => e.stopPropagation()}
+							onClick={handleContentClick}
 						>
 							{/* 헤더 */}
 							<div className="border-primary flex items-center gap-3 border-b px-4 py-4">
-								<SearchIcon className="text-tertiary size-5 shrink-0" />
+								<SearchIcon className="text-tertiary size-5 shrink-0" aria-hidden="true" />
 								<input
 									ref={inputRef}
 									type="text"
 									value={query}
-									onChange={(e) => setQuery(e.target.value)}
+									onChange={handleQueryChange}
 									placeholder="포스트 검색... (제목, 내용, 태그)"
 									className={cn(
 										"text-primary placeholder:text-tertiary flex-1 bg-transparent text-base outline-none",
@@ -99,7 +108,7 @@ export function SearchModal({ isOpen, onClose, posts }: SearchModalProps) {
 									className="text-secondary hover:bg-secondary hover:text-primary flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors"
 									aria-label="검색 닫기"
 								>
-									<XIcon className="size-4" />
+									<XIcon className="size-4" aria-hidden="true" />
 								</button>
 							</div>
 

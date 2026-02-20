@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-import { BlogPosts, getAllPosts, TrendingPosts, TrendingTags } from "@/features/blog";
+import { BlogPosts, getAllPosts, sortPostsByDateDescending, TrendingPosts, TrendingTags } from "@/features/blog";
 import { PopularSeries } from "@/features/series";
 import { PageTransition, SocialLinks } from "@/shared/components";
 
+const RECENT_POSTS_LIMIT = 6;
+
 export default async function Page() {
 	const allPosts = await getAllPosts();
-	const recentPosts = allPosts
-		.sort((a, b) => (Date.parse(b.date ?? "") || -Infinity) - (Date.parse(a.date ?? "") || -Infinity))
-		.slice(0, 6);
+	const recentPosts = sortPostsByDateDescending(allPosts).slice(0, RECENT_POSTS_LIMIT);
 
 	return (
 		<PageTransition>

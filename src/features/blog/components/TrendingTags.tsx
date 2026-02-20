@@ -1,8 +1,7 @@
 import Link from "next/link";
 
+import { getTrendingTags } from "@/features/blog/services";
 import { slugify } from "@/shared/utils";
-
-import { getTrendingTags } from "../services";
 
 const MAX_TAGS_DISPLAY = 10;
 

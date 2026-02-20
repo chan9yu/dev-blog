@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import Script from "next/script";
+import type { ReactNode } from "react";
 
 import { MotionProvider, ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
 import { SITE } from "@/shared/config";
@@ -101,7 +102,7 @@ export const metadata: Metadata = {
 };
 
 type RootLayoutProps = {
-	readonly children: React.ReactNode;
+	readonly children: ReactNode;
 };
 
 const pretendard = localFont({

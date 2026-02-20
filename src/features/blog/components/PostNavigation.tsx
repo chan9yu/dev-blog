@@ -1,9 +1,8 @@
 import Link from "next/link";
 
+import type { PostSummary } from "@/features/blog/types";
 import ChevronLeftIcon from "@/shared/assets/icons/chevron-left.svg";
 import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
-
-import type { PostSummary } from "../types";
 
 type PostNavigationProps = {
 	prevPost?: PostSummary | null;
@@ -24,7 +23,7 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
 					className="bg-secondary border-primary hover:bg-tertiary group flex min-h-[44px] flex-col gap-1.5 rounded-lg border p-4 transition-all duration-200 hover:shadow-md sm:gap-2 sm:p-6"
 				>
 					<div className="text-tertiary flex items-center gap-1.5 text-xs font-medium sm:gap-2 sm:text-sm">
-						<ChevronLeftIcon className="size-3.5 sm:size-4" />
+						<ChevronLeftIcon className="size-3.5 sm:size-4" aria-hidden="true" />
 						<span>이전 글</span>
 					</div>
 					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold text-balance break-keep transition-colors sm:text-base">
@@ -43,7 +42,7 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
 				>
 					<div className="text-tertiary flex items-center justify-end gap-1.5 text-xs font-medium sm:gap-2 sm:text-sm">
 						<span>다음 글</span>
-						<ChevronRightIcon className="size-3.5 sm:size-4" />
+						<ChevronRightIcon className="size-3.5 sm:size-4" aria-hidden="true" />
 					</div>
 					<h3 className="text-primary group-hover-accent line-clamp-2 text-sm font-semibold text-balance break-keep transition-colors sm:text-base">
 						{nextPost.title}
