@@ -26,7 +26,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-						<BookOpenIcon className="text-accent size-4" />
+						<BookOpenIcon className="text-accent size-4" aria-hidden="true" />
 					</div>
 					<div>
 						<p className="text-tertiary text-xs font-medium tracking-wider uppercase">시리즈</p>
@@ -48,7 +48,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
 					>
 						<span className="text-tertiary flex items-center gap-1 text-xs font-medium">
-							<ChevronLeftIcon className="size-3" />
+							<ChevronLeftIcon className="size-3" aria-hidden="true" />
 							이전 글
 						</span>
 						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
@@ -69,7 +69,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 					>
 						<span className="text-tertiary flex items-center justify-end gap-1 text-xs font-medium">
 							다음 글
-							<ChevronRightIcon className="size-3" />
+							<ChevronRightIcon className="size-3" aria-hidden="true" />
 						</span>
 						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
 							{nextPost.title}
@@ -88,7 +88,7 @@ export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesN
 				href={`/series/${seriesSlug}`}
 				className="bg-primary border-primary text-secondary flex items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium transition-all hover:shadow-sm"
 			>
-				<ListIcon className="size-4" />
+				<ListIcon className="size-4" aria-hidden="true" />
 				시리즈 전체 보기
 			</Link>
 		</div>

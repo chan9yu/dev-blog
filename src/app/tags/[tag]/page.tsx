@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getAllTags, getPostsByTag } from "@/features/blog";
-import { FilteredBlogPosts } from "@/features/blog/components/FilteredBlogPosts";
+import { FilteredBlogPosts } from "@/features/blog";
 import TagIcon from "@/shared/assets/icons/tag.svg";
 import { SITE } from "@/shared/config";
 import { slugify } from "@/shared/utils";
@@ -79,7 +79,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
 			<header className="mb-12 space-y-6">
 				<div className="space-y-4">
 					<div className="flex items-center gap-3">
-						<TagIcon className="text-accent size-8" />
+						<TagIcon className="text-accent size-8" aria-hidden="true" />
 						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">#{originalTag}</h1>
 					</div>
 					<p className="text-secondary text-lg">총 {posts.length}개의 글</p>

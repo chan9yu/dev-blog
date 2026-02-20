@@ -48,7 +48,7 @@ export function ScrollToTop() {
 
 	return (
 		<button onClick={handleClick} className={scrollToTopButton({ visible: isVisible })} aria-label="Scroll to top">
-			<ArrowUpIcon className="size-6" />
+			<ArrowUpIcon className="size-6" aria-hidden="true" />
 		</button>
 	);
 }
