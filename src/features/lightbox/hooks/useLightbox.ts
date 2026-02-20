@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
-import type { LightboxImage } from "../types";
+import type { LightboxImage } from "@/features/lightbox/types";
+
+const CLOSE_ANIMATION_DURATION_MS = 300;
 
 /**
  * Lightbox 상태 관리 훅
@@ -24,7 +26,7 @@ export function useLightbox() {
 		setTimeout(() => {
 			setImages([]);
 			setCurrentIndex(0);
-		}, 300);
+		}, CLOSE_ANIMATION_DURATION_MS);
 	};
 
 	return {

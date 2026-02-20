@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getAllSeries, getSeriesDetail } from "@/features/series";
-import { SeriesPosts } from "@/features/series/components/SeriesPosts";
+import { SeriesPosts } from "@/features/series";
 import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
 import { SITE } from "@/shared/config";
 
@@ -75,10 +75,10 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 					<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">{series.name}</h1>
 					<div className="text-tertiary flex flex-wrap items-center gap-4 text-sm">
 						<div className="flex items-center gap-2">
-							<BookOpenIcon className="size-4" />총 {series.posts.length}개의 글
+							<BookOpenIcon className="size-4" aria-hidden="true" />총 {series.posts.length}개의 글
 						</div>
 						<div className="flex items-center gap-2">
-							<BookOpenIcon className="size-4" />
+							<BookOpenIcon className="size-4" aria-hidden="true" />
 							시리즈
 						</div>
 					</div>
