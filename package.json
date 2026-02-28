@@ -9,7 +9,7 @@
 		"node": ">=22.0.0",
 		"pnpm": ">=10.0.0"
 	},
-	"packageManager": "pnpm@10.30.0",
+	"packageManager": "pnpm@10.30.3",
 	"scripts": {
 		"dev": "pnpm copy:images && next dev -p 3036",
 		"build": "pnpm copy:images && next build",
