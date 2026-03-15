@@ -39,5 +39,6 @@ next-env.d.ts
 .vercel
 
 # ai tools
+.omc/
 .serena/
 .lint-needed-default
