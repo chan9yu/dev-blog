@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+temp.*
 
 # debug
 npm-debug.log*
@@ -47,6 +48,7 @@ next-env.d.ts
 # claude
 .claude/agent-memory
 .claude/plans
+.lint-needed-default
 
 # mcp
 .playwright-mcp
