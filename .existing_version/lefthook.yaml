@@ -4,14 +4,12 @@ pre-commit:
   parallel: true
   commands:
     eslint:
-      files: git diff --cached --name-only --diff-filter=d
       glob: "*.{js,ts,jsx,tsx,mjs}"
-      run: pnpm exec eslint {files} --fix
+      run: pnpm exec eslint {staged_files} --fix
       stage_fixed: true
     prettier:
-      files: git diff --cached --name-only --diff-filter=d
       glob: "*.{js,ts,jsx,tsx,mjs,json,yaml,yml,md,css}"
-      run: pnpm exec prettier --write {files}
+      run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     type-check:
       glob: "*.{ts,tsx}"
