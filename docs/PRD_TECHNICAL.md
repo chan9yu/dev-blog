@@ -61,7 +61,7 @@ status: Draft
 │                    ·theme·lightbox·about                          │
 │         │                                                         │
 │         ▼                                                         │
-│   src/shared/*   ── design tokens·layout·mdx·motion·icons        │
+│   src/shared/*   ── design tokens·layout·mdx·motion·lucide       │
 └──────────┬────────────────────┬──────────────────────────────────┘
            │ build-time read    │ runtime (edge/node)
            ▼                    ▼
@@ -110,6 +110,7 @@ status: Draft
 | 애니메이션        | framer-motion                                      | 모션 primitives                                       | ^12          | Reduced Motion 지원                                                             |
 | 이미지 라이트박스 | yet-another-react-lightbox                         | 모달 뷰어                                             | ^3           | 키보드·터치·접근성                                                              |
 | 댓글              | @giscus/react                                      | GitHub Discussions                                    | ^3           | 서버리스, spam 저항                                                             |
+| 아이콘            | lucide-react                                       | 아이콘 라이브러리                                     | ^0.5         | tree-shakable, 일관된 스트로크, React 네이티브 컴포넌트                         |
 | 이미지 최적화     | sharp                                              | 빌드 타임                                             | ^0.34        | next/image 최적화 엔진                                                          |
 | 폰트              | next/font (Pretendard)                             | 가변 폰트                                             | —            | 서브셋 자동                                                                     |
 | 분석              | @vercel/analytics · speed-insights                 | 웹 분석                                               | ^1           | CWV 실측                                                                        |
@@ -425,10 +426,12 @@ type ShikiCodeBlockProps = { code: string; lang?: string; filename?: string };
 // 우상단 "복사" 버튼(2초 "Copied!"), light/dark 테마 자동 전환
 ```
 
-### 8.4 Icon Set
+### 8.4 Icon Set — Lucide Icons
 
-- 23종 SVG를 `shared/assets/icons/*.svg`에 배치. `@svgr/webpack`로 React 컴포넌트 자동 변환.
-- 목록: archive, arrow-left, arrow-up, book-open, calendar, check, chevron-left, chevron-right, clock, copy, email, eye, github, grid, linkedin, list, menu, moon, search, share, sun, tag, x.
+- **라이브러리**: `lucide-react` — 일관된 스트로크 스타일의 오픈소스 아이콘 라이브러리. tree-shakable하여 사용한 아이콘만 번들에 포함된다.
+- **Import 패턴**: `import { Search, Moon, Sun, ChevronLeft } from "lucide-react"` — 개별 named import.
+- **크기 통일**: `size` prop 또는 Tailwind `className="size-5"` (모바일) / `"size-6"` (데스크톱).
+- **사용 아이콘 (주요)**: Archive, ArrowLeft, ArrowUp, BookOpen, Calendar, Check, ChevronLeft, ChevronRight, Clock, Copy, Mail, Eye, Github, Grid3x3, Linkedin, List, Menu, Moon, Search, Share2, Sun, Tag, X 등.
 
 ### 8.5 shadcn/ui 컴포넌트 (`shared/ui/`)
 
@@ -820,7 +823,7 @@ dev-blog/
 │  └─ shared/
 │     ├─ components/ · mdx/ · layout/
 │     ├─ styles/foundations/ · tokens.css · base.css ...
-│     ├─ icons/ · seo/ · config/ · utils/ · hooks/
+│     ├─ seo/ · config/ · utils/ · hooks/
 │     └─ types/
 ├─ contents/                  # submodule
 ├─ next.config.ts · tsconfig.json · eslint.config.mjs · postcss.config.mjs
