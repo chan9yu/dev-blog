@@ -10,8 +10,9 @@
 		"module": "preserve",
 		"moduleDetection": "force",
 		"resolveJsonModule": true,
+		"allowArbitraryExtensions": true,
 		"verbatimModuleSyntax": true,
-		"esModuleInterop": true,
+		"isolatedModules": true,
 
 		/* Type Checking */
 		"strict": true,
@@ -25,8 +26,6 @@
 		"allowJs": true,
 		"skipLibCheck": true,
 		"plugins": [{ "name": "next" }],
-
-		/* Path Aliases */
 		"paths": {
 			"@/*": ["./src/*"]
 		}
