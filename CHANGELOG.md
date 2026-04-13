@@ -18,11 +18,108 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **[M0-07]** Pretendard Variable 폰트 설정 확인 (`src/app/layout.tsx`) — `next/font/local`의 `localFont` 사용, `--font-pretendard` CSS 변수, `display: swap`, weight 45~920, Apple SD Gothic Neo·Malgun Gothic fallback.
 - **[M0-08]** `lucide-react` 아이콘 라이브러리 도입 — `.claude/rules/icons.md` 규칙 문서 신규 추가 (lucide-react 단일화 원칙, 커스텀 브랜드 SVG는 `src/shared/assets/icons/*.svg`, svgr 설정은 실제 첫 커스텀 SVG 시점에 지연 도입).
+- **shadcn/ui 초기화** — `components.json` 신규 (alias: `ui=@/shared/ui`, `utils=@/shared/utils/cn`, `lib=@/shared/utils`). `Sheet` 컴포넌트 추가 (`src/shared/ui/Sheet.tsx`, kebab→PascalCase 리네이밍). `globals.css @theme inline`에 shadcn 표준 키(`--color-background`/`--color-foreground`/`--color-muted`/`--color-border`/`--color-ring` 등) alias 추가 — 컴포넌트 코드 수정 없이 우리 Semantic 토큰 자동 사용.
+- **[M0-09]** `Header.tsx` — sticky 헤더, 데스크톱 네비, `searchSlot`/`themeSlot`/`mobileMenuSlot`. `Container` + `NavLink` 조립.
+- **[M0-10]** `Footer.tsx` — 저작권, RSS 링크, "맨 위로" 앵커, `socialLinksSlot`.
+- **[M0-11]** `Container.tsx` — 반응형 max-width 래퍼. `size="default"`(72rem) | `size="prose"`(44rem).
+- **[M0-12]** `Sidebar.tsx` — `<aside>` 단순 컨테이너. md+ sticky 우측, md 미만 본문 아래 자동 배치.
+- **[M0-13]** `MobileMenu.tsx` — shadcn `Sheet`를 **직접 사용** (별도 Drawer wrapper 생략, 사용자 요청 반영). 햄버거 트리거 + 우측 슬라이드 시트 + 네비/소셜 슬롯.
+- **[M0-14]** `NavLink.tsx` — `usePathname` 기반 활성 경로 하이라이트, `aria-current="page"`.
+- **[M0-15]** `SocialLinks.tsx` — props 주입형 소셜 링크 묶음 (`label`/`href`/`icon`), 외부 링크 `target="_blank" rel="noopener noreferrer"`.
+
+### Changed (M0-09~15 — 컴파운드 사이클 REVIEW 적용)
+
+3개 리뷰 에이전트(react-nextjs-code-reviewer · a11y-auditor · feature-dev:code-reviewer) 병렬 감사 결과 13개 이슈 일괄 수정.
+
+- **MobileMenu**: `SheetClose asChild` + `NavLink` 적용 — 메뉴 항목 클릭 시 Sheet 자동 닫힘 + 포커스 트리거 복원 + `aria-current="page"` 일관. `SheetDescription`(sr-only) 추가로 Radix dev 경고 제거.
+- **NavLink**: `target === "/"` 매칭 가드(모든 경로 활성화 회귀 방지), `href.pathname` nullish 안전 처리, 활성 표시에 underline 비색상 단서(WCAG 1.4.1), `focus-visible:ring` ring.
+- **SocialLinks**: `SocialLink` type 외부 `export` 제거(`components.md` "Props 미노출" 룰), `focus-visible` ring.
+- **Header**: skip link `<a href="#main-content">` 추가 (WCAG 2.4.1 Bypass Blocks), 로고 `aria-label="chan9yu 홈"`.
+- **Footer**: import 순서 정렬(`typescript.md`), `<nav aria-label="보조 링크">` 그룹화 + `<h2 sr-only>` landmark heading, `new Date()` 빌드 타임 의도 주석. `ScrollToTopButton`을 별도 client island로 분리 (Footer는 RSC 유지).
+- **ScrollToTopButton (신규)**: `src/shared/components/layout/ScrollToTopButton.tsx`. `window.scrollTo({behavior:"smooth"})` + `document.getElementById("main-content")?.focus()` — Footer "맨 위로" 클릭 시 시각 스크롤 + 키보드 포커스 동시 이동 (WCAG 2.4.3).
+
+> **Skip link 의존성**: layout.tsx에 `<main id="main-content" tabIndex={-1}>` 추가 필요. M0-31(providers 래핑) 또는 라우팅 쉘 작업 시 통합 예정.
+
+### Harness (하네스 보강 — REVIEW 누락 회귀 차단)
+
+회고 결과 M0-01~06, M0-09~15에서 EXECUTE → DOCUMENT 직행으로 **REVIEW 단계 누락** (사후 3-way 리뷰에서 13+개 이슈 발견). 같은 패턴이 다음 사이클에서 반복되지 않도록 룰·스킬·메모리·placeholder를 일괄 보강.
+
+- **`.claude/rules/review-discipline.md` 신규** — REVIEW 단계 강제 룰. trigger·how·penalty·self-check 명시. 회고 사례를 본문에 박아 살아있는 룰로 유지.
+- **`.claude/skills/blog-dev/skill.md` Phase 3 강화** — EXECUTE 직후 트랙별 3-way 리뷰 에이전트 병렬 호출 자동화 절차 명시.
+- **`.claude/skills/compound-engineering/skill.md` REVIEW 섹션 강화** — Self-stop 가드 + DOCUMENT 진입 전 self-check 체크리스트 추가.
+- **메모리 3종 추가** (`~/.claude/projects/.../memory/`):
+  - `feedback_review_discipline.md` — REVIEW 강제 (사용자 명시 피드백)
+  - `feedback_shadcn_first.md` — UI primitive shadcn-first 원칙
+  - `project_temp_data_single_source.md` — 임시 데이터 단일 source
+  - `MEMORY.md` 인덱스 4개 항목으로 갱신
+- **`src/shared/config/site.ts` placeholder 신규** — `siteNav` 단일 source. M0-33 본 작업 전이라도 Header/MobileMenu가 동일 nav 데이터를 두 곳에 hardcoded하지 않도록 차단.
+- **`Header.tsx`, `MobileMenu.tsx` 마이그레이션** — `DEFAULT_NAV` 인라인 상수 제거, `siteNav` import로 일원화 (DRY 즉시 차단).
+
+### Changed (사용자 직접 리뷰 — Tailwind canonical & shadcn 룰 정리)
+
+- **`.claude/rules/styling.md` 강화** — Tailwind arbitrary value(`[..]`, `(--..)`) 사용 금지 명문화. `suggestCanonicalClasses` 워닝 = 즉시 변환 대상. 금지→사용 매핑 표 + 새 토큰 추가 가이드.
+- **`.claude/rules/shadcn.md` 강화** — shadcn add 후 후처리 절차(필수) 추가:
+  - PascalCase 리네이밍 → React 네임스페이스 import 제거 → 인라인 type 분리 → 빌드 검증
+  - Compound 패턴 적용 범위 명확화 (우리 자체 도메인 컴포넌트만, shadcn primitive는 named export 그대로)
+- **`src/shared/ui/Sheet.tsx`** — 우리 룰 일괄 적용:
+  - `import * as React from "react"` → `import type { ComponentProps } from "react"`
+  - `React.ComponentProps<typeof X>` → `ComponentProps<typeof X>` (9곳)
+  - 인라인 type → 9개 별도 `type` 선언 (SheetProps, SheetTriggerProps, … SheetDescriptionProps)
+  - shadcn 표준 className은 그대로 유지 (upstream sync 보장)
+- **`Container.tsx`, `Header.tsx`, `Footer.tsx`, `MobileMenu.tsx` arbitrary → canonical 마이그레이션**:
+  - `max-w-[72rem]` → `max-w-content` (우리 토큰 자동 생성)
+  - `max-w-[44rem]` → `max-w-prose` (우리 토큰으로 Tailwind 기본 65ch 오버라이드)
+  - `border-(--color-border-subtle)` → `border-border-subtle` (`@theme inline` 자동 매핑)
+
+### Changed (사용자 직접 리뷰 — shadcn Compound 패턴 적용)
+
+사용자 원본 shadcn 룰 복원 — shadcn primitive도 `Object.assign` Compound 패턴으로 통일. 직전 리뷰에서 제가 추가했던 "named export 그대로 유지" 섹션은 잘못된 해석으로 제거.
+
+- **`.claude/rules/shadcn.md`**:
+  - "Compound 패턴 적용 범위" 섹션(named export 예외) **제거**
+  - "shadcn add 후 후처리 절차"에 **4단계 Compound 패턴 적용** 추가
+- **`src/shared/ui/Sheet.tsx`**:
+  - 9개 named export → 단일 `export const Sheet = Object.assign(SheetRoot, { Trigger, Close, Portal, Overlay, Content, Header, Footer, Title, Description })`
+  - 개별 함수명은 `SheetRoot`, `SheetTrigger` 등 부모 prefix 유지
+- **`src/shared/components/layout/MobileMenu.tsx`**:
+  - 7개 named import → 단일 `import { Sheet }`
+  - JSX: `<SheetTrigger>` → `<Sheet.Trigger>`, `<SheetContent>` → `<Sheet.Content>` 등 점 네임스페이스
+  - TypeScript 추론 정상, 빌드 통과
+
+### Changed (디렉토리 평탄화 — 뎁스 축소)
+
+사용자 피드백 반영: `shared/ui/`가 shadcn 전용으로 분리되어 있으므로 우리 컴포넌트의 `shared/components/layout/` 2단 구조는 과도.
+
+- `src/shared/components/layout/*.tsx` (8개) → `src/shared/components/`로 이동
+- `layout/` 빈 디렉토리 제거
+- 컴포넌트 간 상대 경로 import(`./Container` 등)는 같은 디렉토리 내라 자동 유효 (수정 불필요)
+- `.claude/rules/project-structure.md` 갱신 — `shared/components/` 평탄 구조 명시
+
+### Changed (문서 최신화 — drift 정리)
+
+코드·룰 변경 이후 문서에 남은 잔존 정보(drift)를 일괄 제거.
+
+- **README.md**: 규칙 수 "13개" → "15개" (`icons.md` + `review-discipline.md` 추가 반영)
+- **CLAUDE.md**: 규칙 수 갱신 + M0 Foundation 현재 진행 상태(15/33) 문서 상단에 명시
+- **docs/ROADMAP.md**:
+  - M0 섹션 상단에 "진행 상태 + ROADMAP 작성 이후 결정 변경" 요약 추가 (CSS-only / `components/` 평탄화 / Drawer→Sheet)
+  - M0-01 경로: `shared/styles/foundations/colors.ts` → `shared/styles/tokens.css`
+  - M0-02 경로: `shared/styles/foundations/typography.ts` → `shared/styles/globals.css @theme inline`
+  - M0-13 표기: `Drawer.tsx + MobileMenu.tsx` → `MobileMenu.tsx` (shadcn `Sheet` 직접 사용)
+- **docs/PRD_TECHNICAL.md**:
+  - §8.1 디자인 토큰: 2-layer(foundations TS + tokens CSS) → **CSS-only SSOT**. shadcn alias 매핑·arbitrary value 금지 원칙 추가
+  - §8.2 공통 컴포넌트: `Drawer.tsx` 제거, `ScrollToTopButton.tsx` 추가, 평탄 구조 명시
+  - §16 디렉토리 구조: `styles/foundations/` 제거, `components/` 평탄화, `ui/` (shadcn primitives) 별도 명시
+- **docs/AI_WORKFLOW_GUIDE.md**: 상단 개요에 **REVIEW 단계 생략 금지** 박스 추가 (`.claude/rules/review-discipline.md` 참조)
+
+중복 점검: `autonomy.md` ↔ `workflow.md` Git 쓰기 규칙이 부분 겹침이지만 각 문서 맥락이 달라 유지 (autonomy는 자율 경계, workflow는 실행 절차). 15개 룰 파일 간 치명적 중복은 없음.
 
 ### Dependencies
 
 - `clsx` (prod) — 조건부 className 결합.
 - `tailwind-merge` (prod) — 충돌 Tailwind 유틸 뒤쪽 우선 해결.
 - `lucide-react` (prod) — 단일화된 아이콘 라이브러리.
+- `radix-ui` (prod) — shadcn `Sheet`가 사용하는 Radix Dialog 메타 패키지.
+- `tw-animate-css` (prod) — shadcn `Sheet`의 `animate-in`/`slide-in-from-*`/`fade-out-0` 등 Tailwind 4 호환 애니메이션 유틸 제공.
 
 [Unreleased]: https://github.com/chan9yu/dev-blog/compare/main...develop

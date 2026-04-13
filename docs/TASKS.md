@@ -26,13 +26,13 @@
 
 ### 공통 레이아웃
 
-- [ ] [M0-09] `Header.tsx` — sticky 헤더, 네비 슬롯
-- [ ] [M0-10] `Footer.tsx` — 저작권, RSS, 소셜 링크
-- [ ] [M0-11] `Container.tsx` — 반응형 max-width 래퍼
-- [ ] [M0-12] `Sidebar.tsx` — md 이상 우측, md 미만 하단
-- [ ] [M0-13] `Drawer.tsx` + `MobileMenu.tsx` — 모바일 메뉴
-- [ ] [M0-14] `NavLink.tsx` — 활성 경로 하이라이트
-- [ ] [M0-15] `SocialLinks.tsx` — 소셜 링크 묶음
+- [x] [M0-09] `Header.tsx` — sticky 헤더, 네비/슬롯 (`shared/components/layout/`)
+- [x] [M0-10] `Footer.tsx` — 저작권, RSS 링크, "맨 위로", 소셜 슬롯
+- [x] [M0-11] `Container.tsx` — 반응형 max-width 래퍼 (default 72rem / prose 44rem)
+- [x] [M0-12] `Sidebar.tsx` — md+ sticky 우측, md 미만 본문 아래 자동 배치
+- [x] [M0-13] `MobileMenu.tsx` — shadcn `Sheet` **직접 사용** (별도 Drawer wrapper 생략)
+- [x] [M0-14] `NavLink.tsx` — `usePathname` 기반 활성 경로 하이라이트
+- [x] [M0-15] `SocialLinks.tsx` — props 주입형 소셜 링크 묶음
 
 ### 라우팅 쉘 (RT-\*)
 
@@ -376,14 +376,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료  | 진행률 |
-| ---------------------- | ------- | ----- | ------ |
-| M0 Foundation          | 33      | 8     | 24%    |
-| M1 UI Skeleton         | 61      | 0     | 0%     |
-| M2 Content Pipeline    | 24      | 0     | 0%     |
-| M3 Feature Wiring      | 21      | 0     | 0%     |
-| M4 Hubs & Aggregations | 21      | 0     | 0%     |
-| M5 SEO & Syndication   | 10      | 0     | 0%     |
-| M6 A11y & Perf         | 14      | 0     | 0%     |
-| M7 Polish              | 12      | 0     | 0%     |
-| **Total**              | **196** | **8** | **4%** |
+| Phase                  | 태스크  | 완료   | 진행률 |
+| ---------------------- | ------- | ------ | ------ |
+| M0 Foundation          | 33      | 15     | 45%    |
+| M1 UI Skeleton         | 61      | 0      | 0%     |
+| M2 Content Pipeline    | 24      | 0      | 0%     |
+| M3 Feature Wiring      | 21      | 0      | 0%     |
+| M4 Hubs & Aggregations | 21      | 0      | 0%     |
+| M5 SEO & Syndication   | 10      | 0      | 0%     |
+| M6 A11y & Perf         | 14      | 0      | 0%     |
+| M7 Polish              | 12      | 0      | 0%     |
+| **Total**              | **196** | **15** | **8%** |
