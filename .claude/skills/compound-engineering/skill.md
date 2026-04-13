@@ -55,6 +55,26 @@ loop:
 
 **ESCALATE 즉시 조건**: 보안 위반, 명백한 아키텍처 위반 (3 Laws).
 
+### 🛑 REVIEW Self-stop 가드 (review-discipline.md)
+
+EXECUTE 직후 REVIEW를 건너뛰고 VALIDATE/DOCUMENT로 점프하는 것은 **사이클 무결성 위반**. 발생 시 즉시 정지하고 다음을 실행:
+
+1. 트랙별 적합한 **3-way 리뷰 에이전트 병렬 호출** (한 메시지에 Agent tool 다중)
+2. 결과 종합 → Tier 1/2/3 분류
+3. 사용자에게 보고 + AskUserQuestion으로 수정 범위 확정
+4. 수정 적용 → 빌드 재검증
+5. 그 다음에 VALIDATE/DOCUMENT 진입
+
+**Self-check (REVIEW 시작 전 또는 종료 직전)**:
+
+- [ ] EXECUTE 산출물(코드)이 disk에 저장됨
+- [ ] `pnpm build` 통과
+- [ ] 리뷰 에이전트 호출 결과가 컨텍스트에 존재함 (없으면 즉시 호출)
+- [ ] FIX 항목이 모두 처리되거나 Tier 3로 분리됨
+- [ ] CHANGELOG에 변경 내역 + **리뷰 결과 요약 항목** 포함 (Critical 0개·Resolved N개 등)
+
+회고 사례: M0-09~15(레이아웃 7개)에서 EXECUTE → DOCUMENT 직행 → 사용자 지적 후 사후 3-way 리뷰에서 13개 이슈 발견. 룰만으로는 회귀 차단 불가 → 본 가드 추가.
+
 ### 4. VALIDATE (1회 되돌림)
 
 `boundary-mismatch-qa`·`a11y-auditor`·`nextjs-test-engineer` 병렬 실행:

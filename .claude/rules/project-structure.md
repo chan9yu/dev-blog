@@ -56,8 +56,7 @@ src/
 │       └── config/               ← feature 설정값
 │
 └── shared/                       ← 도메인 불가지론 레이어
-    ├── components/               ← 범용 UI (Button, Layout 등)
-    │   └── layouts/              ← Header, Footer 등
+    ├── components/               ← 범용 UI + 레이아웃 (Button, Header, Footer, Container 등, 평탄 구조)
     ├── hooks/                    ← 도메인 무관한 훅 (useDebounce 등)
     ├── utils/                    ← 순수 유틸 (formatDate, clamp 등)
     ├── libs/                     ← 외부 라이브러리 얇은 래퍼
