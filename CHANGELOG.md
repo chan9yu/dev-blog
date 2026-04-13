@@ -86,6 +86,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - JSX: `<SheetTrigger>` → `<Sheet.Trigger>`, `<SheetContent>` → `<Sheet.Content>` 등 점 네임스페이스
   - TypeScript 추론 정상, 빌드 통과
 
+### Changed (전체 문서·하네스 정화 — M0 완료 기준 최신화)
+
+ultrathink 모드에서 2개 Explore 에이전트 병렬 감사 → Tier A(drift) + B(중복) + C(삭제) 전면 적용.
+
+**Drift 제거** (M0 결정과 문서 불일치):
+
+- **docs/ROADMAP.md**: §M0 진행률 `15/33 → 33/33`. 개별 체크박스 `[ ] → [x]` 일괄 동기화 (replace_all, M1 이하는 영향 없음). 선행 결정 요약에 M0-30·M0-31·M0-33 결과 추가.
+- **docs/TASKS.md**: M0-09 경로 `shared/components/layout/ → shared/components/` (평탄화 반영).
+- **docs/AI_WORKFLOW_GUIDE.md**: "13개 규칙" → "15개" 전면 교체. L51에 현재 15개 룰 목록 상세 열거. §L831 "13개 코딩 규약" → "15개".
+- **CLAUDE.md**: M0 상태 `15/33 → 33/33 완료`, M1 대기 중 명시. 규칙 수 "15개" 확정.
+- **`.claude/skills/garbage-collection/skill.md`**: L110 `shared/styles/foundations/*.ts` → `shared/styles/tokens.css` (`@theme inline` 블록 동시 점검 의도 추가). "13개" → "15개" 일괄 + 룰 목록 상세화.
+- **`.claude/skills/garbage-collection/references/rule-violations.md`**: "13개" → "15개".
+- **`.claude/skills/blog-dev/skill.md`**: "13개 규칙" → "15개 규칙".
+- **`.claude/agents/quality/garbage-collector.md`**: description + 본문 4군데 "13개" → "15개".
+- **`.claude/agents/quality/compound-reviewer.md`**: 본문 2군데 "13개 파일"·"13개 전부" → "15개".
+- **`.claude/commands/review/quality.md`**: 체크리스트 "13개 규칙" → "15개".
+
+**Cross-reference 추가** (중복 대신 링크화):
+
+- **`.claude/rules/components.md`**: Props 미노출 조항에 shadcn 예외 참조(`shadcn.md` "import 규칙") 추가 — 두 룰 간 충돌 해소.
+- **`.claude/rules/autonomy.md`**: "관련 룰" 섹션 신설 — `review-discipline.md`(품질 게이트), `workflow.md`(Git 쓰기 절대 금지) 참조.
+- **`.claude/rules/review-discipline.md`**: "관련 룰" 섹션 신설 — `autonomy.md`(범주), `compound-engineering/skill.md`(Phase 정의) 참조.
+
+**삭제 (stale·unused 자산)**:
+
+- `.claude/plans/playful-discovering-parrot.md` (M0 중간 stale plan).
+- `.claude/plans/` 빈 디렉토리 제거.
+- `.claude/agent-memory/*` 빈 디렉토리 9개 전부 제거 (프로젝트에서 persistent agent memory 미사용).
+- `.claude/skills/vercel-react-best-practices/rules/rendering-content-visibility.md` (SSG-first 프로젝트에 무관한 긴 리스트 가상화 예시).
+
+**하네스 health**: 77 → 85+ 예상. 구조적 결함 없음, 정보·조직 일관성 확보.
+
+### Added (M0-30~M0-33: 인프라 마무리, M0 Foundation 100%)
+
+- **[M0-30]** `app/not-found.tsx` — 404 페이지. `Container` 재사용, 홈으로 돌아가기 CTA, focus-visible ring.
+- **[M0-31]** `app/providers.tsx` — `next-themes` `ThemeProvider`로 루트 래핑. `attribute="class"`·`enableColorScheme={false}`·`defaultTheme="system"`·`disableTransitionOnChange` (ADR-011·theme.md). `layout.tsx`에 `<html suppressHydrationWarning>` + `<Providers>` 통합.
+- **[M0-32]** tsconfig path alias 검증 — `"@/*": ["./src/*"]`이 src 전반에서 23+회 사용되고 빌드 통과 확인.
+- **[M0-33]** `shared/config/site.ts` 확장 — `siteMetadata` 보강(`ogImage`, `themeColor`), `siteSocials` 배열(GitHub/LinkedIn/Email + `iconName` lucide 식별자) 추가. Footer·About의 소셜 링크 단일 source.
+
+### Dependencies (M0-31)
+
+- `next-themes` (prod) — class 기반 light/dark + hydration 안전 + `useSyncExternalStore` 내장. ADR-011 표준.
+
 ### Added (M0-16~M0-29: 라우팅 쉘 14종)
 
 14개 라우트가 모두 404 없이 빈 페이지 또는 적절한 응답 렌더. 실데이터는 M1~M5에서 단계적 교체.

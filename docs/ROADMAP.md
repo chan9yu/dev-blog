@@ -63,12 +63,13 @@ Browser (Client)
 
 ### M0: Foundation
 
-**진행 상태** (2026-04-13): 15/33 완료 (M0-01~M0-15). 본 ROADMAP 작성 이후 결정이 변경된 부분:
+**진행 상태** (2026-04-13): **33/33 완료 (M0 Exit 기준 달성)**. 본 ROADMAP 작성 이후 결정이 변경된 부분:
 
 - 디자인 토큰을 **CSS-only**로 통합 (TS `foundations/` 파일 폐기)
 - 공통 레이아웃 컴포넌트 경로: `shared/components/layout/` → `shared/components/` **평탄화**
 - M0-13 Drawer는 별도 구현 없이 **shadcn `Sheet` 직접 사용** (MobileMenu에서 `<Sheet.X>` 네임스페이스)
-- 세부 체크 상태는 `TASKS.md`를 단일 출처로 사용. 본 문서의 체크박스는 참고용.
+- M0-30 `not-found.tsx`·`loading.tsx` 완료, M0-31 `providers.tsx`(next-themes), M0-33 `site.ts`(siteMetadata + siteNav + siteSocials + getSiteUrl)
+- 세부 체크 상태는 [`TASKS.md`](./TASKS.md)를 단일 출처로 사용. 본 문서의 체크박스는 참고용.
 
 **목표**: 빌드 쉘, 디자인 토큰(light/dark), 공통 컴포넌트, 전 라우트(`RT-*`) 빈 페이지 렌더
 
@@ -88,47 +89,47 @@ Browser (Client)
   - 대응: 전체 FEAT
   - 검증: Display/Heading/Body/Label 스케일이 TS 상수로 정의됨
 
-- [ ] **[M0-03]** Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
+- [x] **[M0-03]** Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
   - 대응: FEAT-THEME, ADR-011
   - 검증: `--color-text-primary` 등 semantic 변수가 `.dark` 셀렉터와 함께 정의됨
 
-- [ ] **[M0-04]** 기반 스타일 파일 구성 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
+- [x] **[M0-04]** 기반 스타일 파일 구성 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
   - 대응: MOD-posts, MOD-theme
   - 검증: 글로벌 reset, 스크롤바 스타일, prose 스타일이 적용됨
 
-- [ ] **[M0-05]** Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
+- [x] **[M0-05]** Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
   - 대응: 전체 FEAT
   - 검증: `@theme` 블록에서 CSS 변수를 참조하여 Tailwind 유틸리티로 사용 가능
 
-- [ ] **[M0-06]** `cn()` 유틸리티 함수 구성 (`clsx` + `tailwind-merge`)
+- [x] **[M0-06]** `cn()` 유틸리티 함수 구성 (`clsx` + `tailwind-merge`)
   - 대응: 전체 컴포넌트
   - 검증: `cn("px-4", condition && "bg-red")` 호출이 정상 동작
 
 #### 폰트 & 아이콘
 
-- [ ] **[M0-07]** `next/font`로 Pretendard Variable 폰트 설정 (korean + latin 서브셋)
+- [x] **[M0-07]** `next/font`로 Pretendard Variable 폰트 설정 (korean + latin 서브셋)
   - 대응: NFR-006
   - 검증: FOUT < 100ms, 한글/영문 모두 Pretendard로 렌더
 
-- [ ] **[M0-08]** `lucide-react` 설치 및 아이콘 사용 패턴 확립
+- [x] **[M0-08]** `lucide-react` 설치 및 아이콘 사용 패턴 확립
   - 대응: FEAT-NAVIGATION, FEAT-READING-AIDS, FEAT-THEME
   - 검증: `import { Search, Moon, Sun } from "lucide-react"` 정상 렌더, tree-shaking 확인
 
 #### 공통 레이아웃 컴포넌트
 
-- [ ] **[M0-09]** `Header.tsx` -- sticky 헤더, 로고(홈), 데스크톱 네비게이션 메뉴 슬롯
+- [x] **[M0-09]** `Header.tsx` -- sticky 헤더, 로고(홈), 데스크톱 네비게이션 메뉴 슬롯
   - 대응: FEAT-NAVIGATION
   - 검증: 데스크톱에서 Posts/Tags/Series/About 링크, Search 아이콘, Theme 토글 슬롯 존재
 
-- [ ] **[M0-10]** `Footer.tsx` -- 저작권, RSS 아이콘, 소셜 링크, "맨 위로" 앵커
+- [x] **[M0-10]** `Footer.tsx` -- 저작권, RSS 아이콘, 소셜 링크, "맨 위로" 앵커
   - 대응: FEAT-NAVIGATION, FEAT-RSS
   - 검증: Footer 내 소셜 링크(GitHub/LinkedIn/X/Email)와 RSS 아이콘 렌더
 
-- [ ] **[M0-11]** `Container.tsx` -- 반응형 max-width 래퍼
+- [x] **[M0-11]** `Container.tsx` -- 반응형 max-width 래퍼
   - 대응: 전체 페이지
   - 검증: 콘텐츠가 중앙 정렬, 반응형 padding 적용
 
-- [ ] **[M0-12]** `Sidebar.tsx` -- md 이상 우측 사이드바, md 미만 본문 아래 배치
+- [x] **[M0-12]** `Sidebar.tsx` -- md 이상 우측 사이드바, md 미만 본문 아래 배치
   - 대응: FEAT-HOME
   - 검증: breakpoint에 따른 레이아웃 전환 정상
 
@@ -136,87 +137,87 @@ Browser (Client)
   - 대응: FEAT-NAVIGATION
   - 검증: 햄버거 클릭 시 드로어 슬라이드 인, body 스크롤 잠금, Esc로 닫기
 
-- [ ] **[M0-14]** `NavLink.tsx` -- 활성 경로 하이라이트 링크 컴포넌트
+- [x] **[M0-14]** `NavLink.tsx` -- 활성 경로 하이라이트 링크 컴포넌트
   - 대응: FEAT-NAVIGATION
   - 검증: 현재 경로와 일치하는 NavLink에 활성 스타일 적용
 
-- [ ] **[M0-15]** `SocialLinks.tsx` -- GitHub/LinkedIn/X/Email 소셜 링크 묶음
+- [x] **[M0-15]** `SocialLinks.tsx` -- GitHub/LinkedIn/X/Email 소셜 링크 묶음
   - 대응: FEAT-ABOUT, FEAT-NAVIGATION
   - 검증: 아이콘 + 외부 링크로 새 탭 열림
 
 #### 라우팅 쉘 (모든 RT-\*)
 
-- [ ] **[M0-16]** `RT-/` 홈 페이지 라우트 쉘 (`app/page.tsx`)
+- [x] **[M0-16]** `RT-/` 홈 페이지 라우트 쉘 (`app/page.tsx`)
   - 대응: RT-/, FEAT-HOME
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-17]** `RT-/posts` 포스트 목록 라우트 쉘 (`app/posts/page.tsx`)
+- [x] **[M0-17]** `RT-/posts` 포스트 목록 라우트 쉘 (`app/posts/page.tsx`)
   - 대응: RT-/posts, FEAT-POSTS-LIST
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-18]** `RT-/posts/[slug]` 포스트 상세 라우트 쉘 (`app/posts/[slug]/page.tsx`)
+- [x] **[M0-18]** `RT-/posts/[slug]` 포스트 상세 라우트 쉘 (`app/posts/[slug]/page.tsx`)
   - 대응: RT-/posts/[slug], FEAT-POST-DETAIL
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-19]** `RT-/tags` 태그 허브 라우트 쉘 (`app/tags/page.tsx`)
+- [x] **[M0-19]** `RT-/tags` 태그 허브 라우트 쉘 (`app/tags/page.tsx`)
   - 대응: RT-/tags, FEAT-TAGS-HUB
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-20]** `RT-/tags/[tag]` 태그 상세 라우트 쉘 (`app/tags/[tag]/page.tsx`)
+- [x] **[M0-20]** `RT-/tags/[tag]` 태그 상세 라우트 쉘 (`app/tags/[tag]/page.tsx`)
   - 대응: RT-/tags/[tag], FEAT-TAG-DETAIL
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-21]** `RT-/series` 시리즈 허브 라우트 쉘 (`app/series/page.tsx`)
+- [x] **[M0-21]** `RT-/series` 시리즈 허브 라우트 쉘 (`app/series/page.tsx`)
   - 대응: RT-/series, FEAT-SERIES-HUB
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-22]** `RT-/series/[slug]` 시리즈 상세 라우트 쉘 (`app/series/[slug]/page.tsx`)
+- [x] **[M0-22]** `RT-/series/[slug]` 시리즈 상세 라우트 쉘 (`app/series/[slug]/page.tsx`)
   - 대응: RT-/series/[slug], FEAT-SERIES-DETAIL
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-23]** `RT-/about` About 페이지 라우트 쉘 (`app/about/page.tsx`)
+- [x] **[M0-23]** `RT-/about` About 페이지 라우트 쉘 (`app/about/page.tsx`)
   - 대응: RT-/about, FEAT-ABOUT
   - 검증: 404 없이 빈 페이지 렌더
 
-- [ ] **[M0-24]** `RT-/rss` Route Handler 쉘 (`app/rss/route.ts`)
+- [x] **[M0-24]** `RT-/rss` Route Handler 쉘 (`app/rss/route.ts`)
   - 대응: RT-/rss, FEAT-RSS
   - 검증: GET 요청 시 빈 XML 응답 반환
 
-- [ ] **[M0-25]** `RT-/sitemap.xml` 쉘 (`app/sitemap.ts`)
+- [x] **[M0-25]** `RT-/sitemap.xml` 쉘 (`app/sitemap.ts`)
   - 대응: RT-/sitemap.xml, FEAT-SITEMAP
   - 검증: sitemap 함수 export 존재
 
-- [ ] **[M0-26]** `RT-/robots.txt` 쉘 (`app/robots.ts`)
+- [x] **[M0-26]** `RT-/robots.txt` 쉘 (`app/robots.ts`)
   - 대응: RT-/robots.txt
   - 검증: robots 함수 export 존재
 
-- [ ] **[M0-27]** `RT-/manifest.webmanifest` 쉘 (`app/manifest.ts`)
+- [x] **[M0-27]** `RT-/manifest.webmanifest` 쉘 (`app/manifest.ts`)
   - 대응: RT-/manifest.webmanifest
   - 검증: manifest 함수 export 존재
 
-- [ ] **[M0-28]** `RT-/og` OG 이미지 Edge Route Handler 쉘 (`app/og/route.tsx`)
+- [x] **[M0-28]** `RT-/og` OG 이미지 Edge Route Handler 쉘 (`app/og/route.tsx`)
   - 대응: RT-/og, FEAT-METADATA-OG, US-021
   - 검증: Edge runtime으로 설정, GET 요청 시 placeholder 응답
 
-- [ ] **[M0-29]** `RT-/api/views` Route Handler 쉘 (`app/api/views/route.ts`)
+- [x] **[M0-29]** `RT-/api/views` Route Handler 쉘 (`app/api/views/route.ts`)
   - 대응: RT-/api/views, FEAT-VIEW-COUNTER, MOD-views
   - 검증: GET/POST 핸들러 export 존재
 
 #### 인프라 & DX
 
-- [ ] **[M0-30]** `not-found.tsx`, `loading.tsx` 글로벌 fallback 페이지
+- [x] **[M0-30]** `not-found.tsx`, `loading.tsx` 글로벌 fallback 페이지
   - 대응: 전체 라우트
   - 검증: 존재하지 않는 경로 접속 시 커스텀 404 렌더
 
-- [ ] **[M0-31]** `app/providers.tsx` -- ThemeProvider 루트 래핑 (`next-themes`)
+- [x] **[M0-31]** `app/providers.tsx` -- ThemeProvider 루트 래핑 (`next-themes`)
   - 대응: FEAT-THEME, MOD-theme, ADR-011
   - 검증: `<ThemeProvider attribute="class" enableColorScheme={false} defaultTheme="system">` 설정 완료
 
-- [ ] **[M0-32]** tsconfig.json path alias 확인 (`@/app/*`, `@/features/*`, `@/shared/*`)
+- [x] **[M0-32]** tsconfig.json path alias 확인 (`@/app/*`, `@/features/*`, `@/shared/*`)
   - 대응: 3 Laws 아키텍처
   - 검증: alias import가 정상 resolve
 
-- [ ] **[M0-33]** `src/shared/config/site.ts` -- 사이트 전역 설정 상수 (사이트명, URL, 소셜 링크 등)
+- [x] **[M0-33]** `src/shared/config/site.ts` -- 사이트 전역 설정 상수 (사이트명, URL, 소셜 링크 등)
   - 대응: FEAT-NAVIGATION, FEAT-METADATA-OG, FEAT-ABOUT
   - 검증: 설정값이 Header/Footer/SEO에서 import 가능
 

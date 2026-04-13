@@ -26,7 +26,7 @@
 
 ### 공통 레이아웃
 
-- [x] [M0-09] `Header.tsx` — sticky 헤더, 네비/슬롯 (`shared/components/layout/`)
+- [x] [M0-09] `Header.tsx` — sticky 헤더, 네비/슬롯 (`shared/components/`)
 - [x] [M0-10] `Footer.tsx` — 저작권, RSS 링크, "맨 위로", 소셜 슬롯
 - [x] [M0-11] `Container.tsx` — 반응형 max-width 래퍼 (default 72rem / prose 44rem)
 - [x] [M0-12] `Sidebar.tsx` — md+ sticky 우측, md 미만 본문 아래 자동 배치
@@ -53,10 +53,10 @@
 
 ### 인프라
 
-- [ ] [M0-30] `not-found.tsx`, `loading.tsx` 글로벌 fallback
-- [ ] [M0-31] `app/providers.tsx` — ThemeProvider 루트 래핑
-- [ ] [M0-32] tsconfig path alias 확인 (`@/*`)
-- [ ] [M0-33] `shared/config/site.ts` — 사이트 전역 설정 상수
+- [x] [M0-30] `not-found.tsx`, `loading.tsx` 글로벌 fallback (loading은 M0-16~29에서 선행)
+- [x] [M0-31] `app/providers.tsx` — ThemeProvider 루트 래핑 (`next-themes` + `suppressHydrationWarning`)
+- [x] [M0-32] tsconfig path alias 확인 (`@/*` → `./src/*`, src에서 23+회 사용 검증)
+- [x] [M0-33] `shared/config/site.ts` — `siteMetadata`·`siteNav`·`siteSocials`·`getSiteUrl()` 확장
 
 ---
 
@@ -378,7 +378,7 @@
 
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
-| M0 Foundation          | 33      | 29     | 88%     |
+| M0 Foundation          | 33      | 33     | 100%    |
 | M1 UI Skeleton         | 61      | 0      | 0%      |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
@@ -386,4 +386,4 @@
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **29** | **15%** |
+| **Total**              | **196** | **33** | **17%** |
