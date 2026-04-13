@@ -34,14 +34,25 @@ pnpm test:e2e     # Playwright E2E
 - TDD (Red→Green→Refactor) + Testing Trophy (Integration ~60%)
 - Page-First Skeleton: M1에서 더미 데이터로 전 페이지 UI 완성 후 단계적 실데이터 교체
 
+## AI 협업 (하네스)
+
+이 프로젝트에는 15개 전문 에이전트·12개 스킬·13개 규칙으로 구성된 **컴파운드 엔지니어링 하네스**가 구축되어 있다. `"M0-01 진행해줘"`, `"검색 기능 만들어줘"`, `"React 19 포스트 작성해줘"`, `"Week 0 GC"` 같은 자연어 요청만으로 Feature·Content·GC·Docs 4개 트랙 중 하나로 자동 분류되어 **PLAN→EXECUTE→REVIEW(핑퐁 3회)→VALIDATE→DOCUMENT** 사이클이 돌아간다. 상세 동작은 `docs/AI_WORKFLOW_GUIDE.md` 참조.
+
+**자율 범위 경계** (`.claude/rules/autonomy.md`): `src/`·테스트·`docs/TASKS.md` 체크박스·`CHANGELOG.md`는 자동, 의존성/아키텍처/PRD/Git 쓰기는 **반드시 사용자 승인**.
+
+**Git 브랜치 전략** (`.claude/rules/workflow.md`): 기본 통합 브랜치는 **`develop`**, 마일스톤당 `feature/M{n}-*` 브랜치 1개. 새 마일스톤 첫 태스크 진입 시 orchestrator가 리모트 최신 `develop`으로부터 브랜치 생성 제안 → 사용자 승인 후 실행. 마일스톤 완료 시 `milestone-gate` PASS → `develop`으로 PR. `main`은 프로덕션 릴리스 전용.
+
 ## Progressive Disclosure
 
 작업에 필요한 상세 문서를 아래에서 찾아 읽을 것. 모든 정보를 한번에 읽지 말고 현재 태스크에 관련된 문서만 참조.
 
-| 문서                    | 용도                                                          |
-| ----------------------- | ------------------------------------------------------------- |
-| `docs/TASKS.md`         | 현재 진행할 태스크 체크리스트 (M0~M7)                         |
-| `docs/ROADMAP.md`       | 태스크별 상세 — 대응 ID, 검증 기준, Entry/Exit                |
-| `docs/PRD_PRODUCT.md`   | 제품 스펙 — FEAT, US, 성공 지표, 비목표                       |
-| `docs/PRD_TECHNICAL.md` | 기술 계약 — MOD, RT, ADR, 데이터 모델, 마일스톤               |
-| `.claude/rules/*.md`    | 코드 작성 규약 (아키텍처·React·TS·테마·접근성·테스트 등 10종) |
+| 문서                        | 용도                                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `docs/TASKS.md`             | 현재 진행할 태스크 체크리스트 (M0~M7)                                                                                                      |
+| `docs/ROADMAP.md`           | 태스크별 상세 — 대응 ID, 검증 기준, Entry/Exit                                                                                             |
+| `docs/PRD_PRODUCT.md`       | 제품 스펙 — FEAT, US, 성공 지표, 비목표                                                                                                    |
+| `docs/PRD_TECHNICAL.md`     | 기술 계약 — MOD, RT, ADR, 데이터 모델, 마일스톤                                                                                            |
+| `docs/AI_WORKFLOW_GUIDE.md` | 하네스 동작 원리 — 4개 트랙·6단계 사이클·M0-06 시연·산출물 경로                                                                            |
+| `.claude/rules/*.md`        | 코드 작성 규약 13종 (아키텍처·React·TS·테마·접근성·테스트·MDX·SEO·자율)                                                                    |
+| `.claude/agents/**/*.md`    | 15개 에이전트 정의 (컴파운드 사이클에서 자동 호출)                                                                                         |
+| `.claude/skills/*/skill.md` | 12개 스킬 — `blog-dev`(오케스트레이터)·`compound-engineering`·`content-writing`·`garbage-collection`·`milestone-gate`·`task-completion` 등 |

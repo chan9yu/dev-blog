@@ -23,18 +23,21 @@ PR을 머지하고 브랜치를 정리해주세요:
 ## 머지 후 정리
 
 ```bash
-# main 브랜치로 전환 및 최신화
-git checkout main
-git pull origin main
+# develop 브랜치로 전환 및 최신화 (마일스톤 PR 기준)
+git checkout develop
+git pull origin develop
 
-# 머지된 로컬 브랜치 삭제
-git branch -d <브랜치명>
+# 머지된 로컬 feature 브랜치 삭제
+git branch -d <feature/M{n}-*>
 ```
+
+> 프로덕션 릴리스 PR(`main` 대상)이었다면 `git checkout main && git pull origin main`.
 
 ## 주의사항
 
+- **마일스톤 PR의 base는 `develop`**. 머지 후 `develop` 최신화 → 다음 마일스톤 브랜치의 기반이 됨
 - CI 체크가 실패한 PR은 머지하지 않는다 (사용자에게 실패 원인 안내)
 - 머지 충돌이 있으면 사용자에게 알리고 해결 방법을 제안한다
-- `main` 브랜치에 직접 force push하지 않는다
+- `main`·`develop` 브랜치에 직접 force push하지 않는다
 - 원격 브랜치 삭제는 GitHub PR 머지 시 자동 처리되므로 별도 실행하지 않는다
 - 로컬 브랜치 삭제 전 머지가 완료되었는지 반드시 확인한다 (`-d` 플래그 사용, `-D` 지양)

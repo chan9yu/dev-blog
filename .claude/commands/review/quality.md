@@ -35,22 +35,24 @@ $ARGUMENTS가 없으면:
 
 ### Team 1: React/Next.js Best Practice 리뷰어
 
-- `react-code-reviewer` 에이전트 사용
+- `react-nextjs-code-reviewer` 에이전트 사용
 - 중점: React 19 패턴 준수, hooks 규칙, 컴포넌트 설계, 렌더링 최적화
 - `/vercel-react-best-practices`와 `/nextjs-best-practices` 기준 적용
 - Next.js App Router 활용도, Server/Client Component 분리, 데이터 페칭 패턴
 
 ### Team 2: 코드 품질/구조 리뷰어
 
-- `oh-my-claudecode:quality-reviewer` 에이전트 사용
+- `compound-reviewer` 에이전트 사용
 - 중점: 가독성, 응집도/결합도, 유지보수성, 네이밍, 확장성
 - `/frontend-fundamentals` 기준 적용
 - SOLID 원칙, 안티패턴, 코드 스멜
+- `.claude/rules/` 13개 규칙 위반 여부 체크
 
-### Team 3: 아키텍처 리뷰어
+### Team 3: 경계면/아키텍처 리뷰어
 
-- `oh-my-claudecode:architect` 에이전트 사용
-- 중점: 레이어 의존성, 모듈 경계, 추상화 수준, 디렉토리 구조
+- `boundary-mismatch-qa` 에이전트 사용
+- 중점: 3 Laws(app→features→shared 단방향) 준수, 모듈 경계, feature 간 직접 import 금지, shared 도메인 누수
+- `.claude/rules/project-structure.md` 기준 적용
 - 프로젝트 CLAUDE.md의 제약사항(금지 라이브러리, 직접 구현 요건) 준수 여부
 
 ## 리뷰 기준 체크리스트
