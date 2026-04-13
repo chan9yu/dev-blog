@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
 
+import { getSiteUrl, siteMetadata } from "@/shared/config/site";
+
 const pretendard = localFont({
 	src: "../../public/fonts/PretendardVariable.woff2",
 	display: "swap",
@@ -15,9 +17,27 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "chan9yu | 기술 개발 블로그",
-	description:
-		"프론트엔드 개발자 여찬규의 기술 블로그. React, TypeScript, Next.js, WebRTC를 활용한 웹 개발 및 실시간 통신 경험을 공유합니다. 3년간의 실무 경험을 바탕으로 문제 해결 과정과 인사이트를 기록합니다.",
+	metadataBase: new URL(getSiteUrl()),
+	title: {
+		default: siteMetadata.title,
+		template: `%s | ${siteMetadata.name}`
+	},
+	description: siteMetadata.description,
+	openGraph: {
+		type: "website",
+		siteName: siteMetadata.name,
+		locale: siteMetadata.locale,
+		url: siteMetadata.url,
+		title: siteMetadata.title,
+		description: siteMetadata.description,
+		images: [{ url: "/og?title=chan9yu", width: 1200, height: 630, alt: siteMetadata.title }]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: siteMetadata.title,
+		description: siteMetadata.description,
+		images: ["/og?title=chan9yu"]
+	},
 	icons: {
 		icon: [
 			{ url: "/favicons/favicon.ico", sizes: "any" },
@@ -31,8 +51,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
-		<html lang="ko" className={`${pretendard.variable}`}>
-			<body className="font-sans antialiased">{children}</body>
+		<html lang="ko" className={pretendard.variable}>
+			<body className="bg-background text-foreground font-sans antialiased">
+				{/*
+				  Skip link — WCAG 2.4.1 Bypass Blocks.
+				  M1 Header 통합 시 Header 컴포넌트로 이동 예정 (중복 방지 위해 본 블록 제거).
+				*/}
+				<a
+					href="#main-content"
+					className="bg-foreground text-background focus-visible:ring-ring sr-only rounded-md px-3 py-2 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				>
+					본문으로 건너뛰기
+				</a>
+				<main id="main-content" tabIndex={-1}>
+					{children}
+				</main>
+			</body>
 		</html>
 	);
 }
