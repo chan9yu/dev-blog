@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @import "./tokens.css";
 @import "./base.css";
@@ -72,6 +73,25 @@
 	/* Container */
 	--container-content: var(--container-content);
 	--container-prose: var(--container-prose);
+
+	/* shadcn/ui alias — Semantic 토큰을 shadcn 표준 키로 노출 (bg-background, text-foreground 등) */
+	--color-background: var(--color-bg-default);
+	--color-foreground: var(--color-text-primary);
+	--color-card: var(--color-surface-default);
+	--color-card-foreground: var(--color-text-primary);
+	--color-popover: var(--color-surface-raised);
+	--color-popover-foreground: var(--color-text-primary);
+	--color-primary: var(--color-accent-default);
+	--color-primary-foreground: var(--color-accent-foreground);
+	--color-secondary: var(--color-bg-subtle);
+	--color-secondary-foreground: var(--color-text-primary);
+	--color-muted: var(--color-bg-muted);
+	--color-muted-foreground: var(--color-text-secondary);
+	--color-destructive: var(--color-danger);
+	--color-destructive-foreground: var(--color-text-inverse);
+	--color-border: var(--color-border-default);
+	--color-input: var(--color-border-default);
+	--color-ring: var(--color-focus-ring);
 
 	/* Animation */
 	--animate-fade-in: fade-in 0.3s ease-out;
