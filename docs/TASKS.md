@@ -21,8 +21,8 @@
 
 ### 폰트 & 아이콘
 
-- [ ] [M0-07] Pretendard Variable 폰트 설정 (`next/font`)
-- [ ] [M0-08] `lucide-react` 설치 및 아이콘 사용 패턴 확립
+- [x] [M0-07] Pretendard Variable 폰트 설정 (`next/font` localFont, `--font-pretendard` variable)
+- [x] [M0-08] `lucide-react` 설치 및 아이콘 사용 패턴 확립 (`.claude/rules/icons.md`)
 
 ### 공통 레이아웃
 
@@ -378,7 +378,7 @@
 
 | Phase                  | 태스크  | 완료  | 진행률 |
 | ---------------------- | ------- | ----- | ------ |
-| M0 Foundation          | 33      | 6     | 18%    |
+| M0 Foundation          | 33      | 8     | 24%    |
 | M1 UI Skeleton         | 61      | 0     | 0%     |
 | M2 Content Pipeline    | 24      | 0     | 0%     |
 | M3 Feature Wiring      | 21      | 0     | 0%     |
@@ -386,4 +386,4 @@
 | M5 SEO & Syndication   | 10      | 0     | 0%     |
 | M6 A11y & Perf         | 14      | 0     | 0%     |
 | M7 Polish              | 12      | 0     | 0%     |
-| **Total**              | **196** | **6** | **3%** |
+| **Total**              | **196** | **8** | **4%** |
