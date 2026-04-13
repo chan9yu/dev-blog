@@ -6,6 +6,8 @@ import type { PropsWithChildren } from "react";
 
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
 
+import { Providers } from "./providers";
+
 const pretendard = localFont({
 	src: "../../public/fonts/PretendardVariable.woff2",
 	display: "swap",
@@ -51,21 +53,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
-		<html lang="ko" className={pretendard.variable}>
+		<html lang="ko" className={pretendard.variable} suppressHydrationWarning>
 			<body className="bg-background text-foreground font-sans antialiased">
-				{/*
-				  Skip link — WCAG 2.4.1 Bypass Blocks.
-				  M1 Header 통합 시 Header 컴포넌트로 이동 예정 (중복 방지 위해 본 블록 제거).
-				*/}
-				<a
-					href="#main-content"
-					className="bg-foreground text-background focus-visible:ring-ring sr-only rounded-md px-3 py-2 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-				>
-					본문으로 건너뛰기
-				</a>
-				<main id="main-content" tabIndex={-1}>
-					{children}
-				</main>
+				<Providers>
+					{/*
+					  Skip link — WCAG 2.4.1 Bypass Blocks.
+					  M1 Header 통합 시 Header 컴포넌트로 이동 예정 (중복 방지 위해 본 블록 제거).
+					*/}
+					<a
+						href="#main-content"
+						className="bg-foreground text-background focus-visible:ring-ring sr-only rounded-md px-3 py-2 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+					>
+						본문으로 건너뛰기
+					</a>
+					<main id="main-content" tabIndex={-1}>
+						{children}
+					</main>
+				</Providers>
 			</body>
 		</html>
 	);

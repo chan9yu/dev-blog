@@ -28,8 +28,26 @@ export const siteMetadata = {
 		"프론트엔드 개발자 여찬규의 기술 블로그. React, TypeScript, Next.js, WebRTC를 활용한 웹 개발 및 실시간 통신 경험을 공유합니다.",
 	url: "https://chan9yu.dev",
 	author: "chan9yu",
-	locale: "ko_KR"
+	locale: "ko_KR",
+	ogImage: "/default-og-image.png",
+	themeColor: "#4f46e5"
 } as const;
+
+type SocialLinkConfig = {
+	label: string;
+	href: string;
+	iconName: "Github" | "Linkedin" | "Mail" | "Rss";
+};
+
+/**
+ * Footer·About 페이지에서 참조. 실제 아이콘 렌더는 호출자에서 lucide-react import.
+ * `iconName`은 `.claude/rules/icons.md`의 lucide-react 식별자와 일치.
+ */
+export const siteSocials: SocialLinkConfig[] = [
+	{ label: "GitHub", href: "https://github.com/chan9yu", iconName: "Github" },
+	{ label: "LinkedIn", href: "https://linkedin.com/in/chan9yu", iconName: "Linkedin" },
+	{ label: "Email", href: "mailto:chan9yu.dev@gmail.com", iconName: "Mail" }
+];
 
 /**
  * 환경별 사이트 URL — metadataBase 등에 사용.
