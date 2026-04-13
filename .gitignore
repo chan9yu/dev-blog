@@ -50,6 +50,9 @@ next-env.d.ts
 .claude/plans
 .lint-needed-default
 
+# harness workspace (compound engineering intermediate artifacts)
+_workspace/
+
 # mcp
 .playwright-mcp
 .serena
