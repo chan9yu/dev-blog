@@ -86,6 +86,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - JSX: `<SheetTrigger>` → `<Sheet.Trigger>`, `<SheetContent>` → `<Sheet.Content>` 등 점 네임스페이스
   - TypeScript 추론 정상, 빌드 통과
 
+### Added (M0-16~M0-29: 라우팅 쉘 14종)
+
+14개 라우트가 모두 404 없이 빈 페이지 또는 적절한 응답 렌더. 실데이터는 M1~M5에서 단계적 교체.
+
+- **정적 페이지 5종**: `app/page.tsx`(홈), `app/posts/page.tsx`, `app/tags/page.tsx`, `app/series/page.tsx`, `app/about/page.tsx` — 각 metadata(title·120~160자 description·canonical) + placeholder 마크업
+- **동적 페이지 3종** (PPR 모드): `app/posts/[slug]/page.tsx`, `app/tags/[tag]/page.tsx`, `app/series/[slug]/page.tsx` — async params + `normalizeSlug` validation + `notFound()` 가드 + `generateMetadata` decoded canonical
+- **Route handlers 6종**: `app/rss/route.ts`(escapeXml + Cache-Control), `app/sitemap.ts`, `app/robots.ts`(preview 차단), `app/manifest.ts`, `app/og/route.tsx`(ImageResponse + title slice), `app/api/views/route.ts`(slug 검증 + 타입 가드)
+- **layout.tsx**: `metadataBase` = `getSiteUrl()` 환경 분기, `openGraph`/`twitter` 루트 메타, `<main id="main-content" tabIndex={-1}>` + skip link(Header 통합 전 임시)
+- **loading.tsx 신규** (M0-30 선행): cacheComponents 요구사항 해결, `role="status"` + sr-only, 한국어 메시지
+- **shared/utils/xmlEscape.ts 신규**: RSS·sitemap 인젝션 방지 유틸 (M5 대비)
+- **shared/config/site.ts 확장**: `siteMetadata`(title·description·url·locale) + `getSiteUrl()` 환경 분기 함수
+
+### Changed (리뷰 사이클 반영 — 3-way 병렬 12 이슈 일괄)
+
+3개 리뷰어(react-nextjs-code-reviewer · a11y-auditor · feature-dev:code-reviewer) 합의 이슈 + 사용자 지적 반영.
+
+- **Tier 1 Critical**: 동적 slug decode + validation + notFound, description 120~160자 규약, openGraph/twitter 메타, API route 타입 가드, RSS XML escape, loading.tsx 한글화·ARIA 중복 제거
+- **Tier 2 품질**: metadataBase 환경 분기, skip link 임시 추가, robots.ts `host` 제거, og title slice, tags `#` 접두 aria-hidden, generateStaticParams 빈 배열 → cacheComponents 제약으로 생략(PPR 모드)
+- **리턴 타입 자동 추론**: `typescript.md` 룰 준수 — `getSiteUrl()`·`normalizeSlug()`·`escapeXml()`·`robots()`·`sitemap()`·`manifest()`·`generateMetadata()` 등 자동 추론 가능한 시그니처에서 명시 리턴 타입 제거 (사용자 직접 지적)
+
 ### Changed (디렉토리 평탄화 — 뎁스 축소)
 
 사용자 피드백 반영: `shared/ui/`가 shadcn 전용으로 분리되어 있으므로 우리 컴포넌트의 `shared/components/layout/` 2단 구조는 과도.

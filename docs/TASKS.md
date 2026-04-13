@@ -36,20 +36,20 @@
 
 ### 라우팅 쉘 (RT-\*)
 
-- [ ] [M0-16] `RT-/` 홈
-- [ ] [M0-17] `RT-/posts` 포스트 목록
-- [ ] [M0-18] `RT-/posts/[slug]` 포스트 상세
-- [ ] [M0-19] `RT-/tags` 태그 허브
-- [ ] [M0-20] `RT-/tags/[tag]` 태그 상세
-- [ ] [M0-21] `RT-/series` 시리즈 허브
-- [ ] [M0-22] `RT-/series/[slug]` 시리즈 상세
-- [ ] [M0-23] `RT-/about` About
-- [ ] [M0-24] `RT-/rss` Route Handler
-- [ ] [M0-25] `RT-/sitemap.xml`
-- [ ] [M0-26] `RT-/robots.txt`
-- [ ] [M0-27] `RT-/manifest.webmanifest`
-- [ ] [M0-28] `RT-/og` Edge Route Handler
-- [ ] [M0-29] `RT-/api/views` Route Handler
+- [x] [M0-16] `RT-/` 홈
+- [x] [M0-17] `RT-/posts` 포스트 목록 (metadata + canonical)
+- [x] [M0-18] `RT-/posts/[slug]` 포스트 상세 (async params, slug validation + notFound)
+- [x] [M0-19] `RT-/tags` 태그 허브
+- [x] [M0-20] `RT-/tags/[tag]` 태그 상세 (slug validation, `#` 접두 aria-hidden)
+- [x] [M0-21] `RT-/series` 시리즈 허브
+- [x] [M0-22] `RT-/series/[slug]` 시리즈 상세 (slug validation)
+- [x] [M0-23] `RT-/about` About
+- [x] [M0-24] `RT-/rss` Route Handler (escapeXml + Cache-Control)
+- [x] [M0-25] `RT-/sitemap.xml` (5 정적 경로, M5에서 동적 확장)
+- [x] [M0-26] `RT-/robots.txt` (preview 차단, prod 허용)
+- [x] [M0-27] `RT-/manifest.webmanifest` (PWA 기본값)
+- [x] [M0-28] `RT-/og` Route Handler (Next.js 16 `cacheComponents` → node runtime)
+- [x] [M0-29] `RT-/api/views` Route Handler (slug 검증 + 타입 가드, M3에서 KV 연결)
 
 ### 인프라
 
@@ -376,14 +376,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료   | 진행률 |
-| ---------------------- | ------- | ------ | ------ |
-| M0 Foundation          | 33      | 15     | 45%    |
-| M1 UI Skeleton         | 61      | 0      | 0%     |
-| M2 Content Pipeline    | 24      | 0      | 0%     |
-| M3 Feature Wiring      | 21      | 0      | 0%     |
-| M4 Hubs & Aggregations | 21      | 0      | 0%     |
-| M5 SEO & Syndication   | 10      | 0      | 0%     |
-| M6 A11y & Perf         | 14      | 0      | 0%     |
-| M7 Polish              | 12      | 0      | 0%     |
-| **Total**              | **196** | **15** | **8%** |
+| Phase                  | 태스크  | 완료   | 진행률  |
+| ---------------------- | ------- | ------ | ------- |
+| M0 Foundation          | 33      | 29     | 88%     |
+| M1 UI Skeleton         | 61      | 0      | 0%      |
+| M2 Content Pipeline    | 24      | 0      | 0%      |
+| M3 Feature Wiring      | 21      | 0      | 0%      |
+| M4 Hubs & Aggregations | 21      | 0      | 0%      |
+| M5 SEO & Syndication   | 10      | 0      | 0%      |
+| M6 A11y & Perf         | 14      | 0      | 0%      |
+| M7 Polish              | 12      | 0      | 0%      |
+| **Total**              | **196** | **29** | **15%** |
