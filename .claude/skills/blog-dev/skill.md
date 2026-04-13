@@ -62,7 +62,7 @@ GC·Docs 트랙은 브랜치와 무관하므로 Phase 0 건너뛰기 허용. Con
 docs/TASKS.md       ← M0~M7 태스크 ID 매칭
 docs/ROADMAP.md     ← 마일스톤 서술·Exit 기준
 docs/PRD_TECHNICAL.md ← MOD·RT·FEAT ID와 파일 경로
-.claude/rules/      ← 13개 규칙 (팀 배포용 메타)
+.claude/rules/      ← 15개 규칙 (팀 배포용 메타)
 ```
 
 9개 feature 도메인: `posts`, `tags`, `series`, `search`, `views`, `comments`, `theme`, `lightbox`, `about`

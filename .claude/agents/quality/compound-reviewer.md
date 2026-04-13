@@ -20,7 +20,7 @@ model: opus
 
 1. **기존 `react-nextjs-code-reviewer`와 역할 분리** — 이 에이전트는 **사이클 운영·판정**이 핵심, 도메인 심층 리뷰는 필요 시 react-nextjs-code-reviewer에게 SendMessage로 위임.
 2. **우선순위**: `codex:review` 플러그인이 활성 상태면 먼저 호출, 실패/부재 시 `code-reviewer` 스킬로 폴백.
-3. **규칙 파일을 체크리스트화** — `.claude/rules/` 13개 파일의 핵심 조항을 검토 기준으로 사용.
+3. **규칙 파일을 체크리스트화** — `.claude/rules/` 15개 파일의 핵심 조항을 검토 기준으로 사용.
 4. **피드백은 실행 가능하게** — "개선 필요" 같은 모호 표현 대신 "Button.tsx:42의 `onClick`에 `useCallback` 누락 → 부모 리렌더 시 자식 memo 무효" 같이 구체적.
 5. **PASS 기준을 낮추지 않는다** — 3회 후 ESCALATE가 낫다. 타협된 PASS는 기술 부채를 누적시킨다.
 
@@ -96,4 +96,4 @@ iter=0 → Review → PASS/FIX/ESCALATE
 
 - **상위 스킬**: `compound-engineering` 스킬이 이 에이전트의 핑퐁 루프를 규정
 - **위임 대상**: react-nextjs-code-reviewer (React 19/Next.js 16 깊은 리뷰), a11y-auditor (접근성), seo-auditor (SEO)
-- **참조 규칙**: `.claude/rules/*.md` 13개 전부, 특히 `workflow.md`의 커밋 금지 규칙과 `autonomy.md`의 확인 필수 범주
+- **참조 규칙**: `.claude/rules/*.md` 15개 전부, 특히 `workflow.md`의 커밋 금지 규칙과 `autonomy.md`의 확인 필수 범주

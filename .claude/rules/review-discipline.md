@@ -85,3 +85,8 @@ REVIEW를 건너뛰고 DOCUMENT/SYNTHESIZE로 직행하면 **사이클 무결성
 - import 경로만 변경 (외부화·alias 변경)
 
 이런 변경은 EXECUTE에 해당하지 않으므로 REVIEW 면제. 단, **30줄 이상 수정 또는 신규 파일 1개 이상 생성**이면 면제 무효.
+
+## 관련 룰
+
+- `.claude/rules/autonomy.md` — 자율 실행 vs 사용자 확인 필수 범주 (REVIEW 강제는 자율 범주의 품질 게이트 역할)
+- `.claude/skills/compound-engineering/skill.md` — REVIEW Phase 전체 핑퐁 루프 정의

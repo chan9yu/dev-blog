@@ -122,6 +122,45 @@ src/
 2. 2개 이상의 feature를 import
 3. 해당 라우트에서만 사용됨 (재사용 없음)
 
+#### Provider 관리 규약 (3-tier progressive)
+
+Provider 개수에 따라 구조를 점진적으로 확장한다. Next.js 공식 패턴(Context Provider를 Client Component로 만들고 `layout`에서 감싸기) + 3 Laws 정렬.
+
+**1-tier — Provider 1개 (현재 M0)**
+
+```
+src/app/
+├─ layout.tsx          ← <Providers> 호출
+└─ providers.tsx       ← 엔트리 + 구현 동거 (ThemeProvider 직접 조립)
+```
+
+단일 파일로 조립·구현이 모두 들어간다. 과한 추상화 회피 (YAGNI).
+
+**2~3-tier — Provider 2개 이상 (M3+)**
+
+```
+src/app/
+└─ providers.tsx       ← 조립 지점(얇게, Provider를 감싸는 JSX만)
+
+src/features/
+├─ theme/components/ThemeWrapper.tsx
+└─ lightbox/components/LightboxProvider.tsx
+```
+
+**전환 트리거**: Provider가 **2개 이상**이 되는 순간 엔트리(조립)와 구현을 분리. 각 Provider 구현은 다음 규칙으로 배치:
+
+- **feature 도메인이 있는 Provider** (`LightboxProvider`·`ThemeSwitcher` 등 UI/상태가 해당 feature에 종속) → `features/<domain>/components/`에 위치
+- **도메인 중립 Provider** (토스트·쿼리 클라이언트 등, 현재 프로젝트엔 없음) → `shared/providers/`에 신규 폴더 생성
+- `app/providers.tsx`는 각 Provider를 **import + 중첩**만 수행 (비즈니스 로직 금지)
+
+**금지 패턴**
+
+- `shared/providers/`를 Provider 1~2개 시점에 선행 생성 (과한 추상화)
+- `app/providers.tsx` 안에서 state/effect/ref 직접 선언 (구현 누수 — features/shared로 이동)
+- feature 간 Provider cross-reference (Law 3 위반 — `app/providers.tsx`가 중재)
+
+**구역 전용 Provider** (옵션): 특정 route group에만 필요하면 `app/(group)/providers.tsx`에 격리. 전역에 올리지 않는다.
+
 ### 4.2 `features/` — 도메인 슬라이스
 
 **Feature 식별 기준 (Bounded Context)**

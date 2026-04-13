@@ -46,7 +46,7 @@ $ARGUMENTS가 없으면:
 - 중점: 가독성, 응집도/결합도, 유지보수성, 네이밍, 확장성
 - `/frontend-fundamentals` 기준 적용
 - SOLID 원칙, 안티패턴, 코드 스멜
-- `.claude/rules/` 13개 규칙 위반 여부 체크
+- `.claude/rules/` 15개 규칙 위반 여부 체크
 
 ### Team 3: 경계면/아키텍처 리뷰어
 
