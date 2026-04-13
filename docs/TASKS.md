@@ -12,12 +12,12 @@
 
 ### 디자인 토큰 & 스타일
 
-- [ ] [M0-01] Primitive 색상 팔레트 (`shared/styles/foundations/colors.ts`)
-- [ ] [M0-02] Typography 스케일 (`shared/styles/foundations/typography.ts`)
-- [ ] [M0-03] Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
-- [ ] [M0-04] 기반 스타일 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
-- [ ] [M0-05] Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
-- [ ] [M0-06] `cn()` 유틸리티 (`clsx` + `tailwind-merge`)
+- [x] [M0-01] Primitive 색상 팔레트 (`shared/styles/tokens.css` — CSS-only, SSOT)
+- [x] [M0-02] Typography 스케일 (`shared/styles/globals.css` `@theme inline` — CSS-only)
+- [x] [M0-03] Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
+- [x] [M0-04] 기반 스타일 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
+- [x] [M0-05] Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
+- [x] [M0-06] `cn()` 유틸리티 (`clsx` + `tailwind-merge`)
 
 ### 폰트 & 아이콘
 
@@ -378,7 +378,7 @@
 
 | Phase                  | 태스크  | 완료  | 진행률 |
 | ---------------------- | ------- | ----- | ------ |
-| M0 Foundation          | 33      | 0     | 0%     |
+| M0 Foundation          | 33      | 6     | 18%    |
 | M1 UI Skeleton         | 61      | 0     | 0%     |
 | M2 Content Pipeline    | 24      | 0     | 0%     |
 | M3 Feature Wiring      | 21      | 0     | 0%     |
@@ -386,4 +386,4 @@
 | M5 SEO & Syndication   | 10      | 0     | 0%     |
 | M6 A11y & Perf         | 14      | 0     | 0%     |
 | M7 Polish              | 12      | 0     | 0%     |
-| **Total**              | **196** | **0** | **0%** |
+| **Total**              | **196** | **6** | **3%** |
