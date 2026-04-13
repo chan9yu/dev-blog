@@ -380,32 +380,31 @@ export { getAboutContent } from "./services";
 
 ## 8. Shared Layer Specification
 
-### 8.1 디자인 토큰 (2-layer)
+### 8.1 디자인 토큰 (CSS-only SSOT)
 
 ```
 shared/styles/
-├─ foundations/
-│  ├─ colors.ts         # Primitive palette (gray/slate/zinc/stone/blue/indigo)
-│  └─ typography.ts     # Scale (Display/Heading/Body/Label)
-├─ tokens.css           # Semantic vars (--color-text-primary 등)
-├─ base.css             # Reset + root rules
-├─ animations.css
-├─ prose.css            # MDX 본문용
+├─ tokens.css           # Primitive + Semantic CSS 변수 (light + .dark 오버라이드)
+├─ base.css             # Reset + root rules + prefers-reduced-motion
+├─ animations.css       # keyframes + View Transitions
+├─ prose.css            # MDX 본문 (.prose 스코프)
 ├─ scrollbar.css
-└─ shiki.css            # 코드 하이라이트 light/dark
+├─ shiki.css            # 코드 하이라이트 light/dark
+└─ globals.css          # Tailwind 4 @theme inline 매핑 + Typography scale + shadcn alias
 ```
 
-- **Primitive → Semantic**: Primitive는 TS 상수, Semantic은 CSS 변수(`--color-text-primary`). Tailwind 4 `@theme` 블록에 연결.
-- **테마 토글**: `html.dark` 클래스가 Semantic 변수 그룹을 덮어쓴다.
+- **CSS-only SSOT**: 색·Typography·Radius·Shadow 모든 토큰을 `tokens.css` + `globals.css @theme inline`에만 정의. 별도 TS 팔레트 파일을 두지 않음 (Tailwind 4 CSS-first 철학 준수).
+- **테마 토글**: `html.dark` 클래스가 Semantic 변수 그룹을 덮어쓴다. `color-scheme`은 `.dark` 셀렉터 기반 직접 선언 (ADR-011).
+- **shadcn alias**: `@theme inline`에 `--color-background`·`--color-foreground`·`--color-border`·`--color-ring` 등 shadcn 표준 키를 우리 Semantic 토큰에 매핑하여 shadcn 컴포넌트 코드 수정 없이 자동 사용.
+- **arbitrary value 금지**: `max-w-[72rem]`·`border-(--color-border-subtle)` 등 임의값 사용 금지. 표준 클래스(`max-w-6xl`) 또는 토큰 자동 생성 클래스(`max-w-content`, `border-border-subtle`) 우선. 세부: `.claude/rules/styling.md`.
 
-### 8.2 공통 컴포넌트
+### 8.2 공통 컴포넌트 (평탄 구조)
 
 ```
 shared/components/
 ├─ Header.tsx · Footer.tsx · Container.tsx · Sidebar.tsx
-├─ Drawer.tsx · MobileMenu.tsx · NavLink.tsx
-├─ SocialLinks.tsx · ShareButton.tsx
-├─ ReadingProgress.tsx · ScrollToTop.tsx · ScrollReset.tsx
+├─ MobileMenu.tsx · NavLink.tsx · SocialLinks.tsx · ScrollToTopButton.tsx
+├─ ShareButton.tsx · ReadingProgress.tsx · ScrollReset.tsx
 ├─ FadeInWhenVisible.tsx · MotionProvider.tsx · PageTransition.tsx
 └─ mdx/
    ├─ CustomMDX.tsx · MdxHeading.tsx · MdxImage.tsx · MdxLink.tsx
@@ -821,8 +820,9 @@ dev-blog/
 │  │  ├─ comments/ · theme/ · lightbox/ · about/
 │  │  └─ (each) components/ · services/ · hooks/ · types/ · utils/ · schemas/ · _internal/ · index.ts
 │  └─ shared/
-│     ├─ components/ · mdx/ · layout/
-│     ├─ styles/foundations/ · tokens.css · base.css ...
+│     ├─ components/ (평탄 — Header/Footer/Container/Sidebar/MobileMenu/NavLink 등)
+│     ├─ ui/ (shadcn primitives — Sheet 등, Compound 패턴)
+│     ├─ styles/ (tokens.css + base/animations/prose/scrollbar/shiki + globals.css)
 │     ├─ seo/ · config/ · utils/ · hooks/
 │     └─ types/
 ├─ contents/                  # submodule

@@ -36,7 +36,7 @@ pnpm test:e2e     # Playwright E2E
 
 ## AI 협업 (하네스)
 
-이 프로젝트에는 15개 전문 에이전트·12개 스킬·13개 규칙으로 구성된 **컴파운드 엔지니어링 하네스**가 구축되어 있다. `"M0-01 진행해줘"`, `"검색 기능 만들어줘"`, `"React 19 포스트 작성해줘"`, `"Week 0 GC"` 같은 자연어 요청만으로 Feature·Content·GC·Docs 4개 트랙 중 하나로 자동 분류되어 **PLAN→EXECUTE→REVIEW(핑퐁 3회)→VALIDATE→DOCUMENT** 사이클이 돌아간다. 상세 동작은 `docs/AI_WORKFLOW_GUIDE.md` 참조.
+이 프로젝트에는 15개 전문 에이전트·12개 스킬·15개 규칙으로 구성된 **컴파운드 엔지니어링 하네스**가 구축되어 있다. **M0 Foundation 33/33 완료**, M1 UI Skeleton 진입 대기 중 (Total 17%). `"M0-01 진행해줘"`, `"검색 기능 만들어줘"`, `"React 19 포스트 작성해줘"`, `"Week 0 GC"` 같은 자연어 요청만으로 Feature·Content·GC·Docs 4개 트랙 중 하나로 자동 분류되어 **PLAN→EXECUTE→REVIEW(핑퐁 3회)→VALIDATE→DOCUMENT** 사이클이 돌아간다. 상세 동작은 `docs/AI_WORKFLOW_GUIDE.md` 참조.
 
 **자율 범위 경계** (`.claude/rules/autonomy.md`): `src/`·테스트·`docs/TASKS.md` 체크박스·`CHANGELOG.md`는 자동, 의존성/아키텍처/PRD/Git 쓰기는 **반드시 사용자 승인**.
 

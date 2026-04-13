@@ -62,7 +62,7 @@ GC·Docs 트랙은 브랜치와 무관하므로 Phase 0 건너뛰기 허용. Con
 docs/TASKS.md       ← M0~M7 태스크 ID 매칭
 docs/ROADMAP.md     ← 마일스톤 서술·Exit 기준
 docs/PRD_TECHNICAL.md ← MOD·RT·FEAT ID와 파일 경로
-.claude/rules/      ← 13개 규칙 (팀 배포용 메타)
+.claude/rules/      ← 15개 규칙 (팀 배포용 메타)
 ```
 
 9개 feature 도메인: `posts`, `tags`, `series`, `search`, `views`, `comments`, `theme`, `lightbox`, `about`
@@ -109,9 +109,33 @@ TaskCreate(tasks=[...])  # 태스크별 owner 지정
 PLAN → EXECUTE → REVIEW(3회 핑퐁) → VALIDATE(1회 되돌림) → DOCUMENT → SYNTHESIZE
 ```
 
+### ⚠️ REVIEW 단계 강제 (review-discipline.md)
+
+**EXECUTE 완료 직후 REVIEW를 건너뛰고 DOCUMENT로 직행하는 것은 절대 금지.** `.claude/rules/review-discipline.md` 참조.
+
+자체 판단으로 "단순 작업이라 리뷰 불필요"라고 압축하지 말 것. 회고 결과 그 판단이 빗나가는 사례가 다수 발생함 (M0-01~06, M0-09~15에서 사용자 사후 지적으로 13+개 이슈 발견).
+
+EXECUTE 완료 시 다음을 자동 실행:
+
+1. **트랙별 3-way 리뷰 에이전트 병렬 호출** (한 메시지에 Agent tool 다중 호출):
+   - Feature(UI+로직): `react-nextjs-code-reviewer` + `a11y-auditor` + `feature-dev:code-reviewer`
+   - Feature(로직만): `react-nextjs-code-reviewer` + `boundary-mismatch-qa` + `feature-dev:code-reviewer`
+   - Feature(UI만): `react-nextjs-code-reviewer` + `a11y-auditor` + `feature-dev:code-reviewer`
+   - Content: `seo-auditor` + `a11y-auditor` + `react-nextjs-code-reviewer`
+2. **결과 종합** → Tier 1(Critical) / Tier 2(품질) / Tier 3(후속) 분류
+3. **AskUserQuestion**으로 수정 범위 결정
+4. **수정 적용** → 빌드 재검증
+5. CHANGELOG에 **리뷰 결과 요약 항목 필수** 기재
+6. DOCUMENT 진입
+
+REVIEW 생략은 **사이클 무결성 위반**. 위반 시 즉시 정지하고 누락분 회수.
+
+### 트랙별 사이클 변형
+
 - Content 트랙은 REVIEW가 3-way(SEO·a11y·코드) 병렬
 - GC 트랙은 REVIEW·VALIDATE 생략, PLAN→EXECUTE→DOCUMENT만
 - Docs 트랙은 EXECUTE→VALIDATE(빌드 확인)→DOCUMENT
+- **단일 line/체크박스/CHANGELOG 추가**는 EXECUTE 아님 → REVIEW 면제 (review-discipline.md "예외" 섹션)
 
 ## Phase 4: 결과 통합 (Integration)
 

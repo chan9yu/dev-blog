@@ -12,51 +12,51 @@
 
 ### 디자인 토큰 & 스타일
 
-- [ ] [M0-01] Primitive 색상 팔레트 (`shared/styles/foundations/colors.ts`)
-- [ ] [M0-02] Typography 스케일 (`shared/styles/foundations/typography.ts`)
-- [ ] [M0-03] Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
-- [ ] [M0-04] 기반 스타일 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
-- [ ] [M0-05] Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
-- [ ] [M0-06] `cn()` 유틸리티 (`clsx` + `tailwind-merge`)
+- [x] [M0-01] Primitive 색상 팔레트 (`shared/styles/tokens.css` — CSS-only, SSOT)
+- [x] [M0-02] Typography 스케일 (`shared/styles/globals.css` `@theme inline` — CSS-only)
+- [x] [M0-03] Semantic CSS 변수 토큰 (`shared/styles/tokens.css`)
+- [x] [M0-04] 기반 스타일 (`base.css`, `animations.css`, `prose.css`, `scrollbar.css`, `shiki.css`)
+- [x] [M0-05] Tailwind CSS 4 `@theme` 블록에 Semantic 토큰 연결
+- [x] [M0-06] `cn()` 유틸리티 (`clsx` + `tailwind-merge`)
 
 ### 폰트 & 아이콘
 
-- [ ] [M0-07] Pretendard Variable 폰트 설정 (`next/font`)
-- [ ] [M0-08] `lucide-react` 설치 및 아이콘 사용 패턴 확립
+- [x] [M0-07] Pretendard Variable 폰트 설정 (`next/font` localFont, `--font-pretendard` variable)
+- [x] [M0-08] `lucide-react` 설치 및 아이콘 사용 패턴 확립 (`.claude/rules/icons.md`)
 
 ### 공통 레이아웃
 
-- [ ] [M0-09] `Header.tsx` — sticky 헤더, 네비 슬롯
-- [ ] [M0-10] `Footer.tsx` — 저작권, RSS, 소셜 링크
-- [ ] [M0-11] `Container.tsx` — 반응형 max-width 래퍼
-- [ ] [M0-12] `Sidebar.tsx` — md 이상 우측, md 미만 하단
-- [ ] [M0-13] `Drawer.tsx` + `MobileMenu.tsx` — 모바일 메뉴
-- [ ] [M0-14] `NavLink.tsx` — 활성 경로 하이라이트
-- [ ] [M0-15] `SocialLinks.tsx` — 소셜 링크 묶음
+- [x] [M0-09] `Header.tsx` — sticky 헤더, 네비/슬롯 (`shared/components/`)
+- [x] [M0-10] `Footer.tsx` — 저작권, RSS 링크, "맨 위로", 소셜 슬롯
+- [x] [M0-11] `Container.tsx` — 반응형 max-width 래퍼 (default 72rem / prose 44rem)
+- [x] [M0-12] `Sidebar.tsx` — md+ sticky 우측, md 미만 본문 아래 자동 배치
+- [x] [M0-13] `MobileMenu.tsx` — shadcn `Sheet` **직접 사용** (별도 Drawer wrapper 생략)
+- [x] [M0-14] `NavLink.tsx` — `usePathname` 기반 활성 경로 하이라이트
+- [x] [M0-15] `SocialLinks.tsx` — props 주입형 소셜 링크 묶음
 
 ### 라우팅 쉘 (RT-\*)
 
-- [ ] [M0-16] `RT-/` 홈
-- [ ] [M0-17] `RT-/posts` 포스트 목록
-- [ ] [M0-18] `RT-/posts/[slug]` 포스트 상세
-- [ ] [M0-19] `RT-/tags` 태그 허브
-- [ ] [M0-20] `RT-/tags/[tag]` 태그 상세
-- [ ] [M0-21] `RT-/series` 시리즈 허브
-- [ ] [M0-22] `RT-/series/[slug]` 시리즈 상세
-- [ ] [M0-23] `RT-/about` About
-- [ ] [M0-24] `RT-/rss` Route Handler
-- [ ] [M0-25] `RT-/sitemap.xml`
-- [ ] [M0-26] `RT-/robots.txt`
-- [ ] [M0-27] `RT-/manifest.webmanifest`
-- [ ] [M0-28] `RT-/og` Edge Route Handler
-- [ ] [M0-29] `RT-/api/views` Route Handler
+- [x] [M0-16] `RT-/` 홈
+- [x] [M0-17] `RT-/posts` 포스트 목록 (metadata + canonical)
+- [x] [M0-18] `RT-/posts/[slug]` 포스트 상세 (async params, slug validation + notFound)
+- [x] [M0-19] `RT-/tags` 태그 허브
+- [x] [M0-20] `RT-/tags/[tag]` 태그 상세 (slug validation, `#` 접두 aria-hidden)
+- [x] [M0-21] `RT-/series` 시리즈 허브
+- [x] [M0-22] `RT-/series/[slug]` 시리즈 상세 (slug validation)
+- [x] [M0-23] `RT-/about` About
+- [x] [M0-24] `RT-/rss` Route Handler (escapeXml + Cache-Control)
+- [x] [M0-25] `RT-/sitemap.xml` (5 정적 경로, M5에서 동적 확장)
+- [x] [M0-26] `RT-/robots.txt` (preview 차단, prod 허용)
+- [x] [M0-27] `RT-/manifest.webmanifest` (PWA 기본값)
+- [x] [M0-28] `RT-/og` Route Handler (Next.js 16 `cacheComponents` → node runtime)
+- [x] [M0-29] `RT-/api/views` Route Handler (slug 검증 + 타입 가드, M3에서 KV 연결)
 
 ### 인프라
 
-- [ ] [M0-30] `not-found.tsx`, `loading.tsx` 글로벌 fallback
-- [ ] [M0-31] `app/providers.tsx` — ThemeProvider 루트 래핑
-- [ ] [M0-32] tsconfig path alias 확인 (`@/*`)
-- [ ] [M0-33] `shared/config/site.ts` — 사이트 전역 설정 상수
+- [x] [M0-30] `not-found.tsx`, `loading.tsx` 글로벌 fallback (loading은 M0-16~29에서 선행)
+- [x] [M0-31] `app/providers.tsx` — ThemeProvider 루트 래핑 (`next-themes` + `suppressHydrationWarning`)
+- [x] [M0-32] tsconfig path alias 확인 (`@/*` → `./src/*`, src에서 23+회 사용 검증)
+- [x] [M0-33] `shared/config/site.ts` — `siteMetadata`·`siteNav`·`siteSocials`·`getSiteUrl()` 확장
 
 ---
 
@@ -376,14 +376,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료  | 진행률 |
-| ---------------------- | ------- | ----- | ------ |
-| M0 Foundation          | 33      | 0     | 0%     |
-| M1 UI Skeleton         | 61      | 0     | 0%     |
-| M2 Content Pipeline    | 24      | 0     | 0%     |
-| M3 Feature Wiring      | 21      | 0     | 0%     |
-| M4 Hubs & Aggregations | 21      | 0     | 0%     |
-| M5 SEO & Syndication   | 10      | 0     | 0%     |
-| M6 A11y & Perf         | 14      | 0     | 0%     |
-| M7 Polish              | 12      | 0     | 0%     |
-| **Total**              | **196** | **0** | **0%** |
+| Phase                  | 태스크  | 완료   | 진행률  |
+| ---------------------- | ------- | ------ | ------- |
+| M0 Foundation          | 33      | 33     | 100%    |
+| M1 UI Skeleton         | 61      | 0      | 0%      |
+| M2 Content Pipeline    | 24      | 0      | 0%      |
+| M3 Feature Wiring      | 21      | 0      | 0%      |
+| M4 Hubs & Aggregations | 21      | 0      | 0%      |
+| M5 SEO & Syndication   | 10      | 0      | 0%      |
+| M6 A11y & Perf         | 14      | 0      | 0%      |
+| M7 Polish              | 12      | 0      | 0%      |
+| **Total**              | **196** | **33** | **17%** |

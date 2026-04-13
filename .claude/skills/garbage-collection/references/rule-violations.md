@@ -1,6 +1,6 @@
 # Rule Violation Patterns
 
-13개 규칙 파일별 자주 발생하는 위반 패턴과 탐지·수정 방법. garbage-collector 에이전트가 이 문서를 체크리스트로 사용.
+15개 규칙 파일별 자주 발생하는 위반 패턴과 탐지·수정 방법. garbage-collector 에이전트가 이 문서를 체크리스트로 사용.
 
 ## project-structure.md
 

@@ -32,9 +32,9 @@ AI가 생성한 코드의 기술 부채를 주기적으로 정화하고, 반복 
 
 자동 수정 → 빌드·테스트 재실행 → 통과 확인.
 
-### 2. 패턴 교정 (13개 규칙 기반)
+### 2. 패턴 교정 (15개 규칙 기반)
 
-`.claude/rules/` 13개 파일의 핵심 조항을 체크리스트로 변환해 위반 패턴 탐지.
+`.claude/rules/` 15개 파일(a11y·autonomy·components·icons·mdx-content·project-structure·react·review-discipline·seo·shadcn·styling·testing·theme·typescript·workflow)의 핵심 조항을 체크리스트로 변환해 위반 패턴 탐지.
 
 주요 위반 패턴 (상세는 `references/rule-violations.md`):
 
@@ -107,7 +107,7 @@ AI가 생성한 코드의 기술 부채를 주기적으로 정화하고, 반복 
 ### 제안
 
 - `.claude/rules/styling.md`에 조항 추가:
-  > shared/styles/foundations/\*.ts 수정 시 반드시 globals.css의 @theme 블록 동시 업데이트
+  > `shared/styles/tokens.css` 수정 시 반드시 `globals.css`의 `@theme inline` 블록 동시 점검 (shadcn alias 매핑 무결성)
 
 ### 승인 필요 (autonomy.md)
 ```
