@@ -63,6 +63,13 @@ Browser (Client)
 
 ### M0: Foundation
 
+**진행 상태** (2026-04-13): 15/33 완료 (M0-01~M0-15). 본 ROADMAP 작성 이후 결정이 변경된 부분:
+
+- 디자인 토큰을 **CSS-only**로 통합 (TS `foundations/` 파일 폐기)
+- 공통 레이아웃 컴포넌트 경로: `shared/components/layout/` → `shared/components/` **평탄화**
+- M0-13 Drawer는 별도 구현 없이 **shadcn `Sheet` 직접 사용** (MobileMenu에서 `<Sheet.X>` 네임스페이스)
+- 세부 체크 상태는 `TASKS.md`를 단일 출처로 사용. 본 문서의 체크박스는 참고용.
+
 **목표**: 빌드 쉘, 디자인 토큰(light/dark), 공통 컴포넌트, 전 라우트(`RT-*`) 빈 페이지 렌더
 
 **Entry 기준**: Next.js 16 프로젝트 초기 셋업 완료 (달성)
@@ -73,11 +80,11 @@ Browser (Client)
 
 #### 디자인 토큰 & 스타일 기반
 
-- [ ] **[M0-01]** Primitive 색상 팔레트 정의 (`shared/styles/foundations/colors.ts`)
+- [x] **[M0-01]** Primitive/Semantic 색상 토큰 CSS 일원화 (`shared/styles/tokens.css`)
   - 대응: FEAT-THEME, MOD-theme
   - 검증: light/dark 양쪽 palette가 TS 상수로 정의됨
 
-- [ ] **[M0-02]** Typography 스케일 정의 (`shared/styles/foundations/typography.ts`)
+- [x] **[M0-02]** Typography 스케일 CSS-only (`shared/styles/globals.css` `@theme inline`, 10단계)
   - 대응: 전체 FEAT
   - 검증: Display/Heading/Body/Label 스케일이 TS 상수로 정의됨
 
@@ -125,7 +132,7 @@ Browser (Client)
   - 대응: FEAT-HOME
   - 검증: breakpoint에 따른 레이아웃 전환 정상
 
-- [ ] **[M0-13]** `Drawer.tsx` + `MobileMenu.tsx` -- 모바일 햄버거 메뉴 드로어
+- [x] **[M0-13]** `MobileMenu.tsx` -- shadcn `Sheet` 직접 사용 (별도 Drawer wrapper 생략)
   - 대응: FEAT-NAVIGATION
   - 검증: 햄버거 클릭 시 드로어 슬라이드 인, body 스크롤 잠금, Esc로 닫기
 
