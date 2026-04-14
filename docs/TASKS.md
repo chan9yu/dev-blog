@@ -99,12 +99,12 @@
 
 ### 포스트 목록 (FEAT-POSTS-LIST)
 
-- [ ] [M1-22] `PostCard.tsx` — 썸네일/텍스트 카드
-- [ ] [M1-23] `PostList.tsx` — 그리드/리스트 뷰
-- [ ] [M1-24] 뷰 토글 (그리드/리스트) + localStorage 저장
-- [ ] [M1-25] 태그 필터 패널
-- [ ] [M1-26] 무한 스크롤 (초기 12장 + 추가 12장)
-- [ ] [M1-27] 빈 상태 / Suspense fallback 스켈레톤
+- [x] [M1-22] `PostCard.tsx` — 썸네일/텍스트 카드
+- [x] [M1-23] `PostList.tsx` — 그리드/리스트 뷰
+- [x] [M1-24] 뷰 토글 (그리드/리스트) + localStorage 저장
+- [x] [M1-25] 태그 필터 패널
+- [x] [M1-26] 무한 스크롤 (초기 12장 + 추가 12장)
+- [x] [M1-27] 빈 상태 / Suspense fallback 스켈레톤
 
 ### 포스트 상세 (FEAT-POST-DETAIL)
 

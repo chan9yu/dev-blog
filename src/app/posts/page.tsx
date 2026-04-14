@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import { PostList, PostListSkeleton } from "@/features/posts";
+import { Container } from "@/shared/components/Container";
+import { postsFixture } from "@/shared/fixtures/posts";
+import { tagsFixture } from "@/shared/fixtures/tags";
+import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 
 export const metadata: Metadata = {
 	title: "Posts",
@@ -8,12 +15,21 @@ export const metadata: Metadata = {
 };
 
 export default function PostsPage() {
+	const publicPosts = postsFixture
+		.filter((post) => !post.private)
+		.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail) }));
+
 	return (
-		<section className="max-w-content mx-auto px-4 py-10 sm:px-6 lg:px-8">
-			<h1 className="text-h1">Posts</h1>
-			<p className="text-muted-foreground mt-4">
-				M1에서 포스트 목록 UI 구현 예정 (그리드/리스트 토글 · 태그 필터 · 무한 스크롤).
-			</p>
-		</section>
+		<Container>
+			<div className="space-y-10 py-10 lg:py-14">
+				<header className="space-y-2">
+					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">Posts</h1>
+					<p className="text-muted-foreground text-sm">총 {publicPosts.length}개의 글</p>
+				</header>
+				<Suspense fallback={<PostListSkeleton />}>
+					<PostList posts={publicPosts} tags={tagsFixture} />
+				</Suspense>
+			</div>
+		</Container>
 	);
 }

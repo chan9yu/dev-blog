@@ -6,13 +6,18 @@ import { TrendingTags } from "@/features/tags";
 import { Container } from "@/shared/components/Container";
 import { postsFixture } from "@/shared/fixtures/posts";
 import { trendingFixture } from "@/shared/fixtures/trending";
+import type { PostSummary } from "@/shared/types";
+import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 
 import { HomeHero } from "./HomeHero";
 
 const RECENT_POSTS_LIMIT = 6;
 
+const resolveThumbnails = (items: PostSummary[]) =>
+	items.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail) }));
+
 export default function HomePage() {
-	const recentPosts = postsFixture.filter((post) => !post.private).slice(0, RECENT_POSTS_LIMIT);
+	const recentPosts = resolveThumbnails(postsFixture.filter((post) => !post.private).slice(0, RECENT_POSTS_LIMIT));
 	const { popularPosts, trendingSeries, trendingTags } = trendingFixture;
 
 	return (

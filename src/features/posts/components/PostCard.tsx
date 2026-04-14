@@ -1,6 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,22 +12,7 @@ type PostCardProps = {
 	priority?: boolean;
 };
 
-/**
- * 빌드 타임(RSC)에 public/ 아래 썸네일 파일 존재 여부를 확인하고, 없으면 공용 placeholder로 폴백.
- *
- * **주의 — 이 함수는 Node.js 런타임 전용**이다. PostCard를 `"use client"` 컴포넌트에서 호출하거나
- * 클라이언트 번들에 포함시키면 `fs` 모듈을 찾지 못해 런타임 크래시가 발생한다.
- * M2에서 `features/posts/services/getAllPosts`가 도입되면 이 정규화 로직이 서비스 레이어로 이관되어
- * `PostSummary.thumbnail`이 빌드 타임에 한 번 정규화된 값을 가지게 된다.
- */
-function resolveThumbnailSrc(thumbnail: string | null): string | null {
-	if (!thumbnail) return null;
-	const publicPath = path.join(process.cwd(), "public", thumbnail.replace(/^\//, ""));
-	return fs.existsSync(publicPath) ? thumbnail : "/posts/placeholder.svg";
-}
-
 export function PostCard({ post, variant = "grid", priority = false }: PostCardProps) {
-	const thumbnailSrc = resolveThumbnailSrc(post.thumbnail);
 	const maxTags = variant === "list" ? 3 : 2;
 	const visibleTags = post.tags.slice(0, maxTags);
 	const hiddenCount = post.tags.length - visibleTags.length;
@@ -44,10 +26,10 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 				"focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 			)}
 		>
-			{thumbnailSrc && (
+			{post.thumbnail && (
 				<div className="relative aspect-video w-full overflow-hidden">
 					<Image
-						src={thumbnailSrc}
+						src={post.thumbnail}
 						alt=""
 						fill
 						priority={priority}
