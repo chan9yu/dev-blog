@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+
+import { Container } from "@/shared/components/Container";
+import { seriesFixture } from "@/shared/fixtures/series";
 
 export const metadata: Metadata = {
 	title: "Series",
@@ -9,9 +13,45 @@ export const metadata: Metadata = {
 
 export default function SeriesHubPage() {
 	return (
-		<section className="max-w-content mx-auto px-4 py-10 sm:px-6 lg:px-8">
-			<h1 className="text-h1">Series</h1>
-			<p className="text-muted-foreground mt-4">M1에서 시리즈 허브 UI 구현 예정 (카드 + 미리보기).</p>
-		</section>
+		<Container>
+			<div className="space-y-10 py-10 lg:py-14">
+				<header className="space-y-2">
+					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">Series</h1>
+					<p className="text-muted-foreground text-sm">총 {seriesFixture.length}개의 시리즈</p>
+				</header>
+
+				{seriesFixture.length === 0 ? (
+					<p className="text-muted-foreground py-12 text-center text-sm">아직 시리즈가 없습니다.</p>
+				) : (
+					<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						{seriesFixture.map((series) => {
+							const latest = series.posts[series.posts.length - 1];
+							return (
+								<li key={series.slug}>
+									<Link
+										href={`/series/${series.slug}`}
+										className="group bg-card border-border focus-visible:ring-ring block space-y-3 rounded-xl border p-5 transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+									>
+										<div className="flex items-center justify-between gap-2">
+											<h2 className="text-card-foreground group-hover:text-accent text-lg font-bold tracking-tight transition-colors">
+												{series.name}
+											</h2>
+											<span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium">
+												{series.posts.length}편
+											</span>
+										</div>
+										{latest && (
+											<p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+												최신 편: {latest.title}
+											</p>
+										)}
+									</Link>
+								</li>
+							);
+						})}
+					</ul>
+				)}
+			</div>
+		</Container>
 	);
 }

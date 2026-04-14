@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 
+import { TagChip } from "@/features/tags";
+import { Container } from "@/shared/components/Container";
+import { tagsFixture } from "@/shared/fixtures/tags";
+
 export const metadata: Metadata = {
 	title: "Tags",
 	description:
@@ -9,9 +13,25 @@ export const metadata: Metadata = {
 
 export default function TagsHubPage() {
 	return (
-		<section className="max-w-content mx-auto px-4 py-10 sm:px-6 lg:px-8">
-			<h1 className="text-h1">Tags</h1>
-			<p className="text-muted-foreground mt-4">M1에서 태그 허브 UI 구현 예정 (카드 그리드 · 각 태그별 포스트 수).</p>
-		</section>
+		<Container>
+			<div className="space-y-10 py-10 lg:py-14">
+				<header className="space-y-2">
+					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">Tags</h1>
+					<p className="text-muted-foreground text-sm">총 {tagsFixture.length}개의 태그</p>
+				</header>
+
+				{tagsFixture.length === 0 ? (
+					<p className="text-muted-foreground py-12 text-center text-sm">아직 태그가 없습니다.</p>
+				) : (
+					<ul className="flex flex-wrap gap-3">
+						{tagsFixture.map((tag) => (
+							<li key={tag.slug}>
+								<TagChip tag={tag.tag} slug={tag.slug} count={tag.count} />
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		</Container>
 	);
 }

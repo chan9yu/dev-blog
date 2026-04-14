@@ -127,15 +127,15 @@
 
 ### 태그 (FEAT-TAGS)
 
-- [ ] [M1-44] `TagHub` 페이지 — 태그 카드 그리드
-- [ ] [M1-45] `TagDetail` 페이지 — 태그별 포스트 목록
-- [ ] [M1-46] `TagChip.tsx` — 태그 칩 컴포넌트
+- [x] [M1-44] `TagHub` 페이지 — 태그 카드 그리드
+- [x] [M1-45] `TagDetail` 페이지 — 태그별 포스트 목록
+- [x] [M1-46] `TagChip.tsx` — 태그 칩 컴포넌트
 
 ### 시리즈 (FEAT-SERIES)
 
-- [ ] [M1-47] `SeriesHub` 페이지 — 시리즈 카드 + 미리보기
-- [ ] [M1-48] `SeriesDetail` 페이지 — 헤더 + 순서 네비 + 목록
-- [ ] [M1-49] `SeriesNavigation.tsx` — 이전/다음 시리즈 포스트
+- [x] [M1-47] `SeriesHub` 페이지 — 시리즈 카드 + 미리보기
+- [x] [M1-48] `SeriesDetail` 페이지 — 헤더 + 순서 네비 + 목록
+- [x] [M1-49] `SeriesNavigation.tsx` — 이전/다음 시리즈 포스트
 
 ### About (FEAT-ABOUT)
 
