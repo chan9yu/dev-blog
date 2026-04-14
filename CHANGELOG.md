@@ -218,6 +218,33 @@ M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든
 - `src/shared/types/index.ts` barrel 업데이트 — 2종 추가 export.
 - `src/features/posts/index.ts` 갱신 — placeholder 주석의 "M1-15 본편에서 보충" 문구 제거, `AdjacentPosts`·`RelatedPost` 재export 추가로 MOD-posts 공개 API의 타입 계약(PRD §7.1) 완성.
 
+### Added (M1-16~M1-21: 홈 FEAT-HOME UI)
+
+홈 페이지의 Hero·최근 포스트·사이드바(Popular Posts·Trending Series·Trending Tags)를 더미 fixture 기반으로 완성. 레거시 `.existing_version/src/app/page.tsx` UX를 현 프로젝트 토큰·규약(shadcn alias·Tailwind 4 표준)으로 번역.
+
+- **[M1-16]** `src/app/HomeHero.tsx` — H1 + 소개 2문단 + "최신 글 보기" CTA + SocialLinks. `lucide-react` 최신 버전에서 Github/Linkedin 브랜드 마크가 제거되어 `Code2`/`Briefcase`로 임시 대체(향후 `@svgr/webpack` 도입 시 공식 브랜드 SVG로 교체).
+- **[M1-17]** `src/features/posts/components/PostCard.tsx` — RSC 카드(`variant: "list" | "grid"`). `fs.existsSync`로 썸네일 파일 존재 확인 + `/posts/placeholder.svg` 폴백. `priority` prop으로 LCP 후보 2장 지정. `motion-safe:` 가드로 prefers-reduced-motion 존중.
+- **[M1-17]** `public/posts/placeholder.svg` — 1200×630 그라디언트 placeholder (썸네일 누락 시 사용).
+- **[M1-18]** `src/features/posts/components/PopularPosts.tsx` — `<ol>` 5건 랭킹. 순번 `aria-hidden` + Link `aria-label`로 스크린리더 최적화.
+- **[M1-19]** `src/features/series/components/TrendingSeries.tsx` — `<ul>` 3건. Link `aria-label`로 시리즈명·편수 음성 안내.
+- **[M1-20]** `src/features/tags/components/TrendingTags.tsx` — 태그 chip 10건. Link `aria-label`로 태그명·글 수 안내.
+- **[M1-21]** `src/app/page.tsx` — `Container` + `flex-col lg:flex-row` 반응형. main 영역 + sticky 사이드바(`lg:sticky lg:top-24 lg:w-64`). fixture 필터(`postsFixture.filter(!private).slice(0, 6)`)로 최근 포스트 주입.
+- **barrel 업데이트**: `features/{posts,series,tags}/components/index.ts` leaf barrel 신규, 각 `features/*/index.ts`에서 컴포넌트 재export 추가.
+- **공통 유틸**: `src/shared/utils/formatDate.ts` — dayjs 기반 `YYYY.MM.DD` 포맷.
+
+### Changed (M1-16~21 — 컴파운드 사이클 REVIEW 적용)
+
+3-way REVIEW(react-nextjs-code-reviewer · a11y-auditor · feature-dev:code-reviewer) 결과 반영.
+
+- **Tier 1 a11y**: PostCard Image `alt={post.title}` → `alt=""` (h3 제목 중복 announce 제거, WCAG 1.1.1). "전체 보기 →" Link `aria-label="최근 포스트 전체 보기"` + `→`를 `<span aria-hidden>`으로 분리 (WCAG 2.4.4). PopularPosts 순번 `aria-hidden` + Link `aria-label="인기 포스트 N위: 제목"` (WCAG 1.3.1).
+- **Tier 2 a11y**: PopularPosts/TrendingSeries Link에 `focus-visible:ring-2 ring-offset-2 ring-ring` 추가 (WCAG 1.4.1 색 단독 의존 해소). TrendingTags `text-[10px]` arbitrary → `text-xs`(styling 룰 위반 해결) + Link `aria-label` 추가. HomeHero `chan9yu` → `<span lang="en">chan9yu</span>` (한국어 TTS 철자 읽기 개선). `<aside>`에 `aria-label="추천 블록"` + 사이드바 섹션 H2를 `<span lang="en">`으로 감쌈.
+- **Tier 2 React**: PostCard hover 애니메이션 `motion-safe:` 가드 (WCAG 2.3.3). `resolveThumbnailSrc` 함수에 "Node.js 런타임 전용, 클라이언트 호출 금지" 주석 + M2 services 레이어 이관 계획 명시. `SOCIAL_ITEMS`를 모듈 top-level 상수로 이전(렌더마다 JSX 재생성 회피).
+- **Tier 2/3 후속 이관**: `fs.existsSync` → M2 `getAllPosts` 서비스 레이어에서 정규화(현재는 fixture 기반이라 성능 영향 작음). 브랜드 아이콘 공식 SVG + `@svgr/webpack` 도입(별도 태스크). page.tsx의 fixture 필터링 → `features/posts/services/getRecentPosts` 이관(M2).
+
+### Dependencies (M1)
+
+- `dayjs` `^1.11.20` (prod, 신규) — ISO 날짜 포맷. 초기에는 `YYYY.MM.DD` 포맷만 사용, M1-28 포스트 상세에서 `relativeTime` 플러그인 + `locale/ko` 추가 예정.
+
 ### Dependencies
 
 - `clsx` (prod) — 조건부 className 결합.

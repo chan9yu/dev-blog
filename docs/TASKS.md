@@ -90,12 +90,12 @@
 
 ### 홈 (FEAT-HOME)
 
-- [ ] [M1-16] Hero 섹션 — 소개 + 프로필 이미지 + CTA
-- [ ] [M1-17] 최근 포스트 카드 6장
-- [ ] [M1-18] 사이드바 Popular Posts 5건
-- [ ] [M1-19] 사이드바 Trending Series 3건
-- [ ] [M1-20] 사이드바 Trending Tags 10건
-- [ ] [M1-21] 홈 반응형 레이아웃 (2-column / 1-column)
+- [x] [M1-16] Hero 섹션 — 소개 + 프로필 이미지 + CTA
+- [x] [M1-17] 최근 포스트 카드 6장
+- [x] [M1-18] 사이드바 Popular Posts 5건
+- [x] [M1-19] 사이드바 Trending Series 3건
+- [x] [M1-20] 사이드바 Trending Tags 10건
+- [x] [M1-21] 홈 반응형 레이아웃 (2-column / 1-column)
 
 ### 포스트 목록 (FEAT-POSTS-LIST)
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 15     | 25%     |
+| M1 UI Skeleton         | 61      | 21     | 34%     |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **48** | **24%** |
+| **Total**              | **196** | **54** | **28%** |
