@@ -212,6 +212,12 @@ M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든
 - **[M1-14]** `features/about/index.ts` — MOD-about. `getAboutContent`는 M4.
 - **1-way REVIEW (feature-dev:code-reviewer)** — 9개 파일 전부 고신뢰도 이슈 0건. Law 2/3 준수, leaf barrel 원칙 유지, TypeScript strict 위반 없음.
 
+### Added (M1-15: 공통 타입 본편)
+
+- **[M1-15]** `src/shared/types/post.ts`에 `AdjacentPosts`·`RelatedPost` 타입 2종 추가. M1-01~05 단계에서 선행 생성한 타입 서브셋(PostSummary·PostDetail·TocItem·Series·TagCount·TrendingSnapshot)과 합쳐 PRD_TECHNICAL §5.2 정의 전체를 구현 완료.
+- `src/shared/types/index.ts` barrel 업데이트 — 2종 추가 export.
+- `src/features/posts/index.ts` 갱신 — placeholder 주석의 "M1-15 본편에서 보충" 문구 제거, `AdjacentPosts`·`RelatedPost` 재export 추가로 MOD-posts 공개 API의 타입 계약(PRD §7.1) 완성.
+
 ### Dependencies
 
 - `clsx` (prod) — 조건부 className 결합.

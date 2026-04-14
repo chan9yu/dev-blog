@@ -86,7 +86,7 @@
 
 ### 공통 타입
 
-- [ ] [M1-15] `shared/types/` — PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot
+- [x] [M1-15] `shared/types/` — PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot
 
 ### 홈 (FEAT-HOME)
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 14     | 23%     |
+| M1 UI Skeleton         | 61      | 15     | 25%     |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **47** | **24%** |
+| **Total**              | **196** | **48** | **24%** |
