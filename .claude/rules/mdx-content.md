@@ -20,9 +20,7 @@ tags: ["react", "react-19", "suspense"] # 3~5개, kebab-case, 영문
 series: # 선택
   slug: "react-19-deep-dive"
   order: 2
-cover: # 선택, OG 이미지용
-  src: "./images/cover.png"
-  alt: "React 19 use() 훅 다이어그램"
+thumbnail: "/posts/react-19-use-hook/images/thumbnail.png" # 선택, OG 이미지·카드 썸네일용. `/posts/{slug}/images/*` 평탄 문자열. alt 텍스트는 렌더 시점에 frontmatter.title 재사용 (별도 필드 없음).
 draft: false # true면 빌드에서 제외
 ---
 ```

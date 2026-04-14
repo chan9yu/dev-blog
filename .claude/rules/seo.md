@@ -18,7 +18,7 @@
 - 동적 생성 엔드포인트: `src/app/og/route.tsx`
 - 크기: 1200×630 (Open Graph 표준)
 - 포스트: 제목·시리즈명·발행일 포함. 이미지 텍스트는 **폰트 내장** 필수 (Pretendard Variable subset).
-- frontmatter에 `cover` 있으면 정적 이미지 우선, 없으면 `/og?title=...&tag=...` 동적 생성.
+- frontmatter에 `thumbnail` 있으면 정적 이미지 우선, 없으면 `/og?title=...&tag=...` 동적 생성.
 
 ## Sitemap & RSS
 

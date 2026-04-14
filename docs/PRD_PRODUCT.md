@@ -424,17 +424,17 @@ status: Draft
 
 ### 7.1 Frontmatter 규칙 (저자 관점)
 
-| 필드          | 타입              | 필수 | 허용값                                 | 예시                                      | 위반 시 빌드                        |
-| ------------- | ----------------- | ---- | -------------------------------------- | ----------------------------------------- | ----------------------------------- |
-| `title`       | string            | ✓    | 1자 이상                               | `"React Server Component 완전 정복"`      | 실패                                |
-| `description` | string            | ✓    | 1자 이상, 권장 40~140자                | `"RSC의 렌더 모델과 실무 엣지케이스"`     | 실패                                |
-| `slug`        | string            | ✓    | `^[a-z0-9-]+$`, 디렉토리명과 동일      | `"rsc-deep-dive"`                         | 실패                                |
-| `date`        | string (ISO 8601) | ✓    | `YYYY-MM-DD`                           | `"2026-04-12"`                            | 실패                                |
-| `private`     | boolean           | —    | true/false (기본 false)                | `false`                                   | —                                   |
-| `tags`        | string[]          | —    | 소문자 권장, 공백 허용                 | `["react", "next.js"]`                    | —                                   |
-| `thumbnail`   | string \| null    | —    | `/posts/{slug}/images/*` 또는 원격 URL | `"/posts/rsc-deep-dive/images/cover.png"` | —                                   |
-| `series`      | string \| null    | —    | 시리즈 이름. `seriesOrder`와 쌍        | `"Next.js 정복기"`                        | `seriesOrder`와 짝 맞지 않으면 실패 |
-| `seriesOrder` | integer \| null   | —    | 1 이상 양의 정수                       | `3`                                       | —                                   |
+| 필드          | 타입              | 필수 | 허용값                                 | 예시                                          | 위반 시 빌드                        |
+| ------------- | ----------------- | ---- | -------------------------------------- | --------------------------------------------- | ----------------------------------- |
+| `title`       | string            | ✓    | 1자 이상                               | `"React Server Component 완전 정복"`          | 실패                                |
+| `description` | string            | ✓    | 1자 이상, 권장 40~140자                | `"RSC의 렌더 모델과 실무 엣지케이스"`         | 실패                                |
+| `slug`        | string            | ✓    | `^[a-z0-9-]+$`, 디렉토리명과 동일      | `"rsc-deep-dive"`                             | 실패                                |
+| `date`        | string (ISO 8601) | ✓    | `YYYY-MM-DD`                           | `"2026-04-12"`                                | 실패                                |
+| `private`     | boolean           | —    | true/false (기본 false)                | `false`                                       | —                                   |
+| `tags`        | string[]          | —    | 소문자 권장, 공백 허용                 | `["react", "next.js"]`                        | —                                   |
+| `thumbnail`   | string \| null    | —    | `/posts/{slug}/images/*` 또는 원격 URL | `"/posts/rsc-deep-dive/images/thumbnail.png"` | —                                   |
+| `series`      | string \| null    | —    | 시리즈 이름. `seriesOrder`와 쌍        | `"Next.js 정복기"`                            | `seriesOrder`와 짝 맞지 않으면 실패 |
+| `seriesOrder` | integer \| null   | —    | 1 이상 양의 정수                       | `3`                                           | —                                   |
 
 ### 7.2 파일 배치
 
@@ -444,7 +444,7 @@ contents/
    └─ {slug}/
       ├─ index.mdx            ← 이 파일 하나만 본문
       └─ images/              ← 본문에서 참조할 이미지
-         ├─ cover.png
+         ├─ thumbnail.png
          └─ diagram-1.png
 ```
 
@@ -462,7 +462,7 @@ contents/
 ### 7.4 썸네일 가이드
 
 - 권장 비율 16:9, 해상도 1600×900, 용량 < 300KB (webp/avif 권장).
-- 경로: `/posts/{slug}/images/cover.{ext}`.
+- 경로: `/posts/{slug}/images/thumbnail.{ext}`.
 - 미설정 시 공유·목록에서 텍스트 카드로 자동 대체.
 
 ### 7.5 Private 포스트 정책
