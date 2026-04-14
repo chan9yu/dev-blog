@@ -150,19 +150,19 @@
 
 ### 조회수 · 테마 · 라이트박스 · 댓글
 
-- [ ] [M1-55] `ViewCounter.tsx` — 아이콘 + 숫자 placeholder
-- [ ] [M1-56] `ThemeSwitcher.tsx` — Sun/Moon 토글
-- [ ] [M1-57] `LightboxProvider.tsx` + `ImageLightbox.tsx`
-- [ ] [M1-58] `CommentsSection.tsx` — Giscus placeholder
+- [x] [M1-55] `ViewCounter.tsx` — 아이콘 + 숫자 placeholder
+- [x] [M1-56] `ThemeSwitcher.tsx` — Sun/Moon 토글
+- [x] [M1-57] `LightboxProvider.tsx` + `ImageLightbox.tsx`
+- [x] [M1-58] `CommentsSection.tsx` — Giscus placeholder
 
 ### 모션 & 전환
 
-- [ ] [M1-59] `FadeInWhenVisible.tsx`
-- [ ] [M1-60] `PageTransition.tsx`
+- [x] [M1-59] `FadeInWhenVisible.tsx`
+- [x] [M1-60] `PageTransition.tsx`
 
 ### shadcn/ui
 
-- [ ] [M1-61] 필요한 프리미티브 설치 (Dialog, DropdownMenu, Toast, Badge, Accordion 등)
+- [x] [M1-61] 필요한 프리미티브 설치 (Dialog, DropdownMenu, Toast, Badge, Accordion 등)
 
 ---
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 21     | 34%     |
+| M1 UI Skeleton         | 61      | 61     | 100%    |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **54** | **28%** |
+| **Total**              | **196** | **94** | **48%** |

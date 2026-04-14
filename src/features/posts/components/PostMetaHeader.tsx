@@ -1,6 +1,7 @@
-import { Calendar, Clock, Eye } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 
+import { ViewCounter } from "@/features/views";
 import type { PostSummary } from "@/shared/types";
 import { formatDate } from "@/shared/utils/formatDate";
 
@@ -29,9 +30,10 @@ export function PostMetaHeader({ post }: PostMetaHeaderProps) {
 					<dd>{post.readingTimeMinutes}분</dd>
 				</div>
 				<div className="inline-flex items-center gap-1.5">
-					<Eye className="size-4" aria-hidden />
 					<dt className="sr-only">조회수</dt>
-					<dd>—</dd>
+					<dd>
+						<ViewCounter slug={post.slug} />
+					</dd>
 				</div>
 			</dl>
 			{post.tags.length > 0 && (

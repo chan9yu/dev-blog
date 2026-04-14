@@ -241,9 +241,32 @@ M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든
 - **Tier 2 React**: PostCard hover 애니메이션 `motion-safe:` 가드 (WCAG 2.3.3). `resolveThumbnailSrc` 함수에 "Node.js 런타임 전용, 클라이언트 호출 금지" 주석 + M2 services 레이어 이관 계획 명시. `SOCIAL_ITEMS`를 모듈 top-level 상수로 이전(렌더마다 JSX 재생성 회피).
 - **Tier 2/3 후속 이관**: `fs.existsSync` → M2 `getAllPosts` 서비스 레이어에서 정규화(현재는 fixture 기반이라 성능 영향 작음). 브랜드 아이콘 공식 SVG + `@svgr/webpack` 도입(별도 태스크). page.tsx의 fixture 필터링 → `features/posts/services/getRecentPosts` 이관(M2).
 
+### Added (M1-22~M1-60 + M1-61: 나머지 UI 대량 일괄)
+
+사용자 "M1 일괄 끝내기" 지시로 포스트 목록·포스트 상세·MDX 컴포넌트·태그·시리즈·About·검색·조회수·테마·라이트박스·댓글·모션·shadcn primitives를 Phase 6분할로 완성. 각 컴포넌트는 동작하는 뼈대(fixture 기반 렌더·주요 UX 흐름 가능) 수준이며 실 로직은 M2~M4에서 보강된다.
+
+**Phase B (M1-22~27 포스트 목록)**: PostCard variant list/grid + 썸네일 파일 존재 확인 유틸 `shared/utils/resolveThumbnail.ts` 서버 전용 분리. PostList (Client, useSyncExternalStore localStorage 뷰 토글 + 태그 필터 + IntersectionObserver 무한 스크롤 12건 페이지네이션). PostListSkeleton (Suspense fallback). app/posts/page.tsx 전면 재작성.
+
+**Phase C (M1-28~43 포스트 상세 + MDX)**: ReadingProgress·ScrollToTop·ScrollReset·PostMetaHeader·Toc(IntersectionObserver current heading)·PostNavigation·RelatedPosts·ShareButtons(Clipboard+X+LinkedIn+Web Share)·MdxHeading(createElement)·MdxPre(복사 버튼)·MdxImage·MdxLink·MdxTable·Callout(4 variant)·CustomMDX 컴포넌트 맵·SeriesNavigation 배지 + 이전/다음 편. app/posts/[slug]/page.tsx 전면 재작성.
+
+**Phase D (M1-44~49 태그·시리즈)**: TagChip(size sm/md) + app/tags/page.tsx TagHub + app/tags/[tag]/page.tsx TagDetail + app/series/page.tsx SeriesHub + app/series/[slug]/page.tsx SeriesDetail(numbered 타임라인).
+
+**Phase E (M1-50~54 About + 검색 + Header/Footer 통합)**: AboutProfile · SearchTrigger(shadcn Dialog + input + 결과 리스트 + 인기 태그 빈 상태) · useSearchShortcut Cmd+K. app/layout.tsx 재구성 — Header(searchSlot/themeSlot) + Footer + ScrollReset 통합, cacheComponents 모드 대응을 위해 usePathname 사용 컴포넌트를 `<Suspense>`로 감쌈.
+
+**Phase F (M1-55~60 조회수·테마·라이트박스·댓글·모션)**: ViewCounter · ThemeSwitcher(useSyncExternalStore 기반 mounted 감지로 react-hooks/set-state-in-effect 룰 준수) · LightboxProvider Context + useLightbox + ImageLightbox · CommentsSection(IntersectionObserver lazy-mount) · FadeInWhenVisible · PageTransition(CSS 기반, framer-motion 없음).
+
+**Phase G (M1-61 shadcn)**: Dialog·DropdownMenu·Badge·Accordion·Sonner 추가 + shadcn.md 규약 적용(PascalCase 리네이밍·React 네임스페이스 교체). class-variance-authority 신규 의존성.
+
+**후속 이관 항목 (Week 0 GC 또는 M2+)**: shadcn Compound 패턴 전환(Object.assign 패턴). 브랜드 아이콘 공식 SVG + @svgr/webpack 도입. HomeHero·AboutProfile의 ICON_MAP 중복 shared 승격. fixture 필터링 로직을 features/posts/services/로 이관. findAdjacent/findRelated 인라인 로직을 M4 서비스 레이어로 이관.
+
 ### Dependencies (M1)
 
 - `dayjs` `^1.11.20` (prod, 신규) — ISO 날짜 포맷. 초기에는 `YYYY.MM.DD` 포맷만 사용, M1-28 포스트 상세에서 `relativeTime` 플러그인 + `locale/ko` 추가 예정.
+- `class-variance-authority` `^0.7.1` (prod, 신규) — shadcn Badge의 cva 변형 시스템 의존.
+
+### Milestone (M1 UI Skeleton) — 61/61 완료
+
+M1 마일스톤의 모든 태스크가 완료되어 더미 fixture 기반으로 전 페이지 UI가 동작. Total 진행률 94/196 (48%). M1 Exit 기준("더미 데이터 기준 모든 FEAT-\* UI 통과, 네비게이션으로 UX 흐름 완결") 충족. milestone-gate 실행은 후속 단계에서 사용자 요청 시.
 
 ### Dependencies
 

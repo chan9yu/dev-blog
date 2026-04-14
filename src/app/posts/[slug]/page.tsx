@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { CommentsSection } from "@/features/comments";
 import {
 	PostMetaHeader,
 	PostNavigation,
@@ -102,6 +103,8 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 						<PostNavigation adjacent={adjacent} />
 
 						<RelatedPosts posts={related} />
+
+						<CommentsSection slug={summary.slug} />
 					</article>
 
 					<aside className="w-full lg:sticky lg:top-24 lg:w-64 lg:shrink-0 lg:self-start">

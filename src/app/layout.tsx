@@ -6,6 +6,7 @@ import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
 
 import { SearchTrigger } from "@/features/search";
+import { ThemeSwitcher } from "@/features/theme";
 import { Footer } from "@/shared/components/Footer";
 import { Header } from "@/shared/components/Header";
 import { ScrollReset } from "@/shared/components/ScrollReset";
@@ -68,7 +69,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						<ScrollReset />
 					</Suspense>
 					<Suspense fallback={<div className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />}>
-						<Header searchSlot={<SearchTrigger posts={searchablePosts} />} />
+						<Header searchSlot={<SearchTrigger posts={searchablePosts} />} themeSlot={<ThemeSwitcher />} />
 					</Suspense>
 					<main id="main-content" tabIndex={-1} className="flex-1">
 						{children}
