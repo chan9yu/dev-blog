@@ -66,11 +66,11 @@
 
 ### Fixture 데이터
 
-- [ ] [M1-01] `shared/fixtures/posts.ts` — 더미 PostSummary 12건+
-- [ ] [M1-02] `shared/fixtures/post-details.ts` — 더미 PostDetail (TOC·MDX 포함)
-- [ ] [M1-03] `shared/fixtures/tags.ts` — 더미 TagCount
-- [ ] [M1-04] `shared/fixtures/series.ts` — 더미 Series
-- [ ] [M1-05] `shared/fixtures/trending.ts` — 더미 TrendingSnapshot
+- [x] [M1-01] `shared/fixtures/posts.ts` — 더미 PostSummary 12건+
+- [x] [M1-02] `shared/fixtures/post-details.ts` — 더미 PostDetail (TOC·MDX 포함)
+- [x] [M1-03] `shared/fixtures/tags.ts` — 더미 TagCount
+- [x] [M1-04] `shared/fixtures/series.ts` — 더미 Series
+- [x] [M1-05] `shared/fixtures/trending.ts` — 더미 TrendingSnapshot
 
 ### Feature 모듈 뼈대 (index.ts)
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 0      | 0%      |
+| M1 UI Skeleton         | 61      | 5      | 8%      |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **33** | **17%** |
+| **Total**              | **196** | **38** | **19%** |

@@ -177,6 +177,26 @@ ultrathink 모드에서 2개 Explore 에이전트 병렬 감사 → Tier A(drift
 
 중복 점검: `autonomy.md` ↔ `workflow.md` Git 쓰기 규칙이 부분 겹침이지만 각 문서 맥락이 달라 유지 (autonomy는 자율 경계, workflow는 실행 절차). 15개 룰 파일 간 치명적 중복은 없음.
 
+### Added (M1-01~M1-05: Fixture 데이터 레이어 + M1-15 선행 서브셋)
+
+M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든 페이지·컴포넌트 작업의 기반 제공. 타입 정의(M1-15)는 fixture가 import해야 하므로 필요 서브셋(`PostSummary`·`PostDetail`·`TocItem`·`Series`·`TagCount`·`TrendingSnapshot`)만 선행 생성 — `AdjacentPosts`·`RelatedPost`는 M1-15 본편에서 보충.
+
+- **[M1-01]** `src/shared/fixtures/posts.ts` — `PostSummary` 13건 (public 12 + private 1). 시리즈 3종(react-19-deep-dive 3편 · nextjs-app-router-patterns 3편 · typescript-type-system 2편) + 스탠드얼론 5편. thumbnail 7/13 할당(6건 null). date desc 정렬.
+- **[M1-02]** `src/shared/fixtures/post-details.ts` — `PostDetail` 대표 3건 (시리즈·스탠드얼론·private 각 1). `findSummary` helper로 `postsFixture` 참조, slug 누락 시 module-level throw로 경계 불일치 조기 감지. toc·contentMdx heading 1:1 매칭.
+- **[M1-03]** `src/shared/fixtures/tags.ts` — `TagCount` 20종. `aggregateTagCounts()` 함수로 `postsFixture`에서 **derive**(3-way 리뷰 Tier 2 반영). private 포스트 태그(`meta`) ADR-007 정책에 따라 자동 제외. count desc / tag asc 정렬.
+- **[M1-04]** `src/shared/fixtures/series.ts` — `Series` 3개. `postsFixture`에서 filter+sort로 derive. seriesOrder 오름차순 보장.
+- **[M1-05]** `src/shared/fixtures/trending.ts` — `TrendingSnapshot` 1개. posts/tags/series에서 파생(popularPosts 5건 · trendingSeries 3건 · trendingTags 10건). `generatedAt` 고정 ISO로 재현성 확보. popularPosts는 KV 부재로 "최근 발행순 fallback"으로 의도 대체(M4-13에서 실 스냅샷 생성기로 교체).
+- **shared/fixtures/index.ts·shared/types/index.ts** — leaf barrel. PRD_TECHNICAL §5.1 Zod 스키마 필드 시그니처와 동일 (M2 `z.infer` 교체 무손실).
+
+### Changed (M1-01~05 — 컴파운드 사이클 REVIEW 적용)
+
+3개 리뷰 에이전트(react-nextjs-code-reviewer · boundary-mismatch-qa · feature-dev:code-reviewer) 병렬 감사 결과.
+
+- **Tier 2**: `tagsFixture` 수동 정적 배열 → `aggregateTagCounts` derive 함수로 전환. SSOT 단일화로 `postsFixture` 변경 시 silent drift 차단. 런타임 sanity check으로 기존 수동 집계 결과(top3 react=5 / nextjs=3 / react-19=3 / 총 20종 / `meta` 미포함)와 1:1 일치 확인.
+- **Tier 2**: `findSummary` module-level throw의 의도를 주석으로 명시(fixture 단계 경계 불일치 조기 감지 가드).
+- **Tier 1 정책 반영 (사용자 승인 옵션 A)**: PRD_TECHNICAL `thumbnail: string | null` vs mdx-content.md/seo.md `cover: {src, alt}` 규약 충돌을 **실데이터 우선 원칙**으로 해결. 기존 MDX 포스트 frontmatter가 이미 `thumbnail: "..."` 평탄 문자열을 사용 중이므로 `.claude/rules/mdx-content.md` frontmatter 예시·`.claude/rules/seo.md` OG 설명을 `thumbnail`로 통일. alt 텍스트 별도 필드는 도입하지 않고 렌더 시점에 `frontmatter.title`을 재사용하는 컨벤션 채택(WCAG 1.1.1 충족, 데이터 중복 회피). 파일명 예시도 일관화: `docs/PRD_PRODUCT.md` §7.1 표 / §7.2 디렉토리 트리 / §7.4 썸네일 경로를 `cover.png`·`cover.{ext}` → `thumbnail.png`·`thumbnail.{ext}`로 통일(실제 기존 포스트 `/posts/{slug}/images/thumbnail.png`와 일치).
+- **Tier 3 후속 이관**: Zod refine(`series`/`seriesOrder` 동시 null 제약)의 discriminated union 표현, `seriesSlug` literal union 도입, `TagCount.slug` 중복 필드 재검토 — M1-15 본편 또는 M2 Zod 스키마 설계 시 처리.
+
 ### Dependencies
 
 - `clsx` (prod) — 조건부 className 결합.
