@@ -1,0 +1,1 @@
+export { useSearchShortcut } from "./useSearchShortcut";

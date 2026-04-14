@@ -139,14 +139,14 @@
 
 ### About (FEAT-ABOUT)
 
-- [ ] [M1-50] `AboutProfile` — 프로필 + 소셜 + 마크다운 placeholder
+- [x] [M1-50] `AboutProfile` — 프로필 + 소셜 + 마크다운 placeholder
 
 ### 검색 (FEAT-SEARCH)
 
-- [ ] [M1-51] `SearchButton.tsx` — 헤더 검색 아이콘
-- [ ] [M1-52] `SearchModal.tsx` — 모달 + 입력 + 결과 리스트
-- [ ] [M1-53] `useSearchShortcut` — Cmd+K / Ctrl+K
-- [ ] [M1-54] 검색 0건 상태 — 안내 + 태그 추천
+- [x] [M1-51] `SearchButton.tsx` — 헤더 검색 아이콘
+- [x] [M1-52] `SearchModal.tsx` — 모달 + 입력 + 결과 리스트
+- [x] [M1-53] `useSearchShortcut` — Cmd+K / Ctrl+K
+- [x] [M1-54] 검색 0건 상태 — 안내 + 태그 추천
 
 ### 조회수 · 테마 · 라이트박스 · 댓글
 

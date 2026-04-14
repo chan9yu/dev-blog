@@ -3,8 +3,14 @@ import "@/shared/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
+import { Suspense } from "react";
 
+import { SearchTrigger } from "@/features/search";
+import { Footer } from "@/shared/components/Footer";
+import { Header } from "@/shared/components/Header";
+import { ScrollReset } from "@/shared/components/ScrollReset";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
+import { postsFixture } from "@/shared/fixtures/posts";
 
 import { Providers } from "./providers";
 
@@ -52,23 +58,22 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
+	const searchablePosts = postsFixture.filter((post) => !post.private);
+
 	return (
 		<html lang="ko" className={pretendard.variable} suppressHydrationWarning>
-			<body className="bg-background text-foreground font-sans antialiased">
+			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
 				<Providers>
-					{/*
-					  Skip link — WCAG 2.4.1 Bypass Blocks.
-					  M1 Header 통합 시 Header 컴포넌트로 이동 예정 (중복 방지 위해 본 블록 제거).
-					*/}
-					<a
-						href="#main-content"
-						className="bg-foreground text-background focus-visible:ring-ring sr-only rounded-md px-3 py-2 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-					>
-						본문으로 건너뛰기
-					</a>
-					<main id="main-content" tabIndex={-1}>
+					<Suspense fallback={null}>
+						<ScrollReset />
+					</Suspense>
+					<Suspense fallback={<div className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />}>
+						<Header searchSlot={<SearchTrigger posts={searchablePosts} />} />
+					</Suspense>
+					<main id="main-content" tabIndex={-1} className="flex-1">
 						{children}
 					</main>
+					<Footer />
 				</Providers>
 			</body>
 		</html>
