@@ -74,15 +74,15 @@
 
 ### Feature 모듈 뼈대 (index.ts)
 
-- [ ] [M1-06] `features/posts/index.ts`
-- [ ] [M1-07] `features/tags/index.ts`
-- [ ] [M1-08] `features/series/index.ts`
-- [ ] [M1-09] `features/search/index.ts`
-- [ ] [M1-10] `features/views/index.ts`
-- [ ] [M1-11] `features/comments/index.ts`
-- [ ] [M1-12] `features/theme/index.ts`
-- [ ] [M1-13] `features/lightbox/index.ts`
-- [ ] [M1-14] `features/about/index.ts`
+- [x] [M1-06] `features/posts/index.ts`
+- [x] [M1-07] `features/tags/index.ts`
+- [x] [M1-08] `features/series/index.ts`
+- [x] [M1-09] `features/search/index.ts`
+- [x] [M1-10] `features/views/index.ts`
+- [x] [M1-11] `features/comments/index.ts`
+- [x] [M1-12] `features/theme/index.ts`
+- [x] [M1-13] `features/lightbox/index.ts`
+- [x] [M1-14] `features/about/index.ts`
 
 ### 공통 타입
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 5      | 8%      |
+| M1 UI Skeleton         | 61      | 14     | 23%     |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **38** | **19%** |
+| **Total**              | **196** | **47** | **24%** |

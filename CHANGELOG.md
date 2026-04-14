@@ -197,6 +197,21 @@ M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든
 - **Tier 1 정책 반영 (사용자 승인 옵션 A)**: PRD_TECHNICAL `thumbnail: string | null` vs mdx-content.md/seo.md `cover: {src, alt}` 규약 충돌을 **실데이터 우선 원칙**으로 해결. 기존 MDX 포스트 frontmatter가 이미 `thumbnail: "..."` 평탄 문자열을 사용 중이므로 `.claude/rules/mdx-content.md` frontmatter 예시·`.claude/rules/seo.md` OG 설명을 `thumbnail`로 통일. alt 텍스트 별도 필드는 도입하지 않고 렌더 시점에 `frontmatter.title`을 재사용하는 컨벤션 채택(WCAG 1.1.1 충족, 데이터 중복 회피). 파일명 예시도 일관화: `docs/PRD_PRODUCT.md` §7.1 표 / §7.2 디렉토리 트리 / §7.4 썸네일 경로를 `cover.png`·`cover.{ext}` → `thumbnail.png`·`thumbnail.{ext}`로 통일(실제 기존 포스트 `/posts/{slug}/images/thumbnail.png`와 일치).
 - **Tier 3 후속 이관**: Zod refine(`series`/`seriesOrder` 동시 null 제약)의 discriminated union 표현, `seriesSlug` literal union 도입, `TagCount.slug` 중복 필드 재검토 — M1-15 본편 또는 M2 Zod 스키마 설계 시 처리.
 
+### Added (M1-06~M1-14: Feature 모듈 뼈대)
+
+9개 feature의 Public API barrel(`src/features/{name}/index.ts`)을 PRD_TECHNICAL §7.1~7.9 계약을 주석으로 반영한 placeholder로 생성. 각 파일은 shared/types만 재export하거나 `export {}`로 모듈 마킹하며, 실 컴포넌트/훅/서비스는 M1-22+ / M2 / M3 / M4 단계에서 단계적으로 추가된다.
+
+- **[M1-06]** `features/posts/index.ts` — MOD-posts. `PostDetail`·`PostSummary`·`TocItem`·`TrendingSnapshot` 재export. `AdjacentPosts`·`RelatedPost`는 M1-15 본편에서 보충.
+- **[M1-07]** `features/tags/index.ts` — MOD-tags. `TagCount` 재export.
+- **[M1-08]** `features/series/index.ts` — MOD-series. `Series` 재export.
+- **[M1-09]** `features/search/index.ts` — MOD-search. `SearchResult` 전용 타입은 M3 구현 시 feature 내부에서 정의.
+- **[M1-10]** `features/views/index.ts` — MOD-views. M3에서 KV 클라이언트·ViewCounter 등 채움.
+- **[M1-11]** `features/comments/index.ts` — MOD-comments. Giscus lazy-mount는 M3.
+- **[M1-12]** `features/theme/index.ts` — MOD-theme. ThemeProvider는 현재 `app/providers.tsx`에 있으며 Provider 2+ 시점(M3)에 이관.
+- **[M1-13]** `features/lightbox/index.ts` — MOD-lightbox. `MdxImage` 연동은 M3.
+- **[M1-14]** `features/about/index.ts` — MOD-about. `getAboutContent`는 M4.
+- **1-way REVIEW (feature-dev:code-reviewer)** — 9개 파일 전부 고신뢰도 이슈 0건. Law 2/3 준수, leaf barrel 원칙 유지, TypeScript strict 위반 없음.
+
 ### Dependencies
 
 - `clsx` (prod) — 조건부 className 결합.
