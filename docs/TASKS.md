@@ -108,22 +108,22 @@
 
 ### 포스트 상세 (FEAT-POST-DETAIL)
 
-- [ ] [M1-28] 메타 헤더 — 제목, 설명, 날짜, 읽기 시간, 태그, 조회수
-- [ ] [M1-29] `ReadingProgress.tsx` — 상단 프로그레스 바
-- [ ] [M1-30] `Toc.tsx` — sticky TOC / 접힘 Accordion
-- [ ] [M1-31] MDX 본문 렌더 영역 (placeholder)
-- [ ] [M1-32] `MdxHeading.tsx` — 자동 id + 앵커 링크
-- [ ] [M1-33] `ShikiCodeBlock.tsx` / `MdxPre.tsx` — 코드 블록 + 복사 버튼
-- [ ] [M1-34] `MdxImage.tsx` — 이미지 + Lightbox 연동 슬롯
-- [ ] [M1-35] `MdxLink.tsx` — 외부/내부 링크 분기
-- [ ] [M1-36] `MdxTable.tsx` — 반응형 테이블
-- [ ] [M1-37] `Callout.tsx` — 주의/팁/경고 박스
-- [ ] [M1-38] 시리즈 네비게이션 — 배지 + 이전/다음
-- [ ] [M1-39] `PostNavigation.tsx` — 이전/다음 포스트 카드
-- [ ] [M1-40] `RelatedPosts.tsx` — 관련 포스트 3장
-- [ ] [M1-41] `ShareButtons.tsx` — 복사/X/LinkedIn/Web Share
-- [ ] [M1-42] `ScrollToTop.tsx` — 우하단 버튼
-- [ ] [M1-43] `ScrollReset.tsx` — 페이지 전환 시 상단 초기화
+- [x] [M1-28] 메타 헤더 — 제목, 설명, 날짜, 읽기 시간, 태그, 조회수
+- [x] [M1-29] `ReadingProgress.tsx` — 상단 프로그레스 바
+- [x] [M1-30] `Toc.tsx` — sticky TOC / 접힘 Accordion
+- [x] [M1-31] MDX 본문 렌더 영역 (placeholder)
+- [x] [M1-32] `MdxHeading.tsx` — 자동 id + 앵커 링크
+- [x] [M1-33] `ShikiCodeBlock.tsx` / `MdxPre.tsx` — 코드 블록 + 복사 버튼
+- [x] [M1-34] `MdxImage.tsx` — 이미지 + Lightbox 연동 슬롯
+- [x] [M1-35] `MdxLink.tsx` — 외부/내부 링크 분기
+- [x] [M1-36] `MdxTable.tsx` — 반응형 테이블
+- [x] [M1-37] `Callout.tsx` — 주의/팁/경고 박스
+- [x] [M1-38] 시리즈 네비게이션 — 배지 + 이전/다음
+- [x] [M1-39] `PostNavigation.tsx` — 이전/다음 포스트 카드
+- [x] [M1-40] `RelatedPosts.tsx` — 관련 포스트 3장
+- [x] [M1-41] `ShareButtons.tsx` — 복사/X/LinkedIn/Web Share
+- [x] [M1-42] `ScrollToTop.tsx` — 우하단 버튼
+- [x] [M1-43] `ScrollReset.tsx` — 페이지 전환 시 상단 초기화
 
 ### 태그 (FEAT-TAGS)
 
