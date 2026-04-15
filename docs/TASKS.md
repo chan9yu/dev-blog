@@ -173,7 +173,7 @@
 ### Submodule
 
 - [x] [M2-01] `contents/` Git Submodule 구성
-- [ ] [M2-02] `scripts/vercel-submodule-workaround.sh`
+- [x] [M2-02] `scripts/vercel-submodule-workaround.sh`
 
 ### 파싱 파이프라인 (TDD)
 

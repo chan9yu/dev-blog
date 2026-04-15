@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M2-02 Vercel Submodule Workaround 스크립트 (2026-04-15)
+
+- `scripts/vercel-submodule-workaround.sh` 신규 작성
+- SSH / HTTPS URL 모두 지원: `.gitmodules` 파싱 → `git config`로 토큰 URL 주입 → `git submodule sync && update`
+- `GITHUB_REPO_CLONE_TOKEN` 미설정 시 exit 1로 빌드 중단
+- `.gitmodules` 파일 자체를 수정하지 않으므로 git 커밋 오염 없음
+
 ### Added — M2-01 contents/ Git Submodule 구성 (2026-04-15)
 
 - `.gitmodules`: `chan9yu/dev-blog-archive` private 레포를 `contents/` 경로로 서브모듈 등록
