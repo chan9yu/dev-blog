@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { CommentsSection } from "@/features/comments";
@@ -18,6 +19,7 @@ import { postDetailsFixture } from "@/shared/fixtures/post-details";
 import { postsFixture } from "@/shared/fixtures/posts";
 import { seriesFixture } from "@/shared/fixtures/series";
 import type { AdjacentPosts, RelatedPost } from "@/shared/types";
+import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug } from "@/shared/utils/slug";
 
 type PostDetailPageProps = {
@@ -72,18 +74,32 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const related = findRelated(summary.slug, summary.tags);
 	const currentSeries = summary.series ? seriesFixture.find((item) => item.slug === summary.series) : null;
 	const shareUrl = `${getSiteUrl()}/posts/${summary.slug}`;
+	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
 
 	return (
 		<>
 			<ReadingProgress />
 			<Container>
-				<div className="flex flex-col gap-10 py-10 lg:flex-row lg:gap-12 lg:py-14">
-					<article className="min-w-0 flex-1 space-y-10">
-						<PostMetaHeader post={summary} />
+				<div className="flex flex-col gap-10 py-8 lg:flex-row lg:gap-12 lg:py-10">
+					<article className="min-w-0 flex-1 space-y-10 pb-12 sm:pb-16">
+						<PostMetaHeader post={summary} shareSlot={<ShareButtons title={summary.title} url={shareUrl} />} />
 
 						{currentSeries && <SeriesNavigation series={currentSeries} currentSlug={summary.slug} />}
 
-						<section aria-label="본문" className="prose prose-neutral dark:prose-invert max-w-none">
+						{thumbnailSrc && (
+							<div className="relative aspect-[2/1] w-full overflow-hidden rounded-xl sm:rounded-2xl">
+								<Image
+									src={thumbnailSrc}
+									alt={summary.title}
+									fill
+									priority
+									className="object-cover"
+									sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
+								/>
+							</div>
+						)}
+
+						<section aria-label="본문" className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
 							{detail ? (
 								<pre className="text-muted-foreground bg-muted rounded-md p-4 text-xs leading-relaxed whitespace-pre-wrap">
 									{detail.contentMdx}
@@ -94,11 +110,6 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 								</p>
 							)}
 						</section>
-
-						<div className="border-border-subtle flex flex-wrap items-center justify-between gap-4 border-t pt-6">
-							<span className="text-muted-foreground text-sm">이 글이 도움이 되었다면 공유해 주세요.</span>
-							<ShareButtons title={summary.title} url={shareUrl} />
-						</div>
 
 						<PostNavigation adjacent={adjacent} />
 

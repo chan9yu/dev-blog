@@ -1,7 +1,9 @@
+import { Tag } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { PostCard } from "@/features/posts";
+import { PostList, PostListSkeleton } from "@/features/posts";
 import { Container } from "@/shared/components/Container";
 import { postsFixture } from "@/shared/fixtures/posts";
 import { tagsFixture } from "@/shared/fixtures/tags";
@@ -14,48 +16,53 @@ type TagDetailPageProps = {
 
 export async function generateMetadata({ params }: TagDetailPageProps): Promise<Metadata> {
 	const { tag } = await params;
-	const normalized = normalizeSlug(tag, TAG_MAX_LENGTH);
+	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
 	if (!normalized) return { title: "Tag" };
 	return {
-		title: `${normalized} 태그`,
-		description: `${normalized} 태그가 달린 포스트 목록.`,
+		title: `#${normalized}`,
+		description: `${normalized} 태그가 포함된 포스트를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`,
 		alternates: { canonical: `/tags/${normalized}` }
 	};
 }
 
+/**
+ * 레거시 /tags/[tag] 디자인:
+ * - header mb-12: TagIcon accent size-8 + #태그명 h1 + "총 N개의 글" + hr
+ * - FilteredBlogPosts defaultView="grid" 대신 우리 PostList(뷰 토글) 재사용
+ */
 export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const { tag } = await params;
-	const normalized = normalizeSlug(tag, TAG_MAX_LENGTH);
+	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
 	if (!normalized) notFound();
 
-	const tagMeta = tagsFixture.find((item) => item.slug === normalized);
 	const filtered = postsFixture
 		.filter((post) => !post.private && post.tags.includes(normalized))
+		.slice()
+		.sort((a, b) => (new Date(b.date) > new Date(a.date) ? 1 : -1))
 		.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail, post.slug) }));
 
+	const tagMeta = tagsFixture.find((item) => item.slug === normalized);
 	if (!tagMeta && filtered.length === 0) notFound();
 
 	return (
 		<Container>
-			<div className="space-y-10 py-10 lg:py-14">
-				<header className="space-y-2">
-					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-						<span aria-hidden>#</span>
-						<span className="sr-only">태그: </span>
-						{normalized}
-					</h1>
-					<p className="text-muted-foreground text-sm">총 {filtered.length}개의 글</p>
+			<div className="py-8 lg:py-10">
+				<header className="mb-12 space-y-6">
+					<div className="space-y-4">
+						<div className="flex items-center gap-3">
+							<Tag className="text-accent size-8" aria-hidden />
+							<h1 className="text-foreground text-3xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-4xl md:text-5xl">
+								#{normalized}
+							</h1>
+						</div>
+						<p className="text-muted-foreground text-base sm:text-lg">총 {filtered.length}개의 글</p>
+					</div>
+					<hr className="border-border" />
 				</header>
 
-				{filtered.length === 0 ? (
-					<p className="text-muted-foreground py-12 text-center text-sm">이 태그의 포스트가 없습니다.</p>
-				) : (
-					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-						{filtered.map((post, index) => (
-							<PostCard key={post.slug} post={post} variant="grid" priority={index < 2} />
-						))}
-					</div>
-				)}
+				<Suspense fallback={<PostListSkeleton count={3} />}>
+					<PostList posts={filtered} />
+				</Suspense>
 			</div>
 		</Container>
 	);

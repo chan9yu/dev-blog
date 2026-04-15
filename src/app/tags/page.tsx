@@ -1,32 +1,65 @@
+import { ChevronRight, Tag } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { TagChip } from "@/features/tags";
 import { Container } from "@/shared/components/Container";
 import { tagsFixture } from "@/shared/fixtures/tags";
 
 export const metadata: Metadata = {
-	title: "Tags",
+	title: "태그",
 	description:
-		"chan9yu 개발 블로그의 태그 허브. 관심 주제별로 포스트를 탐색할 수 있도록 React, TypeScript, Next.js 등 모든 태그를 발행 빈도와 함께 한곳에 모았습니다.",
+		"주제별 태그로 정리된 포스트를 탐색하세요. React, TypeScript, Next.js 등 다양한 기술 주제를 확인할 수 있습니다.",
 	alternates: { canonical: "/tags" }
 };
 
+/**
+ * 레거시 /tags 디자인 참조:
+ * - 헤더: h1 + subtitle
+ * - 그리드 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
+ * - 카드 rounded-xl border p-6:
+ *   - 좌측: TagIcon accent + 태그명 + "N개의 포스트"
+ *   - 우측: ChevronRight (hover translate-x-1)
+ */
 export default function TagsHubPage() {
+	const tags = tagsFixture;
+
 	return (
 		<Container>
-			<div className="space-y-10 py-10 lg:py-14">
-				<header className="space-y-2">
-					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">Tags</h1>
-					<p className="text-muted-foreground text-sm">총 {tagsFixture.length}개의 태그</p>
+			<div className="space-y-8 py-8 lg:py-10">
+				<header className="space-y-3">
+					<h1 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">태그</h1>
+					<p className="text-muted-foreground text-sm leading-relaxed sm:text-base">모든 태그를 한눈에 확인하세요</p>
 				</header>
 
-				{tagsFixture.length === 0 ? (
-					<p className="text-muted-foreground py-12 text-center text-sm">아직 태그가 없습니다.</p>
+				{tags.length === 0 ? (
+					<div className="text-muted-foreground flex flex-col items-center justify-center py-16 text-center">
+						<Tag className="mb-4 size-16" aria-hidden />
+						<p className="text-lg font-medium">아직 태그가 없습니다</p>
+					</div>
 				) : (
-					<ul className="flex flex-wrap gap-3">
-						{tagsFixture.map((tag) => (
-							<li key={tag.slug}>
-								<TagChip tag={tag.tag} slug={tag.slug} count={tag.count} />
+					<ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="태그 목록">
+						{tags.map((item) => (
+							<li key={item.slug}>
+								<Link
+									href={`/tags/${item.slug}`}
+									className="group bg-card border-border-subtle focus-visible:ring-ring block rounded-xl border p-6 transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+								>
+									<div className="flex items-start justify-between gap-3">
+										<div className="min-w-0 flex-1 space-y-2">
+											<div className="flex min-w-0 items-center gap-2">
+												<Tag className="text-accent size-5 shrink-0" aria-hidden />
+												<h2 className="text-card-foreground group-hover:text-accent min-w-0 flex-1 truncate font-semibold tracking-tight transition-colors">
+													{item.tag}
+												</h2>
+											</div>
+											<p className="text-muted-foreground text-sm">{item.count}개의 포스트</p>
+										</div>
+										<ChevronRight
+											className="text-muted-foreground size-5 shrink-0 transition-transform motion-safe:group-hover:translate-x-1"
+											aria-hidden
+										/>
+									</div>
+								</Link>
 							</li>
 						))}
 					</ul>

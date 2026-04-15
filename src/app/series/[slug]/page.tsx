@@ -1,3 +1,4 @@
+import { BookOpen, Calendar } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,55 +14,75 @@ type SeriesDetailPageProps = {
 
 export async function generateMetadata({ params }: SeriesDetailPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const normalized = normalizeSlug(slug);
+	const normalized = normalizeSlug(decodeURIComponent(slug));
 	if (!normalized) return { title: "Series" };
 	const series = seriesFixture.find((item) => item.slug === normalized);
 	if (!series) return { title: "Series" };
 	return {
-		title: `${series.name} 시리즈`,
-		description: `${series.name} 시리즈의 연속된 포스트 ${series.posts.length}편.`,
+		title: series.name,
+		description: `${series.name} 시리즈 - 총 ${series.posts.length}개의 연재 글로 구성되어 있습니다`,
 		alternates: { canonical: `/series/${series.slug}` }
 	};
 }
 
+/**
+ * 레거시 /series/[slug] 디자인 참조:
+ * - header mb-12: h1 text-4xl sm:text-5xl + 메타(BookOpen + 편수) + hr
+ * - 본문: 번호 원 뱃지 + 제목·설명·날짜 카드 (seriesOrder 오름차순)
+ */
 export default async function SeriesDetailPage({ params }: SeriesDetailPageProps) {
 	const { slug } = await params;
-	const normalized = normalizeSlug(slug);
+	const normalized = normalizeSlug(decodeURIComponent(slug));
 	if (!normalized) notFound();
 
 	const series = seriesFixture.find((item) => item.slug === normalized);
 	if (!series) notFound();
 
-	const ordered = [...series.posts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
+	const orderedPosts = [...series.posts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 
 	return (
 		<Container>
-			<div className="space-y-10 py-10 lg:py-14">
-				<header className="space-y-3">
-					<span className="bg-accent text-accent-foreground inline-flex items-center rounded-full px-3 py-0.5 text-xs font-semibold">
-						시리즈 · {series.posts.length}편
-					</span>
-					<h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">{series.name}</h1>
+			<div className="py-8 lg:py-10">
+				<header className="mb-12 space-y-6">
+					<div className="space-y-4">
+						<h1 className="text-foreground text-3xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-4xl md:text-5xl">
+							{series.name}
+						</h1>
+						<div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
+							<span className="inline-flex items-center gap-2">
+								<BookOpen className="size-4" aria-hidden />총 {series.posts.length}개의 글
+							</span>
+							<span className="inline-flex items-center gap-2">
+								<BookOpen className="size-4" aria-hidden />
+								시리즈
+							</span>
+						</div>
+					</div>
+					<hr className="border-border" />
 				</header>
 
-				<ol className="border-border-subtle space-y-4 border-l-2">
-					{ordered.map((post) => (
-						<li key={post.slug} className="relative pl-6">
+				<ol className="space-y-4" aria-label="시리즈 포스트">
+					{orderedPosts.map((post) => (
+						<li key={post.slug} className="flex gap-4">
 							<span
+								className="bg-muted text-muted-foreground mt-3 flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold tabular-nums"
 								aria-hidden
-								className="bg-accent text-accent-foreground absolute top-1 -left-3 inline-flex size-6 items-center justify-center rounded-full text-xs font-bold tabular-nums"
 							>
 								{post.seriesOrder}
 							</span>
 							<Link
 								href={`/posts/${post.slug}`}
-								className="group bg-card border-border focus-visible:ring-ring block rounded-lg border p-4 transition-colors hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+								className="group bg-card border-border-subtle focus-visible:ring-ring block flex-1 rounded-xl border p-5 transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 							>
-								<h2 className="text-card-foreground group-hover:text-accent line-clamp-2 text-base font-semibold transition-colors">
+								<h2 className="text-card-foreground group-hover:text-accent line-clamp-2 text-base leading-snug font-semibold transition-colors sm:text-lg">
 									{post.title}
 								</h2>
 								<p className="text-muted-foreground mt-1 line-clamp-2 text-sm leading-relaxed">{post.description}</p>
-								<time className="text-muted-foreground mt-2 block text-xs tabular-nums" dateTime={post.date}>
+								<time
+									className="text-muted-foreground mt-2 inline-flex items-center gap-1.5 text-xs tabular-nums"
+									dateTime={post.date}
+								>
+									<Calendar className="size-3.5" aria-hidden />
 									{formatDate(post.date)}
 								</time>
 							</Link>
