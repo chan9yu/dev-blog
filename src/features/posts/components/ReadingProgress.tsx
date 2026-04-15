@@ -1,34 +1,63 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
- * 페이지 최상단 고정 진행률 바. window.scroll 이벤트를 listen해서 백분율 계산.
- * M2+에서 포스트 본문 컨테이너 기반 측정으로 개선 가능.
+ * 페이지 최상단 고정 진행률 바.
+ * - transform: scaleX(...) 방식으로 60fps 부드럽게 (width % 대신)
+ * - requestAnimationFrame throttle로 scroll 이벤트 낭비 제거
+ * - progress > 0 때 blur glow 레이어 추가 (반투명 잔상)
  */
+function calculateScrollProgress() {
+	const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+	const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+	return scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+}
+
 export function ReadingProgress() {
 	const [progress, setProgress] = useState(0);
+	const rafIdRef = useRef<number | null>(null);
+	const scheduledRef = useRef(false);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-			const total = scrollHeight - clientHeight;
-			setProgress(total > 0 ? Math.min(100, Math.max(0, (scrollTop / total) * 100)) : 0);
+		const update = () => {
+			setProgress(calculateScrollProgress());
+			scheduledRef.current = false;
 		};
 
-		handleScroll();
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
+		const schedule = () => {
+			if (scheduledRef.current) return;
+			rafIdRef.current = requestAnimationFrame(update);
+			scheduledRef.current = true;
+		};
+
+		window.addEventListener("scroll", schedule, { passive: true });
+		update();
+
+		return () => {
+			window.removeEventListener("scroll", schedule);
+			if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+		};
 	}, []);
+
+	const transformStyle = { transform: `scaleX(${progress / 100})` };
+	const showGlow = progress > 0;
 
 	return (
 		<div
-			className="fixed inset-x-0 top-0 z-50 h-1"
+			className="fixed inset-x-0 top-0 z-50"
 			role="progressbar"
 			aria-label="읽기 진행률"
 			aria-valuenow={Math.round(progress)}
 		>
-			<div className="bg-accent h-full origin-left transition-[width] duration-100" style={{ width: `${progress}%` }} />
+			<div className="bg-accent h-1 w-full origin-left transition-transform duration-150" style={transformStyle} />
+			{showGlow && (
+				<div
+					aria-hidden
+					className="bg-accent pointer-events-none absolute inset-x-0 top-0 h-1 w-full origin-left opacity-50 blur-[10px] transition-transform duration-150"
+					style={transformStyle}
+				/>
+			)}
 		</div>
 	);
 }
