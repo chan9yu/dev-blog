@@ -189,12 +189,12 @@
 
 ### 서비스 함수 (TDD)
 
-- [ ] [M2-12] `[Red]` getAllPosts 테스트
-- [ ] [M2-13] `[Green]` getAllPosts 구현
-- [ ] [M2-14] `[Red]` getPostDetail 테스트
-- [ ] [M2-15] `[Green]` getPostDetail 구현
-- [ ] [M2-16] `[Red]` sortPostsByDateDescending 테스트
-- [ ] [M2-17] `[Green]` sortPostsByDateDescending 구현
+- [x] [M2-12] `[Red]` getAllPosts 테스트
+- [x] [M2-13] `[Green]` getAllPosts 구현
+- [x] [M2-14] `[Red]` getPostDetail 테스트
+- [x] [M2-15] `[Green]` getPostDetail 구현
+- [x] [M2-16] `[Red]` sortPostsByDateDescending 테스트
+- [x] [M2-17] `[Green]` sortPostsByDateDescending 구현
 
 ### 이미지 & MDX
 

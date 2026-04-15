@@ -458,4 +458,20 @@ M1 마일스톤의 모든 태스크가 완료되어 더미 fixture 기반으로 
 - `radix-ui` (prod) — shadcn `Sheet`가 사용하는 Radix Dialog 메타 패키지.
 - `tw-animate-css` (prod) — shadcn `Sheet`의 `animate-in`/`slide-in-from-*`/`fade-out-0` 등 Tailwind 4 호환 애니메이션 유틸 제공.
 
+### M2-12~17: 서비스 함수 TDD (getAllPosts · getPostDetail · sortPostsByDateDescending)
+
+**M2-12 [Red] getAllPosts 테스트** — `services/__tests__/getAllPosts.test.ts` 신규 작성. 6개 케이스: private 필터링·includePrivate 옵션·날짜 내림차순·`@template` 디렉토리 스킵·frontmatter 오류 스킵·파일 없음 스킵. `vi.mock("node:fs")`로 FS 격리. `makeDirent` 헬퍼로 `Dirent` 최소 모사.
+
+**M2-13 [Green] getAllPosts 구현** — `services/getAllPosts.ts` 신규 작성. `readdirSync(withFileTypes: true)`로 디렉토리 스캔 → `@` prefix 스킵 → `parseFrontmatter` 검증 → `includePrivate` 필터 → `sortPostsByDateDescending` 정렬. `POSTS_DIR` 상수를 `getPostDetail.ts`와 공유 export. 전체 테스트 통과.
+
+**M2-14 [Red] getPostDetail 테스트** — `services/__tests__/getPostDetail.test.ts` 신규 작성. 6개 케이스: 유효한 slug → PostDetail 반환·contentMdx(frontmatter 제외)·toc h2/h3 순서 추출·ENOENT → null·private 포스트 반환(필터는 호출자 책임)·schema 검증 실패 → null.
+
+**M2-15 [Green] getPostDetail 구현** — `services/getPostDetail.ts` 신규 작성. `readFileSync` → `parseFrontmatter` → `matter().content` → `calculateReadingTime` + `extractTocFromMarkdown` 조합. 예외 시 `null` 반환.
+
+**M2-16 [Red] sortPostsByDateDescending 테스트** — `utils/__tests__/sortPostsByDateDescending.test.ts` 신규 작성. 5개 케이스: 날짜 내림차순·빈 배열·원본 불변성·ISO timestamp 포함·단일 항목.
+
+**M2-17 [Green] sortPostsByDateDescending 구현** — `utils/sortPostsByDateDescending.ts` 신규 작성. `[...posts].sort()` 스프레드로 원본 보존, `Date.getTime()` 차로 내림차순.
+
+**타입 정합성 수정**: 테스트 mock 타입 캐스트를 `as unknown as ReturnType<typeof fs.readdirSync>` / `as unknown as ReturnType<typeof fs.readFileSync>`로 교체 — `noUncheckedIndexedAccess` strict 모드에서 `NonSharedBuffer` 오버로드 불일치 해소. `pnpm tsc --noEmit` 클린, 테스트 53/53 통과.
+
 [Unreleased]: https://github.com/chan9yu/dev-blog/compare/main...develop
