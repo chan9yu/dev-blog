@@ -8,4 +8,4 @@ export { ReadingProgress } from "./ReadingProgress";
 export { RelatedPosts } from "./RelatedPosts";
 export { ScrollToTop } from "./ScrollToTop";
 export { ShareButtons } from "./ShareButtons";
-export { TOC } from "./TOC";
+export { Toc } from "./Toc";

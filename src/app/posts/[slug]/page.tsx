@@ -15,7 +15,7 @@ import {
 	RelatedPosts,
 	ScrollToTop,
 	ShareButtons,
-	TOC
+	Toc
 } from "@/features/posts";
 import { SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
@@ -119,7 +119,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 					</article>
 
 					<aside aria-label="목차" className="hidden lg:sticky lg:top-24 lg:block lg:w-64 lg:shrink-0 lg:self-start">
-						<TOC items={detail?.toc ?? []} />
+						<Toc items={detail?.toc ?? []} />
 					</aside>
 				</div>
 			</Container>

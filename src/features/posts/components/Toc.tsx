@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import type { TocItem } from "@/shared/types";
 
-type TOCProps = {
+type TocProps = {
 	items: TocItem[];
 };
 
@@ -40,7 +40,7 @@ const LEVEL_PADDING_CLASS: Record<1 | 2 | 3, string> = {
  * - 링크: block hover:translate-x-1, active text-accent font-semibold + aria-current="location"
  * - 클릭 시 HEADER_OFFSET_PX(120) 만큼 위로 offset 이동 + hash 업데이트
  */
-export function TOC({ items }: TOCProps) {
+export function Toc({ items }: TocProps) {
 	const [activeId, setActiveId] = useState<string | null>(null);
 
 	useEffect(() => {
