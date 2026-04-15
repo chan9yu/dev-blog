@@ -26,10 +26,9 @@ export function NavLink({ href, exact = false, className, children, ...rest }: N
 			href={href}
 			aria-current={isActive ? "page" : undefined}
 			className={cn(
-				"focus-visible:ring-ring/50 inline-flex items-center rounded-sm text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-				isActive
-					? "text-foreground decoration-foreground/60 font-semibold underline decoration-2 underline-offset-8"
-					: "text-muted-foreground hover:text-foreground",
+				"focus-visible:ring-ring/50 inline-flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-medium transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+				"hover:bg-muted",
+				isActive ? "bg-muted text-accent" : "text-muted-foreground",
 				className
 			)}
 			{...rest}

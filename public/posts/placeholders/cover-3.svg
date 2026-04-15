@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="포스트 썸네일">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c2d12"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g3)"/>
+  <g opacity="0.18" fill="none" stroke="white" stroke-width="2">
+    <rect x="700" y="100" width="400" height="400" rx="8" transform="rotate(15 900 300)"/>
+    <rect x="730" y="130" width="400" height="400" rx="8" transform="rotate(15 900 300)"/>
+    <rect x="760" y="160" width="400" height="400" rx="8" transform="rotate(15 900 300)"/>
+  </g>
+  <text x="80" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="white" opacity="0.6">chan9yu</text>
+</svg>

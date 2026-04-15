@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="포스트 썸네일">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c4a6e"/>
+      <stop offset="50%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <g opacity="0.15" fill="white">
+    <rect x="100" y="100" width="200" height="2"/>
+    <rect x="100" y="140" width="300" height="2"/>
+    <rect x="100" y="180" width="150" height="2"/>
+    <rect x="100" y="220" width="280" height="2"/>
+    <rect x="100" y="260" width="180" height="2"/>
+  </g>
+  <g opacity="0.2" fill="none" stroke="white" stroke-width="3">
+    <path d="M 800 150 L 900 250 L 800 350 L 700 250 Z"/>
+    <path d="M 900 250 L 1000 350 L 900 450 L 800 350 Z"/>
+  </g>
+  <text x="80" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="white" opacity="0.6">chan9yu</text>
+</svg>

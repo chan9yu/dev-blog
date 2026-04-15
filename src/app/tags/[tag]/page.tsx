@@ -31,7 +31,7 @@ export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const tagMeta = tagsFixture.find((item) => item.slug === normalized);
 	const filtered = postsFixture
 		.filter((post) => !post.private && post.tags.includes(normalized))
-		.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail) }));
+		.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail, post.slug) }));
 
 	if (!tagMeta && filtered.length === 0) notFound();
 

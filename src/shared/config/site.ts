@@ -15,9 +15,10 @@ export type NavItem = {
 };
 
 export const siteNav: NavItem[] = [
-	{ href: "/posts", label: "Posts" },
-	{ href: "/tags", label: "Tags" },
-	{ href: "/series", label: "Series" },
+	{ href: "/", label: "홈" },
+	{ href: "/posts", label: "포스트" },
+	{ href: "/series", label: "시리즈" },
+	{ href: "/tags", label: "태그" },
 	{ href: "/about", label: "About" }
 ];
 

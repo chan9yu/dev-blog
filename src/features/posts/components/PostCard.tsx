@@ -16,50 +16,61 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 	const maxTags = variant === "list" ? 3 : 2;
 	const visibleTags = post.tags.slice(0, maxTags);
 	const hiddenCount = post.tags.length - visibleTags.length;
+	const isList = variant === "list";
 
 	return (
 		<Link
 			href={`/posts/${post.slug}`}
 			className={cn(
-				"group bg-card border-border block overflow-hidden rounded-xl border shadow-sm transition-all duration-300",
+				"group bg-card border-border-subtle block overflow-hidden rounded-xl border shadow-sm transition-all duration-300",
 				"hover:shadow-lg motion-safe:hover:-translate-y-1",
 				"focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 			)}
 		>
 			{post.thumbnail && (
-				<div className="relative aspect-video w-full overflow-hidden">
+				<div className={cn("relative w-full overflow-hidden", isList ? "aspect-[2/1]" : "aspect-video")}>
 					<Image
 						src={post.thumbnail}
 						alt=""
 						fill
 						priority={priority}
 						className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
-						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+						sizes={
+							isList ? "(max-width: 1024px) 100vw, 768px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+						}
 					/>
 				</div>
 			)}
-			<div className="p-5">
+
+			<div className={cn(isList ? "p-5 sm:p-6" : "p-5")}>
 				<div
 					className={cn(
-						"mb-3 flex gap-2",
-						variant === "list" ? "flex-col sm:flex-row sm:items-start sm:justify-between" : "flex-col"
+						"mb-2 flex gap-2",
+						isList ? "flex-col sm:flex-row sm:items-start sm:justify-between" : "flex-col"
 					)}
 				>
-					<h3 className="text-card-foreground group-hover:text-accent line-clamp-2 flex-1 text-lg leading-snug font-bold tracking-tight transition-colors">
+					<h3
+						className={cn(
+							"text-card-foreground group-hover:text-accent line-clamp-2 flex-1 leading-snug font-bold tracking-tight text-balance transition-colors",
+							isList ? "text-lg sm:text-xl md:text-2xl" : "text-lg"
+						)}
+					>
 						{post.title}
 					</h3>
 					<time className="text-muted-foreground shrink-0 text-xs tabular-nums" dateTime={post.date}>
 						{formatDate(post.date)}
 					</time>
 				</div>
+
 				<p
 					className={cn(
-						"text-muted-foreground mb-4 text-sm leading-relaxed",
-						variant === "list" ? "line-clamp-2" : "line-clamp-3"
+						"text-muted-foreground mb-4 leading-relaxed text-pretty",
+						isList ? "line-clamp-2 text-sm sm:text-base" : "line-clamp-3 text-sm"
 					)}
 				>
 					{post.description}
 				</p>
+
 				<div className="flex flex-wrap items-center gap-2">
 					{visibleTags.length > 0 && (
 						<div className="flex flex-1 flex-wrap items-center gap-1.5">

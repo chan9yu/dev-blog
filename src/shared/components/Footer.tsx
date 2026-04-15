@@ -1,40 +1,52 @@
-import { Rss } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
-
-import { cn } from "@/shared/utils/cn";
 
 import { Container } from "./Container";
-import { ScrollToTopButton } from "./ScrollToTopButton";
 
-type FooterProps = {
-	socialLinksSlot?: ReactNode;
-	className?: string;
-};
+const FOOTER_LINKS = [
+	{ href: "/rss", label: "RSS", external: false },
+	{ href: "https://github.com/chan9yu", label: "GitHub", external: true },
+	{ href: "mailto:chan9yu.dev@gmail.com", label: "Email", external: false }
+];
 
-// 빌드 타임 기준 — SSG 빌드 시점에 고정. 매년 재배포 시 자동 갱신
 const buildYear = new Date().getFullYear();
 
-export function Footer({ socialLinksSlot, className }: FooterProps) {
+/**
+ * 레거시 SiteFooter 디자인 참조:
+ * - border-t + mt-24 pt-12
+ * - 2-column: 브랜드(좌) · 링크(우)
+ * - 하단 copyright 중앙 정렬 + border-t
+ */
+export function Footer() {
 	return (
-		<footer aria-labelledby="site-footer-heading" className={cn("border-border-subtle border-t py-10", className)}>
-			<h2 id="site-footer-heading" className="sr-only">
-				사이트 푸터
-			</h2>
+		<footer className="border-border-subtle mt-24 border-t pt-12 pb-8">
 			<Container>
-				<div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-					<p className="text-muted-foreground text-sm">© {buildYear} chan9yu. All rights reserved.</p>
-					<nav aria-label="보조 링크" className="flex items-center gap-4">
-						{socialLinksSlot}
-						<Link
-							href="/rss"
-							aria-label="RSS 피드 구독"
-							className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 inline-flex items-center justify-center rounded-md p-1 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-						>
-							<Rss className="size-5" aria-hidden />
-						</Link>
-						<ScrollToTopButton />
+				<div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+					<div className="space-y-2">
+						<p className="text-foreground text-sm font-medium">@chan9yu&apos;s dev blog</p>
+						<p className="text-muted-foreground text-sm leading-relaxed">
+							프론트엔드 개발의 아이디어와 경험을 기록하는 개발 블로그
+							<br />
+							코드와 디자인, 사용자 경험을 아우르는 인사이트를 담습니다.
+						</p>
+					</div>
+
+					<nav className="flex flex-wrap gap-6" aria-label="푸터 링크">
+						{FOOTER_LINKS.map((link) => (
+							<Link
+								key={link.href}
+								href={link.href}
+								target={link.external ? "_blank" : undefined}
+								rel={link.external ? "noopener noreferrer" : undefined}
+								className="text-muted-foreground hover:text-accent focus-visible:ring-ring rounded text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+							>
+								{link.label}
+							</Link>
+						))}
 					</nav>
+				</div>
+
+				<div className="border-border-subtle text-muted-foreground mt-8 border-t pt-6 text-center text-sm">
+					© {buildYear} chan9yu. All rights reserved.
 				</div>
 			</Container>
 		</footer>
