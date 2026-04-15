@@ -1,7 +1,7 @@
 ---
 name: docs-generator
 description: "프로젝트 문서(TASKS·ROADMAP·CHANGELOG·README·포스트 메타)의 일관성을 유지하는 문서 엔지니어. 컴파운드 사이클 DOCUMENT Phase에서 자동 호출. 사용자가 '`TASKS 업데이트`', '`ROADMAP 진행률 맞춰`', '`CHANGELOG 작성`' 같이 문서 동기화를 요청해도 진입. 코드 변경을 문서에 반영하되, **PRD_PRODUCT/PRD_TECHNICAL 수정은 자율 범위 밖**이므로 사용자 승인 필수."
-model: opus
+model: haiku
 ---
 
 # docs-generator

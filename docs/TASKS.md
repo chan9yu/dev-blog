@@ -66,103 +66,103 @@
 
 ### Fixture 데이터
 
-- [ ] [M1-01] `shared/fixtures/posts.ts` — 더미 PostSummary 12건+
-- [ ] [M1-02] `shared/fixtures/post-details.ts` — 더미 PostDetail (TOC·MDX 포함)
-- [ ] [M1-03] `shared/fixtures/tags.ts` — 더미 TagCount
-- [ ] [M1-04] `shared/fixtures/series.ts` — 더미 Series
-- [ ] [M1-05] `shared/fixtures/trending.ts` — 더미 TrendingSnapshot
+- [x] [M1-01] `shared/fixtures/posts.ts` — 더미 PostSummary 12건+
+- [x] [M1-02] `shared/fixtures/post-details.ts` — 더미 PostDetail (TOC·MDX 포함)
+- [x] [M1-03] `shared/fixtures/tags.ts` — 더미 TagCount
+- [x] [M1-04] `shared/fixtures/series.ts` — 더미 Series
+- [x] [M1-05] `shared/fixtures/trending.ts` — 더미 TrendingSnapshot
 
 ### Feature 모듈 뼈대 (index.ts)
 
-- [ ] [M1-06] `features/posts/index.ts`
-- [ ] [M1-07] `features/tags/index.ts`
-- [ ] [M1-08] `features/series/index.ts`
-- [ ] [M1-09] `features/search/index.ts`
-- [ ] [M1-10] `features/views/index.ts`
-- [ ] [M1-11] `features/comments/index.ts`
-- [ ] [M1-12] `features/theme/index.ts`
-- [ ] [M1-13] `features/lightbox/index.ts`
-- [ ] [M1-14] `features/about/index.ts`
+- [x] [M1-06] `features/posts/index.ts`
+- [x] [M1-07] `features/tags/index.ts`
+- [x] [M1-08] `features/series/index.ts`
+- [x] [M1-09] `features/search/index.ts`
+- [x] [M1-10] `features/views/index.ts`
+- [x] [M1-11] `features/comments/index.ts`
+- [x] [M1-12] `features/theme/index.ts`
+- [x] [M1-13] `features/lightbox/index.ts`
+- [x] [M1-14] `features/about/index.ts`
 
 ### 공통 타입
 
-- [ ] [M1-15] `shared/types/` — PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot
+- [x] [M1-15] `shared/types/` — PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot
 
 ### 홈 (FEAT-HOME)
 
-- [ ] [M1-16] Hero 섹션 — 소개 + 프로필 이미지 + CTA
-- [ ] [M1-17] 최근 포스트 카드 6장
-- [ ] [M1-18] 사이드바 Popular Posts 5건
-- [ ] [M1-19] 사이드바 Trending Series 3건
-- [ ] [M1-20] 사이드바 Trending Tags 10건
-- [ ] [M1-21] 홈 반응형 레이아웃 (2-column / 1-column)
+- [x] [M1-16] Hero 섹션 — 소개 + 프로필 이미지 + CTA
+- [x] [M1-17] 최근 포스트 카드 6장
+- [x] [M1-18] 사이드바 Popular Posts 5건
+- [x] [M1-19] 사이드바 Trending Series 3건
+- [x] [M1-20] 사이드바 Trending Tags 10건
+- [x] [M1-21] 홈 반응형 레이아웃 (2-column / 1-column)
 
 ### 포스트 목록 (FEAT-POSTS-LIST)
 
-- [ ] [M1-22] `PostCard.tsx` — 썸네일/텍스트 카드
-- [ ] [M1-23] `PostList.tsx` — 그리드/리스트 뷰
-- [ ] [M1-24] 뷰 토글 (그리드/리스트) + localStorage 저장
-- [ ] [M1-25] 태그 필터 패널
-- [ ] [M1-26] 무한 스크롤 (초기 12장 + 추가 12장)
-- [ ] [M1-27] 빈 상태 / Suspense fallback 스켈레톤
+- [x] [M1-22] `PostCard.tsx` — 썸네일/텍스트 카드
+- [x] [M1-23] `PostList.tsx` — 그리드/리스트 뷰
+- [x] [M1-24] 뷰 토글 (그리드/리스트) + localStorage 저장
+- [x] [M1-25] 태그 필터 패널
+- [x] [M1-26] 무한 스크롤 (초기 12장 + 추가 12장)
+- [x] [M1-27] 빈 상태 / Suspense fallback 스켈레톤
 
 ### 포스트 상세 (FEAT-POST-DETAIL)
 
-- [ ] [M1-28] 메타 헤더 — 제목, 설명, 날짜, 읽기 시간, 태그, 조회수
-- [ ] [M1-29] `ReadingProgress.tsx` — 상단 프로그레스 바
-- [ ] [M1-30] `Toc.tsx` — sticky TOC / 접힘 Accordion
-- [ ] [M1-31] MDX 본문 렌더 영역 (placeholder)
-- [ ] [M1-32] `MdxHeading.tsx` — 자동 id + 앵커 링크
-- [ ] [M1-33] `ShikiCodeBlock.tsx` / `MdxPre.tsx` — 코드 블록 + 복사 버튼
-- [ ] [M1-34] `MdxImage.tsx` — 이미지 + Lightbox 연동 슬롯
-- [ ] [M1-35] `MdxLink.tsx` — 외부/내부 링크 분기
-- [ ] [M1-36] `MdxTable.tsx` — 반응형 테이블
-- [ ] [M1-37] `Callout.tsx` — 주의/팁/경고 박스
-- [ ] [M1-38] 시리즈 네비게이션 — 배지 + 이전/다음
-- [ ] [M1-39] `PostNavigation.tsx` — 이전/다음 포스트 카드
-- [ ] [M1-40] `RelatedPosts.tsx` — 관련 포스트 3장
-- [ ] [M1-41] `ShareButtons.tsx` — 복사/X/LinkedIn/Web Share
-- [ ] [M1-42] `ScrollToTop.tsx` — 우하단 버튼
-- [ ] [M1-43] `ScrollReset.tsx` — 페이지 전환 시 상단 초기화
+- [x] [M1-28] 메타 헤더 — 제목, 설명, 날짜, 읽기 시간, 태그, 조회수
+- [x] [M1-29] `ReadingProgress.tsx` — 상단 프로그레스 바
+- [x] [M1-30] `Toc.tsx` — sticky TOC / 접힘 Accordion
+- [x] [M1-31] MDX 본문 렌더 영역 (placeholder)
+- [x] [M1-32] `MdxHeading.tsx` — 자동 id + 앵커 링크
+- [x] [M1-33] `ShikiCodeBlock.tsx` / `MdxPre.tsx` — 코드 블록 + 복사 버튼
+- [x] [M1-34] `MdxImage.tsx` — 이미지 + Lightbox 연동 슬롯
+- [x] [M1-35] `MdxLink.tsx` — 외부/내부 링크 분기
+- [x] [M1-36] `MdxTable.tsx` — 반응형 테이블
+- [x] [M1-37] `Callout.tsx` — 주의/팁/경고 박스
+- [x] [M1-38] 시리즈 네비게이션 — 배지 + 이전/다음
+- [x] [M1-39] `PostNavigation.tsx` — 이전/다음 포스트 카드
+- [x] [M1-40] `RelatedPosts.tsx` — 관련 포스트 3장
+- [x] [M1-41] `ShareButtons.tsx` — 복사/X/LinkedIn/Web Share
+- [x] [M1-42] `ScrollToTop.tsx` — 우하단 버튼
+- [x] [M1-43] `ScrollReset.tsx` — 페이지 전환 시 상단 초기화
 
 ### 태그 (FEAT-TAGS)
 
-- [ ] [M1-44] `TagHub` 페이지 — 태그 카드 그리드
-- [ ] [M1-45] `TagDetail` 페이지 — 태그별 포스트 목록
-- [ ] [M1-46] `TagChip.tsx` — 태그 칩 컴포넌트
+- [x] [M1-44] `TagHub` 페이지 — 태그 카드 그리드
+- [x] [M1-45] `TagDetail` 페이지 — 태그별 포스트 목록
+- [x] [M1-46] `TagChip.tsx` — 태그 칩 컴포넌트
 
 ### 시리즈 (FEAT-SERIES)
 
-- [ ] [M1-47] `SeriesHub` 페이지 — 시리즈 카드 + 미리보기
-- [ ] [M1-48] `SeriesDetail` 페이지 — 헤더 + 순서 네비 + 목록
-- [ ] [M1-49] `SeriesNavigation.tsx` — 이전/다음 시리즈 포스트
+- [x] [M1-47] `SeriesHub` 페이지 — 시리즈 카드 + 미리보기
+- [x] [M1-48] `SeriesDetail` 페이지 — 헤더 + 순서 네비 + 목록
+- [x] [M1-49] `SeriesNavigation.tsx` — 이전/다음 시리즈 포스트
 
 ### About (FEAT-ABOUT)
 
-- [ ] [M1-50] `AboutProfile` — 프로필 + 소셜 + 마크다운 placeholder
+- [x] [M1-50] `AboutProfile` — 프로필 + 소셜 + 마크다운 placeholder
 
 ### 검색 (FEAT-SEARCH)
 
-- [ ] [M1-51] `SearchButton.tsx` — 헤더 검색 아이콘
-- [ ] [M1-52] `SearchModal.tsx` — 모달 + 입력 + 결과 리스트
-- [ ] [M1-53] `useSearchShortcut` — Cmd+K / Ctrl+K
-- [ ] [M1-54] 검색 0건 상태 — 안내 + 태그 추천
+- [x] [M1-51] `SearchButton.tsx` — 헤더 검색 아이콘
+- [x] [M1-52] `SearchModal.tsx` — 모달 + 입력 + 결과 리스트
+- [x] [M1-53] `useSearchShortcut` — Cmd+K / Ctrl+K
+- [x] [M1-54] 검색 0건 상태 — 안내 + 태그 추천
 
 ### 조회수 · 테마 · 라이트박스 · 댓글
 
-- [ ] [M1-55] `ViewCounter.tsx` — 아이콘 + 숫자 placeholder
-- [ ] [M1-56] `ThemeSwitcher.tsx` — Sun/Moon 토글
-- [ ] [M1-57] `LightboxProvider.tsx` + `ImageLightbox.tsx`
-- [ ] [M1-58] `CommentsSection.tsx` — Giscus placeholder
+- [x] [M1-55] `ViewCounter.tsx` — 아이콘 + 숫자 placeholder
+- [x] [M1-56] `ThemeSwitcher.tsx` — Sun/Moon 토글
+- [x] [M1-57] `LightboxProvider.tsx` + `ImageLightbox.tsx`
+- [x] [M1-58] `CommentsSection.tsx` — Giscus placeholder
 
 ### 모션 & 전환
 
-- [ ] [M1-59] `FadeInWhenVisible.tsx`
-- [ ] [M1-60] `PageTransition.tsx`
+- [x] [M1-59] `FadeInWhenVisible.tsx`
+- [x] [M1-60] `PageTransition.tsx`
 
 ### shadcn/ui
 
-- [ ] [M1-61] 필요한 프리미티브 설치 (Dialog, DropdownMenu, Toast, Badge, Accordion 등)
+- [x] [M1-61] 필요한 프리미티브 설치 (Dialog, DropdownMenu, Toast, Badge, Accordion 등)
 
 ---
 
@@ -379,11 +379,11 @@
 | Phase                  | 태스크  | 완료   | 진행률  |
 | ---------------------- | ------- | ------ | ------- |
 | M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 0      | 0%      |
+| M1 UI Skeleton         | 61      | 61     | 100%    |
 | M2 Content Pipeline    | 24      | 0      | 0%      |
 | M3 Feature Wiring      | 21      | 0      | 0%      |
 | M4 Hubs & Aggregations | 21      | 0      | 0%      |
 | M5 SEO & Syndication   | 10      | 0      | 0%      |
 | M6 A11y & Perf         | 14      | 0      | 0%      |
 | M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **33** | **17%** |
+| **Total**              | **196** | **94** | **48%** |

@@ -1,7 +1,7 @@
 ---
 name: "react-nextjs-code-reviewer"
 description: 'Use this agent when you need expert code review for React 19, Next.js 16 (App Router), TypeScript 5.9 (strict mode), or Tailwind CSS 4 code. This agent should be invoked proactively after completing a logical chunk of frontend code—such as a new component, hook, route handler, server action, or feature implementation—to catch bugs, enforce best practices, and improve code quality before committing. <example>Context: 사용자가 Next.js App Router에 새로운 서버 컴포넌트를 작성했습니다. user: "블로그 포스트 목록을 보여주는 서버 컴포넌트를 작성해줘" assistant: "서버 컴포넌트를 작성했습니다:" <function call omitted for brevity> <commentary>React 19/Next.js 16 서버 컴포넌트가 방금 작성되었으므로, Agent tool을 사용하여 react-nextjs-code-reviewer 에이전트를 실행하여 모범 사례 준수, 타입 안전성, 성능 최적화를 검토해야 합니다.</commentary> assistant: "이제 react-nextjs-code-reviewer 에이전트를 사용하여 방금 작성한 코드를 검토하겠습니다"</example> <example>Context: 사용자가 커스텀 훅과 Tailwind CSS 4 스타일링을 포함한 클라이언트 컴포넌트를 리팩터링했습니다. user: "이 Modal 컴포넌트를 React 19 기능을 사용하도록 리팩터링했어" assistant: "리팩터링이 완료되었습니다." <commentary>중요한 리팩터링이 완료되었으므로, Agent tool을 사용하여 react-nextjs-code-reviewer 에이전트를 실행하여 React 19 패턴(useOptimistic, use, Actions 등), TypeScript strict mode 준수, Tailwind 4 사용법을 검증해야 합니다.</commentary> assistant: "react-nextjs-code-reviewer 에이전트를 사용하여 리팩터링된 코드를 검토하겠습니다"</example> <example>Context: 사용자가 form action과 함께 새로운 기능을 구현했습니다. user: "사용자 프로필 업데이트 기능을 추가했어" assistant: "구현이 완료되었습니다:" <function call omitted> <commentary>새 기능이 구현되었으므로 react-nextjs-code-reviewer 에이전트를 선제적으로 실행하여 Server Actions 보안, 에러 처리, 타입 안전성을 검증합니다.</commentary> assistant: "react-nextjs-code-reviewer 에이전트를 사용하여 구현을 검토하겠습니다"</example>'
-model: opus
+model: sonnet
 color: blue
 memory: project
 ---
@@ -141,6 +141,15 @@ memory: project
 - SDK/API 사용법이 불확실하면 공식 문서를 참조하거나 `document-specialist` 에이전트에 위임하도록 권장합니다.
 - 코드의 의도가 불분명하면 추측하지 말고 명확한 질문을 하십시오.
 - 검토 범위가 불분명하면 사용자에게 확인을 요청하십시오.
+
+## 에스컬레이션
+
+다음 상황에서는 즉시 사용자에게 보고합니다:
+
+- 🔴 Critical 보안 취약점(XSS, CSRF, 환경변수 노출, 인증 우회)이 발견된 경우 — 수정 코드를 직접 커밋하지 말고 보고만 수행
+- 리뷰 결과 REVIEW 3회 핑퐁 후에도 Critical 이슈가 해소되지 않는 경우 → orchestrator에 ESCALATE 신호 전송
+- 아키텍처 설계 변경이 필요한 이슈가 발견된 경우 → architect/planner 에이전트 위임 제안
+- 검토 대상 코드가 지나치게 광범위해 의미 있는 리뷰가 불가한 경우 — 범위 축소 요청
 
 ## 자체 승인 금지
 

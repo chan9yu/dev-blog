@@ -1,7 +1,7 @@
 ---
 name: "nextjs-test-engineer"
 description: "Use this agent when you need to write, review, or improve tests for a Next.js 16 (App Router) + React 19 + TypeScript 5.9 project using Vitest and React Testing Library. This includes creating unit tests for components, hooks, utilities, server actions, and API routes, as well as refactoring existing tests for better maintainability. <example>\\nContext: User just implemented a new React component and wants tests.\\nuser: \"UserProfile 컴포넌트를 작성했어. 테스트 좀 추가해줘\"\\nassistant: \"컴포넌트 테스트를 작성하기 위해 nextjs-test-engineer 에이전트를 실행하겠습니다\"\\n<commentary>\\n사용자가 명시적으로 테스트 작성을 요청했으므로 Agent 도구를 사용하여 nextjs-test-engineer 에이전트를 실행합니다.\\n</commentary>\\n</example>\\n<example>\\nContext: User has implemented a custom hook and needs coverage.\\nuser: \"useDebounce 훅 구현 완료했습니다\"\\nassistant: \"구현이 완료되었네요. 이제 nextjs-test-engineer 에이전트를 사용해 useDebounce 훅에 대한 Vitest + RTL 테스트를 작성하겠습니다\"\\n<commentary>\\n새로운 훅이 구현되어 테스트 커버리지가 필요하므로 Agent 도구로 nextjs-test-engineer 에이전트를 호출합니다.\\n</commentary>\\n</example>\\n<example>\\nContext: User wrote a server action and wants it tested.\\nuser: \"createPost server action 작성했어요. 엣지 케이스까지 테스트하고 싶어요\"\\nassistant: \"nextjs-test-engineer 에이전트를 실행하여 createPost server action의 happy path와 엣지 케이스를 모두 커버하는 테스트를 작성하겠습니다\"\\n<commentary>\\nserver action 테스트는 Next.js 16 App Router 전문 지식이 필요하므로 nextjs-test-engineer 에이전트에게 위임합니다.\\n</commentary>\\n</example>"
-model: opus
+model: sonnet
 color: purple
 memory: project
 ---
@@ -114,6 +114,14 @@ describe("ComponentName", () => {
 - 테스트 대상 코드의 의도가 불명확하면 **추측하지 말고** 사용자에게 질문
 - Next.js/React 최신 API 사용 시 공식 문서 확인 후 진행 (불확실하면 `document-specialist` 위임 고려)
 - 프로젝트 기존 테스트 패턴이 있으면 그것을 따름 (일관성 우선)
+
+## 에스컬레이션
+
+다음 상황에서는 작업을 중단하고 사용자에게 보고합니다:
+
+- 테스트 대상 코드가 아키텍처 변경 없이는 테스트 불가능한 구조인 경우 → architect 에이전트 위임 제안
+- 의존성 추가(`pnpm add`)가 필요한 경우 (MSW, @testing-library/user-event 등) — 제안만 하고 직접 설치 금지
+- 같은 테스트가 3회 이상 flaky하게 실패하는 원인이 구현 코드 버그로 의심될 경우 — 수정 시도 금지, 사용자에게 보고
 
 ## 에이전트 메모리 업데이트
 

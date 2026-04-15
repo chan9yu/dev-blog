@@ -52,6 +52,16 @@
 	}
 }
 
+@keyframes gradient-shift {
+	0%,
+	100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+}
+
 @keyframes pulse-subtle {
 	0%,
 	100% {
@@ -72,16 +82,43 @@
 }
 
 /* View Transitions API — MOD-theme의 테마 전환에서 사용 */
-::view-transition-old(root),
-::view-transition-new(root) {
-	animation: none;
-	mix-blend-mode: normal;
-}
-
 ::view-transition-old(root) {
+	animation: 300ms ease both theme-fade-out;
 	z-index: 1;
 }
 
 ::view-transition-new(root) {
+	animation: 300ms ease both theme-fade-in;
 	z-index: 2;
+}
+
+@keyframes theme-fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes theme-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* prefers-reduced-motion: ::view-transition-* 은 * 셀렉터에 포함되지 않으므로 별도 처리 필수 (WCAG 2.1 §2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation-duration: 0.01ms !important;
+	}
+
+	/* gradient-shift 애니메이션도 감속 처리 */
+	.text-gradient-animated {
+		animation-duration: 0.01ms !important;
+	}
 }

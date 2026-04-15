@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 
+import { AboutProfile } from "@/features/about";
+import { Container } from "@/shared/components/layouts/Container";
+
 export const metadata: Metadata = {
 	title: "About",
 	description:
@@ -9,11 +12,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
 	return (
-		<section className="mx-auto max-w-prose px-4 py-10 sm:px-6 lg:px-8">
-			<h1 className="text-h1">About</h1>
-			<p className="text-muted-foreground mt-4">
-				M4에서 <code>contents/about/index.md</code> 렌더 + 프로필·소셜 링크 통합 예정.
-			</p>
-		</section>
+		<Container>
+			<div className="py-10 lg:py-14">
+				<AboutProfile />
+			</div>
+		</Container>
 	);
 }

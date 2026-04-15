@@ -210,7 +210,7 @@ TaskCreate(subject="M0-06 리뷰", owner="compound-reviewer", blockedBy=[위 2�
 [nextjs-app-router-expert 에이전트에게 Agent 호출]
 
 Agent({
-  model: "opus",
+  model: "sonnet",
   subagent_type: "general-purpose",
   prompt: `
     [컴파운드 사이클 컨텍스트]
@@ -347,7 +347,7 @@ orchestrator: Bash("pnpm lint") → 0 errors
 [compound-reviewer 에이전트 호출]
 
 Agent({
-  model: "opus",
+  model: "sonnet",
   prompt: `
     [컴파운드 사이클 컨텍스트]
     - 현재 Phase: REVIEW (iter 1/3)
@@ -432,7 +432,7 @@ Agent 2: nextjs-test-engineer
 [docs-generator 에이전트 호출]
 
 Agent({
-  model: "opus",
+  model: "haiku",
   prompt: `
     [task-completion 스킬 실행]
     - task_id: M0-06

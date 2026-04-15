@@ -15,9 +15,10 @@ export type NavItem = {
 };
 
 export const siteNav: NavItem[] = [
-	{ href: "/posts", label: "Posts" },
-	{ href: "/tags", label: "Tags" },
-	{ href: "/series", label: "Series" },
+	{ href: "/", label: "홈" },
+	{ href: "/posts", label: "포스트" },
+	{ href: "/series", label: "시리즈" },
+	{ href: "/tags", label: "태그" },
 	{ href: "/about", label: "About" }
 ];
 
@@ -58,7 +59,13 @@ export const siteSocials: SocialLinkConfig[] = [
  * 이 분기를 통해 preview 환경의 OG 이미지·canonical이 잘못된 prod 도메인을 가리키는 것을 방지.
  */
 export function getSiteUrl() {
-	if (process.env.VERCEL_ENV === "production") return siteMetadata.url;
-	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+	if (process.env.VERCEL_ENV === "production") {
+		return siteMetadata.url;
+	}
+
+	if (process.env.VERCEL_URL) {
+		return `https://${process.env.VERCEL_URL}`;
+	}
+
 	return "http://localhost:3100";
 }

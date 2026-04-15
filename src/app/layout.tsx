@@ -3,7 +3,15 @@ import "@/shared/styles/globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
+import { Suspense } from "react";
 
+import { getPublicPosts } from "@/features/posts/services";
+import { SearchTrigger } from "@/features/search";
+import { ThemeSwitcher } from "@/features/theme";
+import { ScrollReset } from "@/shared/components/common/ScrollReset";
+import { Footer } from "@/shared/components/layouts/Footer";
+import { Header } from "@/shared/components/layouts/Header";
+import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
 
 import { Providers } from "./providers";
@@ -52,23 +60,36 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
+	const searchablePosts = getPublicPosts();
+
 	return (
 		<html lang="ko" className={pretendard.variable} suppressHydrationWarning>
-			<body className="bg-background text-foreground font-sans antialiased">
+			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
 				<Providers>
-					{/*
-					  Skip link — WCAG 2.4.1 Bypass Blocks.
-					  M1 Header 통합 시 Header 컴포넌트로 이동 예정 (중복 방지 위해 본 블록 제거).
-					*/}
+					<Suspense fallback={null}>
+						<ScrollReset />
+					</Suspense>
 					<a
 						href="#main-content"
-						className="bg-foreground text-background focus-visible:ring-ring sr-only rounded-md px-3 py-2 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+						className="focus-visible:ring-ring bg-background text-foreground sr-only z-50 rounded-md px-4 py-2 font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2 focus-visible:outline-none"
 					>
-						본문으로 건너뛰기
+						본문 바로가기
 					</a>
-					<main id="main-content" tabIndex={-1}>
+					<Suspense
+						fallback={
+							<div aria-hidden className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />
+						}
+					>
+						<Header
+							searchSlot={<SearchTrigger posts={searchablePosts} />}
+							themeSlot={<ThemeSwitcher />}
+							mobileMenuSlot={<MobileMenu />}
+						/>
+					</Suspense>
+					<main id="main-content" tabIndex={-1} className="flex-1">
 						{children}
 					</main>
+					<Footer />
 				</Providers>
 			</body>
 		</html>

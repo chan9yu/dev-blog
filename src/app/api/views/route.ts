@@ -7,10 +7,10 @@ import { validateSlug } from "@/shared/utils/slug";
 export async function GET(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const slug = validateSlug(searchParams.get("slug"));
-	if (!slug) {
-		return Response.json({ error: "invalid slug" }, { status: 400 });
-	}
-	return Response.json({ slug, views: 0 });
+
+	return slug
+		? Response.json({ slug, views: 0 }, { status: 200 })
+		: Response.json({ error: "invalid slug" }, { status: 400 });
 }
 
 export async function POST(req: NextRequest) {
@@ -18,9 +18,11 @@ export async function POST(req: NextRequest) {
 	if (!raw || typeof raw !== "object") {
 		return Response.json({ error: "invalid JSON body" }, { status: 400 });
 	}
+
 	const slug = validateSlug((raw as Record<string, unknown>).slug);
 	if (!slug) {
 		return Response.json({ error: "invalid slug" }, { status: 400 });
 	}
-	return Response.json({ slug, views: 1 });
+
+	return Response.json({ slug, views: 1 }, { status: 200 });
 }
