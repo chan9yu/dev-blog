@@ -177,15 +177,15 @@
 
 ### 파싱 파이프라인 (TDD)
 
-- [ ] [M2-03] `[Red]` parseFrontmatter 테스트
-- [ ] [M2-04] `[Green]` parseFrontmatter 구현
-- [ ] [M2-05] PostFrontmatterSchema Zod 스키마
-- [ ] [M2-06] `[Red]` calculateReadingTime 테스트
-- [ ] [M2-07] `[Green]` calculateReadingTime 구현
-- [ ] [M2-08] `[Red]` extractTocFromMarkdown 테스트
-- [ ] [M2-09] `[Green]` extractTocFromMarkdown 구현
-- [ ] [M2-10] `[Red]` slugify 테스트
-- [ ] [M2-11] `[Green]` slugify 구현
+- [x] [M2-03] `[Red]` parseFrontmatter 테스트
+- [x] [M2-04] `[Green]` parseFrontmatter 구현
+- [x] [M2-05] PostFrontmatterSchema Zod 스키마
+- [x] [M2-06] `[Red]` calculateReadingTime 테스트
+- [x] [M2-07] `[Green]` calculateReadingTime 구현
+- [x] [M2-08] `[Red]` extractTocFromMarkdown 테스트
+- [x] [M2-09] `[Green]` extractTocFromMarkdown 구현
+- [x] [M2-10] `[Red]` slugify 테스트
+- [x] [M2-11] `[Green]` slugify 구현
 
 ### 서비스 함수 (TDD)
 

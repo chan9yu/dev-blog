@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M2-03~11 파싱 파이프라인 TDD 완성 (2026-04-15)
+
+**의존성**
+
+- `gray-matter 4.0.3` (prod) — MDX frontmatter 파싱
+- `zod 4.3.6` (prod) — PostFrontmatterSchema 런타임 검증
+- `vitest 4.1.4` + `@vitest/coverage-v8` (dev) — TDD 테스트 러너
+
+**신규 파일**
+
+- `vitest.config.ts` — `@` 경로 alias 포함, node 환경, v8 커버리지
+- `src/features/posts/schemas/frontmatter.ts` — `PostFrontmatterSchema` (M2-05): series·seriesOrder 쌍 refine 포함
+- `src/features/posts/utils/parseFrontmatter.ts` — `--`→`---` 보정 + gray-matter + Zod + slug 검증 (M2-04)
+- `src/features/posts/utils/calculateReadingTime.ts` — 코드·수식·이미지 제외, 한국어 500자/분, ceil, 최소 1분 (M2-07)
+- `src/features/posts/utils/extractTocFromMarkdown.ts` — h2/h3 추출, 코드 블록 제외, id=slugify(text) (M2-09)
+- `src/shared/utils/slugify.ts` — 한글 보존, 특수문자 제거, 공백→하이픈 (M2-11)
+- `src/features/posts/utils/__tests__/parseFrontmatter.test.ts` — 7케이스 (M2-03 Red)
+- `src/features/posts/utils/__tests__/calculateReadingTime.test.ts` — 9케이스 (M2-06 Red)
+- `src/features/posts/utils/__tests__/extractTocFromMarkdown.test.ts` — 9케이스 (M2-08 Red)
+- `src/shared/utils/__tests__/slugify.test.ts` — 10케이스 (M2-10 Red)
+
+**테스트**: 4 파일 · 36 케이스 전부 통과
+
 ### Added — M2-02 Vercel Submodule Workaround 스크립트 (2026-04-15)
 
 - `scripts/vercel-submodule-workaround.sh` 신규 작성
