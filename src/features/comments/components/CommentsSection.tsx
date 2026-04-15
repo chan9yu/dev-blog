@@ -7,8 +7,12 @@ type CommentsSectionProps = {
 };
 
 /**
- * Giscus 댓글 placeholder. IntersectionObserver로 뷰포트 진입 시에만 mount.
- * M3-12에서 실제 Giscus 스크립트 주입 (NEXT_PUBLIC_GISCUS_* 환경변수 의존).
+ * 레거시 CommentsSection 디자인 참조:
+ * - section mt-16 border-t pt-8
+ * - h2 "댓글" text-xl font-bold tracking-tight mb-6
+ * - GiscusComments는 M3에서 실제 iframe 주입 (현재 placeholder)
+ *
+ * IntersectionObserver 기반 lazy-mount로 초기 번들/요청 비용 절감.
  */
 export function CommentsSection({ slug }: CommentsSectionProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -31,8 +35,13 @@ export function CommentsSection({ slug }: CommentsSectionProps) {
 	}, []);
 
 	return (
-		<section ref={containerRef} aria-labelledby="comments-title" className="space-y-4" data-post-slug={slug}>
-			<h2 id="comments-title" className="text-foreground text-lg font-semibold">
+		<section
+			ref={containerRef}
+			aria-labelledby="comments-title"
+			className="border-border-subtle mt-16 border-t pt-8"
+			data-post-slug={slug}
+		>
+			<h2 id="comments-title" className="text-foreground mb-6 text-xl font-bold tracking-tight">
 				댓글
 			</h2>
 			<div className="bg-muted text-muted-foreground min-h-32 rounded-md p-6 text-center text-sm">
