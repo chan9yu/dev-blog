@@ -7,37 +7,35 @@ type PopularPostsProps = {
 	posts: PostSummary[];
 };
 
+/**
+ * 레거시 TrendingPosts 디자인 참조:
+ * - space-y-4
+ * - 각 Link: group block space-y-1, hover translate-x-1
+ * - h3: line-clamp-2 text-sm font-medium, hover 시 accent 색상
+ * - time: text-xs
+ */
 export function PopularPosts({ posts }: PopularPostsProps) {
 	if (posts.length === 0) {
 		return <p className="text-muted-foreground text-sm">아직 포스트가 없습니다.</p>;
 	}
 
 	return (
-		<ol className="space-y-3">
-			{posts.map((post, index) => {
-				const rank = index + 1;
-				return (
-					<li key={post.slug}>
-						<Link
-							href={`/posts/${post.slug}`}
-							aria-label={`인기 포스트 ${rank}위: ${post.title}`}
-							className="group focus-visible:ring-ring flex gap-3 rounded focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-						>
-							<span className="text-muted-foreground text-sm font-semibold tabular-nums" aria-hidden>
-								{String(rank).padStart(2, "0")}
-							</span>
-							<div className="min-w-0 flex-1 space-y-0.5">
-								<h3 className="text-card-foreground group-hover:text-accent line-clamp-2 text-sm leading-snug font-medium transition-colors">
-									{post.title}
-								</h3>
-								<time className="text-muted-foreground block text-xs tabular-nums" dateTime={post.date}>
-									{formatDate(post.date)}
-								</time>
-							</div>
-						</Link>
-					</li>
-				);
-			})}
-		</ol>
+		<ul className="space-y-4">
+			{posts.map((post) => (
+				<li key={post.slug}>
+					<Link
+						href={`/posts/${post.slug}`}
+						className="group focus-visible:ring-ring block space-y-1 rounded transition-transform focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:hover:translate-x-1"
+					>
+						<h3 className="text-card-foreground group-hover:text-accent group-focus-visible:text-accent line-clamp-2 text-sm leading-tight font-medium transition-colors">
+							{post.title}
+						</h3>
+						<time className="text-muted-foreground block text-xs tabular-nums" dateTime={post.date}>
+							{formatDate(post.date)}
+						</time>
+					</Link>
+				</li>
+			))}
+		</ul>
 	);
 }
