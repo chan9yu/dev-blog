@@ -495,13 +495,15 @@ Browser (Client)
 
 #### 모션 & 전환
 
-- [ ] **[M1-59]** `FadeInWhenVisible.tsx` -- IntersectionObserver 기반 fade 애니메이션
+- [x] **[M1-59]** `FadeInWhenVisible.tsx` -- framer-motion `useInView` + rAF 기반 fade + slide-up
   - 대응: 전체 FEAT
-  - 검증: 뷰포트 진입 시 fade-in 효과
+  - 검증: 뷰포트 진입 시 fade-in 효과, `reducedMotion="user"` 자동 존중 (MotionConfig)
+  - 구현: `useInView(ref, { once: true, margin: "-50px" })` + rAF `setShouldAnimate` 지연으로 FOUC 방지
 
-- [ ] **[M1-60]** `PageTransition.tsx` -- 페이지 전환 모션 래퍼
+- [x] **[M1-60]** `PageTransition.tsx` -- framer-motion `motion.div` + rAF 기반 페이지 전환
   - 대응: 전체 FEAT
-  - 검증: 라우트 전환 시 부드러운 전환 효과
+  - 검증: `key={pathname}` 리마운트 시 fade + slide-up 재실행, hydration flash 없음
+  - 구현: `key={pathname}` remount 전략 + rAF `setMounted` → effect deps `[]`로 `set-state-in-effect` 룰 준수
 
 #### shadcn/ui 프리미티브
 

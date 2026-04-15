@@ -7,6 +7,152 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — framer-motion 애니메이션 시스템 도입 (2026-04-15)
+
+**의존성**
+
+- `framer-motion` (prod, 신규) — `AnimatePresence`, `motion.*`, `useInView`, `MotionConfig`
+
+**신규 파일**
+
+- `src/shared/hooks/useRafCallback.ts` — rAF throttle 훅. stale closure 없이 항상 최신 콜백 호출, unmount 시 자동 취소.
+
+**수정 파일**
+
+- `src/app/providers.tsx` — `MotionConfig` 추가. `reducedMotion="user"` (시스템 prefers-reduced-motion 자동 존중, WCAG 2.3.3), 전역 `transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }`.
+- `src/shared/components/common/FadeInWhenVisible.tsx` — CSS transition → framer-motion `useInView` + rAF 지연 `setShouldAnimate` 전환. FOUC 없는 fade + slide-up.
+- `src/shared/components/common/PageTransition.tsx` — CSS `animate-in` → framer-motion `motion.div`. `key={pathname}` remount + rAF `setMounted` 패턴. `set-state-in-effect` 룰 준수 (`deps=[]`).
+- `src/features/posts/components/PostList.tsx` — `AnimatePresence mode="popLayout"` + `motion.div` + `cardVariants` (staggerChildren 0.05). IntersectionObserver 콜백에 rAF 적용.
+- `src/features/search/components/SearchTrigger.tsx` — 검색 결과 목록에 `AnimatePresence mode="wait"` + `motion.ul`/`motion.li` stagger (0.04s). 검색어 변경 시 전체 목록 재mount.
+
+**타입 수정**
+
+- `ease: [0.4, 0, 0.2, 1] as [number, number, number, number]` — framer-motion Bezier 4-tuple 타입 정합 (`number[]` 대신 tuple).
+
+**ESLint**
+
+- `PageTransition` effect 내 `setMounted(false)` 제거 → `set-state-in-effect` 위반 해소. `key={pathname}` remount 시 state 자동 리셋으로 충분.
+
+### Review Cycle — 4-way 코드 리뷰 + Tier 1/2 수정 (2026-04-15)
+
+**리뷰 실행**
+
+- `react-nextjs-code-reviewer` · `a11y-auditor` · `feature-dev:code-reviewer` · `codex` 4-way 병렬 감사.
+- 대상: `src/**/*.tsx` 60개 파일 전수.
+- 기준: `.claude/rules/*` 15종 + `frontend-design` · `nextjs-best-practices` · `vercel-react-best-practices` · `frontend-fundamentals` 스킬.
+- 통합 Tier 1 10건 · Tier 2 다수 식별 → 우선순위 수정 → `compound-reviewer` 1차 PASS → 추가 Tier 2 2건 반영.
+
+**수정 적용 (Tier 1 10건 + Tier 2 2건)**
+
+- `src/features/posts/services/{getPublicPosts,getAdjacentPosts,getRelatedPosts,index}.ts` 신규 — 공개 포스트 SSOT 단일화(Tier 1 #10). `features/posts/index.ts`에서 services re-export.
+- `src/app/layout.tsx` · `src/app/page.tsx` · `src/app/posts/page.tsx` · `src/app/tags/[tag]/page.tsx` — inline `postsFixture.filter(...)`를 `getPublicPosts()` 호출로 치환. "공개 포스트 정의" 단일 진실 공급원 확립.
+- `src/app/posts/[slug]/page.tsx` — inline `findAdjacent` / `findRelated` 제거 → `getAdjacentPosts(slug)` · `getRelatedPosts(slug, tags)` 서비스 호출.
+- `src/app/posts/page.tsx` — 사이드바 `aria-label="태그 필터"` + `w-56` canonical 클래스 적용(arbitrary value 회피, `styling.md` 회고 준수).
+- `src/features/posts/components/ReadingProgress.tsx` — `<progress>` 의미론 강화 `aria-valuemin`/`aria-valuemax`, arbitrary `blur-[10px]` → canonical `blur-md`.
+- `src/features/posts/components/ScrollToTop.tsx` — 숨김 상태에서 `tabIndex={-1}`로 포커스 트랩 차단 (WCAG 2.4.3).
+- `src/features/posts/components/ShareButtons.tsx` — `setTimeout`을 `useEffect` cleanup 루프로 격리(`workflow.md` "임시 타이머 우회 금지" 준수).
+- `src/features/posts/components/Toc.tsx` — 인라인 `onClick`/`style` 제거, TOC 레벨을 class map으로, 활성 항목에 `aria-current="location"`.
+- `src/features/search/components/SearchTrigger.tsx` — `role` 오용 제거, `useMemo`로 필터 결과 안정화, 이벤트 핸들러 named 함수로 추출(`react.md` 인라인 함수 지양).
+- `src/features/lightbox/components/ImageLightbox.tsx` — 자체 오버레이 → Radix `Dialog` 기반 전환, `<img>` → `next/image`, `DialogDescription` 명시(a11y).
+- `src/features/lightbox/components/LightboxProvider.tsx` — 불필요한 `useCallback`/`useMemo` 3건 제거(React Compiler 위임, `react.md` 성능 규칙).
+- `src/shared/components/mdx/MdxPre.tsx` — `setTimeout` → `useEffect` cleanup.
+- `src/shared/components/mdx/MdxLink.tsx` — 외부 링크 아이콘 옆에 `sr-only`로 "(새 창에서 열림)" 고지(WCAG 2.4.9/3.2.5).
+- `src/shared/ui/Dialog.tsx` · `src/shared/ui/Sheet.tsx` — 닫기 버튼 `sr-only` 레이블 `"Close"` → `"닫기"` 현지화.
+
+**검증**
+
+- `pnpm lint` · `pnpm build` exit 0. 16 페이지 정적 생성 성공.
+- `compound-reviewer` PASS 판정.
+
+**미커밋 상태**
+
+- 누적 변경(수정 22 + 신규 4)은 `workflow.md` 절대 금지 규칙에 따라 **사용자 명시 승인** 후에만 커밋.
+
+### Tailwind Canonical Variants 보강 (2026-04-15)
+
+**문제**
+
+- VSCode Tailwind extension `suggestCanonicalClasses` 경고가 shadcn primitive의 arbitrary variant(`data-[disabled]`·`data-[state=open]`·`data-[side=*]`·`data-[variant=destructive]`·`[&_svg]` 등)로 인해 대량 발생. `styling.md` 회고·`shadcn.md` 후처리 5번에서 수차례 지적됐으나 shadcn 원본 복사 시점에 재발.
+
+**해결**
+
+- `src/shared/styles/globals.css`에 `@custom-variant` 14종 등록: `state-open`/`state-closed`/`state-checked`/`state-unchecked`, `side-top`/`side-right`/`side-bottom`/`side-left`, `variant-destructive`, `state-open-child-svg`, `variant-destructive-svg`, `child-svg`, `child-svg-no-size`, `child-svg-no-color`.
+- shadcn 컴포넌트 5개 전면 치환(`DropdownMenu`·`Dialog`·`Sheet`·`Accordion`·`ImageLightbox`) — 모든 `data-[...]`·`[&_svg...]`·`[&[data-state=...]>svg]` arbitrary 표현을 canonical variant로 일괄 전환.
+- `src/**/*.tsx` 전수 grep: `data-\[`·`\[&_`·`\[&\[` **0건**. IDE 경고 원천 제거.
+
+### 추가 수정 (compound-reviewer Tier 2 + GC 드리프트 대응)
+
+- `src/features/posts/services/getPostBySlug.ts` 신규 — GC 드리프트 #1(detail 페이지 SSOT) 대응. `src/app/posts/[slug]/page.tsx` `postsFixture.find` 2곳 치환.
+- `src/features/posts/services/getPublicPosts.ts` — 동률 날짜 정렬 불안정 대응. 비교 함수를 `getTime()` 수치 차이(안정 정렬)로 교체.
+- `src/features/lightbox/components/ImageLightbox.tsx` — `aria-describedby={undefined}`(의도 모호) 제거 후 `DialogPrimitive.Description` 명시.
+
+### 컴포넌트 내부 헬퍼 분리 (2026-04-15)
+
+- `src/features/series/services/getAdjacentInSeries.ts` 신규 — `SeriesNavigation.tsx`의 내부 `findAdjacentInSeries` 함수를 service로 승격. `SeriesAdjacency` 타입 export로 반환 타입 재사용 가능. `features/posts/services/getAdjacentPosts.ts`와 대칭 구조 확보.
+- `src/features/series/services/index.ts` 신규 (barrel), `src/features/series/index.ts`에 re-export 추가.
+- `src/features/series/components/SeriesNavigation.tsx` — 내부 함수 제거, `../services` import + unused `PostSummary` import 정리.
+
+### 배럴 파일 정책 명문화 (2026-04-15)
+
+**배경**
+
+- Next.js App Router에서 `"use client"`는 파일 경계에서 작동. 배럴이 클라이언트 컴포넌트를 re-export하면 RSC 호출자의 모듈 그래프가 오염될 위험.
+- Turbopack tree shaking이 실질적으로 해결하지만, 번들러 구현 디테일이지 공식 보장이 아님.
+- `shared/components/{common,layouts,mdx,ui}/` 에 배럴 생성 시도 → 서버/클라이언트 혼재 문제 인지 → 생성 취소.
+
+**정책 (project-structure.md §배럴 정책 신설)**
+
+- `features/<f>/index.ts` · `features/<f>/components/index.ts` · `features/<f>/services/index.ts`: 유지 (Public API 경계 + Turbopack 트레이드오프)
+- `shared/{types,fixtures}/index.ts`: 유지 (타입/데이터 전용)
+- `shared/components/{common,layouts,mdx,ui}/`: **배럴 생성 금지** (서버·클라이언트 혼재, 직접 경로만)
+- `shared/{hooks,utils,config}/`: 배럴 생성 금지 (파일 수 적음, 직접 경로 충분)
+- features 배럴에 서버/클라이언트 구분 주석 적용, export 20+ 초과 시 split barrel 전환 트리거 명시.
+
+**룰 동기화**
+
+- `.claude/rules/project-structure.md` §배럴 정책 섹션 신설 (허용/금지 매트릭스, split 전환 트리거, 회고).
+- `.claude/rules/typescript.md` Import/Export 섹션에 서버/클라이언트 혼재 경고 추가.
+- `features/posts/index.ts` · `features/series/index.ts` 주석 정비 (Components/Services/Types 3구간 구분).
+
+### HomeHero → features/about 이동 (2026-04-15)
+
+- `src/app/HomeHero.tsx`는 `project-structure.md §4.1` "app/ 내부 허용 조건 3요건" 중 **2번(feature 2+ import) 미충족** 상태로 배치되어 있음 — 사용자 지적 후 `src/features/about/components/HomeHero.tsx`로 이동.
+- `src/features/about/components/index.ts` · `src/features/about/index.ts` barrel에 `HomeHero` re-export 추가.
+- `src/app/page.tsx` import: `./HomeHero` → `@/features/about`. ESLint `--fix`로 import sort 2파일 정렬.
+- `.claude/rules/project-structure.md §4.1`에 회고 블록 추가 — 이 유형의 누락 재발 방지.
+
+### shared/components 구조 개편 (2026-04-15)
+
+**배경**
+
+- `src/shared/components/` 루트에 13개 tsx 평탄 배치 → 탐색 피로 누적. shadcn primitive는 `src/shared/ui/` 별도 디렉토리라 혼재 신호.
+- 사용자 요청으로 "shared 내 모든 tsx는 components 아래에서 관리" 원칙 채택(대안 A).
+
+**변경**
+
+- 최종 구조 (루트 직하 tsx 금지, 4개 서브로 완전 분류):
+  ```
+  src/shared/components/
+  ├── common/    NavLink, SocialLinks, ScrollReset, ScrollToTopButton, FadeInWhenVisible, PageTransition
+  ├── layouts/   Header, Footer, MobileMenu, Container, Sidebar
+  ├── mdx/       (기존 유지)
+  └── ui/        Accordion, Badge, Dialog, DropdownMenu, Sheet, Sonner (shadcn)
+  ```
+- 1차 루트 배치(`common/` 제외) → 2차 사용자 일관성 요청 → `common/` 신설로 루트 평탄 제거.
+- `src/shared/ui/` 디렉토리 제거. 내부에 잘못 떨어져 있던 OMC state 로그(`.omc/state/last-tool-error.json`)도 정리.
+- `components.json` `aliases.ui`: `@/shared/ui` → `@/shared/components/ui`.
+- `sed` 일괄 치환: `@/shared/ui/*` → `@/shared/components/ui/*` (12파일), `@/shared/components/{Header,Footer,Container,Sidebar,MobileMenu}` → `.../layouts/*` (10+ 파일).
+- layouts 내부 상대 경로 3건 `./NavLink`·`./SocialLinks` → `../` 재배치.
+- `pnpm lint --fix`로 `simple-import-sort` autofix 3파일 적용.
+
+**룰 동기화**
+
+- `.claude/rules/project-structure.md §2` 표준 디렉토리 트리의 `shared/components/` 설명을 "평탄 구조" → "`layouts/`·`mdx/`·`ui/` 서브 + 루트 단일 컴포넌트 혼용"으로 갱신.
+
+**검증**
+
+- `pnpm lint` · `pnpm build` exit 0, 16 페이지 정적 생성 성공.
+
 ### Added
 
 - **[M0-01]** Primitive/Semantic 색상 팔레트를 `src/shared/styles/tokens.css`에 CSS-only로 일원화 — light 기본 + `.dark` 오버라이드, `color-scheme` 직접 선언 (ADR-011). 별도 TS 팔레트 파일을 두지 않음 (SSOT = CSS, Tailwind 4 철학 준수).
