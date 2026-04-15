@@ -9,6 +9,7 @@ import { SearchTrigger } from "@/features/search";
 import { ThemeSwitcher } from "@/features/theme";
 import { Footer } from "@/shared/components/Footer";
 import { Header } from "@/shared/components/Header";
+import { MobileMenu } from "@/shared/components/MobileMenu";
 import { ScrollReset } from "@/shared/components/ScrollReset";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
 import { postsFixture } from "@/shared/fixtures/posts";
@@ -69,7 +70,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						<ScrollReset />
 					</Suspense>
 					<Suspense fallback={<div className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />}>
-						<Header searchSlot={<SearchTrigger posts={searchablePosts} />} themeSlot={<ThemeSwitcher />} />
+						<Header
+							searchSlot={<SearchTrigger posts={searchablePosts} />}
+							themeSlot={<ThemeSwitcher />}
+							mobileMenuSlot={<MobileMenu />}
+						/>
 					</Suspense>
 					<main id="main-content" tabIndex={-1} className="flex-1">
 						{children}
