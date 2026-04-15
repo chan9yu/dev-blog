@@ -56,7 +56,11 @@ src/
 │       └── config/               ← feature 설정값
 │
 └── shared/                       ← 도메인 불가지론 레이어
-    ├── components/               ← 범용 UI + 레이아웃 (Button, Header, Footer, Container 등, 평탄 구조)
+    ├── components/               ← 범용 UI + 레이아웃. 4개 서브 디렉토리로 완전 분류 (루트 직하에 tsx 금지)
+    │   ├── common/               ← 공통 UI 원자 (NavLink, SocialLinks, ScrollReset, ScrollToTopButton, FadeInWhenVisible, PageTransition)
+    │   ├── layouts/              ← 구조적 컴포넌트 (Header, Footer, Container, Sidebar, MobileMenu)
+    │   ├── mdx/                  ← MDX 렌더 전용 (CustomMDX, MdxHeading, MdxLink, MdxPre 등)
+    │   └── ui/                   ← shadcn primitive (Radix wrapper, `shadcn.md` 후처리 5번 대상)
     ├── hooks/                    ← 도메인 무관한 훅 (useDebounce 등)
     ├── utils/                    ← 순수 유틸 (formatDate, clamp 등)
     ├── libs/                     ← 외부 라이브러리 얇은 래퍼
@@ -121,6 +125,8 @@ src/
 1. 파일명이 조립 의도를 드러냄 (`XxxWithYyy.tsx`, `XxxLayout.tsx`)
 2. 2개 이상의 feature를 import
 3. 해당 라우트에서만 사용됨 (재사용 없음)
+
+> **회고 (2026-04-15)**: `src/app/HomeHero.tsx`가 3요건 중 **2번(feature 2+ import) 미충족** 상태로 배치되어 있다가 사용자 지적으로 `src/features/about/components/HomeHero.tsx`로 이동. 홈 페이지의 "저자 intro 섹션"은 `about` feature 도메인. **`app/`에 신규 tsx를 추가할 때는 이 체크리스트를 통과시키고, 통과 못 하면 `features/<domain>/components/`로 내려라**.
 
 #### Provider 관리 규약 (3-tier progressive)
 
@@ -189,6 +195,49 @@ export { getAllItems, getItemDetail } from "./getItems";
 - 같은 feature 내부 → 상대 경로 (`./`, `../`)
 - 다른 레이어 → 절대 경로 (`@/shared/...`)
 - **다른 feature → import 금지** (Law 3)
+
+---
+
+### 배럴 파일(index.ts) 정책 — 서버/클라이언트 경계 고려
+
+Next.js App Router에서 `"use client"`는 **파일 경계**에서 작동한다. 배럴이 `"use client"` 파일을 re-export하면 그 배럴을 import하는 RSC 파일이 **다른 export까지 클라이언트 모듈 그래프에 포함**시킬 위험이 있다. Turbopack(Next.js 16 기본)은 tree shaking이 공격적이라 실제 미사용 export를 제거하지만, 이는 **번들러 구현 디테일이지 공식 보장이 아니다**.
+
+#### 배럴 허용/금지 매트릭스
+
+| 위치                                         | 배럴         | 근거                                                                                                                                                                                                                                       |
+| -------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `features/<f>/index.ts`                      | ✅ 유지      | Public API 경계. RSC·Client 혼재하지만 **Turbopack tree shake + feature 외부 호출자 편의성** 트레이드오프로 허용. M2에서 코드량 급증 시 split barrel(`index.ts` + `client.ts`)로 전환 검토                                                 |
+| `features/<f>/components/index.ts`           | ✅ 유지      | feature 내부 편의. 외부에서 직접 접근하지 않음 (`features/<f>/index.ts`가 게이트)                                                                                                                                                          |
+| `features/<f>/services/index.ts`             | ✅ 유지      | **100% 서버 전용 순수 함수** — 클라이언트 오염 위험 없음                                                                                                                                                                                   |
+| `shared/types/index.ts`                      | ✅ 유지      | 타입 전용 — 컴파일 타임만, 런타임 번들 영향 없음                                                                                                                                                                                           |
+| `shared/fixtures/index.ts`                   | ✅ 유지      | 서버 전용 데이터 — SSG 빌드 타임 소비, 클라이언트 번들 미포함                                                                                                                                                                              |
+| `shared/components/{common,layouts,mdx,ui}/` | ❌ 생성 금지 | **서버 컴포넌트(Container, PostCard 등)와 클라이언트 컴포넌트(Header, MobileMenu 등)가 혼재**. 배럴 생성 시 RSC에서 Container만 import해도 Header의 `"use client"` 모듈이 그래프에 포함될 수 있다. **직접 경로 import가 유일한 안전 보장** |
+| `shared/{hooks,utils,config}/`               | ❌ 생성 금지 | 파일 수 적음(1~3개) + 직접 경로로 충분. 불필요한 간접 계층                                                                                                                                                                                 |
+
+#### features 배럴 혼재 인지 규칙
+
+`features/<f>/index.ts`가 서버/클라이언트를 혼재 re-export하는 것은 **현 단계(M1) Turbopack 의존 트레이드오프로 허용**한다. 단:
+
+1. **배럴 파일 자체에 `"use client"` 금지** — 배럴에 directive를 넣으면 모든 re-export가 클라이언트 엔트리가 됨
+2. **서비스(services/) re-export는 반드시 별도 줄로 분리** — 시각적으로 서버/클라이언트 경계를 드러냄:
+   ```ts
+   // features/posts/index.ts
+   // Components (서버·클라이언트 혼재 — Turbopack tree shake 의존)
+   export { PostCard, PostList, ... } from "./components";
+   // Services (100% 서버 전용)
+   export { getPublicPosts, getAdjacentPosts, ... } from "./services";
+   // Types (컴파일 타임 전용)
+   export type { PostSummary, ... } from "@/shared/types";
+   ```
+3. **M2 전환 트리거**: feature 배럴의 export 수가 **20개를 초과**하거나, 클라이언트 번들에 서버 전용 코드가 포함되는 것이 `next build --debug`로 확인되면 → split barrel(`index.ts` 서버 + `client.ts` 클라이언트)로 분리
+
+#### 회고 (2026-04-15)
+
+- M1 단계에서 `shared/components/` 하위에 배럴을 만들려다 **서버/클라이언트 혼재** 문제 인지 → 생성하지 않기로 결정.
+- `features/<f>/index.ts`는 Turbopack 의존 트레이드오프로 유지하되 split 전환 트리거(export 20+)를 명시.
+- **배럴 정책을 하나의 문서로 집중** 관리하여 `typescript.md`, `project-structure.md`, `shadcn.md` 간 불일치 방지.
+
+---
 
 ### 4.3 `shared/` — 도메인 불가지론
 
