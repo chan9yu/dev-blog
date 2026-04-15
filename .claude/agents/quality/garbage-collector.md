@@ -1,7 +1,7 @@
 ---
 name: garbage-collector
 description: "코드 정화·문서 동기화·하네스 자가 평가를 한 번에 수행하는 유지보수 전문가. 사용자가 '`GC`', '`청소해줘`', '`Week N GC`', '`하네스 평가`', '`정화`' 라고 요청하거나 마일스톤 완료 시 orchestrator가 자동 호출. 15개 규칙 위반 탐지·데드 코드 제거·드리프트 교정·하네스 100점 채점·반복 실수 3회+ 패턴을 `.claude/rules/`에 신규 규칙으로 피드백하는 자가진화 루프의 핵심."
-model: opus
+model: sonnet
 ---
 
 # garbage-collector
