@@ -1,74 +1,66 @@
 "use client";
 
-import { Check, Link2, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useState } from "react";
 
-import { cn } from "@/shared/utils/cn";
+const TOAST_DURATION_MS = 2000;
 
 type ShareButtonsProps = {
 	title: string;
 	url: string;
+	text?: string;
 };
 
-export function ShareButtons({ title, url }: ShareButtonsProps) {
-	const [copied, setCopied] = useState(false);
+/**
+ * 레거시 ShareButton 디자인:
+ * - 단일 "공유" 버튼 (Share 아이콘 + 텍스트)
+ * - bg-muted/50 backdrop-blur rounded-lg px-3 py-2 min-h-11
+ * - Web Share API 지원 시 native share, 미지원 시 클립보드 복사 + 토스트
+ */
+export function ShareButtons({ title, url, text }: ShareButtonsProps) {
+	const [showToast, setShowToast] = useState(false);
 
-	const handleCopy = async () => {
+	const handleShare = async () => {
+		if (typeof navigator.share === "function") {
+			try {
+				await navigator.share({ title, url, text });
+				return;
+			} catch (error) {
+				if ((error as Error).name === "AbortError") return;
+			}
+		}
 		try {
 			await navigator.clipboard.writeText(url);
-			setCopied(true);
-			window.setTimeout(() => setCopied(false), 2000);
+			setShowToast(true);
+			window.setTimeout(() => setShowToast(false), TOAST_DURATION_MS);
 		} catch {
-			setCopied(false);
+			// 클립보드 실패 시 조용히 무시
 		}
 	};
-
-	const handleWebShare = async () => {
-		if (typeof navigator.share !== "function") return;
-		try {
-			await navigator.share({ title, url });
-		} catch {
-			// 사용자 취소 등은 무시
-		}
-	};
-
-	const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-	const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-
-	const buttonClass =
-		"bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none";
 
 	return (
-		<div className="flex items-center gap-2" aria-label="공유">
+		<>
 			<button
 				type="button"
-				onClick={handleCopy}
-				aria-label={copied ? "링크 복사됨" : "링크 복사"}
-				className={buttonClass}
+				onClick={handleShare}
+				aria-label="공유하기"
+				className="bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring group inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 backdrop-blur-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:gap-2 sm:px-4"
 			>
-				{copied ? <Check className="size-4" aria-hidden /> : <Link2 className="size-4" aria-hidden />}
+				<Share2 className="size-4 transition-transform motion-safe:group-hover:scale-110" aria-hidden />
+				<span className="text-xs font-medium sm:text-sm">공유</span>
 			</button>
-			<a
-				href={xUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="X(Twitter)에 공유"
-				className={cn(buttonClass, "text-sm font-semibold")}
-			>
-				X
-			</a>
-			<a
-				href={linkedInUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="LinkedIn에 공유"
-				className={cn(buttonClass, "text-sm font-semibold")}
-			>
-				in
-			</a>
-			<button type="button" onClick={handleWebShare} aria-label="기기 공유 시트 열기" className={buttonClass}>
-				<Share2 className="size-4" aria-hidden />
-			</button>
-		</div>
+
+			{showToast && (
+				<div
+					role="status"
+					aria-live="polite"
+					className="motion-safe:animate-fade-in fixed bottom-20 left-1/2 z-50 -translate-x-1/2 sm:bottom-8"
+				>
+					<div className="bg-card border-border text-foreground rounded-lg border px-4 py-2 shadow-lg backdrop-blur-sm sm:px-6 sm:py-3">
+						<p className="text-xs font-medium sm:text-sm">링크가 복사되었습니다</p>
+					</div>
+				</div>
+			)}
+		</>
 	);
 }
