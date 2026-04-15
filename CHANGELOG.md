@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M2-01 contents/ Git Submodule 구성 (2026-04-15)
+
+- `.gitmodules`: `chan9yu/dev-blog-archive` private 레포를 `contents/` 경로로 서브모듈 등록
+- branch: `main` 고정 추적
+- 검증: `git submodule update --init --recursive` 성공, `contents/posts/` · `contents/about/` 구조 확인
+
 ### Added — framer-motion 애니메이션 시스템 도입 (2026-04-15)
 
 **의존성**
