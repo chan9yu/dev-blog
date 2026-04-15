@@ -42,7 +42,7 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 				</div>
 			)}
 
-			<div className={cn(isList ? "p-5 sm:p-6" : "p-5")}>
+			<div className={cn(isList ? "p-4 sm:p-5 md:p-6 lg:p-7" : "p-4 sm:p-5")}>
 				<div
 					className={cn(
 						"mb-2 flex gap-2",
