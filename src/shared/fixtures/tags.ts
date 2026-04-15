@@ -11,7 +11,7 @@ import { postsFixture } from "./posts";
  * M1 단계에서는 postsFixture를 SSOT로 하는 **derive 방식**으로 silent drift를 방지한다.
  * M2에서 실제 `getTagCounts()` 서비스 함수로 교체될 때 이 함수는 제거된다.
  */
-const aggregateTagCounts = (posts: PostSummary[]): TagCount[] => {
+const aggregateTagCounts = (posts: PostSummary[]) => {
 	const counts = new Map<string, number>();
 	for (const post of posts) {
 		if (post.private) continue;

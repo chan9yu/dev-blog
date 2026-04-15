@@ -1,7 +1,7 @@
 "use client";
 
 import { Share2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TOAST_DURATION_MS = 2000;
 
@@ -16,9 +16,16 @@ type ShareButtonsProps = {
  * - 단일 "공유" 버튼 (Share 아이콘 + 텍스트)
  * - bg-muted/50 backdrop-blur rounded-lg px-3 py-2 min-h-11
  * - Web Share API 지원 시 native share, 미지원 시 클립보드 복사 + 토스트
+ * - setTimeout cleanup은 useEffect로 격리 (workflow.md 근본 원칙 준수)
  */
 export function ShareButtons({ title, url, text }: ShareButtonsProps) {
 	const [showToast, setShowToast] = useState(false);
+
+	useEffect(() => {
+		if (!showToast) return;
+		const timerId = window.setTimeout(() => setShowToast(false), TOAST_DURATION_MS);
+		return () => window.clearTimeout(timerId);
+	}, [showToast]);
 
 	const handleShare = async () => {
 		if (typeof navigator.share === "function") {
@@ -26,13 +33,15 @@ export function ShareButtons({ title, url, text }: ShareButtonsProps) {
 				await navigator.share({ title, url, text });
 				return;
 			} catch (error) {
-				if ((error as Error).name === "AbortError") return;
+				if (error instanceof Error) {
+					if (error.name === "AbortError") return;
+				}
 			}
 		}
+
 		try {
 			await navigator.clipboard.writeText(url);
 			setShowToast(true);
-			window.setTimeout(() => setShowToast(false), TOAST_DURATION_MS);
 		} catch {
 			// 클립보드 실패 시 조용히 무시
 		}
@@ -54,6 +63,7 @@ export function ShareButtons({ title, url, text }: ShareButtonsProps) {
 				<div
 					role="status"
 					aria-live="polite"
+					aria-atomic="true"
 					className="motion-safe:animate-fade-in fixed bottom-20 left-1/2 z-50 -translate-x-1/2 sm:bottom-8"
 				>
 					<div className="bg-card border-border text-foreground rounded-lg border px-4 py-2 shadow-lg backdrop-blur-sm sm:px-6 sm:py-3">

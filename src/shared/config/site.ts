@@ -59,7 +59,13 @@ export const siteSocials: SocialLinkConfig[] = [
  * 이 분기를 통해 preview 환경의 OG 이미지·canonical이 잘못된 prod 도메인을 가리키는 것을 방지.
  */
 export function getSiteUrl() {
-	if (process.env.VERCEL_ENV === "production") return siteMetadata.url;
-	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+	if (process.env.VERCEL_ENV === "production") {
+		return siteMetadata.url;
+	}
+
+	if (process.env.VERCEL_URL) {
+		return `https://${process.env.VERCEL_URL}`;
+	}
+
 	return "http://localhost:3100";
 }

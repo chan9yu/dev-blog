@@ -1,4 +1,4 @@
-import type { PostSummary, Series } from "@/shared/types";
+import type { Series } from "@/shared/types";
 
 import { postsFixture } from "./posts";
 
@@ -14,7 +14,7 @@ const SERIES_META: SeriesMeta[] = [
 	{ slug: "typescript-type-system", name: "TypeScript Type System" }
 ];
 
-const collectSeriesPosts = (slug: string): PostSummary[] =>
+const collectSeriesPosts = (slug: string) =>
 	postsFixture
 		.filter((post) => post.series === slug && !post.private)
 		.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));

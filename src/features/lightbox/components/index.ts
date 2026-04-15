@@ -1,2 +1,2 @@
 export { ImageLightbox } from "./ImageLightbox";
-export { LightboxProvider, useLightbox } from "./LightboxProvider";
+export { LightboxProvider } from "./LightboxProvider";

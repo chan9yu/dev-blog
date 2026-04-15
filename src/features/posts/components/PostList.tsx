@@ -1,36 +1,38 @@
 "use client";
 
-import { LayoutGrid, List } from "lucide-react";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 import type { PostSummary } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
 
+import { useViewMode } from "../hooks/useViewMode";
 import { PostCard } from "./PostCard";
+import { ViewToggle } from "./ViewToggle";
 
 const PAGE_SIZE = 12;
-const VIEW_STORAGE_KEY = "blog:posts:view";
-const VIEW_CHANGE_EVENT = "blog:posts:view:change";
 
-type ViewMode = "list" | "grid";
+/** 포스트 카드 mount/exit/layout 애니메이션 — 기존 버전 패턴 */
+const cardVariants = {
+	hidden: { opacity: 0, scale: 0.95 },
+	visible: {
+		opacity: 1,
+		scale: 1,
+		transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }
+	},
+	exit: {
+		opacity: 0,
+		scale: 0.95,
+		transition: { duration: 0.2 }
+	}
+};
 
-function subscribeView(callback: () => void) {
-	window.addEventListener(VIEW_CHANGE_EVENT, callback);
-	window.addEventListener("storage", callback);
-	return () => {
-		window.removeEventListener(VIEW_CHANGE_EVENT, callback);
-		window.removeEventListener("storage", callback);
-	};
-}
-
-function getViewSnapshot(): ViewMode {
-	const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
-	return stored === "grid" ? "grid" : "list";
-}
-
-function getViewServerSnapshot(): ViewMode {
-	return "list";
-}
+/** 컨테이너: staggerChildren으로 카드들이 순차적으로 진입 */
+const containerVariants = {
+	visible: {
+		transition: { staggerChildren: 0.05 }
+	}
+};
 
 type PostListProps = {
 	posts: PostSummary[];
@@ -43,34 +45,51 @@ type PostListProps = {
  * - grid: grid gap-6 sm:grid-cols-2 lg:grid-cols-3
  * - IntersectionObserver 무한 스크롤 (PAGE_SIZE 12)
  *
- * 태그 필터는 URL 쿼리 기반(상위 RSC에서 처리), 이 컴포넌트는 뷰 토글만 담당.
+ * ## requestAnimationFrame 전략
+ * IntersectionObserver 콜백에서 직접 setState하면 레이아웃 스래싱이 발생할 수 있다.
+ * rAF로 상태 업데이트를 다음 paint 사이클로 지연해 렌더링 성능을 개선한다.
+ *
+ * ## framer-motion AnimatePresence
+ * mode="popLayout": 뷰 전환(list↔grid) 시 퇴장 카드가 레이아웃을 즉시 해제해
+ * 진입 카드가 자연스럽게 자리를 잡는다.
  */
 export function PostList({ posts }: PostListProps) {
-	const view = useSyncExternalStore(subscribeView, getViewSnapshot, getViewServerSnapshot);
+	const { view } = useViewMode();
 	const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 	const sentinelRef = useRef<HTMLDivElement>(null);
+	const rafRef = useRef<number | undefined>(undefined);
 
 	const visiblePosts = posts.slice(0, displayCount);
 	const hasMore = visiblePosts.length < posts.length;
 
-	const handleSetView = (next: ViewMode) => {
-		window.localStorage.setItem(VIEW_STORAGE_KEY, next);
-		window.dispatchEvent(new Event(VIEW_CHANGE_EVENT));
-	};
-
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
 		if (!sentinel || !hasMore) return;
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0]?.isIntersecting) {
-					setDisplayCount((prev) => prev + PAGE_SIZE);
+					// rAF로 paint 사이클에 맞춰 상태 업데이트 → 렌더링 스래싱 방지
+					if (rafRef.current !== undefined) {
+						cancelAnimationFrame(rafRef.current);
+					}
+					rafRef.current = requestAnimationFrame(() => {
+						setDisplayCount((prev) => prev + PAGE_SIZE);
+						rafRef.current = undefined;
+					});
 				}
 			},
 			{ rootMargin: "200px" }
 		);
+
 		observer.observe(sentinel);
-		return () => observer.disconnect();
+
+		return () => {
+			observer.disconnect();
+			if (rafRef.current !== undefined) {
+				cancelAnimationFrame(rafRef.current);
+			}
+		};
 	}, [hasMore]);
 
 	if (posts.length === 0) {
@@ -81,52 +100,32 @@ export function PostList({ posts }: PostListProps) {
 		);
 	}
 
-	const toggleButtonClass = (isActive: boolean) =>
-		cn(
-			"group focus-visible:ring-ring flex size-9 cursor-pointer items-center justify-center rounded-md transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-			isActive ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-		);
-
 	return (
 		<div className="space-y-6">
 			<div className="flex justify-end">
-				<div
-					className="bg-muted/50 hidden items-center gap-1 rounded-lg p-1 backdrop-blur-sm sm:flex"
-					role="group"
-					aria-label="뷰 모드"
-				>
-					<button
-						type="button"
-						onClick={() => handleSetView("list")}
-						aria-label="리스트 보기"
-						aria-pressed={view === "list"}
-						className={toggleButtonClass(view === "list")}
-					>
-						<List className="size-4 transition-transform group-hover:scale-110" aria-hidden />
-					</button>
-					<button
-						type="button"
-						onClick={() => handleSetView("grid")}
-						aria-label="격자 보기"
-						aria-pressed={view === "grid"}
-						className={toggleButtonClass(view === "grid")}
-					>
-						<LayoutGrid className="size-4 transition-transform group-hover:scale-110" aria-hidden />
-					</button>
-				</div>
+				<ViewToggle />
 			</div>
 
-			<div
+			{/* layout prop: 뷰 전환 시 flex↔grid 위치 변화를 framer-motion이 FLIP으로 보간 */}
+			<motion.div
+				layout
+				variants={containerVariants}
+				initial="hidden"
+				animate="visible"
 				className={cn(
 					view === "list"
 						? "flex flex-col gap-3 sm:gap-4 md:gap-6"
 						: "grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
 				)}
 			>
-				{visiblePosts.map((post, index) => (
-					<PostCard key={post.slug} post={post} variant={view} priority={index < 2} />
-				))}
-			</div>
+				<AnimatePresence mode="popLayout">
+					{visiblePosts.map((post, index) => (
+						<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+							<PostCard post={post} variant={view} priority={index < 2} />
+						</motion.div>
+					))}
+				</AnimatePresence>
+			</motion.div>
 
 			{hasMore && <div ref={sentinelRef} aria-hidden className="h-1" />}
 		</div>

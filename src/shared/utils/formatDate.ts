@@ -6,6 +6,6 @@ import dayjs from "dayjs";
  *
  * dayjs 플러그인(relativeTime·locale/ko)은 필요 시점(M1-28 포스트 상세 `fromNow` 등)에 추가한다.
  */
-export function formatDate(iso: string): string {
+export function formatDate(iso: string) {
 	return dayjs(iso).format("YYYY.MM.DD");
 }

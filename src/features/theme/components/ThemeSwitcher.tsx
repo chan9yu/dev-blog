@@ -18,7 +18,17 @@ export function ThemeSwitcher() {
 	const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
 
 	const isDark = mounted && resolvedTheme === "dark";
-	const handleToggle = () => setTheme(isDark ? "light" : "dark");
+
+	const handleToggle = () => {
+		const nextTheme = isDark ? "light" : "dark";
+		const applyTheme = () => setTheme(nextTheme);
+
+		if (document.startViewTransition) {
+			document.startViewTransition(applyTheme);
+		} else {
+			applyTheme();
+		}
+	};
 
 	return (
 		<button
@@ -26,7 +36,7 @@ export function ThemeSwitcher() {
 			onClick={handleToggle}
 			aria-label={isDark ? "라이트 모드로 변경" : "다크 모드로 변경"}
 			aria-pressed={isDark}
-			className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex size-9 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+			className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 		>
 			{mounted ? (
 				isDark ? (

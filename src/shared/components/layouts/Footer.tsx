@@ -5,10 +5,13 @@ import { Container } from "./Container";
 const FOOTER_LINKS = [
 	{ href: "/rss", label: "RSS", external: false },
 	{ href: "https://github.com/chan9yu", label: "GitHub", external: true },
-	{ href: "mailto:chan9yu.dev@gmail.com", label: "Email", external: false }
+	{ href: "mailto:dev.cgyeo@gmail.com", label: "Email", external: false }
 ];
 
-const buildYear = new Date().getFullYear();
+// 빌드 시점에 연도를 고정한다. Next.js 16 Server Component 프리렌더 중
+// new Date() 호출은 허용되지 않으므로(next/prerender-current-time 에러),
+// 모듈 초기화 시점에 평가해 SSG 빌드 연도를 사용한다.
+const BUILD_YEAR = new Date().getFullYear();
 
 /**
  * 레거시 SiteFooter 디자인 참조:
@@ -40,13 +43,14 @@ export function Footer() {
 								className="text-muted-foreground hover:text-accent focus-visible:ring-ring rounded text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 							>
 								{link.label}
+								{link.external && <span className="sr-only"> (새 창에서 열림)</span>}
 							</Link>
 						))}
 					</nav>
 				</div>
 
 				<div className="border-border-subtle text-muted-foreground mt-8 border-t pt-6 text-center text-sm">
-					© {buildYear} chan9yu. All rights reserved.
+					© {BUILD_YEAR} chan9yu. All rights reserved.
 				</div>
 			</Container>
 		</footer>

@@ -3,21 +3,26 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { PostList, PostListSkeleton } from "@/features/posts";
-import { Container } from "@/shared/components/Container";
-import { postsFixture } from "@/shared/fixtures/posts";
+import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
+import { Container } from "@/shared/components/layouts/Container";
 import { tagsFixture } from "@/shared/fixtures/tags";
-import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
+import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug, TAG_MAX_LENGTH } from "@/shared/utils/slug";
 
 type TagDetailPageProps = {
 	params: Promise<{ tag: string }>;
 };
 
+export function generateStaticParams() {
+	return tagsFixture.map((tag) => ({ tag: tag.slug }));
+}
+
 export async function generateMetadata({ params }: TagDetailPageProps): Promise<Metadata> {
 	const { tag } = await params;
+
 	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
 	if (!normalized) return { title: "Tag" };
+
 	return {
 		title: `#${normalized}`,
 		description: `${normalized} 태그가 포함된 포스트를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`,
@@ -32,14 +37,11 @@ export async function generateMetadata({ params }: TagDetailPageProps): Promise<
  */
 export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const { tag } = await params;
+
 	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
 	if (!normalized) notFound();
 
-	const filtered = postsFixture
-		.filter((post) => !post.private && post.tags.includes(normalized))
-		.slice()
-		.sort((a, b) => (new Date(b.date) > new Date(a.date) ? 1 : -1))
-		.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail, post.slug) }));
+	const filtered = resolvePostThumbnails(getPublicPosts().filter((post) => post.tags.includes(normalized)));
 
 	const tagMeta = tagsFixture.find((item) => item.slug === normalized);
 	if (!tagMeta && filtered.length === 0) notFound();

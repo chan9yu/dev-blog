@@ -33,7 +33,7 @@ export function PostNavigation({ adjacent }: PostNavigationProps) {
 					</h3>
 				</Link>
 			) : (
-				<div />
+				<div aria-hidden />
 			)}
 
 			{next ? (
@@ -50,7 +50,7 @@ export function PostNavigation({ adjacent }: PostNavigationProps) {
 					</h3>
 				</Link>
 			) : (
-				<div />
+				<div aria-hidden />
 			)}
 		</nav>
 	);

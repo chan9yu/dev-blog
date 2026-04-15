@@ -1,24 +1,28 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { CommentsSection } from "@/features/comments";
 import {
+	getAdjacentPosts,
+	getPostBySlug,
+	getPublicPosts,
+	getRelatedPosts,
 	PostMetaHeader,
 	PostNavigation,
 	ReadingProgress,
 	RelatedPosts,
 	ScrollToTop,
 	ShareButtons,
-	Toc
+	TOC
 } from "@/features/posts";
 import { SeriesNavigation } from "@/features/series";
-import { Container } from "@/shared/components/Container";
+import { ViewCounter } from "@/features/views";
+import { Container } from "@/shared/components/layouts/Container";
 import { getSiteUrl } from "@/shared/config/site";
 import { postDetailsFixture } from "@/shared/fixtures/post-details";
-import { postsFixture } from "@/shared/fixtures/posts";
 import { seriesFixture } from "@/shared/fixtures/series";
-import type { AdjacentPosts, RelatedPost } from "@/shared/types";
 import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug } from "@/shared/utils/slug";
 
@@ -26,34 +30,19 @@ type PostDetailPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
-function findAdjacent(currentSlug: string): AdjacentPosts {
-	const publicPosts = postsFixture.filter((post) => !post.private);
-	const index = publicPosts.findIndex((post) => post.slug === currentSlug);
-	if (index === -1) return { prev: null, next: null };
-	return {
-		prev: index < publicPosts.length - 1 ? (publicPosts[index + 1] ?? null) : null,
-		next: index > 0 ? (publicPosts[index - 1] ?? null) : null
-	};
-}
-
-function findRelated(currentSlug: string, tags: string[]): RelatedPost[] {
-	return postsFixture
-		.filter((post) => !post.private && post.slug !== currentSlug)
-		.map((post) => {
-			const overlap = post.tags.filter((tag) => tags.includes(tag)).length;
-			return { ...post, overlapScore: overlap };
-		})
-		.filter((post) => post.overlapScore > 0)
-		.sort((a, b) => b.overlapScore - a.overlapScore)
-		.slice(0, 3);
+export function generateStaticParams() {
+	return getPublicPosts().map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
 	const { slug } = await params;
+
 	const normalized = normalizeSlug(slug);
 	if (!normalized) return { title: "Post" };
-	const post = postsFixture.find((item) => item.slug === normalized);
-	if (!post || post.private) return { title: "Post" };
+
+	const post = getPostBySlug(normalized);
+	if (!post) return { title: "Post" };
+
 	return {
 		title: post.title,
 		description: post.description,
@@ -63,15 +52,16 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const { slug } = await params;
+
 	const normalized = normalizeSlug(slug);
 	if (!normalized) notFound();
 
-	const summary = postsFixture.find((item) => item.slug === normalized);
-	if (!summary || summary.private) notFound();
+	const summary = getPostBySlug(normalized);
+	if (!summary) notFound();
 
 	const detail = postDetailsFixture.find((item) => item.slug === normalized);
-	const adjacent = findAdjacent(summary.slug);
-	const related = findRelated(summary.slug, summary.tags);
+	const adjacent = getAdjacentPosts(summary.slug);
+	const related = getRelatedPosts(summary.slug, summary.tags);
 	const currentSeries = summary.series ? seriesFixture.find((item) => item.slug === summary.series) : null;
 	const shareUrl = `${getSiteUrl()}/posts/${summary.slug}`;
 	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
@@ -82,12 +72,22 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 			<Container>
 				<div className="flex flex-col gap-10 py-8 lg:flex-row lg:gap-12 lg:py-10">
 					<article className="min-w-0 flex-1 space-y-10 pb-12 sm:pb-16">
-						<PostMetaHeader post={summary} shareSlot={<ShareButtons title={summary.title} url={shareUrl} />} />
+						<PostMetaHeader
+							post={summary}
+							shareSlot={<ShareButtons title={summary.title} url={shareUrl} />}
+							viewCounterSlot={
+								<Suspense
+									fallback={<span className="bg-muted inline-block h-4 w-12 animate-pulse rounded" aria-hidden />}
+								>
+									<ViewCounter slug={summary.slug} />
+								</Suspense>
+							}
+						/>
 
 						{currentSeries && <SeriesNavigation series={currentSeries} currentSlug={summary.slug} />}
 
 						{thumbnailSrc && (
-							<div className="relative aspect-[2/1] w-full overflow-hidden rounded-xl sm:rounded-2xl">
+							<div className="relative aspect-2/1 w-full overflow-hidden rounded-xl sm:rounded-2xl">
 								<Image
 									src={thumbnailSrc}
 									alt={summary.title}
@@ -118,8 +118,8 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 						<CommentsSection slug={summary.slug} />
 					</article>
 
-					<aside className="w-full lg:sticky lg:top-24 lg:w-64 lg:shrink-0 lg:self-start">
-						<Toc items={detail?.toc ?? []} />
+					<aside aria-label="목차" className="hidden lg:sticky lg:top-24 lg:block lg:w-64 lg:shrink-0 lg:self-start">
+						<TOC items={detail?.toc ?? []} />
 					</aside>
 				</div>
 			</Container>

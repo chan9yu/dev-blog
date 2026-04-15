@@ -22,16 +22,19 @@ export function SocialLinks({ items, className }: SocialLinksProps) {
 		<ul className={cn("flex flex-wrap gap-3", className)}>
 			{items.map((item) => {
 				const isExternal = /^https?:\/\//i.test(item.href);
+
 				return (
 					<li key={item.href}>
 						<a
 							href={item.href}
 							target={isExternal ? "_blank" : undefined}
 							rel={isExternal ? "noopener noreferrer" : undefined}
-							aria-label={item.label}
 							className="bg-card text-foreground border-border-subtle focus-visible:ring-ring group inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:hover:-translate-y-0.5 motion-safe:hover:scale-[1.03]"
 						>
-							<span className="inline-flex size-4 items-center justify-center transition-transform duration-200 motion-safe:group-hover:rotate-12">
+							<span
+								className="inline-flex size-4 items-center justify-center transition-transform duration-200 motion-safe:group-hover:rotate-12"
+								aria-hidden
+							>
 								{item.icon}
 							</span>
 							{item.label}

@@ -2,7 +2,7 @@ import { ChevronRight, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Container } from "@/shared/components/Container";
+import { Container } from "@/shared/components/layouts/Container";
 import { tagsFixture } from "@/shared/fixtures/tags";
 
 export const metadata: Metadata = {

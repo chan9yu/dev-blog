@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Container } from "@/shared/components/Container";
+import { Container } from "@/shared/components/layouts/Container";
 import { seriesFixture } from "@/shared/fixtures/series";
 import { formatDate } from "@/shared/utils/formatDate";
 import { normalizeSlug } from "@/shared/utils/slug";
@@ -12,12 +12,19 @@ type SeriesDetailPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
+export function generateStaticParams() {
+	return seriesFixture.map((series) => ({ slug: series.slug }));
+}
+
 export async function generateMetadata({ params }: SeriesDetailPageProps): Promise<Metadata> {
 	const { slug } = await params;
+
 	const normalized = normalizeSlug(decodeURIComponent(slug));
 	if (!normalized) return { title: "Series" };
+
 	const series = seriesFixture.find((item) => item.slug === normalized);
 	if (!series) return { title: "Series" };
+
 	return {
 		title: series.name,
 		description: `${series.name} 시리즈 - 총 ${series.posts.length}개의 연재 글로 구성되어 있습니다`,
@@ -32,6 +39,7 @@ export async function generateMetadata({ params }: SeriesDetailPageProps): Promi
  */
 export default async function SeriesDetailPage({ params }: SeriesDetailPageProps) {
 	const { slug } = await params;
+
 	const normalized = normalizeSlug(decodeURIComponent(slug));
 	if (!normalized) notFound();
 

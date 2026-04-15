@@ -2,7 +2,7 @@ import { Archive, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Container } from "@/shared/components/Container";
+import { Container } from "@/shared/components/layouts/Container";
 import { seriesFixture } from "@/shared/fixtures/series";
 
 export const metadata: Metadata = {

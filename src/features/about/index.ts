@@ -9,4 +9,4 @@
  * 규칙: 다른 feature를 import하지 않는다 (Law 3).
  */
 
-export { AboutProfile } from "./components";
+export { AboutProfile, HomeHero } from "./components";

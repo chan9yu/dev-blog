@@ -10,4 +10,5 @@
  * 규칙: 다른 feature를 import하지 않는다 (Law 3).
  */
 
-export { ImageLightbox, LightboxProvider, useLightbox } from "./components";
+export { ImageLightbox, LightboxProvider } from "./components";
+export { useLightbox } from "./hooks/useLightbox";

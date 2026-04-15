@@ -3,10 +3,10 @@
 import { Menu } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { Sheet } from "@/shared/components/ui/Sheet";
 import { type NavItem, siteNav } from "@/shared/config/site";
-import { Sheet } from "@/shared/ui/Sheet";
 
-import { NavLink } from "./NavLink";
+import { NavLink } from "../common/NavLink";
 
 type MobileMenuProps = {
 	navItems?: NavItem[];
@@ -19,11 +19,11 @@ export function MobileMenu({ navItems = siteNav, socialLinksSlot, triggerLabel =
 		<Sheet>
 			<Sheet.Trigger
 				aria-label={triggerLabel}
-				className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 inline-flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 inline-flex size-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 			>
 				<Menu className="size-5" aria-hidden />
 			</Sheet.Trigger>
-			<Sheet.Content side="right" className="flex w-72 flex-col sm:max-w-sm">
+			<Sheet.Content side="right" className="flex w-72 max-w-[85vw] flex-col sm:max-w-sm">
 				<Sheet.Header>
 					<Sheet.Title>메뉴</Sheet.Title>
 					<Sheet.Description className="sr-only">사이트 내비게이션 메뉴</Sheet.Description>

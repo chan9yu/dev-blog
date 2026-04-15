@@ -8,6 +8,27 @@
 @import "./shiki.css";
 @import "./prose.css";
 
+/* button·focus 리셋 — @layer base 안에 두어 Tailwind utilities가 override 가능하도록.
+   CSS 명세상 @import는 모든 @layer/@rule보다 앞에 위치해야 하므로 위에 모아둠. */
+@layer base {
+	button {
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+	}
+
+	:focus {
+		outline: none;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-focus-ring);
+		outline-offset: 2px;
+		border-radius: var(--radius-sm);
+	}
+}
+
 /**
  * Tailwind 4 @theme: Semantic CSS 변수를 Tailwind 유틸(bg-*, text-*, rounded-*)로 노출.
  * `inline` 키워드는 var() 참조를 빌드 타임에 resolve — .dark 오버라이드가 런타임에 여전히 작동.
@@ -144,4 +165,79 @@
 
 	--text-caption: 0.75rem;
 	--text-caption--line-height: 1.5;
+}
+
+/**
+ * Custom variants — shadcn/Radix primitive에서 사용하는 arbitrary `data-[state=open]`·`[&_svg]`·
+ * `data-[variant=destructive]:*:[svg]` 같은 셀렉터 표현을 canonical variant 이름으로 치환한다.
+ * VSCode Tailwind extension의 `suggestCanonicalClasses` 경고 제거 + `styling.md` arbitrary 금지 원칙 +
+ * `shadcn.md` 후처리 5번 "arbitrary canonical 교체" 의무의 통합 대응.
+ */
+@custom-variant state-open (&[data-state="open"]);
+@custom-variant state-closed (&[data-state="closed"]);
+@custom-variant state-checked (&[data-state="checked"]);
+@custom-variant state-unchecked (&[data-state="unchecked"]);
+@custom-variant side-top (&[data-side="top"]);
+@custom-variant side-right (&[data-side="right"]);
+@custom-variant side-bottom (&[data-side="bottom"]);
+@custom-variant side-left (&[data-side="left"]);
+@custom-variant variant-destructive (&[data-variant="destructive"]);
+@custom-variant state-open-child-svg (&[data-state="open"] > svg);
+@custom-variant variant-destructive-svg (&[data-variant="destructive"] svg);
+@custom-variant child-svg (& svg);
+@custom-variant child-svg-no-size (& svg:not([class*="size-"]));
+@custom-variant child-svg-no-color (& svg:not([class*="text-"]));
+
+/* Semantic dimension utilities — arbitrary value([...]) 대체용 @utility 정의 */
+/* 2026 animated gradient text — accent→violet→accent 순환 */
+@utility text-gradient-animated {
+	background: linear-gradient(135deg, var(--color-accent-default), #8b5cf6, #06b6d4, var(--color-accent-default));
+	background-size: 300% 300%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+	animation: gradient-shift 6s ease infinite;
+}
+
+@utility top-modal {
+	top: 10vh;
+}
+
+@utility max-h-modal-content {
+	max-height: 60vh;
+}
+
+@utility max-h-sidebar {
+	max-height: calc(100vh - 7rem);
+}
+
+@utility max-h-toc {
+	max-height: calc(100vh - 24rem);
+}
+
+@utility h-lightbox {
+	height: 90vh;
+}
+
+@utility w-lightbox {
+	width: 90vw;
+}
+
+/* Sonner — 테마 변수를 CSS로 관리 (Sonner.tsx의 style prop 제거) */
+.toaster {
+	--normal-bg: var(--color-popover);
+	--normal-text: var(--color-popover-foreground);
+	--normal-border: var(--color-border);
+	--border-radius: var(--radius-md);
+}
+
+/* ReadingProgress — JS가 --progress(0~1)만 주입, transform은 CSS에서 처리 */
+.reading-progress-bar {
+	transform: scaleX(var(--progress, 0));
+}
+
+/* FadeInWhenVisible — JS가 --fade-delay만 주입, transition-delay는 CSS에서 처리 */
+.fade-in-delay {
+	transition-delay: var(--fade-delay, 0ms);
 }

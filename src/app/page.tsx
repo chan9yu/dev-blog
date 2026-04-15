@@ -1,23 +1,17 @@
 import Link from "next/link";
 
-import { PopularPosts, PostCard } from "@/features/posts";
+import { HomeHero } from "@/features/about";
+import { getPublicPosts, PopularPosts, PostCard } from "@/features/posts";
 import { TrendingSeries } from "@/features/series";
 import { TrendingTags } from "@/features/tags";
-import { Container } from "@/shared/components/Container";
-import { postsFixture } from "@/shared/fixtures/posts";
+import { Container } from "@/shared/components/layouts/Container";
 import { trendingFixture } from "@/shared/fixtures/trending";
-import type { PostSummary } from "@/shared/types";
-import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
-
-import { HomeHero } from "./HomeHero";
+import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
 const RECENT_POSTS_LIMIT = 6;
 
-const resolveThumbnails = (items: PostSummary[]) =>
-	items.map((post) => ({ ...post, thumbnail: resolveThumbnailSrc(post.thumbnail, post.slug) }));
-
 export default function HomePage() {
-	const recentPosts = resolveThumbnails(postsFixture.filter((post) => !post.private).slice(0, RECENT_POSTS_LIMIT));
+	const recentPosts = resolvePostThumbnails(getPublicPosts().slice(0, RECENT_POSTS_LIMIT));
 	const { popularPosts, trendingSeries, trendingTags } = trendingFixture;
 
 	return (
@@ -43,7 +37,7 @@ export default function HomePage() {
 								전체 보기 <span aria-hidden>→</span>
 							</Link>
 						</div>
-						<div className="flex flex-col gap-6">
+						<div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
 							{recentPosts.map((post, index) => (
 								<PostCard key={post.slug} post={post} variant="list" priority={index < 2} />
 							))}

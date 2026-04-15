@@ -1,26 +1,6 @@
-import type { LucideIcon } from "lucide-react";
-import { Briefcase, Code2, Mail, Rss } from "lucide-react";
+import { SocialLinks } from "@/shared/components/common/SocialLinks";
 
-import { SocialLinks } from "@/shared/components/SocialLinks";
-import { siteSocials } from "@/shared/config/site";
-
-type SocialIconName = (typeof siteSocials)[number]["iconName"];
-
-/**
- * lucide-react 최신 버전에서 Github·Linkedin 브랜드 마크가 제거되어 임시 대체.
- * 향후 `@svgr/webpack` 도입 시 `src/shared/assets/icons/*.svg`의 공식 브랜드 SVG로 교체.
- */
-const ICON_MAP: Record<SocialIconName, LucideIcon> = {
-	Github: Code2,
-	Linkedin: Briefcase,
-	Mail,
-	Rss
-};
-
-const SOCIAL_ITEMS = siteSocials.map(({ label, href, iconName }) => {
-	const Icon = ICON_MAP[iconName];
-	return { label, href, icon: <Icon className="size-4" aria-hidden /> };
-});
+import { socialItems } from "../utils/socialItems";
 
 /**
  * 레거시 홈 Hero 디자인:
@@ -54,7 +34,7 @@ export function HomeHero() {
 				</div>
 			</div>
 
-			<SocialLinks items={SOCIAL_ITEMS} />
+			<SocialLinks items={socialItems} />
 		</section>
 	);
 }

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Container } from "@/shared/components/Container";
+import { Container } from "@/shared/components/layouts/Container";
+
+export const metadata: Metadata = {
+	title: "페이지를 찾을 수 없습니다 | chan9yu",
+	description: "요청하신 페이지가 존재하지 않습니다.",
+	robots: { index: false, follow: false }
+};
 
 export default function NotFound() {
 	return (

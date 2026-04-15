@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { AboutProfile } from "@/features/about";
-import { Container } from "@/shared/components/Container";
+import { Container } from "@/shared/components/layouts/Container";
 
 export const metadata: Metadata = {
 	title: "About",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
 	return (
-		<Container size="prose">
+		<Container>
 			<div className="py-10 lg:py-14">
 				<AboutProfile />
 			</div>

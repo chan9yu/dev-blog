@@ -5,14 +5,14 @@ import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
 
+import { getPublicPosts } from "@/features/posts/services";
 import { SearchTrigger } from "@/features/search";
 import { ThemeSwitcher } from "@/features/theme";
-import { Footer } from "@/shared/components/Footer";
-import { Header } from "@/shared/components/Header";
-import { MobileMenu } from "@/shared/components/MobileMenu";
-import { ScrollReset } from "@/shared/components/ScrollReset";
+import { ScrollReset } from "@/shared/components/common/ScrollReset";
+import { Footer } from "@/shared/components/layouts/Footer";
+import { Header } from "@/shared/components/layouts/Header";
+import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
-import { postsFixture } from "@/shared/fixtures/posts";
 
 import { Providers } from "./providers";
 
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
-	const searchablePosts = postsFixture.filter((post) => !post.private);
+	const searchablePosts = getPublicPosts();
 
 	return (
 		<html lang="ko" className={pretendard.variable} suppressHydrationWarning>
@@ -69,7 +69,17 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					<Suspense fallback={null}>
 						<ScrollReset />
 					</Suspense>
-					<Suspense fallback={<div className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />}>
+					<a
+						href="#main-content"
+						className="focus-visible:ring-ring bg-background text-foreground sr-only z-50 rounded-md px-4 py-2 font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2 focus-visible:outline-none"
+					>
+						본문 바로가기
+					</a>
+					<Suspense
+						fallback={
+							<div aria-hidden className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />
+						}
+					>
 						<Header
 							searchSlot={<SearchTrigger posts={searchablePosts} />}
 							themeSlot={<ThemeSwitcher />}

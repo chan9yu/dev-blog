@@ -21,6 +21,7 @@ export function CommentsSection({ slug }: CommentsSectionProps) {
 	useEffect(() => {
 		const container = containerRef.current;
 		if (!container) return;
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0]?.isIntersecting) {
@@ -30,8 +31,12 @@ export function CommentsSection({ slug }: CommentsSectionProps) {
 			},
 			{ rootMargin: "200px" }
 		);
+
 		observer.observe(container);
-		return () => observer.disconnect();
+
+		return () => {
+			observer.disconnect();
+		};
 	}, []);
 
 	return (

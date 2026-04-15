@@ -1,30 +1,14 @@
 import { BookOpen, ChevronLeft, ChevronRight, List } from "lucide-react";
 import Link from "next/link";
 
-import type { PostSummary, Series } from "@/shared/types";
+import type { Series } from "@/shared/types";
+
+import { getAdjacentInSeries } from "../services";
 
 type SeriesNavigationProps = {
 	series: Series;
 	currentSlug: string;
 };
-
-function findAdjacentInSeries(series: Series, currentSlug: string) {
-	const ordered = [...series.posts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
-	const index = ordered.findIndex((post) => post.slug === currentSlug);
-	if (index === -1)
-		return {
-			prev: null as PostSummary | null,
-			next: null as PostSummary | null,
-			order: null as number | null,
-			total: ordered.length
-		};
-	return {
-		prev: index > 0 ? (ordered[index - 1] ?? null) : null,
-		next: index < ordered.length - 1 ? (ordered[index + 1] ?? null) : null,
-		order: ordered[index]?.seriesOrder ?? null,
-		total: ordered.length
-	};
-}
 
 /**
  * 레거시 SeriesNavigation 디자인:
@@ -34,7 +18,7 @@ function findAdjacentInSeries(series: Series, currentSlug: string) {
  * - 하단: 시리즈 전체 보기 버튼 (List 아이콘)
  */
 export function SeriesNavigation({ series, currentSlug }: SeriesNavigationProps) {
-	const { prev, next, order, total } = findAdjacentInSeries(series, currentSlug);
+	const { prev, next, order, total } = getAdjacentInSeries(series, currentSlug);
 	if (order === null) return null;
 
 	return (
@@ -74,7 +58,10 @@ export function SeriesNavigation({ series, currentSlug }: SeriesNavigationProps)
 						</span>
 					</Link>
 				) : (
-					<div className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 opacity-50">
+					<div
+						aria-hidden
+						className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 opacity-50"
+					>
 						<span className="text-muted-foreground text-xs font-medium">이전 글</span>
 						<span className="text-muted-foreground text-sm">첫 번째 글입니다</span>
 					</div>
@@ -94,7 +81,10 @@ export function SeriesNavigation({ series, currentSlug }: SeriesNavigationProps)
 						</span>
 					</Link>
 				) : (
-					<div className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right opacity-50">
+					<div
+						aria-hidden
+						className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right opacity-50"
+					>
 						<span className="text-muted-foreground text-xs font-medium">다음 글</span>
 						<span className="text-muted-foreground text-sm">마지막 글입니다</span>
 					</div>
