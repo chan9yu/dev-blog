@@ -2,8 +2,9 @@ import { Archive, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { getPublicPosts } from "@/features/posts";
+import { getAllSeries } from "@/features/series";
 import { Container } from "@/shared/components/layouts/Container";
-import { seriesFixture } from "@/shared/fixtures/series";
 
 export const metadata: Metadata = {
 	title: "시리즈",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
  *   - +N개 더보기 (3 초과 시)
  */
 export default function SeriesHubPage() {
-	const series = seriesFixture;
+	const series = getAllSeries(getPublicPosts());
 
 	return (
 		<Container>

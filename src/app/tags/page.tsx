@@ -2,8 +2,9 @@ import { ChevronRight, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { getPublicPosts } from "@/features/posts";
+import { getAllTags } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
-import { tagsFixture } from "@/shared/fixtures/tags";
 
 export const metadata: Metadata = {
 	title: "태그",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
  *   - 우측: ChevronRight (hover translate-x-1)
  */
 export default function TagsHubPage() {
-	const tags = tagsFixture;
+	const tags = getAllTags(getPublicPosts());
 
 	return (
 		<Container>

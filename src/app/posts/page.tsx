@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
-import { TagList } from "@/features/tags";
+import { getAllTags, TagList } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
-import { tagsFixture } from "@/shared/fixtures/tags";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
 type PostsPageProps = {
@@ -22,6 +21,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 	const { tag } = await searchParams;
 
 	const basePosts = getPublicPosts();
+	const allTags = getAllTags(basePosts);
 	const filtered = tag ? basePosts.filter((post) => post.tags.includes(tag)) : basePosts;
 	const resolvedPosts = resolvePostThumbnails(filtered);
 
@@ -40,7 +40,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 						aria-label="태그 필터"
 						className="lg:max-h-sidebar hidden lg:sticky lg:top-24 lg:block lg:w-56 lg:shrink-0 lg:overflow-y-auto"
 					>
-						<TagList tags={tagsFixture} currentTag={tag} variant="filter" />
+						<TagList tags={allTags} currentTag={tag} variant="filter" />
 					</aside>
 
 					<div className="min-w-0 flex-1">

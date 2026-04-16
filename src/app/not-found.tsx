@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/shared/components/layouts/Container";
+import { Button } from "@/shared/components/ui/Button";
 
 export const metadata: Metadata = {
-	title: "페이지를 찾을 수 없습니다 | chan9yu",
+	title: "페이지를 찾을 수 없습니다",
 	description: "요청하신 페이지가 존재하지 않습니다.",
 	robots: { index: false, follow: false }
 };
@@ -18,12 +19,9 @@ export default function NotFound() {
 				<p className="text-muted-foreground max-w-prose">
 					요청하신 주소가 이동했거나 삭제되었을 수 있습니다. 주소를 다시 확인하거나 홈으로 돌아가 주세요.
 				</p>
-				<Link
-					href="/"
-					className="bg-foreground text-background focus-visible:ring-ring mt-2 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-				>
-					홈으로 돌아가기
-				</Link>
+				<Button asChild className="bg-foreground text-background hover:bg-foreground/90 mt-2">
+					<Link href="/">홈으로 돌아가기</Link>
+				</Button>
 			</div>
 		</Container>
 	);
