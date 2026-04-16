@@ -57,6 +57,9 @@
 	--shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
 	--shadow-md: 0 4px 8px -2px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
 	--shadow-lg: 0 16px 32px -8px rgb(15 23 42 / 0.12), 0 4px 8px -2px rgb(15 23 42 / 0.06);
+	--shadow-accent:
+		0 0 0 1px color-mix(in srgb, var(--color-accent-default) 35%, transparent),
+		0 8px 24px -4px color-mix(in srgb, var(--color-accent-default) 15%, transparent);
 
 	/* Radius */
 	--radius-xs: 0.25rem;
