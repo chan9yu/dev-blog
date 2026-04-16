@@ -18,7 +18,13 @@ type MdxImageProps = ComponentProps<"img"> & {
 export function MdxImage({ alt, caption, className, ...rest }: MdxImageProps) {
 	return (
 		<figure className="my-6">
-			<img alt={alt} loading="lazy" decoding="async" className={cn("h-auto w-full rounded-lg", className)} {...rest} />
+			<img
+				alt={alt}
+				loading="lazy"
+				decoding="async"
+				className={cn("mx-auto block h-auto max-w-full rounded-lg", className)}
+				{...rest}
+			/>
 			{caption && <figcaption className="text-muted-foreground mt-2 text-center text-xs italic">{caption}</figcaption>}
 		</figure>
 	);
