@@ -16,7 +16,8 @@ export type PostSummary = PostFrontmatter & {
 
 export type TocItem = {
 	id: string;
-	level: 1 | 2 | 3;
+	/** MDX 규약: 본문은 ## 부터 시작하므로 level 1은 사용 안 함. h4까지 지원. */
+	level: 2 | 3 | 4;
 	text: string;
 };
 

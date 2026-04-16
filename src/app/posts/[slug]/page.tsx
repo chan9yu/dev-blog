@@ -20,6 +20,7 @@ import {
 import { SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
 import { Container } from "@/shared/components/layouts/Container";
+import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
 import { getSiteUrl } from "@/shared/config/site";
 import { postDetailsFixture } from "@/shared/fixtures/post-details";
 import { seriesFixture } from "@/shared/fixtures/series";
@@ -101,13 +102,9 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 
 						<section aria-label="본문" className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
 							{detail ? (
-								<pre className="text-muted-foreground bg-muted rounded-md p-4 text-xs leading-relaxed whitespace-pre-wrap">
-									{detail.contentMdx}
-								</pre>
+								<CustomMDX source={detail.contentMdx} />
 							) : (
-								<p className="text-muted-foreground text-sm">
-									본문은 M2 MDX 파이프라인 통합 이후 렌더됩니다. 현재는 fixture 미등록 포스트입니다.
-								</p>
+								<p className="text-muted-foreground text-sm">본문 데이터가 없습니다.</p>
 							)}
 						</section>
 

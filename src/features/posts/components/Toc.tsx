@@ -26,10 +26,10 @@ const tocLink = cva(
 	}
 );
 
-const LEVEL_PADDING_CLASS: Record<1 | 2 | 3, string> = {
-	1: "pl-0",
-	2: "pl-3",
-	3: "pl-6"
+const LEVEL_PADDING_CLASS: Record<2 | 3 | 4, string> = {
+	2: "pl-0",
+	3: "pl-3",
+	4: "pl-6"
 };
 
 /**
