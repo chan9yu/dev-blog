@@ -14,9 +14,10 @@ export {
 	PostListSkeleton,
 	PostMetaHeader,
 	PostNavigation,
+	PostTocAside,
 	ReadingProgress,
+	RecentPostsList,
 	RelatedPosts,
-	ScrollToTop,
 	ShareButtons,
 	Toc
 } from "./components";

@@ -39,7 +39,7 @@ export function PostMetaHeader({ post, shareSlot, viewCounterSlot }: PostMetaHea
 				{viewCounterSlot}
 			</div>
 
-			<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+			<div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
 				{post.tags.length > 0 && (
 					<ul className="flex flex-wrap gap-1.5 sm:gap-2" aria-label="태그">
 						{post.tags.map((tag) => (
