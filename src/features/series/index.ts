@@ -10,7 +10,7 @@ export { SeriesNavigation, TrendingSeries } from "./components";
 
 // Services (100% 서버 전용)
 export type { SeriesAdjacency } from "./services";
-export { getAdjacentInSeries } from "./services";
+export { getAdjacentInSeries, getAllSeries } from "./services";
 
 // Types (컴파일 타임 전용)
 export type { Series } from "@/shared/types";

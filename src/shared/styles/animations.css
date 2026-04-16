@@ -122,3 +122,36 @@
 		animation-duration: 0.01ms !important;
 	}
 }
+
+/* 헤더 스크롤 경계선 — CSS scroll-driven animation (Chrome 115+, Firefox 110+, Safari 17.2+).
+   미지원 브라우저: border 없음(graceful degradation). prefers-reduced-motion: 즉시 표시. */
+@supports (animation-timeline: scroll()) {
+	@keyframes header-border-reveal {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.header-scroll-border::after {
+		content: "";
+		position: absolute;
+		inset-inline: 0;
+		bottom: 0;
+		height: 1px;
+		background: var(--color-border-subtle);
+		animation: header-border-reveal linear both;
+		animation-timeline: scroll(root block);
+		animation-range: 1px 80px;
+		pointer-events: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.header-scroll-border::after {
+			animation: none;
+			opacity: 1;
+		}
+	}
+}

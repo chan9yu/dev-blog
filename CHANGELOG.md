@@ -7,6 +7,85 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — PostTocAside 데스크탑 TOC 토글 컴포넌트 + Toc.tsx hydration 패턴 개선 (2026-04-16)
+
+- `src/features/posts/components/PostTocAside.tsx` (신규) — 데스크탑 TOC 열기/닫기 토글 래퍼. `isOpen=true` 시 `lg:w-64 + X 닫기 버튼 + Toc nav`, `isOpen=false` 시 `lg:w-0 + ChevronLeft 원형 버튼`만 표시. `overflow-visible`로 0px aside에서 버튼이 자연스럽게 넘쳐 보임. nav DOM 제거 방식으로 width 축소 시 텍스트 리플로우 방지.
+- `src/features/posts/components/Toc.tsx` — Portal guard를 `setMounted + useEffect` → `useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot)` 패턴으로 교체. react.md `set-state-in-effect` lint 위반 해소. `max-h-[80vh]` → `max-h-mobile-sheet` (globals.css @utility 토큰) 교체.
+- `src/features/posts/components/index.ts` — `PostTocAside` export 추가
+- `src/features/posts/index.ts` — `PostTocAside` public API 배럴 export 추가
+- `src/app/posts/[slug]/page.tsx` — 인라인 `<aside><Toc>` 조립 → `<PostTocAside items={detail.toc} />` 단일 컴포넌트로 교체
+- `src/shared/styles/globals.css` — `@utility max-h-mobile-sheet { max-height: 80vh }` 토큰 추가 (GC 자동 수정: `max-h-[80vh]` arbitrary value 제거)
+- **빌드**: `pnpm build` 101페이지 통과
+
+### Fixed — MDX bold 렌더링 및 부가 버그 수정 (2026-04-16)
+
+- `features/posts/services/getPostDetail.ts` — `preprocessMdxContent` 추가: CommonMark flanking delimiter 규칙으로 `**text()**한글` 패턴이 리터럴 `**`로 출력되던 문제 수정. `**...**` → `<strong>...</strong>` HTML 변환을 MDX 파싱 전에 수행 (기존 앱 `parser.ts` 동일 방식)
+- `shared/styles/prose.css` — `.prose h1` 스타일 추가: 포스트 본문에서 `#` heading이 사용되는 경우 스타일 미적용 수정
+- `shared/components/mdx/MdxImage.tsx` — `w-full` → `max-w-full`: 작은 이미지가 100% 너비로 강제 확장되어 화질 저하 발생하던 문제 수정
+- `features/posts/components/ScrollToTop.tsx` — `aria-hidden + tabIndex=-1` → `inert={true}`: React 19 `inert=""` 빈 문자열 boolean 경고 및 숨겨진 버튼에 포커스 진입 가능한 접근성 문제 수정
+- `features/posts/utils/extractTocFromMarkdown.ts` — `seenIds` Map 도입: rehype-slug와 동일한 `-1`, `-2` suffix 중복 해소로 TOC React key 중복 경고 수정
+
+### Fixed — Playwright E2E 검증 중 발견된 버그 (2026-04-16)
+
+- `app/tags/[tag]/page.tsx` — `normalizeSlug` 제거: SLUG_PATTERN(`/^[a-z0-9-]+$/`)이 대문자·한글 태그를 거부해 `/tags/React`, `/tags/항해99` 등 전부 404 반환하던 문제 수정. `decodeURIComponent(tag)` 직접 사용으로 `getAllTags`의 raw slug와 일치
+- `app/not-found.tsx` — metadata.title에서 `| chan9yu` 수동 suffix 제거: `layout.tsx`의 title template `"%s | chan9yu"` 와 중복 적용되어 "페이지를 찾을 수 없습니다 | chan9yu | chan9yu" 표시되던 이중 suffix 수정
+- **빌드**: `pnpm build` exit 0, 101개 페이지 정적 생성 (58개+ 한글 태그 URL 포함)
+
+### Fixed — 리뷰 기반 품질 개선 배치 (2026-04-16)
+
+- `posts/[slug]/page.tsx` — `detail === null` 시 fallback UI 제거, `notFound()` 가드 추가; `detail?.toc ?? []` → `detail.toc` (null 단언 불필요)
+- `CustomMDX.tsx` — `MdxP` 컴포넌트 추가: MDX `<p><figure>` 무효 중첩 → 하이드레이션 에러 수정 (standalone 이미지 래퍼 생략)
+- `shared/libs/shiki.ts` — WASM 초기화 실패 시 `highlighterPromise = null` 재설정으로 재시도 가능하도록 수정
+- `features/series/services/getAllSeries.ts` — `SeriesPost` 타입 가드 도입; `name = seriesId` (raw 값 보존, slugify 제거)
+- `app/series/[slug]/page.tsx` — 한글·특수문자 시리즈 slug `normalizeSlug` 제거 → `decodeURIComponent` + 직접 lookup; `React.cache` 적용으로 `getSeriesList()` 렌더당 1회 계산 보장; 중복 `BookOpen` + "시리즈" span 제거
+- `app/page.tsx` — `metadata` export 추가 (title · description · canonical)
+- **빌드**: 101페이지 통과, `/series/항해 플러스 프론트엔드 6기` 등 한글 시리즈 URL 정상 생성 확인
+
+### Changed — M2-22~24 fixture 완전 제거, 실데이터 마이그레이션 (2026-04-16)
+
+- `getPublicPosts` · `getPostBySlug` — `postsFixture` 제거, `getAllPosts()` 실 fs 파싱으로 교체 (M2-23)
+- `getAllSeries` · `getAllTags` — `PostSummary[]` 파라미터 방식 신규 서비스 (Law 3 준수) (M2-23)
+- `app/page.tsx` · `app/posts/page.tsx` · `app/posts/[slug]/page.tsx` — fixture → 실 서비스 호출 전환 (M2-23)
+- `app/series/page.tsx` · `app/series/[slug]/page.tsx` — `seriesFixture` 완전 제거, `getAllSeries(getPublicPosts())` 적용 (M2-24)
+- `app/tags/page.tsx` · `app/tags/[tag]/page.tsx` — `tagsFixture` 완전 제거, `getAllTags(getPublicPosts())` 적용 (M2-24)
+- `src/` 전체 fixture import 0건 확인, 빌드 101페이지 생성 통과 (24개 포스트, 58개+ 태그 실데이터)
+
+### Added — M2-03~11 파싱 파이프라인 TDD 완성 (2026-04-15)
+
+**의존성**
+
+- `gray-matter 4.0.3` (prod) — MDX frontmatter 파싱
+- `zod 4.3.6` (prod) — PostFrontmatterSchema 런타임 검증
+- `vitest 4.1.4` + `@vitest/coverage-v8` (dev) — TDD 테스트 러너
+
+**신규 파일**
+
+- `vitest.config.ts` — `@` 경로 alias 포함, node 환경, v8 커버리지
+- `src/features/posts/schemas/frontmatter.ts` — `PostFrontmatterSchema` (M2-05): series·seriesOrder 쌍 refine 포함
+- `src/features/posts/utils/parseFrontmatter.ts` — `--`→`---` 보정 + gray-matter + Zod + slug 검증 (M2-04)
+- `src/features/posts/utils/calculateReadingTime.ts` — 코드·수식·이미지 제외, 한국어 500자/분, ceil, 최소 1분 (M2-07)
+- `src/features/posts/utils/extractTocFromMarkdown.ts` — h2/h3 추출, 코드 블록 제외, id=slugify(text) (M2-09)
+- `src/shared/utils/slugify.ts` — 한글 보존, 특수문자 제거, 공백→하이픈 (M2-11)
+- `src/features/posts/utils/__tests__/parseFrontmatter.test.ts` — 7케이스 (M2-03 Red)
+- `src/features/posts/utils/__tests__/calculateReadingTime.test.ts` — 9케이스 (M2-06 Red)
+- `src/features/posts/utils/__tests__/extractTocFromMarkdown.test.ts` — 9케이스 (M2-08 Red)
+- `src/shared/utils/__tests__/slugify.test.ts` — 10케이스 (M2-10 Red)
+
+**테스트**: 4 파일 · 36 케이스 전부 통과
+
+### Added — M2-02 Vercel Submodule Workaround 스크립트 (2026-04-15)
+
+- `scripts/vercel-submodule-workaround.sh` 신규 작성
+- SSH / HTTPS URL 모두 지원: `.gitmodules` 파싱 → `git config`로 토큰 URL 주입 → `git submodule sync && update`
+- `GITHUB_REPO_CLONE_TOKEN` 미설정 시 exit 1로 빌드 중단
+- `.gitmodules` 파일 자체를 수정하지 않으므로 git 커밋 오염 없음
+
+### Added — M2-01 contents/ Git Submodule 구성 (2026-04-15)
+
+- `.gitmodules`: `chan9yu/dev-blog-archive` private 레포를 `contents/` 경로로 서브모듈 등록
+- branch: `main` 고정 추적
+- 검증: `git submodule update --init --recursive` 성공, `contents/posts/` · `contents/about/` 구조 확인
+
 ### Added — framer-motion 애니메이션 시스템 도입 (2026-04-15)
 
 **의존성**
@@ -421,5 +500,35 @@ M1 마일스톤의 모든 태스크가 완료되어 더미 fixture 기반으로 
 - `lucide-react` (prod) — 단일화된 아이콘 라이브러리.
 - `radix-ui` (prod) — shadcn `Sheet`가 사용하는 Radix Dialog 메타 패키지.
 - `tw-animate-css` (prod) — shadcn `Sheet`의 `animate-in`/`slide-in-from-*`/`fade-out-0` 등 Tailwind 4 호환 애니메이션 유틸 제공.
+
+### M2-12~17: 서비스 함수 TDD (getAllPosts · getPostDetail · sortPostsByDateDescending)
+
+**M2-12 [Red] getAllPosts 테스트** — `services/__tests__/getAllPosts.test.ts` 신규 작성. 6개 케이스: private 필터링·includePrivate 옵션·날짜 내림차순·`@template` 디렉토리 스킵·frontmatter 오류 스킵·파일 없음 스킵. `vi.mock("node:fs")`로 FS 격리. `makeDirent` 헬퍼로 `Dirent` 최소 모사.
+
+**M2-13 [Green] getAllPosts 구현** — `services/getAllPosts.ts` 신규 작성. `readdirSync(withFileTypes: true)`로 디렉토리 스캔 → `@` prefix 스킵 → `parseFrontmatter` 검증 → `includePrivate` 필터 → `sortPostsByDateDescending` 정렬. `POSTS_DIR` 상수를 `getPostDetail.ts`와 공유 export. 전체 테스트 통과.
+
+**M2-14 [Red] getPostDetail 테스트** — `services/__tests__/getPostDetail.test.ts` 신규 작성. 6개 케이스: 유효한 slug → PostDetail 반환·contentMdx(frontmatter 제외)·toc h2/h3 순서 추출·ENOENT → null·private 포스트 반환(필터는 호출자 책임)·schema 검증 실패 → null.
+
+**M2-15 [Green] getPostDetail 구현** — `services/getPostDetail.ts` 신규 작성. `readFileSync` → `parseFrontmatter` → `matter().content` → `calculateReadingTime` + `extractTocFromMarkdown` 조합. 예외 시 `null` 반환.
+
+**M2-16 [Red] sortPostsByDateDescending 테스트** — `utils/__tests__/sortPostsByDateDescending.test.ts` 신규 작성. 5개 케이스: 날짜 내림차순·빈 배열·원본 불변성·ISO timestamp 포함·단일 항목.
+
+**M2-17 [Green] sortPostsByDateDescending 구현** — `utils/sortPostsByDateDescending.ts` 신규 작성. `[...posts].sort()` 스프레드로 원본 보존, `Date.getTime()` 차로 내림차순.
+
+**타입 정합성 수정**: 테스트 mock 타입 캐스트를 `as unknown as ReturnType<typeof fs.readdirSync>` / `as unknown as ReturnType<typeof fs.readFileSync>`로 교체 — `noUncheckedIndexedAccess` strict 모드에서 `NonSharedBuffer` 오버로드 불일치 해소. `pnpm tsc --noEmit` 클린, 테스트 53/53 통과.
+
+---
+
+### Added — M2-18~21 이미지 복사 + MDX 파이프라인 (2026-04-15)
+
+**M2-18 `scripts/copy-content-images.mjs`** — mtime 비교 멱등 복사 + prune 스크립트. `contents/posts/{slug}/images/` → `public/posts/{slug}/images/` 동기화. `cpSync`/`rmSync`/`statSync`로 변경 파일만 복사, 소스에 없는 대상 디렉토리 제거.
+
+**M2-19 `CustomMDX` async RSC 전환** — `src/shared/components/mdx/CustomMDX.tsx`를 `next-mdx-remote/rsc`의 `MDXRemote`를 사용하는 async Server Component로 재작성. 기존 `customMDXComponents` 객체 맵에서 `export async function CustomMDX`로 변경. `posts/[slug]/page.tsx`의 raw `<pre>` 플레이스홀더를 `<CustomMDX source={detail.contentMdx} />`로 교체.
+
+**M2-20 Shiki 듀얼 테마** — `src/shared/libs/shiki.ts`: `React.cache()` + `createHighlighter()` 싱글톤(github-light/github-dark). `@shikijs/rehype/core`의 `rehypeShikiFromHighlighter` 연결, `defaultColor: false`로 CSS 변수 방식 듀얼 테마 활성화. `shiki.css`에 `.shiki span { color: var(--shiki-light) }` / `.dark .shiki span { color: var(--shiki-dark) }` 추가. Next.js 16 `cacheComponents: true` 환경의 `Date.now()` 사전 렌더 오류 방지를 위해 `CustomMDX`에 `"use cache"` 디렉티브 적용.
+
+**M2-21 remark 플러그인** — `MDXRemote` `options.mdxOptions.remarkPlugins`에 `remarkGfm`(GFM 테이블·체크박스·취소선)과 `remarkBreaks`(줄바꿈 → `<br>`, 한국어 블로그 특성) 추가.
+
+**검증**: `pnpm tsc --noEmit` 클린, `pnpm lint` 통과, `pnpm build` 51개 페이지 정적 생성 성공, `pnpm test` 53/53 통과.
 
 [Unreleased]: https://github.com/chan9yu/dev-blog/compare/main...develop

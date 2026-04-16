@@ -14,15 +14,24 @@ export {
 	PostListSkeleton,
 	PostMetaHeader,
 	PostNavigation,
+	PostTocAside,
 	ReadingProgress,
+	RecentPostsList,
 	RelatedPosts,
-	ScrollToTop,
 	ShareButtons,
-	TOC
+	Toc
 } from "./components";
 
 // Services (100% 서버 전용)
-export { getAdjacentPosts, getPostBySlug, getPublicPosts, getRelatedPosts } from "./services";
+// NOTE: export 22개 — M2-23 이후 split barrel(index.ts + client.ts) 전환 예정
+export {
+	getAdjacentPosts,
+	getAllPosts,
+	getPostBySlug,
+	getPostDetail,
+	getPublicPosts,
+	getRelatedPosts
+} from "./services";
 
 // Types (컴파일 타임 전용)
-export type { AdjacentPosts, PostDetail, PostSummary, RelatedPost, TocItem, TrendingSnapshot } from "@/shared/types";
+export type { AdjacentPosts, PostDetail, PostSummary, RelatedPost, TocItem } from "@/shared/types";

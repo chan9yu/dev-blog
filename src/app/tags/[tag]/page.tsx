@@ -4,29 +4,27 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
+import { getAllTags } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
-import { tagsFixture } from "@/shared/fixtures/tags";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
-import { normalizeSlug, TAG_MAX_LENGTH } from "@/shared/utils/slug";
 
 type TagDetailPageProps = {
 	params: Promise<{ tag: string }>;
 };
 
 export function generateStaticParams() {
-	return tagsFixture.map((tag) => ({ tag: tag.slug }));
+	return getAllTags(getPublicPosts()).map((tag) => ({ tag: tag.slug }));
 }
 
 export async function generateMetadata({ params }: TagDetailPageProps): Promise<Metadata> {
 	const { tag } = await params;
-
-	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
-	if (!normalized) return { title: "Tag" };
+	const decoded = decodeURIComponent(tag);
+	if (!decoded) return { title: "Tag" };
 
 	return {
-		title: `#${normalized}`,
-		description: `${normalized} 태그가 포함된 포스트를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`,
-		alternates: { canonical: `/tags/${normalized}` }
+		title: `#${decoded}`,
+		description: `${decoded} 태그가 포함된 포스트를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`,
+		alternates: { canonical: `/tags/${encodeURIComponent(decoded)}` }
 	};
 }
 
@@ -38,13 +36,13 @@ export async function generateMetadata({ params }: TagDetailPageProps): Promise<
 export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const { tag } = await params;
 
-	const normalized = normalizeSlug(decodeURIComponent(tag), TAG_MAX_LENGTH);
-	if (!normalized) notFound();
+	const decoded = decodeURIComponent(tag);
+	if (!decoded) notFound();
 
-	const filtered = resolvePostThumbnails(getPublicPosts().filter((post) => post.tags.includes(normalized)));
-
-	const tagMeta = tagsFixture.find((item) => item.slug === normalized);
-	if (!tagMeta && filtered.length === 0) notFound();
+	const filtered = resolvePostThumbnails(getPublicPosts().filter((post) => post.tags.includes(decoded)));
+	if (filtered.length === 0) {
+		notFound();
+	}
 
 	return (
 		<Container>
@@ -54,7 +52,7 @@ export default async function TagDetailPage({ params }: TagDetailPageProps) {
 						<div className="flex items-center gap-3">
 							<Tag className="text-accent size-8" aria-hidden />
 							<h1 className="text-foreground text-3xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-4xl md:text-5xl">
-								#{normalized}
+								#{decoded}
 							</h1>
 						</div>
 						<p className="text-muted-foreground text-base sm:text-lg">총 {filtered.length}개의 글</p>

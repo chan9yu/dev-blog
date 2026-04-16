@@ -90,6 +90,7 @@
 	--shadow-sm: var(--shadow-sm);
 	--shadow-md: var(--shadow-md);
 	--shadow-lg: var(--shadow-lg);
+	--shadow-accent: var(--shadow-accent);
 
 	/* Container */
 	--container-content: var(--container-content);
@@ -214,6 +215,10 @@
 
 @utility max-h-toc {
 	max-height: calc(100vh - 24rem);
+}
+
+@utility max-h-mobile-sheet {
+	max-height: 80vh;
 }
 
 @utility h-lightbox {

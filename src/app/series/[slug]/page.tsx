@@ -2,51 +2,56 @@ import { BookOpen, Calendar } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
+import { getPublicPosts } from "@/features/posts";
+import { getAllSeries } from "@/features/series";
 import { Container } from "@/shared/components/layouts/Container";
-import { seriesFixture } from "@/shared/fixtures/series";
 import { formatDate } from "@/shared/utils/formatDate";
-import { normalizeSlug } from "@/shared/utils/slug";
 
 type SeriesDetailPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
+/**
+ * 렌더 패스 내에서 getAllSeries(getPublicPosts())를 한 번만 계산한다.
+ * generateMetadata와 SeriesDetailPage가 같은 렌더 트리 내에서 이 cache를 공유.
+ * (generateStaticParams는 렌더 트리 외부 — 별도 호출)
+ */
+const getSeriesList = cache(() => getAllSeries(getPublicPosts()));
+
+function findSeriesBySlug(rawSlug: string) {
+	return getSeriesList().find((s) => s.slug === rawSlug) ?? null;
+}
+
 export function generateStaticParams() {
-	return seriesFixture.map((series) => ({ slug: series.slug }));
+	return getAllSeries(getPublicPosts()).map((series) => ({ slug: series.slug }));
 }
 
 export async function generateMetadata({ params }: SeriesDetailPageProps): Promise<Metadata> {
 	const { slug } = await params;
-
-	const normalized = normalizeSlug(decodeURIComponent(slug));
-	if (!normalized) return { title: "Series" };
-
-	const series = seriesFixture.find((item) => item.slug === normalized);
+	const series = findSeriesBySlug(decodeURIComponent(slug));
 	if (!series) return { title: "Series" };
 
 	return {
 		title: series.name,
-		description: `${series.name} 시리즈 - 총 ${series.posts.length}개의 연재 글로 구성되어 있습니다`,
-		alternates: { canonical: `/series/${series.slug}` }
+		description: `${series.name} 시리즈 — 총 ${series.posts.length}개의 연재 글로 구성되어 있습니다.`,
+		alternates: { canonical: `/series/${encodeURIComponent(series.slug)}` }
 	};
 }
 
 /**
  * 레거시 /series/[slug] 디자인 참조:
  * - header mb-12: h1 text-4xl sm:text-5xl + 메타(BookOpen + 편수) + hr
- * - 본문: 번호 원 뱃지 + 제목·설명·날짜 카드 (seriesOrder 오름차순)
+ * - 본문: 번호 원 뱃지 + 제목·설명·날짜 카드 (seriesOrder 오름차순, getAllSeries 내부 정렬 완료)
+ *
+ * series slug는 한글·특수문자를 포함할 수 있어 normalizeSlug 대신 직접 문자열 lookup 사용.
+ * generateStaticParams로 생성된 경로 외에는 Next.js SSG가 자연스럽게 404 처리.
  */
 export default async function SeriesDetailPage({ params }: SeriesDetailPageProps) {
 	const { slug } = await params;
-
-	const normalized = normalizeSlug(decodeURIComponent(slug));
-	if (!normalized) notFound();
-
-	const series = seriesFixture.find((item) => item.slug === normalized);
+	const series = findSeriesBySlug(decodeURIComponent(slug));
 	if (!series) notFound();
-
-	const orderedPosts = [...series.posts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
 
 	return (
 		<Container>
@@ -60,23 +65,19 @@ export default async function SeriesDetailPage({ params }: SeriesDetailPageProps
 							<span className="inline-flex items-center gap-2">
 								<BookOpen className="size-4" aria-hidden />총 {series.posts.length}개의 글
 							</span>
-							<span className="inline-flex items-center gap-2">
-								<BookOpen className="size-4" aria-hidden />
-								시리즈
-							</span>
 						</div>
 					</div>
 					<hr className="border-border" />
 				</header>
 
 				<ol className="space-y-4" aria-label="시리즈 포스트">
-					{orderedPosts.map((post) => (
+					{series.posts.map((post) => (
 						<li key={post.slug} className="flex gap-4">
 							<span
 								className="bg-muted text-muted-foreground mt-3 flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold tabular-nums"
 								aria-hidden
 							>
-								{post.seriesOrder}
+								{post.seriesOrder ?? "—"}
 							</span>
 							<Link
 								href={`/posts/${post.slug}`}

@@ -7,22 +7,21 @@ import { CommentsSection } from "@/features/comments";
 import {
 	getAdjacentPosts,
 	getPostBySlug,
+	getPostDetail,
 	getPublicPosts,
 	getRelatedPosts,
 	PostMetaHeader,
 	PostNavigation,
+	PostTocAside,
 	ReadingProgress,
 	RelatedPosts,
-	ScrollToTop,
-	ShareButtons,
-	TOC
+	ShareButtons
 } from "@/features/posts";
-import { SeriesNavigation } from "@/features/series";
+import { getAllSeries, SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
 import { Container } from "@/shared/components/layouts/Container";
+import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
 import { getSiteUrl } from "@/shared/config/site";
-import { postDetailsFixture } from "@/shared/fixtures/post-details";
-import { seriesFixture } from "@/shared/fixtures/series";
 import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug } from "@/shared/utils/slug";
 
@@ -59,10 +58,14 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const summary = getPostBySlug(normalized);
 	if (!summary) notFound();
 
-	const detail = postDetailsFixture.find((item) => item.slug === normalized);
+	const detail = getPostDetail(normalized);
+	if (!detail) notFound();
+
 	const adjacent = getAdjacentPosts(summary.slug);
 	const related = getRelatedPosts(summary.slug, summary.tags);
-	const currentSeries = summary.series ? seriesFixture.find((item) => item.slug === summary.series) : null;
+	// 전체 포스트를 변수로 캐싱 — getAllSeries 안에서 재호출하지 않기 위함
+	const allPosts = getPublicPosts();
+	const currentSeries = summary.series ? (getAllSeries(allPosts).find((s) => s.slug === summary.series) ?? null) : null;
 	const shareUrl = `${getSiteUrl()}/posts/${summary.slug}`;
 	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
 
@@ -70,7 +73,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 		<>
 			<ReadingProgress />
 			<Container>
-				<div className="flex flex-col gap-10 py-8 lg:flex-row lg:gap-12 lg:py-10">
+				<div className="flex flex-col py-8 lg:flex-row lg:py-10">
 					<article className="min-w-0 flex-1 space-y-10 pb-12 sm:pb-16">
 						<PostMetaHeader
 							post={summary}
@@ -100,15 +103,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 						)}
 
 						<section aria-label="본문" className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
-							{detail ? (
-								<pre className="text-muted-foreground bg-muted rounded-md p-4 text-xs leading-relaxed whitespace-pre-wrap">
-									{detail.contentMdx}
-								</pre>
-							) : (
-								<p className="text-muted-foreground text-sm">
-									본문은 M2 MDX 파이프라인 통합 이후 렌더됩니다. 현재는 fixture 미등록 포스트입니다.
-								</p>
-							)}
+							<CustomMDX source={detail.contentMdx} />
 						</section>
 
 						<PostNavigation adjacent={adjacent} />
@@ -118,12 +113,9 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 						<CommentsSection slug={summary.slug} />
 					</article>
 
-					<aside aria-label="목차" className="hidden lg:sticky lg:top-24 lg:block lg:w-64 lg:shrink-0 lg:self-start">
-						<TOC items={detail?.toc ?? []} />
-					</aside>
+					<PostTocAside items={detail.toc} />
 				</div>
 			</Container>
-			<ScrollToTop />
 		</>
 	);
 }

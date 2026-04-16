@@ -1,18 +1,34 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HomeHero } from "@/features/about";
-import { getPublicPosts, PopularPosts, PostCard } from "@/features/posts";
-import { TrendingSeries } from "@/features/series";
-import { TrendingTags } from "@/features/tags";
+import { getPublicPosts, PopularPosts, RecentPostsList } from "@/features/posts";
+import { getAllSeries, TrendingSeries } from "@/features/series";
+import { getAllTags, TrendingTags } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
-import { trendingFixture } from "@/shared/fixtures/trending";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
+export const metadata: Metadata = {
+	title: "chan9yu | 프론트엔드 개발 블로그",
+	description:
+		"프론트엔드 엔지니어 chan9yu의 기술 블로그. React 19, TypeScript, Next.js App Router 실무 경험과 WebRTC, 웹 성능 최적화 등 다양한 주제를 깊이 있게 다룹니다.",
+	alternates: { canonical: "/" }
+};
+
 const RECENT_POSTS_LIMIT = 6;
+const POPULAR_POSTS_LIMIT = 5;
+const TRENDING_SERIES_LIMIT = 3;
+const TRENDING_TAGS_LIMIT = 10;
 
 export default function HomePage() {
-	const recentPosts = resolvePostThumbnails(getPublicPosts().slice(0, RECENT_POSTS_LIMIT));
-	const { popularPosts, trendingSeries, trendingTags } = trendingFixture;
+	const allPosts = getPublicPosts();
+	const recentPosts = resolvePostThumbnails(allPosts.slice(0, RECENT_POSTS_LIMIT));
+	const popularPosts = resolvePostThumbnails(
+		[...allPosts].sort((a, b) => b.readingTimeMinutes - a.readingTimeMinutes).slice(0, POPULAR_POSTS_LIMIT)
+	);
+
+	const trendingSeries = getAllSeries(allPosts).slice(0, TRENDING_SERIES_LIMIT);
+	const trendingTags = getAllTags(allPosts).slice(0, TRENDING_TAGS_LIMIT);
 
 	return (
 		<Container>
@@ -37,11 +53,7 @@ export default function HomePage() {
 								전체 보기 <span aria-hidden>→</span>
 							</Link>
 						</div>
-						<div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
-							{recentPosts.map((post, index) => (
-								<PostCard key={post.slug} post={post} variant="list" priority={index < 2} />
-							))}
-						</div>
+						<RecentPostsList posts={recentPosts} />
 					</section>
 				</div>
 

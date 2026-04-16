@@ -41,6 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# content images (copy-content-images.mjs 빌드 타임 생성)
+public/posts
+
 # ai
 .omc
 .omx

@@ -47,7 +47,7 @@ type SocialLinkConfig = {
 export const siteSocials: SocialLinkConfig[] = [
 	{ label: "GitHub", href: "https://github.com/chan9yu", iconName: "Github" },
 	{ label: "LinkedIn", href: "https://linkedin.com/in/chan9yu", iconName: "Linkedin" },
-	{ label: "Email", href: "mailto:chan9yu.dev@gmail.com", iconName: "Mail" }
+	{ label: "Email", href: "mailto:dev.cgyeo@gmail.com", iconName: "Mail" }
 ];
 
 /**

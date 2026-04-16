@@ -172,42 +172,42 @@
 
 ### Submodule
 
-- [ ] [M2-01] `contents/` Git Submodule 구성
-- [ ] [M2-02] `scripts/vercel-submodule-workaround.sh`
+- [x] [M2-01] `contents/` Git Submodule 구성
+- [x] [M2-02] `scripts/vercel-submodule-workaround.sh`
 
 ### 파싱 파이프라인 (TDD)
 
-- [ ] [M2-03] `[Red]` parseFrontmatter 테스트
-- [ ] [M2-04] `[Green]` parseFrontmatter 구현
-- [ ] [M2-05] PostFrontmatterSchema Zod 스키마
-- [ ] [M2-06] `[Red]` calculateReadingTime 테스트
-- [ ] [M2-07] `[Green]` calculateReadingTime 구현
-- [ ] [M2-08] `[Red]` extractTocFromMarkdown 테스트
-- [ ] [M2-09] `[Green]` extractTocFromMarkdown 구현
-- [ ] [M2-10] `[Red]` slugify 테스트
-- [ ] [M2-11] `[Green]` slugify 구현
+- [x] [M2-03] `[Red]` parseFrontmatter 테스트
+- [x] [M2-04] `[Green]` parseFrontmatter 구현
+- [x] [M2-05] PostFrontmatterSchema Zod 스키마
+- [x] [M2-06] `[Red]` calculateReadingTime 테스트
+- [x] [M2-07] `[Green]` calculateReadingTime 구현
+- [x] [M2-08] `[Red]` extractTocFromMarkdown 테스트
+- [x] [M2-09] `[Green]` extractTocFromMarkdown 구현
+- [x] [M2-10] `[Red]` slugify 테스트
+- [x] [M2-11] `[Green]` slugify 구현
 
 ### 서비스 함수 (TDD)
 
-- [ ] [M2-12] `[Red]` getAllPosts 테스트
-- [ ] [M2-13] `[Green]` getAllPosts 구현
-- [ ] [M2-14] `[Red]` getPostDetail 테스트
-- [ ] [M2-15] `[Green]` getPostDetail 구현
-- [ ] [M2-16] `[Red]` sortPostsByDateDescending 테스트
-- [ ] [M2-17] `[Green]` sortPostsByDateDescending 구현
+- [x] [M2-12] `[Red]` getAllPosts 테스트
+- [x] [M2-13] `[Green]` getAllPosts 구현
+- [x] [M2-14] `[Red]` getPostDetail 테스트
+- [x] [M2-15] `[Green]` getPostDetail 구현
+- [x] [M2-16] `[Red]` sortPostsByDateDescending 테스트
+- [x] [M2-17] `[Green]` sortPostsByDateDescending 구현
 
 ### 이미지 & MDX
 
-- [ ] [M2-18] `scripts/copy-content-images.mjs` (멱등·prune)
-- [ ] [M2-19] `next-mdx-remote/rsc` 통합 — CustomMDX 컴포넌트 맵
-- [ ] [M2-20] Shiki 3 서버 하이라이팅 — `github-light`/`github-dark`
-- [ ] [M2-21] remark/rehype 플러그인 — `remark-gfm`, `remark-breaks`
+- [x] [M2-18] `scripts/copy-content-images.mjs` (멱등·prune)
+- [x] [M2-19] `next-mdx-remote/rsc` 통합 — CustomMDX 컴포넌트 맵
+- [x] [M2-20] Shiki 3 서버 하이라이팅 — `github-light`/`github-dark`
+- [x] [M2-21] remark/rehype 플러그인 — `remark-gfm`, `remark-breaks`
 
 ### 더미 → 실데이터 교체
 
-- [ ] [M2-22] `generateStaticParams` 연결 (posts/[slug])
-- [ ] [M2-23] 홈·목록·상세에서 fixture → 실 서비스 호출
-- [ ] [M2-24] `src/shared/fixtures/` 의존 완전 제거
+- [x] [M2-22] `generateStaticParams` 연결 (posts/[slug])
+- [x] [M2-23] 홈·목록·상세에서 fixture → 실 서비스 호출
+- [x] [M2-24] `src/shared/fixtures/` 의존 완전 제거
 
 ---
 
@@ -376,14 +376,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료   | 진행률  |
-| ---------------------- | ------- | ------ | ------- |
-| M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 61     | 100%    |
-| M2 Content Pipeline    | 24      | 0      | 0%      |
-| M3 Feature Wiring      | 21      | 0      | 0%      |
-| M4 Hubs & Aggregations | 21      | 0      | 0%      |
-| M5 SEO & Syndication   | 10      | 0      | 0%      |
-| M6 A11y & Perf         | 14      | 0      | 0%      |
-| M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **94** | **48%** |
+| Phase                  | 태스크  | 완료    | 진행률  |
+| ---------------------- | ------- | ------- | ------- |
+| M0 Foundation          | 33      | 33      | 100%    |
+| M1 UI Skeleton         | 61      | 61      | 100%    |
+| M2 Content Pipeline    | 24      | 21      | 88%     |
+| M3 Feature Wiring      | 21      | 0       | 0%      |
+| M4 Hubs & Aggregations | 21      | 0       | 0%      |
+| M5 SEO & Syndication   | 10      | 0       | 0%      |
+| M6 A11y & Perf         | 14      | 0       | 0%      |
+| M7 Polish              | 12      | 0       | 0%      |
+| **Total**              | **196** | **115** | **59%** |

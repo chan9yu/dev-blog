@@ -17,13 +17,18 @@ type HeaderProps = {
 
 export function Header({ navItems = siteNav, searchSlot, themeSlot, mobileMenuSlot, className }: HeaderProps) {
 	return (
-		<header className={cn("bg-background/80 sticky top-0 z-40 backdrop-blur-lg md:mt-12", className)}>
+		<header
+			className={cn(
+				"bg-background/80 header-scroll-border relative sticky top-0 z-40 backdrop-blur-lg md:mt-12",
+				className
+			)}
+		>
 			<Container>
 				<nav className="flex items-center justify-between gap-4 py-4 md:py-6" aria-label="주요 메뉴">
 					<Link
 						href="/"
 						aria-label="chan9yu 홈"
-						className="text-foreground text-lg font-bold tracking-tight transition-colors md:text-xl"
+						className="text-foreground flex min-h-11 items-center text-lg font-bold tracking-tight transition-colors md:text-xl"
 					>
 						{"<chan9yu />"}
 					</Link>
