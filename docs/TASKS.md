@@ -205,9 +205,9 @@
 
 ### 더미 → 실데이터 교체
 
-- [ ] [M2-22] `generateStaticParams` 연결 (posts/[slug])
-- [ ] [M2-23] 홈·목록·상세에서 fixture → 실 서비스 호출
-- [ ] [M2-24] `src/shared/fixtures/` 의존 완전 제거
+- [x] [M2-22] `generateStaticParams` 연결 (posts/[slug])
+- [x] [M2-23] 홈·목록·상세에서 fixture → 실 서비스 호출
+- [x] [M2-24] `src/shared/fixtures/` 의존 완전 제거
 
 ---
 

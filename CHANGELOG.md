@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — PostTocAside 데스크탑 TOC 토글 컴포넌트 + Toc.tsx hydration 패턴 개선 (2026-04-16)
+
+- `src/features/posts/components/PostTocAside.tsx` (신규) — 데스크탑 TOC 열기/닫기 토글 래퍼. `isOpen=true` 시 `lg:w-64 + X 닫기 버튼 + Toc nav`, `isOpen=false` 시 `lg:w-0 + ChevronLeft 원형 버튼`만 표시. `overflow-visible`로 0px aside에서 버튼이 자연스럽게 넘쳐 보임. nav DOM 제거 방식으로 width 축소 시 텍스트 리플로우 방지.
+- `src/features/posts/components/Toc.tsx` — Portal guard를 `setMounted + useEffect` → `useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot)` 패턴으로 교체. react.md `set-state-in-effect` lint 위반 해소. `max-h-[80vh]` → `max-h-mobile-sheet` (globals.css @utility 토큰) 교체.
+- `src/features/posts/components/index.ts` — `PostTocAside` export 추가
+- `src/features/posts/index.ts` — `PostTocAside` public API 배럴 export 추가
+- `src/app/posts/[slug]/page.tsx` — 인라인 `<aside><Toc>` 조립 → `<PostTocAside items={detail.toc} />` 단일 컴포넌트로 교체
+- `src/shared/styles/globals.css` — `@utility max-h-mobile-sheet { max-height: 80vh }` 토큰 추가 (GC 자동 수정: `max-h-[80vh]` arbitrary value 제거)
+- **빌드**: `pnpm build` 101페이지 통과
+
+### Fixed — MDX bold 렌더링 및 부가 버그 수정 (2026-04-16)
+
+- `features/posts/services/getPostDetail.ts` — `preprocessMdxContent` 추가: CommonMark flanking delimiter 규칙으로 `**text()**한글` 패턴이 리터럴 `**`로 출력되던 문제 수정. `**...**` → `<strong>...</strong>` HTML 변환을 MDX 파싱 전에 수행 (기존 앱 `parser.ts` 동일 방식)
+- `shared/styles/prose.css` — `.prose h1` 스타일 추가: 포스트 본문에서 `#` heading이 사용되는 경우 스타일 미적용 수정
+- `shared/components/mdx/MdxImage.tsx` — `w-full` → `max-w-full`: 작은 이미지가 100% 너비로 강제 확장되어 화질 저하 발생하던 문제 수정
+- `features/posts/components/ScrollToTop.tsx` — `aria-hidden + tabIndex=-1` → `inert={true}`: React 19 `inert=""` 빈 문자열 boolean 경고 및 숨겨진 버튼에 포커스 진입 가능한 접근성 문제 수정
+- `features/posts/utils/extractTocFromMarkdown.ts` — `seenIds` Map 도입: rehype-slug와 동일한 `-1`, `-2` suffix 중복 해소로 TOC React key 중복 경고 수정
+
+### Fixed — Playwright E2E 검증 중 발견된 버그 (2026-04-16)
+
+- `app/tags/[tag]/page.tsx` — `normalizeSlug` 제거: SLUG_PATTERN(`/^[a-z0-9-]+$/`)이 대문자·한글 태그를 거부해 `/tags/React`, `/tags/항해99` 등 전부 404 반환하던 문제 수정. `decodeURIComponent(tag)` 직접 사용으로 `getAllTags`의 raw slug와 일치
+- `app/not-found.tsx` — metadata.title에서 `| chan9yu` 수동 suffix 제거: `layout.tsx`의 title template `"%s | chan9yu"` 와 중복 적용되어 "페이지를 찾을 수 없습니다 | chan9yu | chan9yu" 표시되던 이중 suffix 수정
+- **빌드**: `pnpm build` exit 0, 101개 페이지 정적 생성 (58개+ 한글 태그 URL 포함)
+
+### Fixed — 리뷰 기반 품질 개선 배치 (2026-04-16)
+
+- `posts/[slug]/page.tsx` — `detail === null` 시 fallback UI 제거, `notFound()` 가드 추가; `detail?.toc ?? []` → `detail.toc` (null 단언 불필요)
+- `CustomMDX.tsx` — `MdxP` 컴포넌트 추가: MDX `<p><figure>` 무효 중첩 → 하이드레이션 에러 수정 (standalone 이미지 래퍼 생략)
+- `shared/libs/shiki.ts` — WASM 초기화 실패 시 `highlighterPromise = null` 재설정으로 재시도 가능하도록 수정
+- `features/series/services/getAllSeries.ts` — `SeriesPost` 타입 가드 도입; `name = seriesId` (raw 값 보존, slugify 제거)
+- `app/series/[slug]/page.tsx` — 한글·특수문자 시리즈 slug `normalizeSlug` 제거 → `decodeURIComponent` + 직접 lookup; `React.cache` 적용으로 `getSeriesList()` 렌더당 1회 계산 보장; 중복 `BookOpen` + "시리즈" span 제거
+- `app/page.tsx` — `metadata` export 추가 (title · description · canonical)
+- **빌드**: 101페이지 통과, `/series/항해 플러스 프론트엔드 6기` 등 한글 시리즈 URL 정상 생성 확인
+
+### Changed — M2-22~24 fixture 완전 제거, 실데이터 마이그레이션 (2026-04-16)
+
+- `getPublicPosts` · `getPostBySlug` — `postsFixture` 제거, `getAllPosts()` 실 fs 파싱으로 교체 (M2-23)
+- `getAllSeries` · `getAllTags` — `PostSummary[]` 파라미터 방식 신규 서비스 (Law 3 준수) (M2-23)
+- `app/page.tsx` · `app/posts/page.tsx` · `app/posts/[slug]/page.tsx` — fixture → 실 서비스 호출 전환 (M2-23)
+- `app/series/page.tsx` · `app/series/[slug]/page.tsx` — `seriesFixture` 완전 제거, `getAllSeries(getPublicPosts())` 적용 (M2-24)
+- `app/tags/page.tsx` · `app/tags/[tag]/page.tsx` — `tagsFixture` 완전 제거, `getAllTags(getPublicPosts())` 적용 (M2-24)
+- `src/` 전체 fixture import 0건 확인, 빌드 101페이지 생성 통과 (24개 포스트, 58개+ 태그 실데이터)
+
 ### Added — M2-03~11 파싱 파이프라인 TDD 완성 (2026-04-15)
 
 **의존성**
