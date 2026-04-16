@@ -198,10 +198,10 @@
 
 ### 이미지 & MDX
 
-- [ ] [M2-18] `scripts/copy-content-images.mjs` (멱등·prune)
-- [ ] [M2-19] `next-mdx-remote/rsc` 통합 — CustomMDX 컴포넌트 맵
-- [ ] [M2-20] Shiki 3 서버 하이라이팅 — `github-light`/`github-dark`
-- [ ] [M2-21] remark/rehype 플러그인 — `remark-gfm`, `remark-breaks`
+- [x] [M2-18] `scripts/copy-content-images.mjs` (멱등·prune)
+- [x] [M2-19] `next-mdx-remote/rsc` 통합 — CustomMDX 컴포넌트 맵
+- [x] [M2-20] Shiki 3 서버 하이라이팅 — `github-light`/`github-dark`
+- [x] [M2-21] remark/rehype 플러그인 — `remark-gfm`, `remark-breaks`
 
 ### 더미 → 실데이터 교체
 
@@ -376,14 +376,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료   | 진행률  |
-| ---------------------- | ------- | ------ | ------- |
-| M0 Foundation          | 33      | 33     | 100%    |
-| M1 UI Skeleton         | 61      | 61     | 100%    |
-| M2 Content Pipeline    | 24      | 0      | 0%      |
-| M3 Feature Wiring      | 21      | 0      | 0%      |
-| M4 Hubs & Aggregations | 21      | 0      | 0%      |
-| M5 SEO & Syndication   | 10      | 0      | 0%      |
-| M6 A11y & Perf         | 14      | 0      | 0%      |
-| M7 Polish              | 12      | 0      | 0%      |
-| **Total**              | **196** | **94** | **48%** |
+| Phase                  | 태스크  | 완료    | 진행률  |
+| ---------------------- | ------- | ------- | ------- |
+| M0 Foundation          | 33      | 33      | 100%    |
+| M1 UI Skeleton         | 61      | 61      | 100%    |
+| M2 Content Pipeline    | 24      | 21      | 88%     |
+| M3 Feature Wiring      | 21      | 0       | 0%      |
+| M4 Hubs & Aggregations | 21      | 0       | 0%      |
+| M5 SEO & Syndication   | 10      | 0       | 0%      |
+| M6 A11y & Perf         | 14      | 0       | 0%      |
+| M7 Polish              | 12      | 0       | 0%      |
+| **Total**              | **196** | **115** | **59%** |

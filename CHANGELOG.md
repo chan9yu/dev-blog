@@ -474,4 +474,18 @@ M1 마일스톤의 모든 태스크가 완료되어 더미 fixture 기반으로 
 
 **타입 정합성 수정**: 테스트 mock 타입 캐스트를 `as unknown as ReturnType<typeof fs.readdirSync>` / `as unknown as ReturnType<typeof fs.readFileSync>`로 교체 — `noUncheckedIndexedAccess` strict 모드에서 `NonSharedBuffer` 오버로드 불일치 해소. `pnpm tsc --noEmit` 클린, 테스트 53/53 통과.
 
+---
+
+### Added — M2-18~21 이미지 복사 + MDX 파이프라인 (2026-04-15)
+
+**M2-18 `scripts/copy-content-images.mjs`** — mtime 비교 멱등 복사 + prune 스크립트. `contents/posts/{slug}/images/` → `public/posts/{slug}/images/` 동기화. `cpSync`/`rmSync`/`statSync`로 변경 파일만 복사, 소스에 없는 대상 디렉토리 제거.
+
+**M2-19 `CustomMDX` async RSC 전환** — `src/shared/components/mdx/CustomMDX.tsx`를 `next-mdx-remote/rsc`의 `MDXRemote`를 사용하는 async Server Component로 재작성. 기존 `customMDXComponents` 객체 맵에서 `export async function CustomMDX`로 변경. `posts/[slug]/page.tsx`의 raw `<pre>` 플레이스홀더를 `<CustomMDX source={detail.contentMdx} />`로 교체.
+
+**M2-20 Shiki 듀얼 테마** — `src/shared/libs/shiki.ts`: `React.cache()` + `createHighlighter()` 싱글톤(github-light/github-dark). `@shikijs/rehype/core`의 `rehypeShikiFromHighlighter` 연결, `defaultColor: false`로 CSS 변수 방식 듀얼 테마 활성화. `shiki.css`에 `.shiki span { color: var(--shiki-light) }` / `.dark .shiki span { color: var(--shiki-dark) }` 추가. Next.js 16 `cacheComponents: true` 환경의 `Date.now()` 사전 렌더 오류 방지를 위해 `CustomMDX`에 `"use cache"` 디렉티브 적용.
+
+**M2-21 remark 플러그인** — `MDXRemote` `options.mdxOptions.remarkPlugins`에 `remarkGfm`(GFM 테이블·체크박스·취소선)과 `remarkBreaks`(줄바꿈 → `<br>`, 한국어 블로그 특성) 추가.
+
+**검증**: `pnpm tsc --noEmit` 클린, `pnpm lint` 통과, `pnpm build` 51개 페이지 정적 생성 성공, `pnpm test` 53/53 통과.
+
 [Unreleased]: https://github.com/chan9yu/dev-blog/compare/main...develop
