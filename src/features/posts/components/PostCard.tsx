@@ -115,7 +115,10 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 					{visibleTags.length > 0 && (
 						<div className="flex flex-1 flex-wrap items-center gap-1.5">
 							{visibleTags.map((tag) => (
-								<span key={tag} className="bg-muted text-muted-foreground rounded px-2 py-0.5 font-mono text-xs">
+								<span
+									key={tag}
+									className="border-border-subtle text-muted-foreground hover:border-accent/50 hover:bg-accent-subtle hover:text-accent rounded border px-2 py-0.5 font-mono text-xs transition-colors"
+								>
 									<span aria-hidden>#</span>
 									{tag}
 								</span>
