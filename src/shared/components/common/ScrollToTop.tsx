@@ -36,8 +36,7 @@ export function ScrollToTop() {
 			type="button"
 			onClick={handleClick}
 			aria-label="맨 위로 이동"
-			aria-hidden={visible ? undefined : true}
-			tabIndex={visible ? 0 : -1}
+			inert={!visible ? true : undefined}
 			className={cn(
 				"bg-accent text-accent-foreground hover:bg-accent/90 focus-visible:ring-ring fixed right-8 bottom-8 z-50 inline-flex cursor-pointer items-center justify-center rounded-full p-3 shadow-lg shadow-black/15 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:hover:scale-110 motion-safe:hover:shadow-xl",
 				visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-16 opacity-0"

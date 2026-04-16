@@ -5,10 +5,11 @@ import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
 
-import { getPublicPosts } from "@/features/posts/services";
+import { getPublicPosts } from "@/features/posts";
 import { SearchTrigger } from "@/features/search";
 import { ThemeSwitcher } from "@/features/theme";
 import { ScrollReset } from "@/shared/components/common/ScrollReset";
+import { ScrollToTop } from "@/shared/components/common/ScrollToTop";
 import { Footer } from "@/shared/components/layouts/Footer";
 import { Header } from "@/shared/components/layouts/Header";
 import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						{children}
 					</main>
 					<Footer />
+					<ScrollToTop />
 				</Providers>
 			</body>
 		</html>
