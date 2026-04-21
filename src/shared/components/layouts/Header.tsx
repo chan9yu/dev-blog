@@ -18,10 +18,7 @@ type HeaderProps = {
 export function Header({ navItems = siteNav, searchSlot, themeSlot, mobileMenuSlot, className }: HeaderProps) {
 	return (
 		<header
-			className={cn(
-				"bg-background/80 header-scroll-border relative sticky top-0 z-40 backdrop-blur-lg md:mt-12",
-				className
-			)}
+			className={cn("bg-background/80 header-scroll-border relative top-0 z-40 backdrop-blur-lg md:mt-12", className)}
 		>
 			<Container>
 				<nav className="flex items-center justify-between gap-4 py-4 md:py-6" aria-label="주요 메뉴">
@@ -33,22 +30,18 @@ export function Header({ navItems = siteNav, searchSlot, themeSlot, mobileMenuSl
 						{"<chan9yu />"}
 					</Link>
 
-					<div className="hidden items-center gap-1 md:flex">
-						{navItems.map((item) => (
-							<NavLink key={item.href} href={item.href}>
-								{item.label}
-							</NavLink>
-						))}
-						<div className="ml-2 flex items-center gap-1">
-							{searchSlot}
-							{themeSlot}
+					{/* search/theme slot은 단일 인스턴스로 유지 — 양쪽에 렌더하면 두 번 마운트되어 ⌘K 리스너가 중복 등록됨 */}
+					<div className="flex items-center gap-1 md:gap-2">
+						<div className="mr-1 hidden items-center gap-1 md:flex">
+							{navItems.map((item) => (
+								<NavLink key={item.href} href={item.href}>
+									{item.label}
+								</NavLink>
+							))}
 						</div>
-					</div>
-
-					<div className="flex items-center gap-2 md:hidden">
 						{searchSlot}
 						{themeSlot}
-						{mobileMenuSlot}
+						<div className="md:hidden">{mobileMenuSlot}</div>
 					</div>
 				</nav>
 			</Container>
