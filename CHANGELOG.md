@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-01~04 검색 기능 Fuse.js 연결 + 컴포넌트 분리 (2026-04-21)
+
+- `package.json` — `fuse.js@^7` 추가, devDependencies에 `@testing-library/react@^16`, `@testing-library/user-event@^14`, `@testing-library/jest-dom@^6`, `jsdom@^27` 추가
+- `vitest.config.ts` — `environment: "node"` → `"jsdom"` 전환, `setupFiles: ["./src/shared/test/setup.ts"]` 추가
+- `src/shared/test/setup.ts` (신규) — `@testing-library/jest-dom/vitest` matcher 확장 + `afterEach(cleanup)` 등록
+- `src/features/posts/services/__tests__/getAllPosts.test.ts`, `getPostDetail.test.ts` — `/** @vitest-environment node */` pragma 추가 (fs mocking 테스트용)
+- `src/features/posts/utils/__tests__/extractTocFromMarkdown.test.ts` — M2-09 개정 반영: "h1 제외" → "h1 포함" 테스트 수정 (CustomMDX +1 시프트 렌더링 전제)
+- `src/features/search/types/index.ts` (신규) — `SearchResult` 타입(`post` + `score` + `matches?: ReadonlyArray<FuseResultMatch>`) 정의
+- `src/features/search/hooks/useSearch.ts` (신규) — Fuse.js 기반 fuzzy 검색 훅. PRD §7.4 계약: weights(title 0.5 / description 0.3 / tags 0.2), threshold 0.4, limit 10, debounce 200ms, `ignoreLocation: true`, `minMatchCharLength: 2`, `includeScore/Matches`. 빈 문자열 즉시 반영 UX. 이벤트 핸들러 내부 setTimeout debounce 패턴으로 `react-hooks/set-state-in-effect` + `react-hooks/refs` 룰 회피
+- `src/features/search/hooks/__tests__/useSearch.test.tsx` (신규) — 11개 테스트: 초기 상태, 200ms debounce, limit 기본/커스텀, title weight 우선순위, tag 매치, fuzzy(오타) 허용, score 정렬, debounce cancellation, 빈 문자열 즉시 리셋
+- `src/features/search/components/SearchButton.tsx` (신규) — 아이콘 트리거 버튼. `size-11`(44px) 터치 타겟, `aria-keyshortcuts="Meta+k Control+k"`, `motion-reduce:transition-none`
+- `src/features/search/components/SearchModal.tsx` (신규) — Radix Dialog 기반 검색 모달. `useSearch` 훅 연동, ArrowDown/ArrowUp 키보드 내비(리스트 순환, ArrowUp input 예외), AnimatePresence + stagger, debounce 대기 중 "검색 중..." `aria-live="polite"` 안내, `query.trim() === ""` 기준 풋터 분기(결과/입력 상태 깜빡임 방지)
+- `src/features/search/components/SearchResultItem.tsx` (신규) — Fuse match indices를 `<mark>`로 하이라이트. 중첩/인접 구간은 `effectiveStart = Math.max(start, cursor)` 패턴으로 병합 (텍스트 소실 버그 방지)
+- `src/features/search/components/SearchTrigger.tsx` — 기존 통합체를 `SearchButton + SearchModal + useSearchShortcut` 얇은 조립체로 리팩터. `{ posts: PostSummary[] }` Public API 보존으로 `layout.tsx` 호출자 영향 없음
+- `src/features/search/components/__tests__/SearchModal.test.tsx` (신규) — 9개 테스트: open 토글, autoFocus, 빈 상태/총 포스트 수 안내, debounce → 결과 렌더, 결과 없음, href 정확성, onOpenChange 전파, ESC 닫기, ArrowDown 포커스 이동
+- `src/features/search/components/index.ts`, `src/features/search/index.ts` — `SearchButton`, `SearchModal`, `SearchResultItem`, `SearchTrigger`, `useSearch`, type `SearchResult` public API 노출 (PRD §7.4)
+- **리뷰 결과 요약 (REVIEW 1-way: react-nextjs-code-reviewer, a11y/boundary는 토큰 한도로 생략·self-check 대체)**:
+  - Tier 1 수정: `SearchResultItem.renderHighlighted`의 중첩 구간 텍스트 소실 버그, `useSearch`의 Effect 내부 setState 룰 위반 → 이벤트 핸들러 debounce 패턴 전환
+  - Tier 2 수정: `trimmed` 기준을 `debouncedQuery`로 통일해 공백 입력 시 "결과 없음" 깜빡임 해소, ArrowUp input 예외 추가, useMemo 2개 근거 주석 명시
+- **검증**: `pnpm test` 75/75 통과, `pnpm lint` 0 에러, `pnpm build` 101페이지 정적 생성 성공
+
 ### Added — PostTocAside 데스크탑 TOC 토글 컴포넌트 + Toc.tsx hydration 패턴 개선 (2026-04-16)
 
 - `src/features/posts/components/PostTocAside.tsx` (신규) — 데스크탑 TOC 열기/닫기 토글 래퍼. `isOpen=true` 시 `lg:w-64 + X 닫기 버튼 + Toc nav`, `isOpen=false` 시 `lg:w-0 + ChevronLeft 원형 버튼`만 표시. `overflow-visible`로 0px aside에서 버튼이 자연스럽게 넘쳐 보임. nav DOM 제거 방식으로 width 축소 시 텍스트 리플로우 방지.

@@ -217,10 +217,10 @@
 
 ### 검색 (MOD-search)
 
-- [ ] [M3-01] `[Red]` useSearch Integration 테스트
-- [ ] [M3-02] `[Green]` useSearch 구현 (Fuse.js)
-- [ ] [M3-03] `[Red]` SearchModal Integration 테스트
-- [ ] [M3-04] `[Green]` SearchModal 실 Fuse 연결
+- [x] [M3-01] `[Red]` useSearch Integration 테스트
+- [x] [M3-02] `[Green]` useSearch 구현 (Fuse.js)
+- [x] [M3-03] `[Red]` SearchModal Integration 테스트
+- [x] [M3-04] `[Green]` SearchModal 실 Fuse 연결
 
 ### 조회수 (MOD-views)
 
