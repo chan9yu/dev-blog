@@ -123,6 +123,9 @@ importers:
       lefthook:
         specifier: ^2.1.5
         version: 2.1.5
+      msw:
+        specifier: ^2.13.2
+        version: 2.13.2(@types/node@25.6.0)(typescript@6.0.2)
       prettier:
         specifier: ^3.8.2
         version: 3.8.2
