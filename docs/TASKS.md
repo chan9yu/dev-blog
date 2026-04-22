@@ -224,8 +224,8 @@
 
 ### 조회수 (MOD-views)
 
-- [ ] [M3-05] `[Red]` KV 클라이언트 테스트 (MSW)
-- [ ] [M3-06] `[Green]` KV 클라이언트 구현
+- [x] [M3-05] `[Red]` KV 클라이언트 테스트 (MSW)
+- [x] [M3-06] `[Green]` KV 클라이언트 구현
 - [ ] [M3-07] `[Red]` RT-/api/views Route Handler 테스트
 - [ ] [M3-08] `[Green]` RT-/api/views 구현
 - [ ] [M3-09] `[Red]` ViewCounter Integration 테스트

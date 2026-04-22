@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-05~06 KV 조회수 클라이언트 + MSW 테스트 인프라 (2026-04-21)
+
+- `package.json` — `msw@^2` devDependencies 추가 (Mock Service Worker v2.13.2). PRD §7.5 `RT-/api/views` 계약을 테스트 더블로 재현하기 위함
+- `src/shared/test/msw/handlers.ts` (신규) — `/api/views` GET/POST 핸들러 + `seedMockView(slug, count)`/`resetMockViews()` 테스트 헬퍼. **PRD §7.5 계약의 machine-readable reference**로 격상: `GET → { views: number }`, `POST → 204 (no body)`, 잘못된 slug → 400. slug 검증은 `@/shared/utils/slug` 의 `validateSlug`를 재사용해 서버 구현과 drift 차단
+- `src/shared/test/msw/server.ts` (신규) — `setupServer(...handlers)` Node 전용 export (브라우저 worker 미사용)
+- `src/shared/test/setup.ts` — MSW lifecycle hooks 추가 (`beforeAll(listen, { onUnhandledRequest: "error" })`, `afterEach(cleanup + resetHandlers + resetMockViews)`, `afterAll(close)`). `"error"` 정책으로 핸들러 누락 요청을 즉시 실패시켜 integration 신뢰도 확보
+- `src/features/views/services/kv-client.ts` (신규) — PRD §7.5 MOD-views public API 3종
+  - `getPostViews(slug): Promise<number>` — `fetch(/api/views?slug=...)` `cache: "no-store"`, `isViewsResponse` 타입 가드로 malformed payload 방어, KV 실패 시 조용히 0 + `console.warn`
+  - `incrementPostViews(slug): Promise<void>` — POST 호출, body 미파싱(204 호환), 실패 시 throw 대신 `console.warn`으로 UI 블록 방지
+  - `getBatchPostViews(slugs: ReadonlyArray<string>)` — `Promise.all` 병렬 fanout, `new Set(slugs)`로 dedup, 개별 실패는 `getPostViews`의 fallback에 위임 (JSDoc으로 순서 비보장 명시)
+- `src/features/views/services/__tests__/kv-client.test.ts` (신규) — 14개 테스트: happy path(중복 slug·빈 배열 포함), 500/네트워크/malformed shape/잘못된 slug fallback, POST 증분·최초 호출·무시 경로. 성공 경로마다 `expect(console.warn).not.toHaveBeenCalled()` 단언으로 노이즈 감지
+- `src/features/views/services/index.ts` (신규) — re-export 전용 barrel (`.claude/rules/typescript.md` §배럴 규칙 준수)
+- `src/features/views/index.ts` — public API에 `getPostViews`, `incrementPostViews`, `getBatchPostViews` 추가. 기존 `ViewCounter` export 유지
+- **설계 근거**: kv-client는 **tolerant consumer** — 현재 placeholder route(`{ slug, views }`)와 PRD 계약(`{ views }`) 모두 `views: number` 필드만 추출하므로 forward-compatible. M3-07~08에서 Route Handler를 PRD shape로 수정해도 kv-client 수정 불필요
+- **리뷰 결과 요약 (3-way 병렬: react-nextjs-code-reviewer + boundary-mismatch-qa + oh-my-claudecode:code-reviewer)**:
+  - Tier 1 수정(2건, 2개 이상 리뷰어 독립 지적): (a) `handlers.ts`의 자체 `SLUG_PATTERN`/`isValidSlug` 중복 구현 제거 → `validateSlug` 재사용으로 drift 봉쇄, (b) `kv-client.test.ts`의 `resetMockViews()` 이중 호출 제거 (setup.ts afterEach에 단일 진실 공급원 일원화)
+  - Tier 2 수정(4건): 리턴 타입 자동 추론 전환(`typescript.md` §9 준수), POST `cache: "no-store"` 노이즈 제거, 성공 경로 테스트에 `warn.not.toHaveBeenCalled()` 단언 추가, `getBatchPostViews` JSDoc + `handlers.ts` 계약 reference 주석 강화
+  - Tier 3 기록(후속): PRD drift 감지용 contract test suite 추가(M3-07 진입 전 검토), placeholder POST `views:1` → 204 수정(M3-07~08 범위), `react-nextjs`가 제안한 `'use client'` directive는 **프로젝트 `components.md:12`("hooks/browser API 사용 시에만") 기준 미적용** — 서비스 파일 관례에 반함
+  - 의견 충돌 해결: `'use client'` 추가(triangulation 결과 다수/규칙 모두 반대 → 스킵), 리턴 타입 명시(규칙 엄격 준수 → 제거)
+- **검증**: `pnpm test` 89/89 통과, `pnpm build` Next.js 16 정적 경로 생성 성공
+
 ### Added — M3-01~04 검색 기능 Fuse.js 연결 + 컴포넌트 분리 (2026-04-21)
 
 - `package.json` — `fuse.js@^7` 추가, devDependencies에 `@testing-library/react@^16`, `@testing-library/user-event@^14`, `@testing-library/jest-dom@^6`, `jsdom@^27` 추가
