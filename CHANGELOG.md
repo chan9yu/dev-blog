@@ -7,6 +7,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-17~20 Posts AC characterization + M3-21 빌드 파이프라인 통합 (2026-04-23)
+
+**M3-17/18 PostList Integration (US-001 characterization)**
+
+- `src/features/posts/components/__tests__/PostList.test.tsx` (신규, 6 케이스) — US-001 AC 통합 관점 고정
+  - 빈 배열 안내 메시지(role=status), 카드 href `/posts/{slug}`, 제목/설명/reading time/태그 표시, 썸네일 렌더, 페이지 크기(12개) 제한, ViewToggle 리스트/격자 전환 버튼
+  - `IntersectionObserver` vi.stubGlobal 스텁(jsdom 미지원 대응)
+
+**M3-19/20 PostDetail Integration (US-002 characterization)**
+
+- `src/features/posts/components/__tests__/PostMetaHeader.test.tsx` (신규, 6 케이스) — 메타 헤더 계약 고정
+  - h1 제목 + datetime 속성, 태그 Link `/tags/{tag}` href, 한글 태그 raw slug 유지(항해99 등), 빈 tags → 태그 ul 비렌더, viewCounterSlot·shareSlot 주입 확인
+
+**M3-21 빌드 파이프라인 통합**
+
+- `package.json` — 빌드 스크립트 체인 추가
+  - `build:strict` — `STRICT_FRONTMATTER=1 pnpm build` (frontmatter 스키마 위반 시 즉시 throw)
+  - `build:vercel` — `vercel-submodule-workaround.sh && pnpm build:strict` (Vercel Build Command용 단일 진입점)
+  - 기존 `prebuild` (`copy-content-images.mjs`)은 pnpm 자동 실행 유지
+- `src/features/posts/services/getAllPosts.ts` — `STRICT_FRONTMATTER=1` env 감지 시 첫 번째 오류에서 throw (slug + 원본 에러 메시지 포함). 기본 dev 환경은 기존대로 `console.warn` + skip 관용 유지
+- **빌드 파이프라인 체인**: `vercel-submodule-workaround.sh` (submodule clone) → `prebuild` (이미지 복사) → `next build` (페이지 생성) — 3단계가 단일 `pnpm build:vercel` 명령으로 실행
+
+**설계 근거**
+
+- M3-17~20은 이미 M2-22~24에서 fixture → 실 서비스 전환이 완료되어 실질적 US-001/002 AC를 만족하는 상태 — 이 커밋의 기여는 **regression 보호 테스트 커버리지 확장**
+- `STRICT_FRONTMATTER` 토글 방식은 dev 중 WIP MDX가 빌드를 막지 않도록 하면서 CI/프로덕션에서는 hard-fail을 보장 (autonomy.md 관용 vs 엄격 경계 선택적 해제)
+
+**검증**: `pnpm test` 144/144 통과(PostList 6/6 + PostMetaHeader 6/6 신규), `pnpm lint` 0 에러, `STRICT_FRONTMATTER=1 pnpm build` 101 페이지 정적 생성 성공
+
+### Added — M3-15~16 MOD-lightbox Radix 기반 multi-image carousel (Green, 2026-04-23)
+
+- `src/features/lightbox/contexts/LightboxContext.ts` — Context 확장
+  - 기존 `{ open(single), close }` → `{ open(single), openMany(images, startIndex?), close }`로 확장
+  - `LightboxImage = { src, alt }` 공개 타입 추가
+- `src/features/lightbox/components/LightboxProvider.tsx` — 상태 모델을 `{ images: readonly LightboxImage[], index }`로 전환
+  - `images.length === 0`이면 닫힘 상태로 간주, `images.length > 0`이면 자동 `ImageLightbox` 마운트
+  - `goNext`/`goPrev` — modulo 산술로 circular navigation (마지막→첫, 첫→마지막)
+  - `startIndex` 경계 검사 (`Math.max(0, Math.min(n-1))`) + empty images 가드
+- `src/features/lightbox/components/ImageLightbox.tsx` — props 변경 `{ src, alt, onClose }` → `{ images, index, onNext, onPrev, onClose }`
+  - `hasMultiple = images.length > 1`일 때만 좌우 화살표 (`ChevronLeft`/`ChevronRight`) 렌더 — 1장 시 화살표 자동 숨김
+  - `document.addEventListener("keydown")` ArrowRight/ArrowLeft 키보드 nav (hasMultiple일 때만 등록, useEffect cleanup로 누수 방지)
+  - Radix Dialog primitive 유지 — 포커스 트랩·ESC·포커스 복원·body scroll lock·fade 300ms 변화없음
+- `src/features/lightbox/components/__tests__/ImageLightbox.test.tsx` (신규, 9 케이스)
+  - 단일 이미지 → 화살표 숨김, 다중 이미지 → 화살표 렌더, next/prev 버튼 nav, circular navigation(마지막→첫, 첫→마지막), ArrowRight/ArrowLeft 키보드 nav, ESC 닫기
+- `src/features/lightbox/index.ts` — `LightboxImage` 타입 공개 API 추가, JSDoc M3-16 Green 상태 반영
+- `src/app/providers.tsx` — `LightboxProvider` 트리 루트 배치. `ThemeProvider > MotionConfig > LightboxProvider > children` 순서로 `useLightbox()` 소비자 전역 접근 가능
+- **의존성 없이 구현**: ROADMAP이 지목한 `yet-another-react-lightbox` 설치가 autonomy.md에 의해 블록되어, Radix Dialog primitive + custom carousel 로직으로 동등 기능 제공. API 계약은 독립적이라 향후 스왑 시 내부 구현만 교체
+- **follow-up**: MdxImage 클릭 → `useLightbox().openMany()` 연결은 M3-20 Posts AC 완성 스코프에서 처리 (MDX 이미지 수집/그룹화 로직 포함)
+- **검증**: `pnpm test` 132/132 통과(ImageLightbox 9/9), `pnpm lint` 0 에러
+
+### Added — M3-13~14 MOD-theme useTheme wrapper + View Transitions persistence (Green, 2026-04-23)
+
+- `src/features/theme/hooks/useTheme.ts` (신규) — next-themes wrapper 훅 (ADR-011)
+  - `{ resolvedTheme: "light"|"dark"|null, toggleTheme, setTheme, mounted }` 반환
+  - `useSyncExternalStore` 기반 `mounted` 플래그 — hydration 이전 `resolvedTheme: null` 반환으로 FOUC 차단
+  - `toggleTheme` — light↔dark 스왑 원샷 호출
+  - `document.startViewTransition` progressive enhancement — 지원 시 전환 경유, 미지원 시 즉시 apply
+- `src/features/theme/hooks/index.ts` (신규) — `useTheme` re-export leaf barrel
+- `src/features/theme/components/ThemeSwitcher.tsx` — 프레젠테이션 전용으로 축소. next-themes 직접 소비 로직은 `useTheme` 훅으로 이관
+- `src/features/theme/index.ts` — `useTheme` public API 추가
+- `src/features/theme/components/__tests__/ThemeSwitcher.test.tsx` (신규, 6 케이스, M3-13) — Integration characterization 테스트
+  - aria-label 존재, light→dark 클릭 토글(aria-pressed + html.dark 클래스), dark→light 복귀, View Transitions API 지원 시 `startViewTransition` 경유, 미지원 환경에서도 전환 동작, localStorage 저장
+  - `matchMedia` mock + ThemeProvider 래퍼로 next-themes 계약 테스트
+- **설계 근거**: 기존 ThemeSwitcher가 이미 계약을 만족하는 상태였지만, CommentsSection 등 다른 feature가 공유할 wrapper 훅을 노출해야 재사용 가능. follow-up: CommentsSection을 `features/theme`의 wrapper로 전환해 mounted 감지 기반 postMessage 타이밍 개선
+- **검증**: `pnpm test` 123/123 통과(ThemeSwitcher 6/6), `pnpm lint` 0 에러
+
 ### Added — M3-11~12 MOD-comments Giscus 댓글 통합 완성 (Green, 2026-04-23)
 
 - `src/features/comments/components/CommentsSection.tsx` — placeholder → Giscus 실 iframe 주입

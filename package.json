@@ -12,6 +12,8 @@
 		"dev": "next dev --port 3100",
 		"prebuild": "node scripts/copy-content-images.mjs",
 		"build": "next build",
+		"build:strict": "STRICT_FRONTMATTER=1 pnpm build",
+		"build:vercel": "bash scripts/vercel-submodule-workaround.sh && pnpm build:strict",
 		"start": "next start",
 		"copy-images": "node scripts/copy-content-images.mjs",
 		"lint": "eslint",
