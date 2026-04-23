@@ -1,1 +1,1 @@
-export { getBatchPostViews, getPostViews, incrementPostViews } from "./kv-client";
+export { fetchPostViewsOrNull, getBatchPostViews, getPostViews, incrementPostViews } from "./kv-client";

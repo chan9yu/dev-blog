@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-08~10 MOD-views KV 조회수 통합 완성 (Green, 2026-04-23)
+
+- `src/app/api/views/route.ts` — placeholder → PRD §7.5 계약 정합 구현
+  - GET: `{ views: number }` shape + `Cache-Control: no-store` + 400 on invalid slug
+  - POST: `204 no content` + `no-store` + 400 on invalid slug/malformed JSON
+  - 저장소: `globalThis.__devBlogViewsStore` Map (HMR 생존). **프로덕션 배포 전 `@vercel/kv` incr/mget 어댑터로 스왑 필수** (ADR-003, follow-up). autonomy.md에 의해 deps 자율 설치 불가, 계약 shape는 현재 구현과 KV 어댑터 간 identical이라 UI·테스트 영향 없음
+- `src/features/views/services/kv-client.ts` — `fetchPostViewsOrNull(slug): Promise<number | null>` 신규. UI가 "— 회" fallback을 렌더해야 할 때 사용(실패/성공 구분). 기존 `getPostViews`는 이 저수준 함수를 감싸 `0` fallback(배치·SSR용)을 유지 — **tolerant consumer** 계약 보존
+- `src/features/views/hooks/useViews.ts` (신규) — 마운트 시 POST +1 → GET 파이프라인, `sessionStorage` 기반 slug별 dedup. `{ views: number | null, failed: boolean }` 반환. React 19 룰(`set-state-in-effect`·`refs`) 양립 위해 slug 생명주기 내 불변 가정 + `[slug]` deps effect 단일 실행 패턴 채택 (슬러그 변경은 App Router 세그먼트 remount로 처리)
+- `src/features/views/hooks/index.ts` (신규) — `useViews` re-export leaf barrel
+- `src/features/views/components/ViewCounter.tsx` — server component placeholder → `"use client"` + `useViews(slug)` 연결. 3-state 렌더(로딩 스켈레톤 `animate-pulse` / 성공 `toLocaleString("ko-KR")회` / 실패 `— 회`) + `aria-label` 상태별 분기(`조회수 불러오는 중` / `조회수 N회` / `조회수 정보 없음`)
+- `src/features/views/index.ts` — public API에 `useViews`·`fetchPostViewsOrNull` 추가
+- `src/features/views/components/__tests__/ViewCounter.test.tsx` (신규, 7 케이스) — Integration 테스트
+  - 초기 로딩 placeholder, POST +1 + GET 수신 후 숫자 렌더(seeded 42 → 43), 3자리 이상 `toLocaleString("ko-KR")` 포맷(1234 → "1,234회"), 동일 slug 재마운트 시 POST 재호출 금지(sessionStorage dedup), 서로 다른 slug별 개별 POST, GET 500 → `— 회` fallback + `조회수 정보 없음` aria-label, POST 실패도 GET 결과 표시(best-effort)
+- **설계 근거**: React 19 `react-hooks/set-state-in-effect` + `react-hooks/refs` 동시 충족 위해 `useRef` 기반 setState-during-render 패턴 대신 **"slug는 컴포넌트 lifecycle 내 불변"** 가정으로 단순화. App Router의 `/posts/[slug]` 세그먼트가 slug param 변경 시 언마운트/재마운트하는 Next.js 계약에 편승
+- **검증**: `pnpm test` 112/112 통과(M3-09 Red 7/7 포함), `pnpm lint` 0 에러, `pnpm build` 101페이지 정적 생성
+
+### Added — M3-07 RT-/api/views Route Handler 계약 테스트 (Red, 2026-04-22)
+
+- `src/app/api/views/__tests__/route.test.ts` (신규, 16 케이스) — Route Handler 함수(`GET`, `POST`)를 직접 호출하는 **서버 단위 테스트**. `kv-client.test.ts`(MSW 기반 컨슈머)와 달리 **프로듀서 관점에서 PRD §7.5 + ROADMAP M3-08 계약을 직접 강제**
+  - GET 8 cases: `{ views: number }` shape + slug 필드 누설 금지 + `Cache-Control: no-store` + `Content-Type: application/json` + 400 cases(null·empty·공백·대문자)
+  - POST 8 cases: **204 no body** + `Cache-Control: no-store` + 400 cases(slug 누락·공백·malformed JSON·string primitive·null JSON)
+- **Red 검증**: 5건 실패(모두 계약 위반으로 올바르게 실패)
+  - GET: `slug` 필드 누설(현재 `{ slug, views: 0 }`) / `no-store` 헤더 미설정
+  - POST: 200 응답(204여야 함) / `{ slug, views: 1 }` body 누설 / `no-store` 헤더 미설정
+  - M3-08 Green에서 route.ts를 `Response.json({ views }, { headers: { "cache-control": "no-store" } })` + `new Response(null, { status: 204, headers: { "cache-control": "no-store" } })` + `@vercel/kv` incr/get으로 수정하면 자연 녹색 전환
+- **드리프트 방어 설계**: `route.test.ts`가 **프로듀서↔MSW mock 드리프트의 유일한 게이트**. `handlers.ts`(컨슈머 테스트용 mock)가 PRD 스펙을 복제하고 있으므로, 한쪽만 수정되어 드리프트가 날 위험을 route.test.ts의 exact-shape 단언(`Object.keys(body).sort() === ["views"]`)이 차단
+- **리뷰 결과 요약 (3-way 병렬: react-nextjs-code-reviewer + boundary-mismatch-qa + oh-my-claudecode:code-reviewer)**:
+  - Tier 1 수정(2건, 3명 전원 독립 지적): (a) `as unknown as Parameters<typeof GET>[0]` 이중 캐스팅 → `new NextRequest(url)` 직접 생성으로 교체(M3-08에서 `req.nextUrl`/`req.cookies` 사용 시 silent 실패 방지), (b) `buildPostRequest`의 `"not-json"` sentinel 리터럴 파라미터 → discriminated union `{ type: "json" | "malformed" }`로 교체(의도 명시)
+  - Tier 2 수정(3건): POST 400 케이스들의 실제 전송 body 명확화(`JSON.stringify(null)` = `"null"`이 유효 JSON literal임을 주석 + 케이스명으로 노출), GET `Content-Type: application/json` 응답 헤더 검증 추가, POST `Cache-Control: no-store` 검증 추가(ROADMAP "GET/POST 핸들러" 문자적 해석)
+  - Tier 3 기록(후속): (a) `features/views/schemas/` 아래 Zod `ViewsResponseSchema.strict()` + `ViewsPostBodySchema.strict()` 승격 — route.ts·handlers.ts·kv-client.ts가 모두 parse로 소비하는 단일 진실 공급원 체제 (M3-08 진입 시 고려), (b) `kv-client.ts`의 `isViewsResponse` 가드를 exact-shape로 강화(현재는 extra field 허용 — tolerant consumer 설계라 의도적, CHANGELOG에 책임 경계 명시), (c) GET happy path 3회 반복 호출 DRY — Red 진단성 우선 유지
+  - 의견 충돌 해결: boundary 단독의 "POST `no-store` 필요" 주장 채택(ROADMAP 문구 문자적 해석), boundary 단독의 "POST no-store 불필요(PRD GET only)" 미주장 → 전자 우선
+- **검증**: route.test.ts 5 fail / 100 pass(의도된 Red), 전체 suite 10 file pass + 1 file fail(route.test.ts). `tsc --noEmit` + ESLint 통과
+
 ### Added — M3-05~06 KV 조회수 클라이언트 + MSW 테스트 인프라 (2026-04-21)
 
 - `package.json` — `msw@^2` devDependencies 추가 (Mock Service Worker v2.13.2). PRD §7.5 `RT-/api/views` 계약을 테스트 더블로 재현하기 위함

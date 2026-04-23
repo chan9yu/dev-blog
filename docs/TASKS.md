@@ -226,10 +226,10 @@
 
 - [x] [M3-05] `[Red]` KV 클라이언트 테스트 (MSW)
 - [x] [M3-06] `[Green]` KV 클라이언트 구현
-- [ ] [M3-07] `[Red]` RT-/api/views Route Handler 테스트
-- [ ] [M3-08] `[Green]` RT-/api/views 구현
-- [ ] [M3-09] `[Red]` ViewCounter Integration 테스트
-- [ ] [M3-10] `[Green]` ViewCounter 실 KV 연결
+- [x] [M3-07] `[Red]` RT-/api/views Route Handler 테스트
+- [x] [M3-08] `[Green]` RT-/api/views 구현
+- [x] [M3-09] `[Red]` ViewCounter Integration 테스트
+- [x] [M3-10] `[Green]` ViewCounter 실 KV 연결
 
 ### 댓글 (MOD-comments)
 
@@ -381,7 +381,7 @@
 | M0 Foundation          | 33      | 33      | 100%    |
 | M1 UI Skeleton         | 61      | 61      | 100%    |
 | M2 Content Pipeline    | 24      | 21      | 88%     |
-| M3 Feature Wiring      | 21      | 0       | 0%      |
+| M3 Feature Wiring      | 21      | 7       | 33%     |
 | M4 Hubs & Aggregations | 21      | 0       | 0%      |
 | M5 SEO & Syndication   | 10      | 0       | 0%      |
 | M6 A11y & Perf         | 14      | 0       | 0%      |
