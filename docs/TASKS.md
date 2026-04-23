@@ -238,8 +238,8 @@
 
 ### 테마 (MOD-theme)
 
-- [ ] [M3-13] `[Red]` ThemeSwitcher Integration 테스트
-- [ ] [M3-14] `[Green]` ThemeSwitcher + useTheme 완성
+- [x] [M3-13] `[Red]` ThemeSwitcher Integration 테스트
+- [x] [M3-14] `[Green]` ThemeSwitcher + useTheme 완성
 
 ### 라이트박스 (MOD-lightbox)
 
@@ -381,7 +381,7 @@
 | M0 Foundation          | 33      | 33      | 100%    |
 | M1 UI Skeleton         | 61      | 61      | 100%    |
 | M2 Content Pipeline    | 24      | 21      | 88%     |
-| M3 Feature Wiring      | 21      | 9       | 43%     |
+| M3 Feature Wiring      | 21      | 11      | 52%     |
 | M4 Hubs & Aggregations | 21      | 0       | 0%      |
 | M5 SEO & Syndication   | 10      | 0       | 0%      |
 | M6 A11y & Perf         | 14      | 0       | 0%      |
