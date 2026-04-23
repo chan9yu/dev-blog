@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-11~12 MOD-comments Giscus 댓글 통합 완성 (Green, 2026-04-23)
+
+- `src/features/comments/components/CommentsSection.tsx` — placeholder → Giscus 실 iframe 주입
+  - `isPrivate?: boolean` prop 신규 — `true`면 섹션 자체 비렌더(개인 포스트 노출 방지, US-005 AC)
+  - 환경변수 4종(`NEXT_PUBLIC_GISCUS_REPO`·`REPO_ID`·`CATEGORY`·`CATEGORY_ID`) 누락 시 설정 안내 placeholder
+  - IntersectionObserver lazy-mount(`rootMargin: "200px"`) → `giscus.app/client.js` script 주입
+  - `next-themes` `useTheme` 연동 — 최초 주입 시 현재 테마 주입, 이후 테마 변경은 iframe `postMessage({ giscus: { setConfig: { theme } } })` 전파로 재주입 회피
+  - 언마운트 시 script·iframe 정리 (메모리 누수 방지)
+  - **DIY 로더 근거**: `@giscus/react` 미설치(autonomy.md deps 블록) 상태에서 공식 `client.js` + `data-*` attrs 계약을 직접 준수한 경량 wrapper. `data-mapping: specific`·`data-term: slug`·`data-strict: 1` 등 권장 설정 적용. `@giscus/react` 스왑은 follow-up이며 외부 계약 identical이라 UI 영향 없음
+- `src/features/comments/components/__tests__/CommentsSection.test.tsx` (신규, 5 케이스) — Integration 테스트
+  - `isPrivate=true` 비렌더, 환경변수 누락 안내 placeholder, script 주입 + data-\* attrs 검증(repo/repoId/category/categoryId/term/mapping/crossOrigin/async), slug별 data-term 분기, 언마운트 cleanup
+  - `IntersectionObserver` vi.stubGlobal로 즉시 교차 발동, `vi.stubEnv`로 환경변수 주입
+- `src/app/posts/[slug]/page.tsx` — `<CommentsSection>`에 `isPrivate={summary.private}` 전달 (private 포스트가 includePrivate 경로로 들어올 때 댓글 차단)
+- `src/features/comments/index.ts` — JSDoc 갱신: M3-12 Green 완료 + DIY 로더 근거 명시
+- **검증**: `pnpm test` 117/117 통과(CommentsSection 5/5 Red→Green), `pnpm lint` 0 에러(테마 deps는 postMessage 동기화 이유로 명시적 `eslint-disable` + 주석), `pnpm build` 통과
+
 ### Added — M3-08~10 MOD-views KV 조회수 통합 완성 (Green, 2026-04-23)
 
 - `src/app/api/views/route.ts` — placeholder → PRD §7.5 계약 정합 구현

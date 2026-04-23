@@ -110,7 +110,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 
 						<RelatedPosts posts={related} />
 
-						<CommentsSection slug={summary.slug} />
+						<CommentsSection slug={summary.slug} isPrivate={summary.private} />
 					</article>
 
 					<PostTocAside items={detail.toc} />
