@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
-import { getAllTags } from "@/features/tags";
+import { getAllTags, getPostsByTag } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
@@ -12,8 +12,8 @@ type TagDetailPageProps = {
 	params: Promise<{ tag: string }>;
 };
 
-export function generateStaticParams() {
-	return getAllTags(getPublicPosts()).map((tag) => ({ tag: tag.slug }));
+export async function generateStaticParams() {
+	return getAllTags(getPublicPosts()).map((tag) => ({ tag }));
 }
 
 export async function generateMetadata({ params }: TagDetailPageProps): Promise<Metadata> {
@@ -39,7 +39,7 @@ export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const decoded = decodeURIComponent(tag);
 	if (!decoded) notFound();
 
-	const filtered = resolvePostThumbnails(getPublicPosts().filter((post) => post.tags.includes(decoded)));
+	const filtered = resolvePostThumbnails(getPostsByTag(getPublicPosts(), decoded));
 	if (filtered.length === 0) {
 		notFound();
 	}

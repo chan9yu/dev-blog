@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getPublicPosts } from "@/features/posts";
-import { getAllTags } from "@/features/tags";
+import { getTagCounts } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  *   - 우측: ChevronRight (hover translate-x-1)
  */
 export default function TagsHubPage() {
-	const tags = getAllTags(getPublicPosts());
+	const tags = getTagCounts(getPublicPosts());
 
 	return (
 		<Container>

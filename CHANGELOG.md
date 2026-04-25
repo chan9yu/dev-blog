@@ -7,6 +7,205 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M4-20~21 About 콘텐츠 + Private 정책 통합 테스트 (Green, 2026-04-25)
+
+**M4-20 About 콘텐츠 (PRD §7.9)**:
+
+- `src/features/about/services/getAboutContent.ts` (신규) — `() => string`. `contents/about/index.md` 본문을 sync fs로 읽어 raw markdown string 반환. 파일 누락 시 throw — 빌드 시점 즉시 감지(silent fail 방지).
+- `src/features/about/services/__tests__/getAboutContent.test.ts` (3 케이스) — 본문 반환·utf-8 인코딩·ENOENT throw
+- `src/features/about/index.ts` — `getAboutContent` Public API export
+- `src/features/about/components/AboutProfile.tsx` — 하드코딩된 80+ 줄 placeholder 본문(인사·기술스택·블로그·연락) → `<CustomMDX source={getAboutContent()} />` 단일 호출로 교체. 프로필 메타(이름/직함/소셜)는 1인 블로그 특성상 inline 유지.
+
+**M4-21 Private 정책 통합 테스트**:
+
+- `src/features/posts/services/__tests__/privatePolicy.integration.test.ts` (신규, 8 케이스) — 단일 fs mock 픽스처(public-a, public-b, private-x)로 모든 collector 누설 검증
+  - `getPublicPosts()` 자체 private 제외
+  - `includePrivate: true` 반대 케이스
+  - `findAdjacentPosts` private 미포함
+  - `findRelatedPostsByTags` private 미포함 + secret 태그 누설 차단
+  - `getAllSeries` 시리즈 그룹에 private 미포함
+  - `getTagCounts` private 기여분 미합산 + secret 태그 미등장
+  - `getTrendingTags` private 기여분 제외
+  - `getTrendingSeries` 소속 포스트 수 정확
+
+**3-way 리뷰 결과**:
+
+- Tier 1: 1건 false positive (`React.cache` 격리 우려 → 빌드/테스트 220/220 PASS로 실제 격리 정상 검증)
+- Tier 2 즉시 수정: 라인 106 중복 assertion 정리 + secret 태그 누설 검증으로 교체 (양성 케이스 확장)
+- Tier 2 후속(별도 트랙):
+  - `getAboutContent` async/await + `readFile` 전환 — ISR 전환 시점에 적용 (현재 SSG 전용 빌드 타임만 호출되므로 무해)
+  - `privatePolicy.integration.test.ts` → `src/__tests__/integration/`으로 이동 — 통합 테스트 디렉토리 신설은 testing.md 갱신 필요(별도 GC 작업)
+
+**검증**: `pnpm test` 220/220 PASS(getAboutContent 3 + privatePolicy 8 신규), `pnpm build` 101/101 정적 페이지(About 페이지 ○ Static 그대로), `/about` 마크다운 렌더 정상 동작.
+
+**설계 근거**:
+
+- `getAboutContent`가 `Promise<string>` 대신 sync `string` 반환 — 1인 블로그의 단일 about 페이지에 대한 RSC 모듈 단순화. 미래 ISR 전환 시점에 async로 전환 (autonomy.md "기존 계약 변경" 범위 회피)
+- 통합 테스트가 모든 collector를 한 픽스처로 검증 — `getPublicPosts()`가 single source of truth라는 ADR-007 정책의 명시적 보장
+- M4-21이 그룹 1~4 services에 적용한 `posts: PostSummary[]` 매개변수 패턴의 격리성 효과를 통합 시점에서 검증 — 각 collector가 외부 상태 의존 없이 입력만으로 결과를 결정하므로 fs mock 한 번으로 7개 함수 모두 검증 가능
+
+### Added — M4-15~19 관련/인접 포스트 PRD 시그니처 정합 + 포스트 상세 통합 (Red→Green→리팩터, 2026-04-25)
+
+**시그니처 교체 (Breaking)** — 사용자 결정에 따라 PRD §7.1 시그니처로 통일:
+
+- `src/features/posts/services/findAdjacentPosts.ts` (신규) — `(posts: PostSummary[], slug: string) => AdjacentPosts`. 순수 함수, fs 모킹 불필요한 단위 테스트 격리성 확보.
+- `src/features/posts/services/findRelatedPostsByTags.ts` (신규) — `(posts: PostSummary[], target: PostSummary, limit=3) => RelatedPost[]`. target 객체 전체 의존(`slug`/`tags`/미래 확장 시 `series` 등도 흡수 가능).
+- `src/features/posts/services/getAdjacentPosts.ts` 삭제 — 편의형(`getPublicPosts()` 내부 호출)
+- `src/features/posts/services/getRelatedPosts.ts` 삭제 — 동일 패턴
+
+**테스트 (14 케이스)**:
+
+- `__tests__/findAdjacentPosts.test.ts` (6 케이스) — prev/next 경계, 첫/마지막 포스트, slug 미일치, 단일/빈 입력
+- `__tests__/findRelatedPostsByTags.test.ts` (8 케이스) — overlapScore desc 정렬, target 자기제외, overlap=0 제외, default limit 3·custom limit, target 빈 태그 early return, 동률 입력 순서 보존, 빈 입력
+
+**호출자 통합 (M4-19)**:
+
+- `src/app/posts/[slug]/page.tsx` — `getAdjacentPosts(slug)` → `findAdjacentPosts(allPosts, slug)`, `getRelatedPosts(slug, tags)` → `findRelatedPostsByTags(allPosts, summary)`. `allPosts`를 한 번 계산해 `findAdjacentPosts`/`findRelatedPostsByTags`/`getSeriesDetail` 3 함수가 공유 → React.cache 의존도 감소 + 의도 명확화.
+
+**배럴 갱신**:
+
+- `src/features/posts/services/index.ts` — `find*` 2종 export, `get*` 2종 제거
+- `src/features/posts/index.ts` — Public API 동일 정렬
+- `src/features/posts/services/getPublicPosts.ts` JSDoc — 새 식별자(`findAdjacentPosts`/`findRelatedPostsByTags`)로 갱신
+
+**3-way 리뷰 결과**:
+
+- Tier 1(Critical): 0건 (3 리뷰어 모두 PASS)
+- Tier 2 즉시 수정: `getPublicPosts.ts:9` JSDoc 잔존 식별자 정정 (3 리뷰어 공통 지적)
+- Tier 3 후속: `findRelatedPostsByTags`의 `Set` 활용 (포스트 수 백 단위 시점에 도입), 중복 slug 입력 시 `findAdjacentPosts` 동작 명세 추가
+- 경계면 검증: PASS (8 producer/consumer 매트릭스 mismatch 0건, 호출자 누락 0)
+
+**검증**: `pnpm test` 209/209 PASS(find\* 14 신규), `pnpm build` 101/101 정적 페이지, `/posts/[slug]` 22+ 라우트 정상 prerender.
+
+**설계 근거**:
+
+- PRD §7.1 시그니처(`(posts, slug)`/`(posts, target, limit)`) 직접 정합 — 단위 테스트에서 fs 모킹 없이 PostSummary[] 배열만 주입 가능 (격리성 향상)
+- `target: PostSummary` 객체 전체 의존 — `(slug, tags)` 분해보다 호출자 시그니처 단순, 미래 확장(시간/시리즈 가중치) 시 시그니처 변경 불필요
+- 편의형 함수 제거 — API 표면 축소 (PRD 단일 진실 공급원)
+
+### Added — M4-11~14 Popular 스냅샷 (KV + fallback) + 홈 사이드바 실데이터 (Red→Green→통합, 2026-04-25)
+
+**ADR-007 빌드 타임 스냅샷 구현**:
+
+- `src/features/posts/services/getTrendingPosts.ts` (신규) — `(posts: PostSummary[], limit=5) => Promise<{ posts, fallback: boolean }>` 형태로 fallback 신호 노출.
+  - 빌드 타임 KV 누적 조회수(`@vercel/kv`의 `mget`) 일괄 페치 후 조회수 desc 정렬, 동률 시 발행일 desc.
+  - **2단계 안전망**: (1) `hasKvCredentials()` — `KV_REST_API_URL`/`KV_REST_API_TOKEN` 미설정 시 즉시 fallback. (2) try-catch — KV 호출 실패 시 console.warn + fallback.
+  - fallback 경로는 `pickRecentPosts()`로 자체 date desc 재정렬 (호출자 정렬 계약 변경에 견고).
+  - `@vercel/kv`는 동적 import — 라이브러리 초기화 실패 격리 (2차 방어선).
+
+**테스트 (8 케이스)**:
+
+- `__tests__/getTrendingPosts.test.ts` — `vi.mock("@vercel/kv")`로 mget mock
+  - 조회수 desc 정렬·동률 발행일·null→0 변환·env 미설정 fallback·KV throw fallback·default limit 5·빈 입력·limit 초과
+
+**홈 사이드바 통합 (M4-14)**:
+
+- `src/app/page.tsx` — `HomePage`를 `async function`으로 전환, `await getTrendingPosts(allPosts, 5).posts`로 popularPosts 교체. 임시 `readingTimeMinutes` desc 정렬 제거 (M2 placeholder 정리).
+- 사이드바 3블록(`PopularPosts`/`TrendingSeries`/`TrendingTags`)이 모두 실데이터로 동작.
+- `dynamic = "force-static"`은 Next.js 16 `cacheComponents` 모드와 충돌 → 미명시. 빌드 결과 SSG로 prerender 확인.
+
+**배럴 갱신**:
+
+- `src/features/posts/services/index.ts` — `getTrendingPosts` export 추가
+- `src/features/posts/index.ts` — `getTrendingPosts` + `TrendingSnapshot` type re-export
+
+**3-way 리뷰 결과**:
+
+- Tier 1: 1건 false positive (`getPublicPosts` await 누락 지적 → 실제 `getAllPosts`는 동기 `readdirSync/readFileSync` 함수, `cache(() => ...)` 래퍼도 동기. 빌드/테스트 PASS로 검증)
+- Tier 2 즉시 수정: fallback 경로 자체 date desc 정렬, JSDoc 동적 import 의도 정정 (`force-static`은 Next.js 16 cacheComponents 모드 충돌로 미적용)
+- Tier 2 보류: `mget<number>` vs `Array<number | null>` 시그니처 — boundary-qa가 기존 형태 PASS 판정. KV 저장값이 항상 number(`route.ts:46`의 `kv.get<number>` + `kv.incr` 보장)이므로 NaN 위험 없음.
+- Tier 3: `trending.fallback` UI 표기, 테스트 limit=0 경계, M3-21 description 길이(SEO 별도 트랙)
+- 경계면 검증: PASS (8 producer × consumer 매트릭스 mismatch 0건, KV 키 prefix 일관, mget 시그니처 정합)
+
+**검증**: `pnpm test` 195/195 PASS(getTrendingPosts 8 신규), `pnpm build` 101/101 정적 페이지, KV 미설정 환경에서도 빌드 성공 (fallback 경로 동작 확인).
+
+**설계 근거**:
+
+- ADR-007 "빌드 절대 깨뜨리지 않음" 원칙 — env 체크 + try-catch 2중 방어로 KV 장애가 빌드 차단으로 이어지지 않음.
+- `Promise<{ posts, fallback }>`로 PRD §7.1 시그니처(`Promise<PostSummary[]>`)를 확장 — ADR-007의 fallback 플래그 요구를 단일 진입점에서 노출. UI에서 "스냅샷 기준 시점" 표기 등 후속 활용 가능.
+- 동적 import + `hasKvCredentials()` 병용 — 환경 변수 부재 시 `@vercel/kv` 모듈 자체 평가 회피.
+
+### Added — M4-06~10 시리즈 서비스 분리 + Trending 스냅샷 (Red→Green→라우트 정합성, 2026-04-25)
+
+**시그니처 분리** — PRD §7.3 4종 export 충족 (기존 `getAllSeries`/`getAdjacentInSeries` 유지):
+
+- `src/features/series/services/getSeriesDetail.ts` (신규) — `(posts, slug) => Series | null`. `getAllSeries`로 그룹화 후 slug 매칭, 없으면 `null` (호출자가 `notFound()` 처리).
+- `src/features/series/services/getSeriesStats.ts` (신규) — `(series) => SeriesStats`. `{ total, firstPublished, lastUpdated }` 형태로 통계 제공. 빈 시리즈는 `firstPublished/lastUpdated`를 `null`로 반환해 ISO 8601 문자열과 빈 값을 타입으로 구분.
+- `src/features/series/services/getTrendingSeries.ts` (신규, ADR-007) — `(posts, limit=3) => Series[]`. 정렬: (1) 소속 public 포스트 수 desc, (2) 동률 시 `lastUpdated` desc. 사전 계산 패턴으로 sort 비교 비용 O(N log N × M) → O(N M + N log N) 감축.
+
+**타입 추가**:
+
+- `src/shared/types/series.ts` — `SeriesStats = { total, firstPublished: string | null, lastUpdated: string | null }`. `null` 사용으로 빈 시리즈와 ISO 8601 문자열 타입 분리.
+- `src/shared/types/index.ts` — `SeriesStats` re-export
+- `src/features/series/index.ts` — `Series, SeriesStats` 외부 노출
+
+**테스트 (22 케이스)**:
+
+- `__tests__/getAllSeries.test.ts` (6 케이스) — 그룹핑·seriesOrder asc·name/slug 동일·null seriesOrder 무시·빈 입력
+- `__tests__/getSeriesDetail.test.ts` (4 케이스) — slug 매칭·null 반환·정렬 보존
+- `__tests__/getSeriesStats.test.ts` (6 케이스) — total/first/last·1편·빈 시리즈 null·발행일 비교
+- `__tests__/getTrendingSeries.test.ts` (6 케이스) — default limit 3·count desc·동률 lastUpdated desc·series null 무시
+
+**라우트 정합성 (M4-10)**:
+
+- `src/app/page.tsx` — `getAllSeries(allPosts).slice(0, 3)` → `getTrendingSeries(allPosts, TRENDING_SERIES_LIMIT)` (정렬 규칙 ADR-007 적용).
+- `src/app/posts/[slug]/page.tsx` — `getAllSeries(allPosts).find(...)` → `getSeriesDetail(allPosts, summary.series)` (단일 시리즈 lookup 단순화).
+- `src/app/series/[slug]/page.tsx` — `cache(() => getAllSeries(...))` → `cache((slug) => getSeriesDetail(getPublicPosts(), slug))`. slug별 메모이즈로 의도 명확화. `generateStaticParams`를 `async`로 선언 (Next.js 16 권장).
+- `src/app/series/page.tsx` — 변경 없음 (`getAllSeries` 그대로 유지)
+
+**3-way 리뷰 결과**:
+
+- Tier 1(Critical): 1건 false positive (`react-nextjs-reviewer`가 `getPublicPosts` cache 미적용 지적 → 실제로 `getPublicPosts.ts`는 이미 `cache()` wrap됨, 무시).
+- Tier 2 즉시 수정: SeriesStats 빈 값을 `null`로(타입 명확성), `getTrendingSeries` 정렬 사전계산 패턴.
+- Tier 2 보류: `getSeriesDetail`이 `getAllSeries` 매번 호출 — PRD 시그니처 단순함 우선.
+- Tier 3: 테스트 헬퍼 4파일 분기(GC 일괄 정리 권장)
+- 경계면 검증: PASS (11 producer × consumer 매트릭스 mismatch 0건)
+
+**검증**: `pnpm test` 187/187 PASS(시리즈 22 신규), `pnpm build` 101/101 정적 페이지, TypeScript strict 통과, `/series/[slug]` 라우트 정상 생성.
+
+**설계 근거**:
+
+- PRD §7.3 4종 export를 의미적으로 분리: `getAllSeries`(전체 그룹핑) / `getSeriesDetail`(단일 lookup) / `getSeriesStats`(통계) / `getTrendingSeries`(트렌딩 정렬). 호출자가 의도를 코드만으로 표현 가능.
+- `cache(slug => ...)` 패턴: list 통째 캐시보다 slug 단위 캐시가 메모이즈 의도를 명확히 표현. `getPublicPosts()`가 이미 cache wrap되어 있어 fs 스캔 중복 없음.
+
+### Added — M4-01~05 태그 서비스 분리 + Trending 스냅샷 (Red→Green→라우트 정합성, 2026-04-25)
+
+**시그니처 분리** — PRD §7.2 4종 export 충족:
+
+- `src/features/tags/services/getAllTags.ts` (시그니처 변경) — `(posts) => string[]` (unique 태그 slug, 알파벳 오름차순). 주 용도: `generateStaticParams`. 이전 `TagCount[]` 반환 책임은 `getTagCounts`로 이전.
+- `src/features/tags/services/getTagCounts.ts` (신규) — `(posts) => TagCount[]` (count desc, tag asc 정렬). 카운트 집계 단일 책임.
+- `src/features/tags/services/getPostsByTag.ts` (신규) — `(posts, tag) => PostSummary[]`. 입력 정렬 보존 단순 filter.
+- `src/features/tags/services/getTrendingTags.ts` (신규, ADR-007) — `(posts, limit=10) => TagCount[]`. `getTagCounts(...).slice(0, limit)` 위임으로 트렌딩 의도 명시.
+
+**테스트 (Red→Green, 21 케이스)**:
+
+- `src/features/tags/services/__tests__/getAllTags.test.ts` (4 케이스) — unique·정렬·빈 입력
+- `src/features/tags/services/__tests__/getTagCounts.test.ts` (6 케이스) — count desc·동률 알파벳·`tag/slug` 동일·private 호출자 책임
+- `src/features/tags/services/__tests__/getPostsByTag.test.ts` (5 케이스) — 필터·순서 보존·대소문자·빈 입력
+- `src/features/tags/services/__tests__/getTrendingTags.test.ts` (6 케이스) — default limit 10·동률·private 위임
+
+**라우트 정합성 (M4-05)**:
+
+- `src/app/page.tsx` — `getAllTags(allPosts).slice(0, 10)` → `getTrendingTags(allPosts, TRENDING_TAGS_LIMIT)` (의도 명확화)
+- `src/app/posts/page.tsx` — `getAllTags(basePosts)` → `getTagCounts(basePosts)` (TagList props 정합)
+- `src/app/tags/page.tsx` — `getAllTags(getPublicPosts())` → `getTagCounts(getPublicPosts())` (count 표시 카드)
+- `src/app/tags/[tag]/page.tsx` — `generateStaticParams`를 `async`로 선언(Next.js 16 권장), `getAllTags(...).map((tag) => ({ tag }))` 시그니처 정합. 인라인 `posts.filter(...).includes(decoded)` → `getPostsByTag(getPublicPosts(), decoded)`로 단일 진실 공급원.
+- `src/features/tags/index.ts` — services 4종 named export 추가
+
+**3-way 리뷰 결과** (`react-nextjs-code-reviewer` + `boundary-mismatch-qa` + `feature-dev:code-reviewer`):
+
+- Tier 1(Critical): 0건
+- Tier 2 즉시 수정 적용: `async generateStaticParams`, 인라인 filter → `getPostsByTag`
+- Tier 2 후속(별도): `TagCount.slug` 중복 필드(타입 계약 변경 → M5 SEO 정렬 시점 검토), 테스트 헬퍼 4파일 인라인 중복(GC 일괄 정리 권장)
+- 경계면 검증: PASS (4 producer × 4 consumer 매트릭스 mismatch 0건)
+
+**검증**: `pnpm test` 165/165 PASS(태그 21 신규), `pnpm build` 101/101 정적 페이지 (Next.js 16.2.3 Turbopack), TypeScript strict 통과, `/tags/[tag]` 60+개 라우트 정상 생성.
+
+**설계 근거**:
+
+- PRD §7.2가 4종 export를 명시했으므로 `getAllTags`(slug 목록)/`getTagCounts`(카운트 포함)로 의미 분리. 이전 단일 함수가 4 호출자 중 3곳에서 카운트, 1곳에서 slug만 필요했음 → 분리 후 각 호출자가 의도를 코드만으로 표현.
+- 모든 services를 `posts: PostSummary[]` 매개변수 형태 순수 함수로 통일 — Law 3 준수, 단위 테스트에서 fs 모킹 불필요.
+
 ### Added — M3-17~20 Posts AC characterization + M3-21 빌드 파이프라인 통합 (2026-04-23)
 
 **M3-17/18 PostList Integration (US-001 characterization)**

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
-import { getAllTags, TagList } from "@/features/tags";
+import { getTagCounts, TagList } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
@@ -21,7 +21,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 	const { tag } = await searchParams;
 
 	const basePosts = getPublicPosts();
-	const allTags = getAllTags(basePosts);
+	const allTags = getTagCounts(basePosts);
 	const filtered = tag ? basePosts.filter((post) => post.tags.includes(tag)) : basePosts;
 	const resolvedPosts = resolvePostThumbnails(filtered);
 

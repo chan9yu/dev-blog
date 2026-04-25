@@ -73,10 +73,8 @@ export async function incrementPostViews(slug: string) {
  * - 반환 객체의 키 순회 순서는 보장하지 않음 — 호출자는 slug로 직접 lookup할 것
  * - 개별 실패는 조용히 0으로 대체 (getPostViews 자체가 throw 대신 0을 반환)
  */
-export async function getBatchPostViews(slugs: ReadonlyArray<string>) {
-	if (slugs.length === 0) {
-		return {} as Record<string, number>;
-	}
+export async function getBatchPostViews(slugs: ReadonlyArray<string>): Promise<Record<string, number>> {
+	if (slugs.length === 0) return {};
 
 	const unique = Array.from(new Set(slugs));
 	const entries = await Promise.all(unique.map(async (slug) => [slug, await getPostViews(slug)] as const));

@@ -1,24 +1,21 @@
-import type { PostSummary, TagCount } from "@/shared/types";
+import type { PostSummary } from "@/shared/types";
 
 /**
- * PostSummary[] 에서 태그를 집계해 TagCount[] 를 반환한다 (M2-23).
+ * 포스트 배열에서 unique 태그 slug 목록을 반환한다 (M4-01).
  *
- * - count 내림차순, 동률 시 tag 알파벳 오름차순 정렬.
- * - private 포스트 제외는 호출자(getPublicPosts) 책임.
- * - M4에서 getPostsByTag, getTrendingTags 등으로 확장 예정.
+ * - 정렬: 알파벳 오름차순 (안정적 라우팅 키 정렬).
+ * - 중복 제거: 같은 태그가 여러 포스트에 있어도 1번만 등장.
+ * - 주 용도: `generateStaticParams` (RT-/tags/[tag]).
+ * - private 제외는 호출자(`getPublicPosts`) 책임 (Law 3).
  *
- * @param posts - getPublicPosts() 결과 (private 제외)
+ * 카운트 포함 형태가 필요하면 `getTagCounts`를 사용한다.
  */
-export function getAllTags(posts: PostSummary[]): TagCount[] {
-	const countMap = new Map<string, number>();
-
+export function getAllTags(posts: PostSummary[]): string[] {
+	const tagSet = new Set<string>();
 	for (const post of posts) {
 		for (const tag of post.tags) {
-			countMap.set(tag, (countMap.get(tag) ?? 0) + 1);
+			tagSet.add(tag);
 		}
 	}
-
-	return Array.from(countMap.entries())
-		.map(([tag, count]) => ({ tag, slug: tag, count }))
-		.sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+	return Array.from(tagSet).sort((a, b) => a.localeCompare(b));
 }

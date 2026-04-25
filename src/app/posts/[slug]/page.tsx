@@ -5,11 +5,11 @@ import { Suspense } from "react";
 
 import { CommentsSection } from "@/features/comments";
 import {
-	getAdjacentPosts,
+	findAdjacentPosts,
+	findRelatedPostsByTags,
 	getPostBySlug,
 	getPostDetail,
 	getPublicPosts,
-	getRelatedPosts,
 	PostMetaHeader,
 	PostNavigation,
 	PostTocAside,
@@ -17,7 +17,7 @@ import {
 	RelatedPosts,
 	ShareButtons
 } from "@/features/posts";
-import { getAllSeries, SeriesNavigation } from "@/features/series";
+import { getSeriesDetail, SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
 import { Container } from "@/shared/components/layouts/Container";
 import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
@@ -61,11 +61,11 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const detail = getPostDetail(normalized);
 	if (!detail) notFound();
 
-	const adjacent = getAdjacentPosts(summary.slug);
-	const related = getRelatedPosts(summary.slug, summary.tags);
-	// 전체 포스트를 변수로 캐싱 — getAllSeries 안에서 재호출하지 않기 위함
+	// 전체 포스트를 변수로 캐싱 — find* 함수들과 getSeriesDetail이 같은 입력을 공유한다.
 	const allPosts = getPublicPosts();
-	const currentSeries = summary.series ? (getAllSeries(allPosts).find((s) => s.slug === summary.series) ?? null) : null;
+	const adjacent = findAdjacentPosts(allPosts, summary.slug);
+	const related = findRelatedPostsByTags(allPosts, summary);
+	const currentSeries = summary.series ? getSeriesDetail(allPosts, summary.series) : null;
 	const shareUrl = `${getSiteUrl()}/posts/${summary.slug}`;
 	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
 

@@ -265,39 +265,39 @@
 
 ### 태그 (MOD-tags)
 
-- [ ] [M4-01] `[Red]` getAllTags / getPostsByTag / getTagCounts 테스트
-- [ ] [M4-02] `[Green]` 태그 서비스 구현
-- [ ] [M4-03] `[Red]` getTrendingTags 테스트
-- [ ] [M4-04] `[Green]` getTrendingTags 구현
-- [ ] [M4-05] RT-/tags + RT-/tags/[tag] generateStaticParams + 실 서비스
+- [x] [M4-01] `[Red]` getAllTags / getPostsByTag / getTagCounts 테스트
+- [x] [M4-02] `[Green]` 태그 서비스 구현
+- [x] [M4-03] `[Red]` getTrendingTags 테스트
+- [x] [M4-04] `[Green]` getTrendingTags 구현
+- [x] [M4-05] RT-/tags + RT-/tags/[tag] generateStaticParams + 실 서비스
 
 ### 시리즈 (MOD-series)
 
-- [ ] [M4-06] `[Red]` getAllSeries / getSeriesDetail / getSeriesStats 테스트
-- [ ] [M4-07] `[Green]` 시리즈 서비스 구현
-- [ ] [M4-08] `[Red]` getTrendingSeries 테스트
-- [ ] [M4-09] `[Green]` getTrendingSeries 구현
-- [ ] [M4-10] RT-/series + RT-/series/[slug] generateStaticParams + 실 서비스
+- [x] [M4-06] `[Red]` getAllSeries / getSeriesDetail / getSeriesStats 테스트
+- [x] [M4-07] `[Green]` 시리즈 서비스 구현
+- [x] [M4-08] `[Red]` getTrendingSeries 테스트
+- [x] [M4-09] `[Green]` getTrendingSeries 구현
+- [x] [M4-10] RT-/series + RT-/series/[slug] generateStaticParams + 실 서비스
 
 ### Popular 스냅샷 (ADR-007)
 
-- [ ] [M4-11] `[Red]` getTrendingPosts 테스트 (KV 스냅샷 + fallback)
-- [ ] [M4-12] `[Green]` getTrendingPosts 구현
-- [ ] [M4-13] TrendingSnapshot 생성 로직
-- [ ] [M4-14] 홈 사이드바 Popular 3블록 실데이터 교체
+- [x] [M4-11] `[Red]` getTrendingPosts 테스트 (KV 스냅샷 + fallback)
+- [x] [M4-12] `[Green]` getTrendingPosts 구현
+- [x] [M4-13] TrendingSnapshot 생성 로직
+- [x] [M4-14] 홈 사이드바 Popular 3블록 실데이터 교체
 
 ### 관련 · 인접 포스트
 
-- [ ] [M4-15] `[Red]` findRelatedPostsByTags 테스트
-- [ ] [M4-16] `[Green]` findRelatedPostsByTags 구현
-- [ ] [M4-17] `[Red]` findAdjacentPosts 테스트
-- [ ] [M4-18] `[Green]` findAdjacentPosts 구현
-- [ ] [M4-19] 포스트 상세에 관련 + 인접 실데이터 연결
+- [x] [M4-15] `[Red]` findRelatedPostsByTags 테스트
+- [x] [M4-16] `[Green]` findRelatedPostsByTags 구현
+- [x] [M4-17] `[Red]` findAdjacentPosts 테스트
+- [x] [M4-18] `[Green]` findAdjacentPosts 구현
+- [x] [M4-19] 포스트 상세에 관련 + 인접 실데이터 연결
 
 ### About · Private 정책
 
-- [ ] [M4-20] getAboutContent 구현 (contents/about/index.md)
-- [ ] [M4-21] `[TDD]` Private 포스트 제외 정책 Integration 테스트
+- [x] [M4-20] getAboutContent 구현 (contents/about/index.md)
+- [x] [M4-21] `[TDD]` Private 포스트 제외 정책 Integration 테스트
 
 ---
 
@@ -380,10 +380,10 @@
 | ---------------------- | ------- | ------- | ------- |
 | M0 Foundation          | 33      | 33      | 100%    |
 | M1 UI Skeleton         | 61      | 61      | 100%    |
-| M2 Content Pipeline    | 24      | 21      | 88%     |
+| M2 Content Pipeline    | 24      | 24      | 100%    |
 | M3 Feature Wiring      | 21      | 21      | 100%    |
-| M4 Hubs & Aggregations | 21      | 0       | 0%      |
+| M4 Hubs & Aggregations | 21      | 21      | 100%    |
 | M5 SEO & Syndication   | 10      | 0       | 0%      |
 | M6 A11y & Perf         | 14      | 0       | 0%      |
 | M7 Polish              | 12      | 0       | 0%      |
-| **Total**              | **196** | **136** | **69%** |
+| **Total**              | **196** | **160** | **82%** |
