@@ -16,7 +16,7 @@
 		"build:vercel": "pnpm build:strict",
 		"install:vercel": "bash scripts/vercel-submodule-workaround.sh && pnpm install --frozen-lockfile",
 		"start": "next start",
-		"copy-images": "node scripts/copy-content-images.mjs",
+		"copy:images": "node scripts/copy-content-images.mjs",
 		"lint": "eslint",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
