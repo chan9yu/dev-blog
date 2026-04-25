@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 
 import { getPublicPosts } from "@/features/posts";
-import { getAllSeries } from "@/features/series";
+import { getAllSeries, getSeriesDetail } from "@/features/series";
 import { Container } from "@/shared/components/layouts/Container";
 import { formatDate } from "@/shared/utils/formatDate";
 
@@ -14,17 +14,13 @@ type SeriesDetailPageProps = {
 };
 
 /**
- * 렌더 패스 내에서 getAllSeries(getPublicPosts())를 한 번만 계산한다.
+ * 렌더 패스 내에서 단일 시리즈 lookup을 한 번만 계산한다.
  * generateMetadata와 SeriesDetailPage가 같은 렌더 트리 내에서 이 cache를 공유.
  * (generateStaticParams는 렌더 트리 외부 — 별도 호출)
  */
-const getSeriesList = cache(() => getAllSeries(getPublicPosts()));
+const findSeriesBySlug = cache((slug: string) => getSeriesDetail(getPublicPosts(), slug));
 
-function findSeriesBySlug(rawSlug: string) {
-	return getSeriesList().find((s) => s.slug === rawSlug) ?? null;
-}
-
-export function generateStaticParams() {
+export async function generateStaticParams() {
 	return getAllSeries(getPublicPosts()).map((series) => ({ slug: series.slug }));
 }
 

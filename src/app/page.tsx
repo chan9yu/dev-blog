@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HomeHero } from "@/features/about";
-import { getPublicPosts, PopularPosts, RecentPostsList } from "@/features/posts";
-import { getAllSeries, TrendingSeries } from "@/features/series";
-import { getAllTags, TrendingTags } from "@/features/tags";
+import { getPublicPosts, getTrendingPosts, PopularPosts, RecentPostsList } from "@/features/posts";
+import { getTrendingSeries, TrendingSeries } from "@/features/series";
+import { getTrendingTags, TrendingTags } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
@@ -20,15 +20,22 @@ const POPULAR_POSTS_LIMIT = 5;
 const TRENDING_SERIES_LIMIT = 3;
 const TRENDING_TAGS_LIMIT = 10;
 
-export default function HomePage() {
+/**
+ * 홈 페이지 — TrendingSnapshot 합성 진입점 (ADR-007).
+ *
+ * - `getTrendingPosts`는 빌드 타임 KV 누적 조회수 기반 (실패 시 date desc fallback)
+ * - `getTrendingSeries`/`getTrendingTags`는 입력 포스트 집계 기반
+ * - private 제외는 `getPublicPosts()`에서 일괄 처리
+ */
+export default async function HomePage() {
 	const allPosts = getPublicPosts();
 	const recentPosts = resolvePostThumbnails(allPosts.slice(0, RECENT_POSTS_LIMIT));
-	const popularPosts = resolvePostThumbnails(
-		[...allPosts].sort((a, b) => b.readingTimeMinutes - a.readingTimeMinutes).slice(0, POPULAR_POSTS_LIMIT)
-	);
 
-	const trendingSeries = getAllSeries(allPosts).slice(0, TRENDING_SERIES_LIMIT);
-	const trendingTags = getAllTags(allPosts).slice(0, TRENDING_TAGS_LIMIT);
+	const trending = await getTrendingPosts(allPosts, POPULAR_POSTS_LIMIT);
+	const popularPosts = resolvePostThumbnails(trending.posts);
+
+	const trendingSeries = getTrendingSeries(allPosts, TRENDING_SERIES_LIMIT);
+	const trendingTags = getTrendingTags(allPosts, TRENDING_TAGS_LIMIT);
 
 	return (
 		<Container>
