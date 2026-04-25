@@ -64,7 +64,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 	const searchablePosts = getPublicPosts();
 
 	return (
-		<html lang="ko" className={pretendard.variable} suppressHydrationWarning>
+		<html lang="ko" className={pretendard.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
 			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
 				<Providers>
 					<Suspense fallback={null}>
