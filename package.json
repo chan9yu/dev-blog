@@ -14,7 +14,7 @@
 		"build": "next build",
 		"build:strict": "STRICT_FRONTMATTER=1 pnpm build",
 		"build:vercel": "pnpm build:strict",
-		"install:vercel": "bash scripts/vercel-submodule-workaround.sh && pnpm install --frozen-lockfile",
+		"install:vercel": "bash scripts/vercel-submodule-workaround.sh && pnpm install",
 		"start": "next start",
 		"copy:images": "node scripts/copy-content-images.mjs",
 		"lint": "eslint",
