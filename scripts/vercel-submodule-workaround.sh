@@ -12,6 +12,17 @@
 
 set -euo pipefail
 
+# ── 0. 로컬 .env 자동 로드 (Vercel 환경에는 .env가 없으므로 가드로 skip) ────
+# Vercel은 dashboard 환경 변수를 process env에 자동 주입하지만 로컬 bash 스크립트는
+# 자동 로드되지 않는다. .env가 존재하면 KEY=VALUE 라인을 export해 로컬 검증 가능하게.
+if [[ -f .env ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source .env
+  set +a
+  echo "[info] .env 로드 완료 (로컬 환경)"
+fi
+
 # ── 1. 토큰 확인 ────────────────────────────────────────────────────────────
 TOKEN="${GITHUB_REPO_CLONE_TOKEN:-}"
 if [[ -z "$TOKEN" ]]; then
