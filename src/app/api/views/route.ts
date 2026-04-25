@@ -1,3 +1,4 @@
+import { kv } from "@vercel/kv";
 import type { NextRequest } from "next/server";
 
 import { validateSlug } from "@/shared/utils/slug";
@@ -10,26 +11,31 @@ import { validateSlug } from "@/shared/utils/slug";
  * - 잘못된 slug / malformed JSON → 400
  * - `Cache-Control: no-store` (GET·POST 공통)
  *
- * **저장소**: 현재는 in-memory `Map`. 프로덕션 배포 전 `@vercel/kv` 어댑터로 스왑 필요
- * (ADR-003, PRD §7 — `incr`/`mget` 파이프라인 사용으로 N+1 방지).
- * HMR 생존을 위해 `globalThis`에 스토어를 걸어둔다 — 개발 중 Next.js fast-refresh로
- * 모듈이 재평가되어도 조회수가 0으로 초기화되지 않도록.
+ * **저장소**: `@vercel/kv` (ADR-003). 환경 변수(`KV_REST_API_URL`·`KV_REST_API_TOKEN`)는
+ * Vercel 대시보드 또는 `.env`로 주입. 쓰기 토큰은 본 라우트 내부에서만 사용되며
+ * 클라이언트 번들 노출 금지(PRD §보안).
  *
  * **응답 shape 고정**: 테스트(route.test.ts)가 `Object.keys(body) === ["views"]`를 단언.
  * slug 누설 금지 — MSW handlers.ts와 계약 동일.
+ *
+ * **에러 정책**: KV 장애 시 GET은 0 fallback, POST는 silent fail. 조회수는 부가 기능이므로
+ * KV 실패가 포스트 페이지 자체를 500으로 내리지 않도록 보호한다.
+ *
+ * **runtime**: 명시하지 않음. `next.config.ts`의 `cacheComponents: true`(PPR)가 활성화되어
+ * 있어 Route segment `runtime` export가 빌드 에러로 차단된다. 기본 Node.js 런타임으로 충분.
  */
 
-type GlobalWithViewsStore = typeof globalThis & {
-	__devBlogViewsStore?: Map<string, number>;
-};
-
-const globalForViews = globalThis as GlobalWithViewsStore;
-const viewsStore = globalForViews.__devBlogViewsStore ?? new Map<string, number>();
-if (process.env.NODE_ENV !== "production") {
-	globalForViews.__devBlogViewsStore = viewsStore;
-}
-
 const NO_STORE_HEADERS = { "cache-control": "no-store" } as const;
+
+/**
+ * KV 키 네임스페이스. 운영 KV(main 브랜치 시절부터 누적)에 이미 저장된 키 패턴과 호환을 위해
+ * `views:post:` prefix를 사용한다. 변경 시 기존 카운트가 모두 0으로 초기화됨에 주의.
+ */
+const VIEW_KEY_PREFIX = "views:post:";
+
+function viewsKey(slug: string) {
+	return `${VIEW_KEY_PREFIX}${slug}`;
+}
 
 export async function GET(req: NextRequest) {
 	const slug = validateSlug(new URL(req.url).searchParams.get("slug"));
@@ -37,21 +43,23 @@ export async function GET(req: NextRequest) {
 		return Response.json({ error: "invalid slug" }, { status: 400, headers: NO_STORE_HEADERS });
 	}
 
-	const views = viewsStore.get(slug) ?? 0;
+	const stored = await kv.get<number>(viewsKey(slug)).catch(() => null);
+	const views = stored ?? 0;
 	return Response.json({ views }, { headers: NO_STORE_HEADERS });
 }
 
 export async function POST(req: NextRequest) {
 	const raw: unknown = await req.json().catch(() => null);
-	if (!raw || typeof raw !== "object") {
+	if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
 		return Response.json({ error: "invalid JSON body" }, { status: 400, headers: NO_STORE_HEADERS });
 	}
 
-	const slug = validateSlug((raw as Record<string, unknown>).slug);
+	const slug = "slug" in raw ? validateSlug(raw.slug) : null;
 	if (!slug) {
 		return Response.json({ error: "invalid slug" }, { status: 400, headers: NO_STORE_HEADERS });
 	}
 
-	viewsStore.set(slug, (viewsStore.get(slug) ?? 0) + 1);
+	// fire-and-forget: incr 반환값(증가 후 카운트)은 사용하지 않음. KV가 원자적으로 카운트 관리.
+	await kv.incr(viewsKey(slug)).catch(() => undefined);
 	return new Response(null, { status: 204, headers: NO_STORE_HEADERS });
 }

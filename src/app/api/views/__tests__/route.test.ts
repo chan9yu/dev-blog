@@ -14,9 +14,27 @@
  */
 
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET, POST } from "../route";
+
+const { kvStore } = vi.hoisted(() => ({ kvStore: new Map<string, number>() }));
+
+vi.mock("@vercel/kv", () => ({
+	kv: {
+		get: vi.fn(async (key: string) => kvStore.get(key) ?? null),
+		incr: vi.fn(async (key: string) => {
+			const next = (kvStore.get(key) ?? 0) + 1;
+			kvStore.set(key, next);
+			return next;
+		})
+	}
+}));
+
+beforeEach(() => {
+	kvStore.clear();
+	vi.clearAllMocks();
+});
 
 type PostBody = { type: "json"; data: unknown } | { type: "malformed" };
 
