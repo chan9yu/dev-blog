@@ -16,15 +16,17 @@ type GetAllPostsOptions = {
 };
 
 /**
- * contents/posts/ 디렉토리를 스캔해 PostSummary[] 를 반환한다 (M2-13).
+ * contents/posts/ 디렉토리를 스캔해 PostSummary[] 를 반환한다 (M2-13 / M3-21).
  *
  * - @ 로 시작하는 디렉토리(@template 등)는 건너뛴다.
- * - frontmatter 파싱·검증 오류가 있는 포스트는 건너뛴다.
+ * - frontmatter 파싱·검증 오류가 있는 포스트는 기본적으로 건너뛴다 (dev 관용).
+ * - **`STRICT_FRONTMATTER=1` 환경변수 설정 시** 첫 번째 오류에서 throw — CI/빌드에서 스키마 위반 즉시 실패.
  * - 기본적으로 private: false 포스트만 반환한다.
  * - 결과는 날짜 내림차순 정렬.
  */
 export function getAllPosts(options: GetAllPostsOptions = {}): PostSummary[] {
 	const { includePrivate = false } = options;
+	const strict = process.env.STRICT_FRONTMATTER === "1";
 
 	const slugs = readdirSync(POSTS_DIR, { withFileTypes: true })
 		.filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith("@"))
@@ -46,6 +48,9 @@ export function getAllPosts(options: GetAllPostsOptions = {}): PostSummary[] {
 			posts.push({ ...frontmatter, readingTimeMinutes });
 		} catch (error) {
 			const message = error instanceof Error ? error.message : String(error);
+			if (strict) {
+				throw new Error(`[getAllPosts] "${slug}" frontmatter 오류 (STRICT_FRONTMATTER=1): ${message}`);
+			}
 			console.warn(`[getAllPosts] "${slug}" 건너뜀: ${message}`);
 		}
 	}

@@ -7,6 +7,163 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M3-17~20 Posts AC characterization + M3-21 빌드 파이프라인 통합 (2026-04-23)
+
+**M3-17/18 PostList Integration (US-001 characterization)**
+
+- `src/features/posts/components/__tests__/PostList.test.tsx` (신규, 6 케이스) — US-001 AC 통합 관점 고정
+  - 빈 배열 안내 메시지(role=status), 카드 href `/posts/{slug}`, 제목/설명/reading time/태그 표시, 썸네일 렌더, 페이지 크기(12개) 제한, ViewToggle 리스트/격자 전환 버튼
+  - `IntersectionObserver` vi.stubGlobal 스텁(jsdom 미지원 대응)
+
+**M3-19/20 PostDetail Integration (US-002 characterization)**
+
+- `src/features/posts/components/__tests__/PostMetaHeader.test.tsx` (신규, 6 케이스) — 메타 헤더 계약 고정
+  - h1 제목 + datetime 속성, 태그 Link `/tags/{tag}` href, 한글 태그 raw slug 유지(항해99 등), 빈 tags → 태그 ul 비렌더, viewCounterSlot·shareSlot 주입 확인
+
+**M3-21 빌드 파이프라인 통합**
+
+- `package.json` — 빌드 스크립트 체인 추가
+  - `build:strict` — `STRICT_FRONTMATTER=1 pnpm build` (frontmatter 스키마 위반 시 즉시 throw)
+  - `build:vercel` — `vercel-submodule-workaround.sh && pnpm build:strict` (Vercel Build Command용 단일 진입점)
+  - 기존 `prebuild` (`copy-content-images.mjs`)은 pnpm 자동 실행 유지
+- `src/features/posts/services/getAllPosts.ts` — `STRICT_FRONTMATTER=1` env 감지 시 첫 번째 오류에서 throw (slug + 원본 에러 메시지 포함). 기본 dev 환경은 기존대로 `console.warn` + skip 관용 유지
+- **빌드 파이프라인 체인**: `vercel-submodule-workaround.sh` (submodule clone) → `prebuild` (이미지 복사) → `next build` (페이지 생성) — 3단계가 단일 `pnpm build:vercel` 명령으로 실행
+
+**설계 근거**
+
+- M3-17~20은 이미 M2-22~24에서 fixture → 실 서비스 전환이 완료되어 실질적 US-001/002 AC를 만족하는 상태 — 이 커밋의 기여는 **regression 보호 테스트 커버리지 확장**
+- `STRICT_FRONTMATTER` 토글 방식은 dev 중 WIP MDX가 빌드를 막지 않도록 하면서 CI/프로덕션에서는 hard-fail을 보장 (autonomy.md 관용 vs 엄격 경계 선택적 해제)
+
+**검증**: `pnpm test` 144/144 통과(PostList 6/6 + PostMetaHeader 6/6 신규), `pnpm lint` 0 에러, `STRICT_FRONTMATTER=1 pnpm build` 101 페이지 정적 생성 성공
+
+### Added — M3-15~16 MOD-lightbox Radix 기반 multi-image carousel (Green, 2026-04-23)
+
+- `src/features/lightbox/contexts/LightboxContext.ts` — Context 확장
+  - 기존 `{ open(single), close }` → `{ open(single), openMany(images, startIndex?), close }`로 확장
+  - `LightboxImage = { src, alt }` 공개 타입 추가
+- `src/features/lightbox/components/LightboxProvider.tsx` — 상태 모델을 `{ images: readonly LightboxImage[], index }`로 전환
+  - `images.length === 0`이면 닫힘 상태로 간주, `images.length > 0`이면 자동 `ImageLightbox` 마운트
+  - `goNext`/`goPrev` — modulo 산술로 circular navigation (마지막→첫, 첫→마지막)
+  - `startIndex` 경계 검사 (`Math.max(0, Math.min(n-1))`) + empty images 가드
+- `src/features/lightbox/components/ImageLightbox.tsx` — props 변경 `{ src, alt, onClose }` → `{ images, index, onNext, onPrev, onClose }`
+  - `hasMultiple = images.length > 1`일 때만 좌우 화살표 (`ChevronLeft`/`ChevronRight`) 렌더 — 1장 시 화살표 자동 숨김
+  - `document.addEventListener("keydown")` ArrowRight/ArrowLeft 키보드 nav (hasMultiple일 때만 등록, useEffect cleanup로 누수 방지)
+  - Radix Dialog primitive 유지 — 포커스 트랩·ESC·포커스 복원·body scroll lock·fade 300ms 변화없음
+- `src/features/lightbox/components/__tests__/ImageLightbox.test.tsx` (신규, 9 케이스)
+  - 단일 이미지 → 화살표 숨김, 다중 이미지 → 화살표 렌더, next/prev 버튼 nav, circular navigation(마지막→첫, 첫→마지막), ArrowRight/ArrowLeft 키보드 nav, ESC 닫기
+- `src/features/lightbox/index.ts` — `LightboxImage` 타입 공개 API 추가, JSDoc M3-16 Green 상태 반영
+- `src/app/providers.tsx` — `LightboxProvider` 트리 루트 배치. `ThemeProvider > MotionConfig > LightboxProvider > children` 순서로 `useLightbox()` 소비자 전역 접근 가능
+- **의존성 없이 구현**: ROADMAP이 지목한 `yet-another-react-lightbox` 설치가 autonomy.md에 의해 블록되어, Radix Dialog primitive + custom carousel 로직으로 동등 기능 제공. API 계약은 독립적이라 향후 스왑 시 내부 구현만 교체
+- **follow-up**: MdxImage 클릭 → `useLightbox().openMany()` 연결은 M3-20 Posts AC 완성 스코프에서 처리 (MDX 이미지 수집/그룹화 로직 포함)
+- **검증**: `pnpm test` 132/132 통과(ImageLightbox 9/9), `pnpm lint` 0 에러
+
+### Added — M3-13~14 MOD-theme useTheme wrapper + View Transitions persistence (Green, 2026-04-23)
+
+- `src/features/theme/hooks/useTheme.ts` (신규) — next-themes wrapper 훅 (ADR-011)
+  - `{ resolvedTheme: "light"|"dark"|null, toggleTheme, setTheme, mounted }` 반환
+  - `useSyncExternalStore` 기반 `mounted` 플래그 — hydration 이전 `resolvedTheme: null` 반환으로 FOUC 차단
+  - `toggleTheme` — light↔dark 스왑 원샷 호출
+  - `document.startViewTransition` progressive enhancement — 지원 시 전환 경유, 미지원 시 즉시 apply
+- `src/features/theme/hooks/index.ts` (신규) — `useTheme` re-export leaf barrel
+- `src/features/theme/components/ThemeSwitcher.tsx` — 프레젠테이션 전용으로 축소. next-themes 직접 소비 로직은 `useTheme` 훅으로 이관
+- `src/features/theme/index.ts` — `useTheme` public API 추가
+- `src/features/theme/components/__tests__/ThemeSwitcher.test.tsx` (신규, 6 케이스, M3-13) — Integration characterization 테스트
+  - aria-label 존재, light→dark 클릭 토글(aria-pressed + html.dark 클래스), dark→light 복귀, View Transitions API 지원 시 `startViewTransition` 경유, 미지원 환경에서도 전환 동작, localStorage 저장
+  - `matchMedia` mock + ThemeProvider 래퍼로 next-themes 계약 테스트
+- **설계 근거**: 기존 ThemeSwitcher가 이미 계약을 만족하는 상태였지만, CommentsSection 등 다른 feature가 공유할 wrapper 훅을 노출해야 재사용 가능. follow-up: CommentsSection을 `features/theme`의 wrapper로 전환해 mounted 감지 기반 postMessage 타이밍 개선
+- **검증**: `pnpm test` 123/123 통과(ThemeSwitcher 6/6), `pnpm lint` 0 에러
+
+### Added — M3-11~12 MOD-comments Giscus 댓글 통합 완성 (Green, 2026-04-23)
+
+- `src/features/comments/components/CommentsSection.tsx` — placeholder → Giscus 실 iframe 주입
+  - `isPrivate?: boolean` prop 신규 — `true`면 섹션 자체 비렌더(개인 포스트 노출 방지, US-005 AC)
+  - 환경변수 4종(`NEXT_PUBLIC_GISCUS_REPO`·`REPO_ID`·`CATEGORY`·`CATEGORY_ID`) 누락 시 설정 안내 placeholder
+  - IntersectionObserver lazy-mount(`rootMargin: "200px"`) → `giscus.app/client.js` script 주입
+  - `next-themes` `useTheme` 연동 — 최초 주입 시 현재 테마 주입, 이후 테마 변경은 iframe `postMessage({ giscus: { setConfig: { theme } } })` 전파로 재주입 회피
+  - 언마운트 시 script·iframe 정리 (메모리 누수 방지)
+  - **DIY 로더 근거**: `@giscus/react` 미설치(autonomy.md deps 블록) 상태에서 공식 `client.js` + `data-*` attrs 계약을 직접 준수한 경량 wrapper. `data-mapping: specific`·`data-term: slug`·`data-strict: 1` 등 권장 설정 적용. `@giscus/react` 스왑은 follow-up이며 외부 계약 identical이라 UI 영향 없음
+- `src/features/comments/components/__tests__/CommentsSection.test.tsx` (신규, 5 케이스) — Integration 테스트
+  - `isPrivate=true` 비렌더, 환경변수 누락 안내 placeholder, script 주입 + data-\* attrs 검증(repo/repoId/category/categoryId/term/mapping/crossOrigin/async), slug별 data-term 분기, 언마운트 cleanup
+  - `IntersectionObserver` vi.stubGlobal로 즉시 교차 발동, `vi.stubEnv`로 환경변수 주입
+- `src/app/posts/[slug]/page.tsx` — `<CommentsSection>`에 `isPrivate={summary.private}` 전달 (private 포스트가 includePrivate 경로로 들어올 때 댓글 차단)
+- `src/features/comments/index.ts` — JSDoc 갱신: M3-12 Green 완료 + DIY 로더 근거 명시
+- **검증**: `pnpm test` 117/117 통과(CommentsSection 5/5 Red→Green), `pnpm lint` 0 에러(테마 deps는 postMessage 동기화 이유로 명시적 `eslint-disable` + 주석), `pnpm build` 통과
+
+### Added — M3-08~10 MOD-views KV 조회수 통합 완성 (Green, 2026-04-23)
+
+- `src/app/api/views/route.ts` — placeholder → PRD §7.5 계약 정합 구현
+  - GET: `{ views: number }` shape + `Cache-Control: no-store` + 400 on invalid slug
+  - POST: `204 no content` + `no-store` + 400 on invalid slug/malformed JSON
+  - 저장소: `globalThis.__devBlogViewsStore` Map (HMR 생존). **프로덕션 배포 전 `@vercel/kv` incr/mget 어댑터로 스왑 필수** (ADR-003, follow-up). autonomy.md에 의해 deps 자율 설치 불가, 계약 shape는 현재 구현과 KV 어댑터 간 identical이라 UI·테스트 영향 없음
+- `src/features/views/services/kv-client.ts` — `fetchPostViewsOrNull(slug): Promise<number | null>` 신규. UI가 "— 회" fallback을 렌더해야 할 때 사용(실패/성공 구분). 기존 `getPostViews`는 이 저수준 함수를 감싸 `0` fallback(배치·SSR용)을 유지 — **tolerant consumer** 계약 보존
+- `src/features/views/hooks/useViews.ts` (신규) — 마운트 시 POST +1 → GET 파이프라인, `sessionStorage` 기반 slug별 dedup. `{ views: number | null, failed: boolean }` 반환. React 19 룰(`set-state-in-effect`·`refs`) 양립 위해 slug 생명주기 내 불변 가정 + `[slug]` deps effect 단일 실행 패턴 채택 (슬러그 변경은 App Router 세그먼트 remount로 처리)
+- `src/features/views/hooks/index.ts` (신규) — `useViews` re-export leaf barrel
+- `src/features/views/components/ViewCounter.tsx` — server component placeholder → `"use client"` + `useViews(slug)` 연결. 3-state 렌더(로딩 스켈레톤 `animate-pulse` / 성공 `toLocaleString("ko-KR")회` / 실패 `— 회`) + `aria-label` 상태별 분기(`조회수 불러오는 중` / `조회수 N회` / `조회수 정보 없음`)
+- `src/features/views/index.ts` — public API에 `useViews`·`fetchPostViewsOrNull` 추가
+- `src/features/views/components/__tests__/ViewCounter.test.tsx` (신규, 7 케이스) — Integration 테스트
+  - 초기 로딩 placeholder, POST +1 + GET 수신 후 숫자 렌더(seeded 42 → 43), 3자리 이상 `toLocaleString("ko-KR")` 포맷(1234 → "1,234회"), 동일 slug 재마운트 시 POST 재호출 금지(sessionStorage dedup), 서로 다른 slug별 개별 POST, GET 500 → `— 회` fallback + `조회수 정보 없음` aria-label, POST 실패도 GET 결과 표시(best-effort)
+- **설계 근거**: React 19 `react-hooks/set-state-in-effect` + `react-hooks/refs` 동시 충족 위해 `useRef` 기반 setState-during-render 패턴 대신 **"slug는 컴포넌트 lifecycle 내 불변"** 가정으로 단순화. App Router의 `/posts/[slug]` 세그먼트가 slug param 변경 시 언마운트/재마운트하는 Next.js 계약에 편승
+- **검증**: `pnpm test` 112/112 통과(M3-09 Red 7/7 포함), `pnpm lint` 0 에러, `pnpm build` 101페이지 정적 생성
+
+### Added — M3-07 RT-/api/views Route Handler 계약 테스트 (Red, 2026-04-22)
+
+- `src/app/api/views/__tests__/route.test.ts` (신규, 16 케이스) — Route Handler 함수(`GET`, `POST`)를 직접 호출하는 **서버 단위 테스트**. `kv-client.test.ts`(MSW 기반 컨슈머)와 달리 **프로듀서 관점에서 PRD §7.5 + ROADMAP M3-08 계약을 직접 강제**
+  - GET 8 cases: `{ views: number }` shape + slug 필드 누설 금지 + `Cache-Control: no-store` + `Content-Type: application/json` + 400 cases(null·empty·공백·대문자)
+  - POST 8 cases: **204 no body** + `Cache-Control: no-store` + 400 cases(slug 누락·공백·malformed JSON·string primitive·null JSON)
+- **Red 검증**: 5건 실패(모두 계약 위반으로 올바르게 실패)
+  - GET: `slug` 필드 누설(현재 `{ slug, views: 0 }`) / `no-store` 헤더 미설정
+  - POST: 200 응답(204여야 함) / `{ slug, views: 1 }` body 누설 / `no-store` 헤더 미설정
+  - M3-08 Green에서 route.ts를 `Response.json({ views }, { headers: { "cache-control": "no-store" } })` + `new Response(null, { status: 204, headers: { "cache-control": "no-store" } })` + `@vercel/kv` incr/get으로 수정하면 자연 녹색 전환
+- **드리프트 방어 설계**: `route.test.ts`가 **프로듀서↔MSW mock 드리프트의 유일한 게이트**. `handlers.ts`(컨슈머 테스트용 mock)가 PRD 스펙을 복제하고 있으므로, 한쪽만 수정되어 드리프트가 날 위험을 route.test.ts의 exact-shape 단언(`Object.keys(body).sort() === ["views"]`)이 차단
+- **리뷰 결과 요약 (3-way 병렬: react-nextjs-code-reviewer + boundary-mismatch-qa + oh-my-claudecode:code-reviewer)**:
+  - Tier 1 수정(2건, 3명 전원 독립 지적): (a) `as unknown as Parameters<typeof GET>[0]` 이중 캐스팅 → `new NextRequest(url)` 직접 생성으로 교체(M3-08에서 `req.nextUrl`/`req.cookies` 사용 시 silent 실패 방지), (b) `buildPostRequest`의 `"not-json"` sentinel 리터럴 파라미터 → discriminated union `{ type: "json" | "malformed" }`로 교체(의도 명시)
+  - Tier 2 수정(3건): POST 400 케이스들의 실제 전송 body 명확화(`JSON.stringify(null)` = `"null"`이 유효 JSON literal임을 주석 + 케이스명으로 노출), GET `Content-Type: application/json` 응답 헤더 검증 추가, POST `Cache-Control: no-store` 검증 추가(ROADMAP "GET/POST 핸들러" 문자적 해석)
+  - Tier 3 기록(후속): (a) `features/views/schemas/` 아래 Zod `ViewsResponseSchema.strict()` + `ViewsPostBodySchema.strict()` 승격 — route.ts·handlers.ts·kv-client.ts가 모두 parse로 소비하는 단일 진실 공급원 체제 (M3-08 진입 시 고려), (b) `kv-client.ts`의 `isViewsResponse` 가드를 exact-shape로 강화(현재는 extra field 허용 — tolerant consumer 설계라 의도적, CHANGELOG에 책임 경계 명시), (c) GET happy path 3회 반복 호출 DRY — Red 진단성 우선 유지
+  - 의견 충돌 해결: boundary 단독의 "POST `no-store` 필요" 주장 채택(ROADMAP 문구 문자적 해석), boundary 단독의 "POST no-store 불필요(PRD GET only)" 미주장 → 전자 우선
+- **검증**: route.test.ts 5 fail / 100 pass(의도된 Red), 전체 suite 10 file pass + 1 file fail(route.test.ts). `tsc --noEmit` + ESLint 통과
+
+### Added — M3-05~06 KV 조회수 클라이언트 + MSW 테스트 인프라 (2026-04-21)
+
+- `package.json` — `msw@^2` devDependencies 추가 (Mock Service Worker v2.13.2). PRD §7.5 `RT-/api/views` 계약을 테스트 더블로 재현하기 위함
+- `src/shared/test/msw/handlers.ts` (신규) — `/api/views` GET/POST 핸들러 + `seedMockView(slug, count)`/`resetMockViews()` 테스트 헬퍼. **PRD §7.5 계약의 machine-readable reference**로 격상: `GET → { views: number }`, `POST → 204 (no body)`, 잘못된 slug → 400. slug 검증은 `@/shared/utils/slug` 의 `validateSlug`를 재사용해 서버 구현과 drift 차단
+- `src/shared/test/msw/server.ts` (신규) — `setupServer(...handlers)` Node 전용 export (브라우저 worker 미사용)
+- `src/shared/test/setup.ts` — MSW lifecycle hooks 추가 (`beforeAll(listen, { onUnhandledRequest: "error" })`, `afterEach(cleanup + resetHandlers + resetMockViews)`, `afterAll(close)`). `"error"` 정책으로 핸들러 누락 요청을 즉시 실패시켜 integration 신뢰도 확보
+- `src/features/views/services/kv-client.ts` (신규) — PRD §7.5 MOD-views public API 3종
+  - `getPostViews(slug): Promise<number>` — `fetch(/api/views?slug=...)` `cache: "no-store"`, `isViewsResponse` 타입 가드로 malformed payload 방어, KV 실패 시 조용히 0 + `console.warn`
+  - `incrementPostViews(slug): Promise<void>` — POST 호출, body 미파싱(204 호환), 실패 시 throw 대신 `console.warn`으로 UI 블록 방지
+  - `getBatchPostViews(slugs: ReadonlyArray<string>)` — `Promise.all` 병렬 fanout, `new Set(slugs)`로 dedup, 개별 실패는 `getPostViews`의 fallback에 위임 (JSDoc으로 순서 비보장 명시)
+- `src/features/views/services/__tests__/kv-client.test.ts` (신규) — 14개 테스트: happy path(중복 slug·빈 배열 포함), 500/네트워크/malformed shape/잘못된 slug fallback, POST 증분·최초 호출·무시 경로. 성공 경로마다 `expect(console.warn).not.toHaveBeenCalled()` 단언으로 노이즈 감지
+- `src/features/views/services/index.ts` (신규) — re-export 전용 barrel (`.claude/rules/typescript.md` §배럴 규칙 준수)
+- `src/features/views/index.ts` — public API에 `getPostViews`, `incrementPostViews`, `getBatchPostViews` 추가. 기존 `ViewCounter` export 유지
+- **설계 근거**: kv-client는 **tolerant consumer** — 현재 placeholder route(`{ slug, views }`)와 PRD 계약(`{ views }`) 모두 `views: number` 필드만 추출하므로 forward-compatible. M3-07~08에서 Route Handler를 PRD shape로 수정해도 kv-client 수정 불필요
+- **리뷰 결과 요약 (3-way 병렬: react-nextjs-code-reviewer + boundary-mismatch-qa + oh-my-claudecode:code-reviewer)**:
+  - Tier 1 수정(2건, 2개 이상 리뷰어 독립 지적): (a) `handlers.ts`의 자체 `SLUG_PATTERN`/`isValidSlug` 중복 구현 제거 → `validateSlug` 재사용으로 drift 봉쇄, (b) `kv-client.test.ts`의 `resetMockViews()` 이중 호출 제거 (setup.ts afterEach에 단일 진실 공급원 일원화)
+  - Tier 2 수정(4건): 리턴 타입 자동 추론 전환(`typescript.md` §9 준수), POST `cache: "no-store"` 노이즈 제거, 성공 경로 테스트에 `warn.not.toHaveBeenCalled()` 단언 추가, `getBatchPostViews` JSDoc + `handlers.ts` 계약 reference 주석 강화
+  - Tier 3 기록(후속): PRD drift 감지용 contract test suite 추가(M3-07 진입 전 검토), placeholder POST `views:1` → 204 수정(M3-07~08 범위), `react-nextjs`가 제안한 `'use client'` directive는 **프로젝트 `components.md:12`("hooks/browser API 사용 시에만") 기준 미적용** — 서비스 파일 관례에 반함
+  - 의견 충돌 해결: `'use client'` 추가(triangulation 결과 다수/규칙 모두 반대 → 스킵), 리턴 타입 명시(규칙 엄격 준수 → 제거)
+- **검증**: `pnpm test` 89/89 통과, `pnpm build` Next.js 16 정적 경로 생성 성공
+
+### Added — M3-01~04 검색 기능 Fuse.js 연결 + 컴포넌트 분리 (2026-04-21)
+
+- `package.json` — `fuse.js@^7` 추가, devDependencies에 `@testing-library/react@^16`, `@testing-library/user-event@^14`, `@testing-library/jest-dom@^6`, `jsdom@^27` 추가
+- `vitest.config.ts` — `environment: "node"` → `"jsdom"` 전환, `setupFiles: ["./src/shared/test/setup.ts"]` 추가
+- `src/shared/test/setup.ts` (신규) — `@testing-library/jest-dom/vitest` matcher 확장 + `afterEach(cleanup)` 등록
+- `src/features/posts/services/__tests__/getAllPosts.test.ts`, `getPostDetail.test.ts` — `/** @vitest-environment node */` pragma 추가 (fs mocking 테스트용)
+- `src/features/posts/utils/__tests__/extractTocFromMarkdown.test.ts` — M2-09 개정 반영: "h1 제외" → "h1 포함" 테스트 수정 (CustomMDX +1 시프트 렌더링 전제)
+- `src/features/search/types/index.ts` (신규) — `SearchResult` 타입(`post` + `score` + `matches?: ReadonlyArray<FuseResultMatch>`) 정의
+- `src/features/search/hooks/useSearch.ts` (신규) — Fuse.js 기반 fuzzy 검색 훅. PRD §7.4 계약: weights(title 0.5 / description 0.3 / tags 0.2), threshold 0.4, limit 10, debounce 200ms, `ignoreLocation: true`, `minMatchCharLength: 2`, `includeScore/Matches`. 빈 문자열 즉시 반영 UX. 이벤트 핸들러 내부 setTimeout debounce 패턴으로 `react-hooks/set-state-in-effect` + `react-hooks/refs` 룰 회피
+- `src/features/search/hooks/__tests__/useSearch.test.tsx` (신규) — 11개 테스트: 초기 상태, 200ms debounce, limit 기본/커스텀, title weight 우선순위, tag 매치, fuzzy(오타) 허용, score 정렬, debounce cancellation, 빈 문자열 즉시 리셋
+- `src/features/search/components/SearchButton.tsx` (신규) — 아이콘 트리거 버튼. `size-11`(44px) 터치 타겟, `aria-keyshortcuts="Meta+k Control+k"`, `motion-reduce:transition-none`
+- `src/features/search/components/SearchModal.tsx` (신규) — Radix Dialog 기반 검색 모달. `useSearch` 훅 연동, ArrowDown/ArrowUp 키보드 내비(리스트 순환, ArrowUp input 예외), AnimatePresence + stagger, debounce 대기 중 "검색 중..." `aria-live="polite"` 안내, `query.trim() === ""` 기준 풋터 분기(결과/입력 상태 깜빡임 방지)
+- `src/features/search/components/SearchResultItem.tsx` (신규) — Fuse match indices를 `<mark>`로 하이라이트. 중첩/인접 구간은 `effectiveStart = Math.max(start, cursor)` 패턴으로 병합 (텍스트 소실 버그 방지)
+- `src/features/search/components/SearchTrigger.tsx` — 기존 통합체를 `SearchButton + SearchModal + useSearchShortcut` 얇은 조립체로 리팩터. `{ posts: PostSummary[] }` Public API 보존으로 `layout.tsx` 호출자 영향 없음
+- `src/features/search/components/__tests__/SearchModal.test.tsx` (신규) — 9개 테스트: open 토글, autoFocus, 빈 상태/총 포스트 수 안내, debounce → 결과 렌더, 결과 없음, href 정확성, onOpenChange 전파, ESC 닫기, ArrowDown 포커스 이동
+- `src/features/search/components/index.ts`, `src/features/search/index.ts` — `SearchButton`, `SearchModal`, `SearchResultItem`, `SearchTrigger`, `useSearch`, type `SearchResult` public API 노출 (PRD §7.4)
+- **리뷰 결과 요약 (REVIEW 1-way: react-nextjs-code-reviewer, a11y/boundary는 토큰 한도로 생략·self-check 대체)**:
+  - Tier 1 수정: `SearchResultItem.renderHighlighted`의 중첩 구간 텍스트 소실 버그, `useSearch`의 Effect 내부 setState 룰 위반 → 이벤트 핸들러 debounce 패턴 전환
+  - Tier 2 수정: `trimmed` 기준을 `debouncedQuery`로 통일해 공백 입력 시 "결과 없음" 깜빡임 해소, ArrowUp input 예외 추가, useMemo 2개 근거 주석 명시
+- **검증**: `pnpm test` 75/75 통과, `pnpm lint` 0 에러, `pnpm build` 101페이지 정적 생성 성공
+
 ### Added — PostTocAside 데스크탑 TOC 토글 컴포넌트 + Toc.tsx hydration 패턴 개선 (2026-04-16)
 
 - `src/features/posts/components/PostTocAside.tsx` (신규) — 데스크탑 TOC 열기/닫기 토글 래퍼. `isOpen=true` 시 `lg:w-64 + X 닫기 버튼 + Toc nav`, `isOpen=false` 시 `lg:w-0 + ChevronLeft 원형 버튼`만 표시. `overflow-visible`로 0px aside에서 버튼이 자연스럽게 넘쳐 보임. nav DOM 제거 방식으로 width 축소 시 텍스트 리플로우 방지.

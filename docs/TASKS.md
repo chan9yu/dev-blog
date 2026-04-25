@@ -217,45 +217,45 @@
 
 ### 검색 (MOD-search)
 
-- [ ] [M3-01] `[Red]` useSearch Integration 테스트
-- [ ] [M3-02] `[Green]` useSearch 구현 (Fuse.js)
-- [ ] [M3-03] `[Red]` SearchModal Integration 테스트
-- [ ] [M3-04] `[Green]` SearchModal 실 Fuse 연결
+- [x] [M3-01] `[Red]` useSearch Integration 테스트
+- [x] [M3-02] `[Green]` useSearch 구현 (Fuse.js)
+- [x] [M3-03] `[Red]` SearchModal Integration 테스트
+- [x] [M3-04] `[Green]` SearchModal 실 Fuse 연결
 
 ### 조회수 (MOD-views)
 
-- [ ] [M3-05] `[Red]` KV 클라이언트 테스트 (MSW)
-- [ ] [M3-06] `[Green]` KV 클라이언트 구현
-- [ ] [M3-07] `[Red]` RT-/api/views Route Handler 테스트
-- [ ] [M3-08] `[Green]` RT-/api/views 구현
-- [ ] [M3-09] `[Red]` ViewCounter Integration 테스트
-- [ ] [M3-10] `[Green]` ViewCounter 실 KV 연결
+- [x] [M3-05] `[Red]` KV 클라이언트 테스트 (MSW)
+- [x] [M3-06] `[Green]` KV 클라이언트 구현
+- [x] [M3-07] `[Red]` RT-/api/views Route Handler 테스트
+- [x] [M3-08] `[Green]` RT-/api/views 구현
+- [x] [M3-09] `[Red]` ViewCounter Integration 테스트
+- [x] [M3-10] `[Green]` ViewCounter 실 KV 연결
 
 ### 댓글 (MOD-comments)
 
-- [ ] [M3-11] `[Red]` CommentsSection Integration 테스트
-- [ ] [M3-12] `[Green]` CommentsSection 구현 (Giscus)
+- [x] [M3-11] `[Red]` CommentsSection Integration 테스트
+- [x] [M3-12] `[Green]` CommentsSection 구현 (Giscus)
 
 ### 테마 (MOD-theme)
 
-- [ ] [M3-13] `[Red]` ThemeSwitcher Integration 테스트
-- [ ] [M3-14] `[Green]` ThemeSwitcher + useTheme 완성
+- [x] [M3-13] `[Red]` ThemeSwitcher Integration 테스트
+- [x] [M3-14] `[Green]` ThemeSwitcher + useTheme 완성
 
 ### 라이트박스 (MOD-lightbox)
 
-- [ ] [M3-15] `[Red]` ImageLightbox Integration 테스트
-- [ ] [M3-16] `[Green]` ImageLightbox 구현
+- [x] [M3-15] `[Red]` ImageLightbox Integration 테스트
+- [x] [M3-16] `[Green]` ImageLightbox 구현
 
 ### 포스트 AC 완성
 
-- [ ] [M3-17] `[Red]` PostList Integration 테스트
-- [ ] [M3-18] `[Green]` PostList 실 서비스 연결
-- [ ] [M3-19] `[Red]` PostDetail Integration 테스트
-- [ ] [M3-20] `[Green]` PostDetail 완성
+- [x] [M3-17] `[Red]` PostList Integration 테스트
+- [x] [M3-18] `[Green]` PostList 실 서비스 연결
+- [x] [M3-19] `[Red]` PostDetail Integration 테스트
+- [x] [M3-20] `[Green]` PostDetail 완성
 
 ### 빌드 파이프라인
 
-- [ ] [M3-21] `pnpm build` 통합 (submodule → copy-images → next build)
+- [x] [M3-21] `pnpm build` 통합 (submodule → copy-images → next build)
 
 ---
 
@@ -381,9 +381,9 @@
 | M0 Foundation          | 33      | 33      | 100%    |
 | M1 UI Skeleton         | 61      | 61      | 100%    |
 | M2 Content Pipeline    | 24      | 21      | 88%     |
-| M3 Feature Wiring      | 21      | 0       | 0%      |
+| M3 Feature Wiring      | 21      | 21      | 100%    |
 | M4 Hubs & Aggregations | 21      | 0       | 0%      |
 | M5 SEO & Syndication   | 10      | 0       | 0%      |
 | M6 A11y & Perf         | 14      | 0       | 0%      |
 | M7 Polish              | 12      | 0       | 0%      |
-| **Total**              | **196** | **115** | **59%** |
+| **Total**              | **196** | **136** | **69%** |

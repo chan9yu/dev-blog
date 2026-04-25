@@ -1,14 +1,21 @@
 /**
  * MOD-search Public API — PRD_TECHNICAL §7.4
  *
- * 현재(M1): SearchTrigger(검색 버튼 + Dialog + 결과 리스트 통합) + 단축키 훅.
- *
- * 향후 (PRD §7.4 계약):
- * - M3-02: useSearch — Fuse.js 인덱스 기반 검색 로직 분리. 현재는 SearchTrigger 내부의 단순 includes 필터.
- * - M3-04: 실 Fuse 연결.
+ * M3-04 이후 구성:
+ * - `SearchTrigger` — Header 등에서 ⌘K 단축키까지 묶어 쓰는 기본 조립체
+ * - `SearchButton` — 아이콘 버튼 UI만 독립 사용 (커맨드 팔레트 병합 등)
+ * - `SearchModal` — 검색 UX(입력·debounce·결과·키보드 내비) 단독 사용
+ * - `SearchResultItem` — Fuse match indices 하이라이트 포함 결과 렌더
+ * - `useSearch` — Fuse.js 기반 검색 훅 (debounce 200ms, limit 10)
+ * - `useSearchShortcut` — ⌘K / Ctrl+K 전역 단축키
+ * - type `SearchResult` — post + score + matches 집합
  *
  * 규칙: 다른 feature를 import하지 않는다 (Law 3).
  */
 
-export { SearchTrigger } from "./components";
-export { useSearchShortcut } from "./hooks";
+// Components (서버·클라이언트 혼재 — Turbopack tree shake 의존)
+export { SearchButton, SearchModal, SearchResultItem, SearchTrigger } from "./components";
+// Hooks (100% 클라이언트 전용)
+export { useSearch, useSearchShortcut } from "./hooks";
+// Types (컴파일 타임 전용)
+export type { SearchResult } from "./types";

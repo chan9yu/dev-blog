@@ -1,13 +1,12 @@
 /**
- * MOD-theme Public API — PRD_TECHNICAL §7.7
+ * MOD-theme Public API — PRD_TECHNICAL §7.7 + ADR-011
  *
- * 현재(M1): ThemeSwitcher — next-themes 기반 light/dark 토글.
+ * - Components: ThemeSwitcher — light/dark 토글 버튼
+ * - Hooks: useTheme — next-themes wrapper (mounted 감지 + View Transitions progressive enhancement)
  *
- * 향후:
- * - M3-14: useTheme wrapper (next-themes 래핑 + View Transitions)
- * - Theme 타입 ("light" | "dark")은 feature 내부 types.ts에서 M3에 정의.
- *
- * 규칙: ThemeProvider는 현재 app/providers.tsx에서 next-themes 직접 호출. Provider 2+ 시점(M3)에 여기로 이관.
+ * ThemeProvider 조립은 여전히 `app/providers.tsx`에서 next-themes 직접 소비.
+ * 규칙: 다른 feature를 import하지 않는다 (Law 3).
  */
 
 export { ThemeSwitcher } from "./components";
+export { useTheme } from "./hooks";

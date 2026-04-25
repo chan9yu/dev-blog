@@ -16,11 +16,12 @@ describe("extractTocFromMarkdown", () => {
 		expect(toc[0]).toMatchObject({ level: 3, text: "서브 섹션" });
 	});
 
-	it("h1은 제외", () => {
+	it("h1도 포함한다 (CustomMDX +1 시프트 렌더링 전제, M2-09 개정)", () => {
 		const md = "# 제목\n## 섹션";
 		const toc = extractTocFromMarkdown(md);
-		expect(toc).toHaveLength(1);
-		expect(toc[0]?.level).toBe(2);
+		expect(toc).toHaveLength(2);
+		expect(toc[0]?.level).toBe(1);
+		expect(toc[1]?.level).toBe(2);
 	});
 
 	it("h4 이하 제외", () => {
