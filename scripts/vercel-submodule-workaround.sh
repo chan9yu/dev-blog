@@ -2,15 +2,17 @@
 # scripts/vercel-submodule-workaround.sh
 #
 # Vercel 빌드 환경에서 private submodule을 GITHUB_REPO_CLONE_TOKEN으로 clone하는 워크어라운드.
-# .gitmodules의 SSH / HTTPS URL → HTTPS + token URL로 변환 후 submodule update 실행.
+# `.gitmodules`의 SSH/HTTPS URL → `https://oauth2:TOKEN@github.com/...` 로 sed 치환 후
+# `git submodule sync && git submodule update`. `trap cleanup EXIT`로 빌드 종료 시
+# `.gitmodules` 원본 복원 (dirty 상태 방지).
 #
-# 사용법 (Vercel Build Command):
-#   bash scripts/vercel-submodule-workaround.sh && pnpm build
+# 사용법 (Vercel Install Command):
+#   bash scripts/vercel-submodule-workaround.sh && pnpm install
 #
 # 필요 환경 변수:
-#   GITHUB_REPO_CLONE_TOKEN  — fine-grained PAT (Contents: Read 권한만)
+#   GITHUB_REPO_CLONE_TOKEN  — fine-grained PAT (Contents: Read 권한)
 
-set -euo pipefail
+set -Eeuo pipefail
 
 # ── 0. 로컬 .env 자동 로드 (Vercel 환경에는 .env가 없으므로 가드로 skip) ────
 # Vercel은 dashboard 환경 변수를 process env에 자동 주입하지만 로컬 bash 스크립트는
@@ -23,45 +25,40 @@ if [[ -f .env ]]; then
   echo "[info] .env 로드 완료 (로컬 환경)"
 fi
 
-# ── 1. 토큰 확인 ────────────────────────────────────────────────────────────
-TOKEN="${GITHUB_REPO_CLONE_TOKEN:-}"
-if [[ -z "$TOKEN" ]]; then
-  echo "[error] GITHUB_REPO_CLONE_TOKEN 환경 변수가 설정되지 않았습니다." >&2
-  exit 1
-fi
+GITMODULES=".gitmodules"
+FEXT=".bak"
+GITMODULES_BACKUP="${GITMODULES}${FEXT}"
 
-# ── 2. .gitmodules 파싱 → git config로 토큰 주입 ───────────────────────────
-# git config submodule.<name>.url 로 .git/config를 오버라이드한 뒤
-# git submodule sync 가 이를 전파함 — .gitmodules 파일 자체를 수정하지 않음
-current_name=""
-while IFS= read -r line; do
-  # [submodule "name"] 섹션 감지
-  if [[ "$line" =~ ^\[submodule[[:space:]]+\"([^\"]+)\"\] ]]; then
-    current_name="${BASH_REMATCH[1]}"
+function cleanup {
+  echo "Cleaning the runner..."
+  rm -f "$GITMODULES" "$GITMODULES_BACKUP"
+  git restore "$GITMODULES" 2>/dev/null || true
+  echo "Done!"
+}
+
+trap cleanup EXIT
+
+function submodule_workaround {
+  if [ -z "${GITHUB_REPO_CLONE_TOKEN:-}" ]; then
+    echo "[error] GITHUB_REPO_CLONE_TOKEN 환경 변수가 설정되지 않았습니다." >&2
+    exit 1
   fi
 
-  # url = <value> 감지
-  if [[ -n "$current_name" && "$line" =~ ^[[:space:]]*url[[:space:]]*=[[:space:]]*(.+)$ ]]; then
-    raw_url="${BASH_REMATCH[1]}"
+  echo "Monkey patching .gitmodules..."
+  # SSH URL: git@github.com: → https://oauth2:TOKEN@github.com/
+  sed -i"$FEXT" "s/git@github.com:/https:\/\/oauth2:${GITHUB_REPO_CLONE_TOKEN}@github.com\//" "$GITMODULES"
+  # HTTPS URL: https://github.com/ → https://oauth2:TOKEN@github.com/
+  sed -i"$FEXT" "s/https:\/\/github.com\//https:\/\/oauth2:${GITHUB_REPO_CLONE_TOKEN}@github.com\//" "$GITMODULES"
+  echo "Done!"
 
-    # SSH → HTTPS 변환: git@github.com:owner/repo.git
-    if [[ "$raw_url" =~ ^git@github\.com:(.+)$ ]]; then
-      token_url="https://${TOKEN}@github.com/${BASH_REMATCH[1]}"
-    # HTTPS → 토큰 주입: https://github.com/owner/repo.git
-    elif [[ "$raw_url" =~ ^https://github\.com/(.+)$ ]]; then
-      token_url="https://${TOKEN}@github.com/${BASH_REMATCH[1]}"
-    else
-      echo "[warn] 알 수 없는 URL 형식: ${raw_url} — 변환 생략" >&2
-      continue
-    fi
+  echo "Synchronising submodules' remote URL configuration..."
+  git submodule sync
+  echo "Done!"
 
-    echo "[info] submodule '${current_name}': 토큰 URL 주입 완료"
-    git config "submodule.${current_name}.url" "${token_url}"
-  fi
-done < .gitmodules
+  echo "Updating the registered submodules..."
+  git submodule update --init --recursive --jobs "$(getconf _NPROCESSORS_ONLN)"
+  echo "Done!"
+}
 
-# ── 3. sync → clone ─────────────────────────────────────────────────────────
-git submodule sync
-git submodule update --init --recursive
-
+submodule_workaround
 echo "[success] Submodule clone 완료"
