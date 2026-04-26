@@ -32,18 +32,18 @@ EXECUTE 완료 직후, DOCUMENT 진입 **전**:
 병렬 호출 (Agent tool, 한 메시지에 다중 호출):
 ├── react-nextjs-code-reviewer  — React 19/Next 16 베스트 프랙티스, 룰 위반
 ├── a11y-auditor                — WCAG 2.1 AA, 키보드/포커스/대비비
-└── feature-dev:code-reviewer   — 일반 코드 품질, SOLID, 룰 인용
+└── compound-reviewer           — 일반 코드 품질, SOLID, 룰 인용, 핑퐁 루프 운영
 ```
 
 ### 트랙별 조합
 
-| 트랙             | 리뷰어 3-way                                                                  |
-| ---------------- | ----------------------------------------------------------------------------- |
-| Feature(UI+로직) | react-nextjs-code-reviewer + a11y-auditor + feature-dev:code-reviewer         |
-| Feature(로직만)  | react-nextjs-code-reviewer + boundary-mismatch-qa + feature-dev:code-reviewer |
-| Feature(UI만)    | react-nextjs-code-reviewer + a11y-auditor + feature-dev:code-reviewer         |
-| MDX 콘텐츠       | seo-auditor + a11y-auditor + react-nextjs-code-reviewer                       |
-| shadcn 통합      | 위 3-way + shadcn 룰 검토                                                     |
+| 트랙             | 리뷰어 3-way                                                          |
+| ---------------- | --------------------------------------------------------------------- |
+| Feature(UI+로직) | react-nextjs-code-reviewer + a11y-auditor + compound-reviewer         |
+| Feature(로직만)  | react-nextjs-code-reviewer + boundary-mismatch-qa + compound-reviewer |
+| Feature(UI만)    | react-nextjs-code-reviewer + a11y-auditor + compound-reviewer         |
+| MDX 콘텐츠       | seo-auditor + a11y-auditor + react-nextjs-code-reviewer               |
+| shadcn 통합      | 위 3-way + shadcn 룰 검토                                             |
 
 ### 결과 처리
 
@@ -89,4 +89,4 @@ REVIEW를 건너뛰고 DOCUMENT/SYNTHESIZE로 직행하면 **사이클 무결성
 ## 관련 룰
 
 - `.claude/rules/autonomy.md` — 자율 실행 vs 사용자 확인 필수 범주 (REVIEW 강제는 자율 범주의 품질 게이트 역할)
-- `.claude/skills/compound-engineering/skill.md` — REVIEW Phase 전체 핑퐁 루프 정의
+- `.claude/skills/compound-engineering/SKILL.md` — REVIEW Phase 전체 핑퐁 루프 정의

@@ -118,9 +118,9 @@ PLAN → EXECUTE → REVIEW(3회 핑퐁) → VALIDATE(1회 되돌림) → DOCUME
 EXECUTE 완료 시 다음을 자동 실행:
 
 1. **트랙별 3-way 리뷰 에이전트 병렬 호출** (한 메시지에 Agent tool 다중 호출):
-   - Feature(UI+로직): `react-nextjs-code-reviewer` + `a11y-auditor` + `feature-dev:code-reviewer`
-   - Feature(로직만): `react-nextjs-code-reviewer` + `boundary-mismatch-qa` + `feature-dev:code-reviewer`
-   - Feature(UI만): `react-nextjs-code-reviewer` + `a11y-auditor` + `feature-dev:code-reviewer`
+   - Feature(UI+로직): `react-nextjs-code-reviewer` + `a11y-auditor` + `compound-reviewer`
+   - Feature(로직만): `react-nextjs-code-reviewer` + `boundary-mismatch-qa` + `compound-reviewer`
+   - Feature(UI만): `react-nextjs-code-reviewer` + `a11y-auditor` + `compound-reviewer`
    - Content: `seo-auditor` + `a11y-auditor` + `react-nextjs-code-reviewer`
 2. **결과 종합** → Tier 1(Critical) / Tier 2(품질) / Tier 3(후속) 분류
 3. **AskUserQuestion**으로 수정 범위 결정
@@ -218,8 +218,8 @@ REVIEW 생략은 **사이클 무결성 위반**. 위반 시 즉시 정지하고 
 ## 참고
 
 - 프로젝트 컨텍스트: `references/project-context.md`
-- 사이클 정의: `.claude/skills/compound-engineering/skill.md`
-- 콘텐츠 전용: `.claude/skills/content-writing/skill.md`
-- GC: `.claude/skills/garbage-collection/skill.md`
-- 게이트: `.claude/skills/milestone-gate/skill.md`
-- 문서 동기화: `.claude/skills/task-completion/skill.md`
+- 사이클 정의: `.claude/skills/compound-engineering/SKILL.md`
+- 콘텐츠 전용: `.claude/skills/content-writing/SKILL.md`
+- GC: `.claude/skills/garbage-collection/SKILL.md`
+- 게이트: `.claude/skills/milestone-gate/SKILL.md`
+- 문서 동기화: `.claude/skills/task-completion/SKILL.md`

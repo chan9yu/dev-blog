@@ -114,3 +114,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Git 작업 금지** (`.claude/rules/workflow.md`): 커밋·푸시·PR 생성은 사용자 명시 요청 시에만.
 - **PRD 자율 수정 금지** (`.claude/rules/autonomy.md`): 반드시 AskUserQuestion 경유.
 - 다중 task_id 입력 시 배치 처리 가능 — 각각 TASKS 갱신 + CHANGELOG에 한 라운드로 모아서 추가.
+
+## Should-NOT-trigger (이 스킬을 직접 호출하지 않는 경우)
+
+- **코드 작성·수정**: Feature 구현은 `blog-dev` 오케스트레이터 → `compound-engineering` 사이클
+- **마일스톤 완료 검증**: `milestone-gate` 스킬이 담당 (태스크 완료와 마일스톤 게이트는 별개)
+- **GC·하네스 평가**: `garbage-collection` 스킬
+- **MDX 포스트 작성**: `content-writing` 스킬
+- **PRD·ROADMAP 갱신**: `autonomy.md` 상 사용자 승인 필수 — 이 스킬의 자율 범위 밖
+
+이 스킬은 `compound-engineering` DOCUMENT Phase에서 `docs-generator` 에이전트가 자동 호출하는 것이 표준 경로. 사용자가 직접 "TASKS 체크해줘", "CHANGELOG 추가해줘" 요청 시에도 트리거.

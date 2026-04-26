@@ -235,13 +235,13 @@ export type TrendingSnapshot = {
 | RT-/sitemap.xml          | `/sitemap.xml`          | —            | `sitemap()`            | —                  | —                   | Node                 |
 | RT-/robots.txt           | `/robots.txt`           | —            | `robots()`             | —                  | —                   | Node                 |
 | RT-/manifest.webmanifest | `/manifest.webmanifest` | —            | `manifest()`           | —                  | —                   | Node                 |
-| RT-/og                   | `/og`                   | searchParams | —                      | —                  | —                   | Edge                 |
+| RT-/og                   | `/og`                   | searchParams | —                      | —                  | —                   | Node                 |
 | RT-/api/views            | `/api/views`            | —            | —                      | —                  | —                   | Node (Route Handler) |
 
 ### 6.2 렌더링 원칙
 
 - **SSG by default**: 모든 페이지 라우트는 빌드 타임 HTML 생성. `dynamic = "force-static"` 명시.
-- **Edge for OG**: `/og`는 Edge Runtime에서 `@vercel/og`로 동적 생성.
+- **Node for OG**: `/og`는 Node Runtime에서 `@vercel/og`로 동적 생성. (`runtime = "edge"` 미사용 — Next.js 16 `cacheComponents` 옵션과 충돌로 기본 Node runtime 사용)
 - **Streaming**: Post 상세는 본문 RSC + `ViewCounter` Suspense boundary. Fallback은 스켈레톤.
 - **Metadata**: `generateMetadata`는 공통 헬퍼 `buildMetadata({ title, description, image, path })`로 표준화.
 
@@ -253,10 +253,13 @@ export function buildMetadata(input: {
 	title: string;
 	description: string;
 	path: string; // 예: "/posts/slug"
-	image?: string; // 절대 URL
+	image?: string; // 절대 URL. 미지정 시 /og?title=... 동적 생성으로 fallback
 	type?: "website" | "article";
 	publishedAt?: string;
-	noIndex?: boolean; // private 포스트 true
+	modifiedAt?: string; // 포스트 수정일 (article:modified_time)
+	authors?: string[]; // 포스트 저자 (article:author)
+	tags?: string[]; // 포스트 태그 (article:tag)
+	noIndex?: boolean; // private 포스트 true → robots noindex/nofollow
 }): Metadata;
 ```
 
@@ -468,6 +471,31 @@ shared/modules/<module>/
 
 **Definition of Done**: 어떤 기능도 shared에서 feature를 import하지 않는다(단방향 의존 — `.claude/rules/project-structure.md`의 **Law 2**). MDX·shadcn·Icon 컴포넌트 props 시그니처는 TypeScript 시그니처 + JSDoc으로 문서화된다. `shared/modules/*`는 각각 README + leaf barrel + tests를 포함한다.
 
+### 8.7 SEO 인프라 (`shared/seo/`)
+
+M5에서 신설된 SEO 전용 유틸리티 모듈. 모든 라우트의 metadata·JSON-LD·OG 처리를 표준화한다.
+
+```
+shared/seo/
+├─ build-metadata.ts   — generateMetadata 공통 헬퍼 (title·canonical·og·twitter·noIndex)
+├─ json-ld.ts          — Schema.org 4종 빌더 (WebSite / BlogPosting / BreadcrumbList / Person)
+├─ JsonLdScript.tsx    — <script type="application/ld+json"> 인라인 주입 컴포넌트 (XSS 방어)
+├─ index.ts            — leaf barrel
+└─ __tests__/          — build-metadata.test.ts · json-ld.test.ts
+```
+
+**공개 API (`index.ts` 경유):**
+
+- `buildMetadata(input: BuildMetadataInput): Metadata` — 모든 `generateMetadata`의 단일 진입점
+- `buildWebSiteJsonLd(input)` · `buildBlogPostingJsonLd(input)` · `buildBreadcrumbJsonLd(input)` · `buildPersonJsonLd(input)`
+- `JsonLdScript` — `id`·`data` props, `dangerouslySetInnerHTML` 기반 인라인 주입
+
+**설계 원칙:**
+
+- `features/`를 import하지 않음 — shared 단방향 의존 준수 (Law 2)
+- `buildMetadata`의 `image` 미지정 시 `/og?title=...` 동적 OG 라우트로 fallback 자동 적용
+- OpenGraph union 직렬화 안전성: `type === "article"` 분기로 처음부터 두 갈래를 별도 빌드 (`OpenGraphArticle` vs `OpenGraphWebsite`)
+
 ## 9. Content Pipeline
 
 ### 9.1 Submodule 레이아웃
@@ -535,15 +563,20 @@ scripts/vercel-submodule-workaround.sh
 - `BlogPosting` (포스트 상세에 1회) — headline, datePublished, author, keywords, image, url.
 - `BreadcrumbList` (포스트/태그/시리즈 상세) — 계층 1→2→3.
 
-### 10.3 `/og` Edge Handler
+### 10.3 `/og` Node Handler
 
 ```ts
-// src/app/og/route.tsx (runtime: "edge")
-// Query: title (required) · tag? · thumbnail?
-// 동작: thumbnail이 있으면 그대로 프록시, 없으면 ImageResponse로 렌더
-//  - 배경: 다크 그라디언트
-//  - Foreground: title 48px, tag 20px, 사이트 로고
-// 크기: 1200x630
+// src/app/og/route.tsx (runtime: node — default)
+// Next.js 16 cacheComponents 옵션과 edge runtime 충돌로 기본 node runtime 사용.
+// ImageResponse는 node runtime에서도 정상 동작.
+// Query: title (required, 120자 truncate) · tag? (40자 truncate) · thumbnail?
+// 동작:
+//  - thumbnail이 절대 URL → Response.redirect(thumbnail, 302) (프록시 비용 회피)
+//  - thumbnail이 /로 시작하는 상대 경로 → 같은 origin 절대화 후 redirect
+//  - 미지정 → ImageResponse 동적 렌더 (1200×630, 다크 그라디언트)
+//   · 배경: linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #4f46e5 100%)
+//   · title: 72px 800w · tag: 24px 600w · 사이트명: 22px
+// TODO(M7-06): Pretendard subset .otf 임베딩으로 한글 렌더 품질 향상
 ```
 
 ### 10.4 Sitemap 규칙

@@ -28,9 +28,12 @@
 
 ## Structured Data (JSON-LD)
 
-- 포스트 상세: `BlogPosting` + `Person`(author) + `BreadcrumbList` 3종.
+- 포스트 상세: `BlogPosting` + `BreadcrumbList` 2종.
 - About 페이지: `Person` 하나.
-- JSON-LD는 `<script type="application/ld+json">`로 삽입, `dangerouslySetInnerHTML` 대신 `next/script`의 `strategy="afterInteractive"` 사용.
+- JSON-LD는 일반 `<script type="application/ld+json">` + `dangerouslySetInnerHTML={{ __html: json }}`으로 인라인 삽입.
+  `next/script`는 **사용하지 않는다** — `strategy="afterInteractive"`는 클라이언트 하이드레이션 이후 실행되어 검색 크롤러 파싱 시점에 JSON-LD가 누락될 수 있음. Next.js 공식 문서도 JSON-LD에 일반 `<script>` 권장.
+- XSS 방어: `JSON.stringify(data).replace(/</g, "\\u003c")`로 `</script>` 인젝션 차단.
+- 구현체: `src/shared/seo/JsonLdScript.tsx` — `id`·`data` props를 받아 위 패턴을 캡슐화.
 
 ## Slug & URL 규약
 

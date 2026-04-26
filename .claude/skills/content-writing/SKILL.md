@@ -120,6 +120,14 @@ content-engineer가 OUTLINE을 기반으로 MDX 초안 작성:
 - "시리즈 'React 19 Deep Dive'의 2편 작성" → 1편 frontmatter 읽어 order=2 자동
 - "published-post/abc의 예시 코드가 잘못됐어, 교정" → 교정 모드로 분기
 
+## Should-NOT-trigger (이 스킬을 직접 호출하지 않는 경우)
+
+- **코드 기능 구현**: "검색 기능 만들어줘", "M3-05 진행" → `blog-dev` 오케스트레이터 → Feature 트랙
+- **기존 포스트 단순 링크·메타 수정**: TASKS.md 변경 또는 `task-completion` 스킬로 충분
+- **SEO 규약 질문**: `seo-auditor` 에이전트에게 직접 질의
+- **MDX 컴포넌트 구현**: Feature 트랙 (새 MDX 컴포넌트는 `src/shared/components/mdx/` 에 코드)
+- **GC·하네스 평가**: `garbage-collection` 스킬
+
 ## 참고
 
 - Frontmatter 스키마: `references/frontmatter-schema.md`
