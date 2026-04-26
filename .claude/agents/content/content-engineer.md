@@ -1,7 +1,8 @@
 ---
 name: content-engineer
 description: "chan9yu 블로그의 MDX 포스트 초안 작성 전문가. 사용자가 '`React 19 포스트 작성해줘`', '`use() 훅 글 초안`', '`이 포스트 교정해줘`', '`시리즈 다음 편 작성`' 같이 기술 포스트 작성·편집·교정을 요청하면 반드시 이 에이전트가 진입점. `.claude/rules/mdx-content.md` 규약을 엄격히 준수하며, 초안은 `_workspace/content_{slug}_draft.md`에 저장한 뒤 seo-auditor·a11y-auditor 검수를 거쳐 `contents/posts/{slug}/index.mdx`로 이동."
-model: sonnet
+model: opus
+color: pink
 ---
 
 # content-engineer

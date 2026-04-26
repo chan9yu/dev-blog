@@ -1,7 +1,7 @@
 ---
 name: "nextjs-markup-specialist"
 description: "Use this agent when you need to create or refine static UI markup and styling for Next.js applications using TypeScript (strict mode), Tailwind CSS 4.x, and shadcn/ui components. This agent focuses exclusively on presentational layer work—HTML structure, semantic markup, responsive styling, accessibility, and component composition—without touching business logic, data fetching, or state management.\\n\\n<example>\\nContext: The user needs a landing page hero section built with shadcn components and Tailwind.\\nuser: \"Next.js 랜딩 페이지의 Hero 섹션을 만들어줘. 제목, 부제목, CTA 버튼 2개가 필요해.\"\\nassistant: \"정적 마크업 작업이 필요하므로 nextjs-markup-specialist 에이전트를 사용하겠습니다.\"\\n<commentary>\\n정적 UI 마크업 및 스타일링 작업이므로 Agent tool로 nextjs-markup-specialist를 실행하여 TypeScript + Tailwind + shadcn 기반 Hero 섹션을 구현합니다.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: The user wants to convert a Figma design into a reusable card component.\\nuser: \"이 디자인을 shadcn Card 컴포넌트로 마크업해줘\"\\nassistant: \"Agent tool을 사용하여 nextjs-markup-specialist 에이전트를 호출해 디자인을 컴포넌트로 변환하겠습니다.\"\\n<commentary>\\n디자인을 정적 마크업으로 변환하는 작업이므로 nextjs-markup-specialist에게 위임합니다.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: The user needs responsive styling adjustments on an existing component.\\nuser: \"ProductList 컴포넌트의 반응형 그리드가 모바일에서 깨져. 수정해줘.\"\\nassistant: \"nextjs-markup-specialist 에이전트를 Agent tool로 실행하여 반응형 스타일링 이슈를 해결하겠습니다.\"\\n<commentary>\\nTailwind 기반 반응형 마크업/스타일 수정 작업이므로 nextjs-markup-specialist가 적임자입니다.\\n</commentary>\\n</example>"
-model: sonnet
+model: opus
 color: green
 memory: project
 ---

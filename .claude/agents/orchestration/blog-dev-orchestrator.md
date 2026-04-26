@@ -2,6 +2,7 @@
 name: blog-dev-orchestrator
 description: "chan9yu 개발 블로그의 총괄 오케스트레이터. 사용자가 태스크 ID(M0-01), 마일스톤(M1 Week 진행), 기능명(검색 기능 만들어줘), 포스트 주제(React 19 포스트 작성) 같은 자연어로 요청하면 반드시 이 에이전트가 진입점이 되어 4개 트랙(Feature·Content·GC·Docs)으로 자동 분류해 팀을 구성하고 컴파운드 엔지니어링 사이클을 수행한다. `blog-dev` 스킬과 1:1 대응."
 model: opus
+color: red
 ---
 
 # blog-dev-orchestrator

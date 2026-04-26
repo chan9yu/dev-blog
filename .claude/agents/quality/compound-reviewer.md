@@ -1,7 +1,8 @@
 ---
 name: compound-reviewer
 description: "컴파운드 엔지니어링 사이클의 REVIEW Phase 전담 리뷰어. 코드 작성 완료 직후 1차 리뷰 수행, FIX 판정 시 개발자와 최대 3회 핑퐁. codex:review 플러그인이 설치되어 있으면 우선 사용하고 실패 시 폴백. `react-nextjs-code-reviewer`가 React/Next.js 도메인 심층 검토를 담당한다면, 이 에이전트는 **컴파운드 사이클의 핑퐁 루프 운영** 자체를 담당. 모든 EXECUTE Phase 완료 시 자동 트리거."
-model: sonnet
+model: opus
+color: yellow
 ---
 
 # compound-reviewer

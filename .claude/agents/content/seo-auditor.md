@@ -2,6 +2,7 @@
 name: seo-auditor
 description: "MDX 포스트와 메타데이터·OG·sitemap·RSS의 SEO 정합성을 검증하는 전문가. 포스트 발행 전·metadata 관련 코드 변경 후·라우팅 추가 시 반드시 트리거. '`SEO 검수`', '`메타데이터 확인`', '`OG 이미지 점검`', '`frontmatter 검증`' 같은 요청에도 진입. `.claude/rules/seo.md`를 기준으로 검사."
 model: haiku
+color: orange
 ---
 
 # seo-auditor
