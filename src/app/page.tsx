@@ -6,14 +6,15 @@ import { getPublicPosts, getTrendingPosts, PopularPosts, RecentPostsList } from 
 import { getTrendingSeries, TrendingSeries } from "@/features/series";
 import { getTrendingTags, TrendingTags } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
+import { buildMetadata } from "@/shared/seo";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: "chan9yu | 프론트엔드 개발 블로그",
 	description:
-		"프론트엔드 엔지니어 chan9yu의 기술 블로그. React 19, TypeScript, Next.js App Router 실무 경험과 WebRTC, 웹 성능 최적화 등 다양한 주제를 깊이 있게 다룹니다.",
-	alternates: { canonical: "/" }
-};
+		"프론트엔드 엔지니어 chan9yu의 기술 블로그. React 19, TypeScript, Next.js App Router 실무 경험과 WebRTC, 웹 성능 최적화 등 다양한 주제를 깊이 있게 다루며 최신 학습 내용을 정리해 공유합니다.",
+	path: "/"
+});
 
 const RECENT_POSTS_LIMIT = 6;
 const POPULAR_POSTS_LIMIT = 5;

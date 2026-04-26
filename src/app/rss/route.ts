@@ -1,18 +1,26 @@
-import { siteMetadata } from "@/shared/config/site";
-import { escapeXml } from "@/shared/utils/xmlEscape";
+import { getPublicPosts } from "@/features/posts";
+import { getSiteUrl, siteMetadata, siteSocials } from "@/shared/config/site";
+
+import { buildRssFeed } from "../rss-feed";
+
+function resolveAuthorEmail(): string {
+	const mailLink = siteSocials.find((s) => s.iconName === "Mail");
+	if (mailLink && mailLink.href.startsWith("mailto:")) {
+		return mailLink.href.slice("mailto:".length);
+	}
+	return "";
+}
 
 export function GET() {
-	// M5에서 최신 50편 포스트 + content:encoded 통합 예정. 현재는 빈 채널.
-	const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>${escapeXml(siteMetadata.title)}</title>
-    <link>${escapeXml(siteMetadata.url)}</link>
-    <description>${escapeXml(siteMetadata.description)}</description>
-    <language>${siteMetadata.locale.replace("_", "-")}</language>
-    <atom:link href="${escapeXml(siteMetadata.url)}/rss" rel="self" type="application/rss+xml" />
-  </channel>
-</rss>`;
+	const xml = buildRssFeed({
+		siteUrl: getSiteUrl(),
+		siteTitle: siteMetadata.title,
+		siteDescription: siteMetadata.description,
+		authorName: siteMetadata.author,
+		authorEmail: resolveAuthorEmail(),
+		locale: siteMetadata.locale,
+		posts: getPublicPosts()
+	});
 
 	return new Response(xml, {
 		headers: {

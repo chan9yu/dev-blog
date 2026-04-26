@@ -305,16 +305,16 @@
 
 > Exit: Lighthouse SEO 100, Rich Results Test 통과
 
-- [ ] [M5-01] `buildMetadata` 공통 헬퍼
-- [ ] [M5-02] 전 라우트에 `generateMetadata` 적용
-- [ ] [M5-03] Private 포스트 `noindex` + JSON-LD 생략
-- [ ] [M5-04] `WebSite` JSON-LD (루트 layout)
-- [ ] [M5-05] `BlogPosting` JSON-LD (포스트 상세)
-- [ ] [M5-06] `BreadcrumbList` JSON-LD (포스트/태그/시리즈)
-- [ ] [M5-07] `RT-/og` Edge Handler 완성 (@vercel/og)
-- [ ] [M5-08] `RT-/sitemap.xml` 완성 (priority/changefreq, private 제외)
-- [ ] [M5-09] `RT-/rss` 완성 (RSS 2.0, 최신 50편, private 제외)
-- [ ] [M5-10] `RT-/robots.txt` 완성
+- [x] [M5-01] `buildMetadata` 공통 헬퍼 (`shared/seo/build-metadata.ts`, OpenGraph union 분기 안전)
+- [x] [M5-02] 전 라우트에 `generateMetadata` 적용 (정적 5 + 동적 3, buildMetadata 통일)
+- [x] [M5-03] Private 포스트 `noindex` + JSON-LD 생략 (`getPostDetail` 직접 URL 200 + noIndex)
+- [x] [M5-04] `WebSite` JSON-LD (루트 layout, `JsonLdScript` 컴포넌트)
+- [x] [M5-05] `BlogPosting` JSON-LD (포스트 상세, private 미렌더)
+- [x] [M5-06] `BreadcrumbList` JSON-LD (포스트/태그/시리즈) + Person(About)
+- [x] [M5-07] `RT-/og` Edge Handler 완성 (thumbnail proxy + ImageResponse, M7-06 폰트 polish 위임)
+- [x] [M5-08] `RT-/sitemap.xml` 완성 (priority/changefreq PRD §10.4, private 제외)
+- [x] [M5-09] `RT-/rss` 완성 (RSS 2.0, 최신 50편, RFC 822 pubDate, private 제외)
+- [x] [M5-10] `RT-/robots.txt` 완성 (production allow + sitemap URL)
 
 ---
 
@@ -383,7 +383,7 @@
 | M2 Content Pipeline    | 24      | 24      | 100%    |
 | M3 Feature Wiring      | 21      | 21      | 100%    |
 | M4 Hubs & Aggregations | 21      | 21      | 100%    |
-| M5 SEO & Syndication   | 10      | 0       | 0%      |
+| M5 SEO & Syndication   | 10      | 10      | 100%    |
 | M6 A11y & Perf         | 14      | 0       | 0%      |
 | M7 Polish              | 12      | 0       | 0%      |
-| **Total**              | **196** | **160** | **82%** |
+| **Total**              | **196** | **170** | **87%** |

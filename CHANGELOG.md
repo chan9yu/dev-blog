@@ -7,6 +7,98 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M5-01~10 SEO & Syndication 인프라 (Green, 2026-04-26)
+
+**M5-01 buildMetadata 공통 헬퍼**:
+
+- `src/shared/seo/build-metadata.ts` (신규) — `buildMetadata({ title, description, path, image?, type?, publishedAt?, modifiedAt?, authors?, tags?, noIndex? }): Metadata`. 모든 라우트의 `generateMetadata`에서 호출하는 단일 진입점.
+- `__tests__/build-metadata.test.ts` (8 케이스) — title/canonical/og/twitter 매핑·image fallback(`/og?title=...`)·article 분기·noIndex.
+- **OpenGraph union 분기 안전성**: `Metadata["openGraph"]`가 `OpenGraphWebsite | OpenGraphArticle` union이라 객체 mutation 방식은 직렬화 시 타입 분기 손실 위험. 처음부터 `type === "article" ? {…article} : {…website}` 갈래로 build해 `<meta property="article:published_time">` 출력 보장.
+
+**M5-04~06 JSON-LD 빌더 (`shared/seo/json-ld.ts`)**:
+
+- `buildWebSiteJsonLd` — schema.org WebSite + Person(author) + inLanguage="ko-KR"
+- `buildBlogPostingJsonLd` — headline·datePublished·dateModified?·author·keywords·image(absolute)·url·mainEntityOfPage
+- `buildBreadcrumbJsonLd` — ListItem 배열 (절대 URL)
+- `buildPersonJsonLd` — name·url?·sameAs?
+- `JsonLdScript.tsx` — `<script type="application/ld+json">` 인라인 주입. `<` → `<` 이스케이프로 `</script>` XSS 방어.
+- `__tests__/json-ld.test.ts` (6 케이스) — 4종 빌더 직렬화 + 절대 URL 변환 + 옵션 필드 분기.
+
+**M5-02 전 라우트 generateMetadata 마이그레이션**:
+
+- `src/app/{page,posts/page,tags/page,series/page,about/page}.tsx` — 모두 `buildMetadata({…})` 통과
+- `posts/[slug]/page.tsx` — `getPostBySlug` → `getPostDetail`로 전환(private 포스트 직접 URL 접근 200 허용 + noIndex), `type: "article"` + `publishedAt`/`authors`/`tags` 주입
+- `tags/[tag]/page.tsx`, `series/[slug]/page.tsx` — buildMetadata 적용
+- `not-found.tsx`는 `robots: { index: false, follow: false }` 그대로 유지
+
+**M5-03 Private 포스트 noindex + JSON-LD 생략**:
+
+- `posts/[slug]/page.tsx` generateMetadata에서 `noIndex: post.private` 전달 → `<meta name="robots" content="noindex, nofollow">` 자동 출력
+- BlogPosting/Breadcrumb JSON-LD는 `summary.private`이면 미렌더 (조건부 분기)
+- M4-21 통합 테스트로 `getPublicPosts`/`findAdjacent`/`findRelated`/`getAllSeries`/`getTagCounts`/`getTrendingTags`/`getTrendingSeries` 7개 collector가 private 누설 안 한다는 사실 이미 보장됨
+
+**M5-04 WebSite JSON-LD (root layout)**:
+
+- `app/layout.tsx` — `<body>` 첫 자식에 `<JsonLdScript id="website-json-ld">` 주입. 모든 페이지에 1회 노출.
+- root metadata도 `ROOT_OG_IMAGE = /og?title=${name}` 상수로 통일 (twitter/openGraph 동일 경로)
+
+**M5-05 BlogPosting JSON-LD (포스트 상세)** + **M5-06 BreadcrumbList JSON-LD (3종 상세)**:
+
+- `posts/[slug]/page.tsx` — BlogPosting + Breadcrumb 2종 인젝션 (private 미렌더)
+- `tags/[tag]/page.tsx` — Breadcrumb (홈→태그→#{tag})
+- `series/[slug]/page.tsx` — Breadcrumb (홈→시리즈→{name})
+- `about/page.tsx` — Person JSON-LD + sameAs(소셜 링크 전부) — 저자 E-E-A-T 신호
+
+**M5-07 `/og` Edge Handler 완성**:
+
+- `src/app/og/route.tsx` — `searchParams: title (120자 truncate), tag? (40자), thumbnail?`.
+  - thumbnail이 절대 URL → `Response.redirect(thumbnail, 302)` (프록시 비용 회피)
+  - thumbnail이 `/posts/...` 상대 경로 → 같은 origin 절대화 후 redirect
+  - 미지정 → ImageResponse 1200×630, 다크 그라디언트(`#0f172a → #1e1b4b → #4f46e5`), title 72px 800w, tag 24px 600w, 사이트명 22px
+- TODO(M7-06): satori는 woff2 미지원 → 한글 폰트 임베딩(Pretendard subset .otf) Polish
+
+**M5-08 동적 sitemap (`src/app/sitemap.ts` + `sitemap-entries.ts`)**:
+
+- `buildSitemapEntries({ siteUrl, publicPosts, tags, series })` — PRD §10.4 priority/changefreq 표 그대로:
+  - / 1.0 daily · /posts 0.9 daily · /posts/[slug] 0.8 weekly · /series 0.7 weekly · /series/[slug] 0.6 weekly · /tags 0.6 weekly · /tags/[tag] 0.5 weekly · /about 0.5 monthly
+- `sitemap.ts` default export는 `getPublicPosts()` + `getAllTags()` + `getAllSeries()` 조립 — private 자동 제외
+- `__tests__/sitemap-entries.test.ts` (6 케이스) — 정적 priority·post lastModified=frontmatter.date·URL encode·private 미포함
+
+**M5-09 RSS 2.0 (`src/app/rss/route.ts` + `rss-feed.ts`)**:
+
+- `buildRssFeed({ siteUrl, siteTitle, siteDescription, authorName, authorEmail, locale, posts })` — RSS 2.0 표준 channel + atom:link self
+- 항목당: title·link·guid(isPermaLink="true")·description·pubDate(RFC 822)·author(`email (name)`)·category(태그)
+- 최대 50편 (RSS_ITEM_LIMIT) — 호출자가 private 제외 (`getPublicPosts`)
+- XML 특수문자 5종 escape
+- `__tests__/rss-feed.test.ts` (5 케이스) — 채널 메타·item 형식·RFC 822 pubDate·escape·50개 절단
+
+**M5-10 robots.txt 완성**:
+
+- production: `allow: /` + `disallow: /api/` + `sitemap: getSiteUrl()/sitemap.xml`
+- preview/local: `disallow: /` (검색엔진 색인 차단)
+- private slug 별도 Disallow 불필요(sitemap에서 이미 제외) — PRD §10.6
+
+**3-way 리뷰 결과**:
+
+- react-nextjs-code-reviewer: Tier 1 1건(buildMetadata article OG 캐스팅) → 빌드 출력 검증으로 false positive 확인됐으나 명료성 위해 union 분기 패턴으로 리팩토링
+- seo-auditor: FIX 판정 — Description 6개 페이지 120자 미달 + About Person JSON-LD 누락 → 모두 즉시 수정 (site.ts/page/posts/tags/series/about)
+- a11y-auditor: Tier 1 위반 0건. Tier 2 (tags/series JSX 인덴트 단절 위험) → 즉시 정리
+- 후속(별도 GC 작업): `.claude/rules/seo.md`의 `next/script strategy="afterInteractive"` 규약이 실제 구현(일반 script + dangerouslySetInnerHTML)과 불일치 — autonomy.md상 사용자 승인 필요 영역, 별도 처리
+
+**검증**:
+
+- `pnpm tsc --noEmit` 통과 (strict)
+- `pnpm test` 245/245 PASS (M5 신규 25케이스: build-metadata 8 + json-ld 6 + sitemap-entries 6 + rss-feed 5)
+- `pnpm lint` 0 errors
+- `pnpm build` 101/101 정적 페이지 PASS, 빌드 출력에서 `<meta property="article:published_time">`·canonical·og:image:width=1200 등 정상 노출 확인
+
+**설계 근거**:
+
+- buildMetadata가 path만 받고 `/og?title=...`로 fallback — 모든 페이지가 OG 이미지 자동 보장 (썸네일 없는 시리즈 허브·태그 페이지에서도 1200×630 미리보기)
+- JSON-LD는 `next/script` 대신 일반 `<script>` 인라인 — 검색 크롤러는 즉시 파싱 필요 (afterInteractive 지연과 부합 안 함)
+- `getPostDetail`로 변경(getPostBySlug 아님) — private 포스트 직접 URL 접근 시 noIndex로 200 응답 (PRD §13.3)
+- sitemap-entries/rss-feed가 `app/`에 위치 — Next.js metadata route(`sitemap.ts`/`rss/route.ts`)와 같은 디렉토리에 묶어 빌드 책임 영역 일치 (3-way 리뷰의 shared/seo 이동 권고는 후속 GC로 위임)
+
 ### Added — M4-20~21 About 콘텐츠 + Private 정책 통합 테스트 (Green, 2026-04-25)
 
 **M4-20 About 콘텐츠 (PRD §7.9)**:

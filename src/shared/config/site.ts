@@ -26,7 +26,7 @@ export const siteMetadata = {
 	name: "chan9yu",
 	title: "chan9yu | 기술 개발 블로그",
 	description:
-		"프론트엔드 개발자 여찬규의 기술 블로그. React, TypeScript, Next.js, WebRTC를 활용한 웹 개발 및 실시간 통신 경험을 공유합니다.",
+		"프론트엔드 개발자 여찬규의 기술 블로그. React 19, TypeScript, Next.js App Router, WebRTC 기반 실시간 통신 등 실무에서 마주친 문제와 학습 기록을 정리합니다. 신뢰할 수 있는 자료를 토대로 깊이 있게 다룹니다.",
 	url: "https://chan9yu.dev",
 	author: "chan9yu",
 	locale: "ko_KR",
