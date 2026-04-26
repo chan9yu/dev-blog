@@ -4,18 +4,19 @@ import { Suspense } from "react";
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
 import { getTagCounts, TagList } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
+import { buildMetadata } from "@/shared/seo";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
 type PostsPageProps = {
 	searchParams: Promise<{ tag?: string }>;
 };
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: "포스트",
 	description:
-		"chan9yu 개발 블로그의 전체 포스트 목록. React, TypeScript, Next.js, WebRTC 등 프론트엔드 실무 경험과 학습 기록을 모은 기술 글 모음입니다.",
-	alternates: { canonical: "/posts" }
-};
+		"chan9yu 개발 블로그의 전체 포스트 목록. React, TypeScript, Next.js, WebRTC 등 프론트엔드 실무 경험과 학습 기록을 모은 기술 글 모음으로, 태그·시리즈별로 검색하고 필터링할 수 있습니다.",
+	path: "/posts"
+});
 
 export default async function PostsPage({ searchParams }: PostsPageProps) {
 	const { tag } = await searchParams;

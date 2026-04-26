@@ -31,3 +31,33 @@ paths: ["src/**/*.test.ts", "src/**/*.test.tsx"]
 - `userEvent`를 `fireEvent`보다 우선 사용
 - RTL 쿼리 우선순위: `getByRole` > `getByLabelText` > `getByText` > `getByTestId`
 - 외부 의존성만 모킹, 내부 모듈은 실제 구현 사용
+
+## 공유 fixture 추출 트리거
+
+테스트 픽스처 빌더가 다음 조건을 **모두** 만족하면 `src/shared/test/fixtures/`로 추출한다:
+
+- 동일·유사 시그니처 헬퍼가 **3개 이상의 테스트 파일**에 인라인 정의됨
+- 동일 도메인 타입(`PostSummary`·`Series` 등)을 생성하는 빌더
+
+**추출 형태 (Partial override 패턴):**
+
+```ts
+// src/shared/test/fixtures/posts.ts
+export const makePost = (slug: string, overrides: Partial<PostSummary> = {}): PostSummary => ({
+	title: slug,
+	description: "desc",
+	slug,
+	date: "2026-01-01",
+	private: false,
+	tags: [],
+	thumbnail: null,
+	series: null,
+	seriesOrder: null,
+	readingTimeMinutes: 1,
+	...overrides
+});
+```
+
+테스트에서는 `import { makePost } from "@/shared/test/fixtures/posts"`로 사용.
+
+**Why**: `Partial<T>` override 패턴으로 시그니처 분기를 흡수하고, 도메인 타입 필드 추가 시 빌더 한 곳만 수정한다. GC에서 3회+ 인라인 중복 발견 시 자동으로 이 규칙을 적용한다.

@@ -117,6 +117,14 @@ FAIL — 1건 미통과 (RT-/posts/[slug])
 | 마일스톤 Exit 기준이 모호 | `AskUserQuestion`으로 세부 기준 확인             |
 | 신규 규칙이 실패 유발     | 규칙 최근 변경 이력 확인 후 사용자에게 롤백 질의 |
 
+## Should-NOT-trigger (이 스킬을 직접 호출하지 않는 경우)
+
+- **개별 태스크 완료 문서화**: TASKS.md 체크·CHANGELOG 갱신은 `task-completion` 스킬
+- **코드 품질 리뷰**: `compound-engineering` REVIEW Phase 또는 `react-nextjs-code-reviewer`
+- **GC 실행**: 마일스톤 게이트와 별개. `garbage-collection` 스킬이 담당
+- **단순 빌드 확인**: `pnpm build` 단독 실행은 스킬 불필요 — 직접 Bash 호출로 충분
+- **마일스톤 미완료 상태**: 모든 TASKS 체크박스가 `[x]`가 아니면 게이트 진입 자체가 무의미. `blog-dev` 오케스트레이터가 완료 감지 후 자동 호출하는 것이 표준 경로.
+
 ## PASS 후 자동 액션
 
 1. `garbage-collection` 자동 호출 (해당 마일스톤 범위)

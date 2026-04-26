@@ -5,13 +5,14 @@ import Link from "next/link";
 import { getPublicPosts } from "@/features/posts";
 import { getTagCounts } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
+import { buildMetadata } from "@/shared/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: "태그",
 	description:
-		"주제별 태그로 정리된 포스트를 탐색하세요. React, TypeScript, Next.js 등 다양한 기술 주제를 확인할 수 있습니다.",
-	alternates: { canonical: "/tags" }
-};
+		"주제별 태그로 정리된 포스트를 탐색하세요. React, TypeScript, Next.js, WebRTC 등 다양한 기술 주제를 한눈에 확인할 수 있고, 관심 있는 주제별로 포스트를 빠르게 찾을 수 있는 허브 페이지입니다.",
+	path: "/tags"
+});
 
 /**
  * 레거시 /tags 디자인 참조:

@@ -158,7 +158,7 @@ User state:
 → blog-dev 스킬 자동 활성화
 ```
 
-내부 매칭 근거: `blog-dev/skill.md`의 description에 명시된 `M\d-\d+` 패턴.
+내부 매칭 근거: `blog-dev/SKILL.md`의 description에 명시된 `M\d-\d+` 패턴.
 
 ### Step 2 — Phase 1: 입력 분석 (Input Analysis)
 
@@ -821,15 +821,15 @@ GC 실행 히스토리 (3회)
 1. **`CLAUDE.md`** (루트) — 프로젝트 전체 맥락
 2. **`docs/TASKS.md` / `docs/ROADMAP.md`** — 태스크·마일스톤 정의
 3. **이 문서** — 하네스 동작 원리
-4. **`.claude/skills/blog-dev/skill.md`** — 오케스트레이터 스킬
-5. **`.claude/skills/compound-engineering/skill.md`** — 6단계 사이클 상세
+4. **`.claude/skills/blog-dev/SKILL.md`** — 오케스트레이터 스킬
+5. **`.claude/skills/compound-engineering/SKILL.md`** — 6단계 사이클 상세
 6. **`.claude/skills/blog-dev/references/project-context.md`** — 팀 구성 매트릭스
 
 개발자 관점:
 
 1. **`.claude/agents/**/\*.md`\*\* — 15개 에이전트 정의
 2. **`.claude/rules/*.md`** — 15개 코딩 규약
-3. **`.claude/skills/*/skill.md`** — 12개 스킬
+3. **`.claude/skills/*/SKILL.md`** — 12개 스킬
 4. **`.claude/commands/**/\*.md`\*\* — 9개 슬래시 커맨드
 5. **`.claude/hooks/*.sh`** — 지연 린팅 스크립트
 6. **`.claude/settings.json`** — MCP 권한·훅 연결

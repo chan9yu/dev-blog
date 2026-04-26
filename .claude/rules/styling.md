@@ -55,6 +55,14 @@ paths: ["src/**/*.css", "src/**/*.tsx"]
 - `shiki.css`: 코드블록 컨테이너
 - `globals.css`: 위 모두 import + Tailwind `@theme inline` 매핑
 
+## 예외 — `@vercel/og` ImageResponse (Satori)
+
+`src/app/og/route.tsx`의 `ImageResponse` JSX 렌더는 **Satori 엔진 제약으로 className 미지원**. 해당 파일에서만 `style={{ ... }}` 인라인 객체를 사용한다.
+
+- Satori는 React DOM이 아닌 SVG 렌더링 엔진 — CSS 클래스가 아닌 PostCSS 스타일 객체만 처리
+- 이 파일 외의 일반 RSC·Client 컴포넌트에 이 패턴을 모방하지 말 것
+- `next/image`, `next/font` 등 다른 Next.js 컴포넌트는 Satori 외부이므로 기존 Tailwind 규약 그대로 적용
+
 ## 회고
 
 - M0-09~15에서 `max-w-[72rem]`·`max-w-[44rem]`·`border-(--color-border-subtle)` 등 arbitrary value 다수 발생 → 사용자 직접 리뷰에서 `suggestCanonicalClasses` 워닝 지적 → 본 룰로 명문화.

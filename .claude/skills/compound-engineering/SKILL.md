@@ -134,6 +134,17 @@ _workspace/
 | 팀원 응답 지연                       | orchestrator가 `SendMessage("status?")` 1회 핑, 무응답 시 해당 Phase 건너뛰고 기록 |
 | 외부 도구 실패 (context7, serena 등) | 폴백: 로컬 Read/Grep으로 대체, 결과 품질 저하를 리포트에 명시                      |
 
+## Should-NOT-trigger (이 스킬을 직접 호출하지 않는 경우)
+
+- **단순 질문·코드 조회**: "이 함수가 뭐야?", "타입 오류 설명해줘" → 직접 답변으로 충분
+- **단일 라인 수정**: 오타·import 순서·alias 추가 등 — REVIEW 면제 대상 (review-discipline.md "예외" 참조)
+- **TASKS.md 체크박스 토글·CHANGELOG 항목 추가**: `task-completion` 스킬로 충분
+- **마일스톤 완료 검증**: `milestone-gate` 스킬이 담당
+- **GC 실행**: `garbage-collection` 스킬이 담당
+- **Content 트랙 포스트 작성**: `content-writing` 스킬이 전용 5단계 제공
+
+`blog-dev` 오케스트레이터가 트랙 분류 후 자동 호출하는 것이 기본 경로. 사용자가 직접 `compound-engineering`을 언급하는 경우는 드물다.
+
 ## 테스트 시나리오
 
 **정상 흐름 (Feature 트랙, M0-06 `cn()` 유틸):**
@@ -198,5 +209,5 @@ DOCUMENT: 정상 진행
 ## 참고
 
 - 실행 주체별 프로토콜: `.claude/agents/quality/compound-reviewer.md`
-- 콘텐츠 트랙 디테일: `.claude/skills/content-writing/skill.md`
-- 문서 동기화: `.claude/skills/task-completion/skill.md`
+- 콘텐츠 트랙 디테일: `.claude/skills/content-writing/SKILL.md`
+- 문서 동기화: `.claude/skills/task-completion/SKILL.md`

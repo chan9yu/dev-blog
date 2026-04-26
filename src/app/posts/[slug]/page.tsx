@@ -7,7 +7,6 @@ import { CommentsSection } from "@/features/comments";
 import {
 	findAdjacentPosts,
 	findRelatedPostsByTags,
-	getPostBySlug,
 	getPostDetail,
 	getPublicPosts,
 	PostMetaHeader,
@@ -21,7 +20,8 @@ import { getSeriesDetail, SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
 import { Container } from "@/shared/components/layouts/Container";
 import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
-import { getSiteUrl } from "@/shared/config/site";
+import { getSiteUrl, siteMetadata } from "@/shared/config/site";
+import { buildBlogPostingJsonLd, buildBreadcrumbJsonLd, buildMetadata, JsonLdScript } from "@/shared/seo";
 import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug } from "@/shared/utils/slug";
 
@@ -39,14 +39,20 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
 	const normalized = normalizeSlug(slug);
 	if (!normalized) return { title: "Post" };
 
-	const post = getPostBySlug(normalized);
+	const post = getPostDetail(normalized);
 	if (!post) return { title: "Post" };
 
-	return {
+	return buildMetadata({
 		title: post.title,
 		description: post.description,
-		alternates: { canonical: `/posts/${post.slug}` }
-	};
+		path: `/posts/${post.slug}`,
+		image: post.thumbnail ?? undefined,
+		type: "article",
+		publishedAt: post.date,
+		authors: [siteMetadata.author],
+		tags: post.tags,
+		noIndex: post.private
+	});
 }
 
 export default async function PostDetailPage({ params }: PostDetailPageProps) {
@@ -55,22 +61,47 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const normalized = normalizeSlug(slug);
 	if (!normalized) notFound();
 
-	const summary = getPostBySlug(normalized);
-	if (!summary) notFound();
-
 	const detail = getPostDetail(normalized);
 	if (!detail) notFound();
+	const summary = detail;
 
 	// 전체 포스트를 변수로 캐싱 — find* 함수들과 getSeriesDetail이 같은 입력을 공유한다.
 	const allPosts = getPublicPosts();
 	const adjacent = findAdjacentPosts(allPosts, summary.slug);
 	const related = findRelatedPostsByTags(allPosts, summary);
 	const currentSeries = summary.series ? getSeriesDetail(allPosts, summary.series) : null;
-	const shareUrl = `${getSiteUrl()}/posts/${summary.slug}`;
+	const siteUrl = getSiteUrl();
+	const shareUrl = `${siteUrl}/posts/${summary.slug}`;
 	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
+
+	const blogPostingLd = summary.private
+		? null
+		: buildBlogPostingJsonLd({
+				siteUrl,
+				authorName: siteMetadata.author,
+				slug: summary.slug,
+				title: summary.title,
+				description: summary.description,
+				date: summary.date,
+				tags: summary.tags,
+				image: summary.thumbnail ?? null
+			});
+
+	const breadcrumbLd = summary.private
+		? null
+		: buildBreadcrumbJsonLd({
+				siteUrl,
+				items: [
+					{ name: "홈", path: "/" },
+					{ name: "포스트", path: "/posts" },
+					{ name: summary.title, path: `/posts/${summary.slug}` }
+				]
+			});
 
 	return (
 		<>
+			{blogPostingLd && <JsonLdScript id="blogposting-json-ld" data={blogPostingLd} />}
+			{breadcrumbLd && <JsonLdScript id="breadcrumb-json-ld" data={breadcrumbLd} />}
 			<ReadingProgress />
 			<Container>
 				<div className="flex flex-col py-8 lg:flex-row lg:py-10">

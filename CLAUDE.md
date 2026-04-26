@@ -55,4 +55,4 @@ pnpm test:e2e     # Playwright E2E
 | `docs/AI_WORKFLOW_GUIDE.md` | 하네스 동작 원리 — 4개 트랙·6단계 사이클·M0-06 시연·산출물 경로                                                                            |
 | `.claude/rules/*.md`        | 코드 작성 규약 13종 (아키텍처·React·TS·테마·접근성·테스트·MDX·SEO·자율)                                                                    |
 | `.claude/agents/**/*.md`    | 15개 에이전트 정의 (컴파운드 사이클에서 자동 호출)                                                                                         |
-| `.claude/skills/*/skill.md` | 12개 스킬 — `blog-dev`(오케스트레이터)·`compound-engineering`·`content-writing`·`garbage-collection`·`milestone-gate`·`task-completion` 등 |
+| `.claude/skills/*/SKILL.md` | 12개 스킬 — `blog-dev`(오케스트레이터)·`compound-engineering`·`content-writing`·`garbage-collection`·`milestone-gate`·`task-completion` 등 |

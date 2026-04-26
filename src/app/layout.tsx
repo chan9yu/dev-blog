@@ -14,6 +14,7 @@ import { Footer } from "@/shared/components/layouts/Footer";
 import { Header } from "@/shared/components/layouts/Header";
 import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
+import { buildWebSiteJsonLd, JsonLdScript } from "@/shared/seo";
 
 import { Providers } from "./providers";
 
@@ -27,6 +28,8 @@ const pretendard = localFont({
 	adjustFontFallback: "Arial"
 });
 
+const ROOT_OG_IMAGE = `/og?title=${encodeURIComponent(siteMetadata.name)}`;
+
 export const metadata: Metadata = {
 	metadataBase: new URL(getSiteUrl()),
 	title: {
@@ -34,20 +37,21 @@ export const metadata: Metadata = {
 		template: `%s | ${siteMetadata.name}`
 	},
 	description: siteMetadata.description,
+	alternates: { canonical: "/" },
 	openGraph: {
 		type: "website",
 		siteName: siteMetadata.name,
 		locale: siteMetadata.locale,
-		url: siteMetadata.url,
+		url: "/",
 		title: siteMetadata.title,
 		description: siteMetadata.description,
-		images: [{ url: "/og?title=chan9yu", width: 1200, height: 630, alt: siteMetadata.title }]
+		images: [{ url: ROOT_OG_IMAGE, width: 1200, height: 630, alt: siteMetadata.title }]
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: siteMetadata.title,
 		description: siteMetadata.description,
-		images: ["/og?title=chan9yu"]
+		images: [ROOT_OG_IMAGE]
 	},
 	icons: {
 		icon: [
@@ -60,12 +64,20 @@ export const metadata: Metadata = {
 	}
 };
 
+const websiteJsonLd = buildWebSiteJsonLd({
+	siteUrl: siteMetadata.url,
+	siteName: siteMetadata.name,
+	description: siteMetadata.description,
+	authorName: siteMetadata.author
+});
+
 export default function RootLayout({ children }: PropsWithChildren) {
 	const searchablePosts = getPublicPosts();
 
 	return (
 		<html lang="ko" className={pretendard.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
 			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
+				<JsonLdScript id="website-json-ld" data={websiteJsonLd} />
 				<Providers>
 					<Suspense fallback={null}>
 						<ScrollReset />
