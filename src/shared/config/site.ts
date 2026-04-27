@@ -22,9 +22,10 @@ export const siteNav: NavItem[] = [
 	{ href: "/about", label: "About" }
 ];
 
+// 브랜드 title 통일 (D6 fix, 2026-04-27): RSS·manifest·OG·home 모두 동일 문자열 사용
 export const siteMetadata = {
 	name: "chan9yu",
-	title: "chan9yu | 기술 개발 블로그",
+	title: "chan9yu | 프론트엔드 개발 블로그",
 	description:
 		"프론트엔드 개발자 여찬규의 기술 블로그. React 19, TypeScript, Next.js App Router, WebRTC 기반 실시간 통신 등 실무에서 마주친 문제와 학습 기록을 정리합니다. 신뢰할 수 있는 자료를 토대로 깊이 있게 다룹니다.",
 	url: "https://chan9yu.dev",

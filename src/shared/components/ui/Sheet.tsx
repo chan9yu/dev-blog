@@ -56,6 +56,7 @@ function SheetContent({ className, children, side = "right", showCloseButton = t
 			<SheetOverlay />
 			<SheetPrimitive.Content
 				data-slot="sheet-content"
+				aria-modal="true"
 				className={cn(
 					"bg-background state-closed:animate-out state-open:animate-in state-closed:duration-300 state-open:duration-500 fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out",
 					side === "right" &&

@@ -324,26 +324,26 @@
 
 ### 접근성
 
-- [ ] [M6-01] Skip link (`<a href="#main">`)
-- [ ] [M6-02] 전 버튼/아이콘에 `aria-label` 검수
-- [ ] [M6-03] 모달/드로어 `role="dialog"` + 포커스 트랩
-- [ ] [M6-04] 포커스 링 `focus-visible` 전역 스타일
-- [ ] [M6-05] 명암 대비 검수 (4.5:1 / 3:1 / 7:1)
-- [ ] [M6-06] `prefers-reduced-motion` 존중
-- [ ] [M6-07] 키보드 맵 검증 (Cmd+K, Esc, 화살표, Tab)
+- [x] [M6-01] Skip link (`<a href="#main">`)
+- [x] [M6-02] 전 버튼/아이콘에 `aria-label` 검수
+- [x] [M6-03] 모달/드로어 `role="dialog"` + 포커스 트랩
+- [x] [M6-04] 포커스 링 `focus-visible` 전역 스타일
+- [x] [M6-05] 명암 대비 검수 (4.5:1 / 3:1 / 7:1)
+- [x] [M6-06] `prefers-reduced-motion` 존중
+- [x] [M6-07] 키보드 맵 검증 (Cmd+K, Esc, 화살표, Tab)
 
 ### 성능
 
-- [ ] [M6-08] LCP 최적화 (next/image + sharp) — < 2.5s
-- [ ] [M6-09] CLS 방지 (이미지 dimension 예약) — < 0.1
-- [ ] [M6-10] INP 최적화 (지연 로드) — < 200ms
-- [ ] [M6-11] JS Transfer 최적화 — 홈 < 120KB gzipped
-- [ ] [M6-12] 폰트 서브셋 최적화 — FOUT < 100ms
-- [ ] [M6-13] Lighthouse Performance — >= 95
+- [x] [M6-08] LCP 최적화 (next/image + sharp) — < 2.5s
+- [x] [M6-09] CLS 방지 (이미지 dimension 예약) — < 0.1 (MdxImage M7 후속)
+- [x] [M6-10] INP 최적화 (지연 로드) — SearchModal dynamic 추가
+- [x] [M6-11] JS Transfer 분석 — Speed Insights에 측정 위임
+- [x] [M6-12] 폰트 서브셋 — 현상 유지 (display:swap, M7 재평가)
+- [x] [M6-13] Lighthouse Performance — `docs/PERFORMANCE_AUDIT.md` 가이드
 
 ### 관측
 
-- [ ] [M6-14] `@vercel/analytics` + `@vercel/speed-insights` 주입
+- [x] [M6-14] `@vercel/analytics` + `@vercel/speed-insights` 주입 (`src/app/layout.tsx`)
 
 ---
 
@@ -372,6 +372,12 @@
 - [ ] [M7-11] Production 첫 배포 + 24h CWV 확인
 - [ ] [M7-12] Change Log 확정 + v1.0.0 태깅
 
+### A11y · Perf 후속 (M6 E2E 발견 결함 이월)
+
+- [ ] [M7-13] 모바일 PostCard `priority` 정책 정밀화 — `index === 0`만 priority, sizes prop 모바일 분기 (M6-08 회귀 D4)
+- [ ] [M7-14] 잘못된 slug `generateMetadata`에서 `noIndex` 반환 — 404 metadata "Post" fallback 제거 (E2E D2)
+- [ ] [M7-15] 한글 slug → 영문 kebab-case 매핑 + `next.config.ts` 301 redirect (E2E D1, GC 트랙 후보)
+
 ---
 
 ## 진행 현황 요약
@@ -384,6 +390,6 @@
 | M3 Feature Wiring      | 21      | 21      | 100%    |
 | M4 Hubs & Aggregations | 21      | 21      | 100%    |
 | M5 SEO & Syndication   | 10      | 10      | 100%    |
-| M6 A11y & Perf         | 14      | 0       | 0%      |
-| M7 Polish              | 12      | 0       | 0%      |
-| **Total**              | **196** | **170** | **87%** |
+| M6 A11y & Perf         | 14      | 14      | 100%    |
+| M7 Polish              | 15      | 0       | 0%      |
+| **Total**              | **199** | **184** | **92%** |

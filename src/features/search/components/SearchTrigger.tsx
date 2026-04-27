@@ -1,12 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import type { PostSummary } from "@/shared/types";
 
 import { useSearchShortcut } from "../hooks/useSearchShortcut";
 import { SearchButton } from "./SearchButton";
-import { SearchModal } from "./SearchModal";
+
+/**
+ * SearchModal은 첫 진입 시 필요 없으므로 초기 번들에서 분리.
+ * fuse.js·framer-motion 등 무거운 의존성을 사용자가 ⌘K 또는 버튼을 누르기 전까지 지연 로드 → INP 개선.
+ */
+const SearchModal = dynamic(() => import("./SearchModal").then((mod) => ({ default: mod.SearchModal })), {
+	ssr: false
+});
 
 type SearchTriggerProps = {
 	posts: PostSummary[];
@@ -16,7 +24,7 @@ type SearchTriggerProps = {
  * Header에서 사용하는 검색 진입점 — 버튼 + 모달 + ⌘K 단축키 조립.
  *
  * 본 컴포넌트는 상태(open)와 단축키만 책임진다. 실제 UI는 `SearchButton`·`SearchModal`에 위임.
- * 다른 레이아웃에서 모달만 쓰고 싶으면 `SearchModal`을 직접 사용하면 된다 (PRD §7.4).
+ * `SearchModal`은 `next/dynamic`으로 lazy load — 초기 First Load JS에서 제외 (M6-10).
  */
 export function SearchTrigger({ posts }: SearchTriggerProps) {
 	const [open, setOpen] = useState(false);
@@ -30,7 +38,7 @@ export function SearchTrigger({ posts }: SearchTriggerProps) {
 	return (
 		<>
 			<SearchButton onClick={handleOpen} />
-			<SearchModal open={open} onOpenChange={setOpen} posts={posts} />
+			{open && <SearchModal open={open} onOpenChange={setOpen} posts={posts} />}
 		</>
 	);
 }

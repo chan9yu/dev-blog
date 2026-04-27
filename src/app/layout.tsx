@@ -1,5 +1,7 @@
 import "@/shared/styles/globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
@@ -105,6 +107,8 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					<Footer />
 					<ScrollToTop />
 				</Providers>
+				<Analytics />
+				<SpeedInsights />
 			</body>
 		</html>
 	);
