@@ -7,6 +7,121 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — M6 E2E 발견 결함 즉시 수정 (T1, 2026-04-27)
+
+- **D3 aria-modal 명시** — 모든 Radix Dialog 기반 모달에 `aria-modal="true"` prop 추가:
+  - `src/shared/components/ui/Dialog.tsx` (`DialogPrimitive.Content`) — SearchModal·일반 Dialog 사용처 일괄 적용
+  - `src/shared/components/ui/Sheet.tsx` (`SheetPrimitive.Content`) — MobileMenu Sheet 적용
+  - `src/features/lightbox/components/ImageLightbox.tsx` (`DialogPrimitive.Content`) — 라이트박스 직접 적용
+  - **Why**: WCAG 2.1 4.1.2. Radix Dialog는 inert/포커스 트랩으로 격리하지만 `aria-modal` 속성을 명시 추가하지 않아 일부 스크린리더가 모달 외부 콘텐츠를 계속 읽을 위험. ROADMAP M6-03 명시 요구사항 충족 강화.
+  - **Verify**: Playwright `dom.querySelector('[role="dialog"]').getAttribute('aria-modal')` = `"true"` 확인 (SearchModal/MobileMenu/ImageLightbox 3곳).
+
+- **D6 브랜드 title 통일** — `src/shared/config/site.ts` `siteMetadata.title`:
+  - `"chan9yu | 기술 개발 블로그"` → `"chan9yu | 프론트엔드 개발 블로그"`
+  - **Why**: RSS·manifest·OG 기본값(site.ts 사용)과 홈 page metadata(`app/page.tsx` 직접 override) 사이 브랜드 불일치. SNS 공유 시 제목 일관성 저해.
+  - **Verify**: production 빌드 결과 `.next/server/app/rss.body` `<title>chan9yu | 프론트엔드 개발 블로그</title>` 확인 + manifest.name 일치.
+
+### Documented — M7 신규 태스크 등록 (2026-04-27)
+
+- **M7-13** 모바일 PostCard priority 정책 정밀화 (E2E D4 회귀 — `priority={index < 2}`가 모바일에서 unused preload 경고)
+- **M7-14** 잘못된 slug `generateMetadata` noIndex 반환 (E2E D2 — 404 page title 누설)
+- **M7-15** 한글 slug 영문화 + 301 redirect (E2E D1 — seo.md 룰 위반, GC 트랙 후보 / contents/ 변경 동반으로 사용자 승인 필수)
+
+### Added — M6-01~13 A11y & Perf 검증·보강 (2026-04-27)
+
+**M6-01 Skip link** — 검증 완료. `src/app/layout.tsx:85-90` 이미 `<a href="#main-content">본문 바로가기</a>` + `sr-only`/`focus-visible:not-sr-only` 패턴 적용, `<main id="main-content" tabIndex={-1}>`가 포커스 수신.
+
+**M6-02 aria-label 검수** — 검증 완료. 단독 아이콘 button/Link 전수 점검:
+
+- `ScrollToTopButton` `aria-label="맨 위로 이동"` ✅
+- `SearchModal` Close `aria-label="검색 닫기"` ✅
+- `MobileMenu` Trigger `aria-label={triggerLabel}` ✅
+- `ImageLightbox` 좌·우·닫기 모두 한국어 aria-label ✅
+- `SocialLinks`: 텍스트 동반 — 아이콘 `aria-hidden` 정책 일관 ✅
+- `RecentPostsList` 뷰 토글 시 `role="status" aria-live="polite"` 알림 ✅
+
+**M6-03 모달/드로어 포커스 트랩** — 모든 오버레이가 Radix Dialog primitive 기반:
+
+- `SearchModal` → `shared/components/ui/Dialog` (Radix wrapper)
+- `MobileMenu` → `Sheet` (Radix Dialog)
+- `ImageLightbox` → `radix-ui` Dialog primitive 직접 사용 — 포커스 트랩·ESC·body scroll lock·포커스 복원·`Title`/`Description` sr-only 모두 자동
+- 추가로 `ImageLightbox`는 ArrowLeft/ArrowRight 키보드 nav `useEffect`로 직접 구현
+
+**M6-04 focus-visible 전역** — 검증 완료. `globals.css:25-29`에 `@layer base { :focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); } }`. 다크 모드는 `--color-focus-ring`이 `#818cf8`로 자동 전환.
+
+**M6-05 명암 대비 검증** — 검증 완료. `tokens.css` Light/Dark 토큰 분석:
+
+| 조합                             | Light  | Dark   | WCAG     |
+| -------------------------------- | ------ | ------ | -------- |
+| `text-primary` on `bg-default`   | ~16:1  | ~17:1  | AAA      |
+| `text-secondary` on `bg-default` | ~7.5:1 | ~12:1  | AAA      |
+| `text-tertiary` on `bg-default`  | ~5.0:1 | ~7.5:1 | AA / AAA |
+| `accent` on `bg-default`         | ~7:1   | ~7:1   | AAA      |
+| `text-disabled` on `bg-default`  | ~3.0:1 | ~4.5:1 | UI 면제  |
+
+본문 4.5:1, 대제목 3:1 모두 충족. text-disabled는 disabled 상태로 WCAG 1.4.3 면제.
+
+**M6-06 prefers-reduced-motion 3중 방어선**:
+
+- `base.css:79-88` 글로벌 `@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; ... } }` — 모든 애니메이션·트랜지션 즉시 단축
+- `animations.css:113-124, 151-156` View Transitions API + scroll-driven animation 별도 처리 (`*` selector 미포함 영역)
+- `app/providers.tsx:26` `<MotionConfig reducedMotion="user">` framer-motion 자동 비활성
+
+**M6-07 키보드 맵 검증** — 코드 점검 통과:
+
+- ⌘K/Ctrl+K → `useSearchShortcut` 활성화, `SearchTrigger`가 모달 open
+- Esc → Radix Dialog 자동 처리 (SearchModal·MobileMenu·ImageLightbox 공통)
+- ArrowLeft/ArrowRight → `ImageLightbox` `useEffect` 핸들러 (circular)
+- ArrowUp/ArrowDown → `SearchModal` 결과 리스트 순환 + 입력창 위 가드
+- Tab → focus-visible 글로벌 + skip link → main → header 순 자연 흐름
+
+**M6-08 LCP 최적화** — `next/image` priority 정책 일관:
+
+- `posts/[slug]/page.tsx:129` thumbnail `priority` ✅
+- `RecentPostsList:67`, `PostList:124` `priority={index < 2}` ✅
+- `PostCard:71-94` priority prop forward ✅
+- `next/image`는 sharp 자동 의존 (Next.js 16 빌트인). `outputFileTracingExcludes`로 lambda 사이즈 방어 (M5에 도입됨, 회귀 없음)
+
+**M6-09 CLS 방지** — 이미지 dimension 예약:
+
+- 모든 `<Image fill sizes="...">` 패턴 — 부모 wrapper의 `aspect-*` 클래스로 dimension 예약
+- 폰트 swap 안정화 — `localFont`에 `adjustFontFallback: "Arial"` 적용 (`layout.tsx:28`)
+- **잔여 위험**: `MdxImage`는 width/height 미지정 (`<img>` 직접 사용). 본문 주석에 "M4+ remark 플러그인으로 dimension 주입 시 next/image 복귀" 명시 — M7 후속 처리 권고
+
+**M6-10 INP 최적화** — 무거운 클라이언트 모듈 lazy load 전수 적용:
+
+- `LightboxProvider:11` `ImageLightbox` `dynamic({ ssr: false })` ✅
+- `CommentsSection:65-83` IntersectionObserver lazy mount + Giscus script DIY 주입 ✅
+- `SearchTrigger.tsx` (변경) — `SearchModal`을 `next/dynamic({ ssr: false })`로 분리, `{open && <SearchModal />}` 가드. 첫 진입 시 fuse.js·framer-motion·Dialog 코드 번들 제외 → 초기 First Load JS 감소.
+
+**M6-11 JS Transfer 분석** — 빌드 청크 baseline:
+
+- `.next/static/chunks` 총 1.0MB (uncompressed) / 청크 16개
+- 가장 큰 청크 222KB (vendor 통합 추정)
+- `cacheComponents`(Next 16) + Turbopack tree shake로 페이지별 자동 분할
+- 정확한 First Load JS gzip 측정은 M6-13 가이드대로 Lighthouse / M6-14 Speed Insights에 위임 (로컬 CLI 분석 도구 미도입 결정)
+
+**M6-12 폰트 서브셋** — 현상 유지 결정 (사용자 승인):
+
+- `PretendardVariable.woff2` 2.0MB / `localFont` `display: "swap"` + `preload: true` + `adjustFontFallback: "Arial"`
+- swap 전략으로 FOUT < 100ms 충족, 서브셋 교체는 M7 Polish에서 LCP 측정 후 재평가
+
+**M6-13 Lighthouse 측정 가이드** — `docs/PERFORMANCE_AUDIT.md` (신규):
+
+- 측정 환경(Chrome Incognito + Mobile Moto G Power + Slow 4G + 4x CPU throttle)
+- 필수 라우트 5종(`/`·`/posts`·`/posts/{slug}`·`/tags`·`/about`)
+- 합격 기준 (Performance >= 95, NFR-001~006 매트릭스)
+- 회귀 신호별 진단 가이드 (LCP/CLS/INP/JS Transfer)
+- M7-11 production 24h CWV 검증 절차 안내
+- @lhci/cli 도입은 M7-10 영역으로 이월
+
+**M6-14 Vercel Analytics + Speed Insights 주입**:
+
+- 의존성: `@vercel/analytics@^2.0.1` + `@vercel/speed-insights@^2.0.0` (사용자 직접 `pnpm add`, settings 권한 정책)
+- `src/app/layout.tsx` — `<Analytics />` + `<SpeedInsights />` 주입 (`</body>` 직전, `Providers` 외부). `@vercel/analytics/next`·`@vercel/speed-insights/next` Next.js 16 전용 entrypoint 사용.
+- 자동 수집: pageview·웹 비탈(LCP/CLS/INP/TTFB/FCP). Vercel 배포 환경에서만 송신, 로컬 개발은 no-op. M7-11 production 24h CWV 검증의 데이터 소스.
+- 빌드 검증: `pnpm build` 통과 (101 정적 페이지, Cache Components 정상)
+
 ### Added — M5-01~10 SEO & Syndication 인프라 (Green, 2026-04-26)
 
 **M5-01 buildMetadata 공통 헬퍼**:

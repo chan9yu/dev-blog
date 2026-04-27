@@ -1050,6 +1050,25 @@ Browser (Client)
   - 검증: Speed Insights에서 5개 지표 모두 green
 
 - [ ] **[M7-12]** Change Log 확정 및 v1.0.0 태깅
+
+#### A11y · Perf 후속 (M6 E2E 발견 결함 이월, 2026-04-27)
+
+- [ ] **[M7-13]** 모바일 `PostCard.priority` 정책 보강 -- 모바일은 `index === 0`만 priority, `sizes` prop 분기
+  - 대응: NFR-001 (LCP), M6-08 회귀
+  - 검증: `console.warn` "preloaded but not used" 0건 (375px viewport 홈)
+  - 발견: 2026-04-27 E2E 결함 D4
+
+- [ ] **[M7-14]** 잘못된 slug `generateMetadata` `noIndex` 반환 -- 404 metadata "Post" fallback 제거
+  - 대응: SEO 인덱싱 위생
+  - 검증: `/posts/__nonexistent` 응답의 `<title>` = "404" + `robots noindex,nofollow`
+  - 발견: 2026-04-27 E2E 결함 D2
+
+- [ ] **[M7-15]** 한글 slug → 영문 kebab-case 매핑 + `next.config.ts` 301 redirect (GC 트랙 후보)
+  - 대응: `.claude/rules/seo.md` "한글 slug 금지"
+  - 작업: `contents/posts/*/index.mdx` frontmatter `series.slug`·`tags` 영문화 + 매핑 함수 + redirects
+  - 검증: `/series/항해...` → `/series/hanghae-plus-frontend-6th` 301
+  - 발견: 2026-04-27 E2E 결함 D1
+  - 비고: contents/ submodule 변경 동반 — autonomy.md상 사용자 명시 승인 필수
   - 대응: 전체
   - 검증: CHANGELOG.md 또는 GitHub Release 생성
 

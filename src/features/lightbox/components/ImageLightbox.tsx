@@ -48,7 +48,10 @@ export function ImageLightbox({ images, index, onNext, onPrev, onClose }: ImageL
 		<DialogPrimitive.Root open onOpenChange={handleOpenChange}>
 			<DialogPrimitive.Portal>
 				<DialogPrimitive.Overlay className="state-open:animate-in state-open:fade-in-0 fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" />
-				<DialogPrimitive.Content className="state-open:animate-in state-open:fade-in-0 fixed inset-0 z-50 flex items-center justify-center p-4 outline-none">
+				<DialogPrimitive.Content
+					aria-modal="true"
+					className="state-open:animate-in state-open:fade-in-0 fixed inset-0 z-50 flex items-center justify-center p-4 outline-none"
+				>
 					<DialogPrimitive.Title className="sr-only">이미지 확대</DialogPrimitive.Title>
 					<DialogPrimitive.Description className="sr-only">{current.alt}</DialogPrimitive.Description>
 					<div className="h-lightbox w-lightbox relative">
