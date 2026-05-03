@@ -60,3 +60,9 @@ _workspace/
 # mcp
 .playwright-mcp
 .serena
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
