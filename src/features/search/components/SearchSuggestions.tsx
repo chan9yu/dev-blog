@@ -29,14 +29,7 @@ type SearchSuggestionsProps = {
 	onSelect: () => void;
 };
 
-/**
- * 빈 검색창에서 보여주는 추천 영역 (US-023).
- *
- * - 인기 태그: 전체 포스트의 태그 빈도 상위 5개
- * - 최근 포스트: 호출 측 정렬 계약에 의존하지 않고 컴포넌트 내부에서 date desc 정렬 후 상위 3개
- *
- * 모든 항목은 a 링크로 구성 — SearchModal의 ArrowDown/Up 키보드 내비게이션에 자연스럽게 편입된다.
- */
+// 호출자 정렬 계약에 의존하지 않도록 자체 date desc 정렬 — 모든 항목은 a 링크로 SearchModal 키보드 내비에 편입.
 export function SearchSuggestions({ posts, onSelect }: SearchSuggestionsProps) {
 	const trendingTags = computeTrendingTags(posts, TRENDING_TAGS_LIMIT);
 	const recentPosts = [...posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, RECENT_POSTS_LIMIT);

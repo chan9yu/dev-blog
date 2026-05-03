@@ -4,12 +4,7 @@ import { Moon, Sun } from "lucide-react";
 
 import { useTheme } from "../hooks/useTheme";
 
-/**
- * light/dark 토글 버튼 — ADR-011.
- *
- * 테마 상태·전환 로직은 `useTheme` wrapper 훅에 위임. 이 컴포넌트는 프레젠테이션만 담당.
- * hydration 이전(`mounted: false`)에는 opacity-0 placeholder로 FOUC 차단 + 레이아웃 점프 방지.
- */
+// hydration 이전(mounted=false): opacity-0 placeholder로 FOUC 차단 + 레이아웃 점프 방지.
 export function ThemeSwitcher() {
 	const { resolvedTheme, toggleTheme, mounted } = useTheme();
 	const isDark = resolvedTheme === "dark";

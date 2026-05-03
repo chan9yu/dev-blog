@@ -14,7 +14,7 @@
 export function slugify(text: string): string {
 	return text
 		.toLowerCase()
-		.replace(/\s/g, "-") // 각 공백을 개별 하이픈으로 변환 (github-slugger 동작과 일치)
-		.replace(/[^a-z0-9가-힣-]/g, "") // 허용 문자 외 제거 (공백은 이미 변환됨)
-		.replace(/^-+|-+$/g, ""); // 앞뒤 연속 하이픈 전체 제거
+		.replace(/\s/g, "-")
+		.replace(/[^a-z0-9가-힣-]/g, "")
+		.replace(/^-+|-+$/g, "");
 }

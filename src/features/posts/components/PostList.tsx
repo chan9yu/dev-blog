@@ -38,21 +38,8 @@ type PostListProps = {
 	posts: PostSummary[];
 };
 
-/**
- * 레거시 FilteredBlogPosts 디자인:
- * - 상단 우측 뷰 토글(List/Grid, default list)
- * - list: flex flex-col gap-4 sm:gap-6
- * - grid: grid gap-6 sm:grid-cols-2 lg:grid-cols-3
- * - IntersectionObserver 무한 스크롤 (PAGE_SIZE 12)
- *
- * ## requestAnimationFrame 전략
- * IntersectionObserver 콜백에서 직접 setState하면 레이아웃 스래싱이 발생할 수 있다.
- * rAF로 상태 업데이트를 다음 paint 사이클로 지연해 렌더링 성능을 개선한다.
- *
- * ## framer-motion AnimatePresence
- * mode="popLayout": 뷰 전환(list↔grid) 시 퇴장 카드가 레이아웃을 즉시 해제해
- * 진입 카드가 자연스럽게 자리를 잡는다.
- */
+// rAF로 IntersectionObserver setState를 다음 paint 사이클로 지연 — 레이아웃 스래싱 방지.
+// AnimatePresence mode="popLayout": 뷰 전환 시 퇴장 카드가 레이아웃을 즉시 해제해 진입 카드 정렬 안정.
 export function PostList({ posts }: PostListProps) {
 	const { view } = useViewMode();
 	const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
@@ -69,7 +56,6 @@ export function PostList({ posts }: PostListProps) {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0]?.isIntersecting) {
-					// rAF로 paint 사이클에 맞춰 상태 업데이트 → 렌더링 스래싱 방지
 					if (rafRef.current !== undefined) {
 						cancelAnimationFrame(rafRef.current);
 					}

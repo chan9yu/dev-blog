@@ -18,17 +18,10 @@ const FOOTER_LINKS: ReadonlyArray<FooterLink> = [
 	{ href: "mailto:dev.cgyeo@gmail.com", label: "Email", external: false }
 ];
 
-// 빌드 시점에 연도를 고정한다. Next.js 16 Server Component 프리렌더 중
-// new Date() 호출은 허용되지 않으므로(next/prerender-current-time 에러),
-// 모듈 초기화 시점에 평가해 SSG 빌드 연도를 사용한다.
+// Next.js 16 Server Component 프리렌더는 new Date() 호출을 차단(next/prerender-current-time)
+// → 모듈 초기화 시점에 평가하여 SSG 빌드 연도 고정.
 const BUILD_YEAR = new Date().getFullYear();
 
-/**
- * 레거시 SiteFooter 디자인 참조:
- * - border-t + mt-24 pt-12
- * - 2-column: 브랜드(좌) · 링크(우)
- * - 하단 copyright 중앙 정렬 + border-t
- */
 export function Footer() {
 	return (
 		<footer className="border-border-subtle mt-24 border-t pt-12 pb-8">

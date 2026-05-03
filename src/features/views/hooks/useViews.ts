@@ -33,19 +33,8 @@ type UseViewsState = {
 
 const INITIAL_STATE: UseViewsState = { views: null, failed: false };
 
-/**
- * 포스트 조회수를 KV에서 가져오고, 마운트 시 1회 +1 POST. 세션당 dedup.
- *
- * - `views: null, failed: false` — 초기 로딩 (placeholder)
- * - `views: number, failed: false` — 성공
- * - `views: null, failed: true` — GET 실패 (UI는 `— 회`)
- *
- * POST는 best-effort이며 실패해도 GET은 시도한다. UI 블록 금지.
- *
- * **슬러그 가정**: Next.js App Router에서 `/posts/[slug]` 페이지 세그먼트는 slug 변경 시
- * 언마운트/재마운트되므로 ViewCounter 인스턴스 생명주기 동안 slug는 불변이라 가정한다.
- * 이 가정이 깨지면 호출자는 `<ViewCounter key={slug} slug={slug} />`로 강제 remount하면 된다.
- */
+// 마운트 시 1회 POST +1 → GET fetch. 세션당 dedup.
+// slug 가정: ViewCounter 생명주기 동안 불변 — 같은 인스턴스에서 slug가 바뀌면 호출자가 `key={slug}`로 강제 remount.
 export function useViews(slug: string) {
 	const [state, setState] = useState<UseViewsState>(INITIAL_STATE);
 

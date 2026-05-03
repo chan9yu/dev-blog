@@ -99,7 +99,6 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 					/>
 				</div>
 			) : variant === "grid" ? (
-				/* 썸네일 없는 grid 카드의 높이 통일용 플레이스홀더 */
 				<div className={cn(cardImageWrapper({ variant }), "bg-muted")} aria-hidden />
 			) : null}
 

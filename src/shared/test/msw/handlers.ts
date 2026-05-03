@@ -1,16 +1,5 @@
-/**
- * MSW 기본 핸들러 — `/api/views` 계약 **PRD §7.5**의 machine-readable reference.
- *
- * - `GET /api/views?slug=xxx` → `{ views: number }`
- * - `POST /api/views { slug }` → 204 (no body)
- * - 유효하지 않은 slug는 400
- *
- * 이 파일은 "테스트 더블"을 넘어 PRD 계약의 단일 진실 공급원 역할을 겸한다.
- * Route Handler(`src/app/api/views/route.ts`) 수정 시 **여기서 벗어나면 안 된다**.
- * slug 검증은 서버와 동일하게 `validateSlug`를 재사용해 drift를 차단.
- *
- * 테스트별 특수 시나리오는 `server.use(...)`로 오버라이드.
- */
+// `/api/views` 계약(PRD §7.5)의 machine-readable reference — Route Handler 수정 시 이 파일도 동기화 필수.
+// validateSlug를 서버와 동일하게 재사용해 drift 차단.
 
 import { http, HttpResponse } from "msw";
 
@@ -52,12 +41,10 @@ export const viewsHandlers = [
 
 export const handlers = [...viewsHandlers];
 
-/** 테스트에서 특정 slug의 초기 조회수를 지정. */
 export function seedMockView(slug: string, count: number) {
 	viewsStore.set(slug, count);
 }
 
-/** 테스트 간 store 격리용 — `setup.ts`의 afterEach에서 단일 호출. */
 export function resetMockViews() {
 	viewsStore.clear();
 }

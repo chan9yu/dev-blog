@@ -8,14 +8,6 @@ type ViewCounterProps = {
 	slug: string;
 };
 
-/**
- * 포스트 조회수 표시. 마운트 시 `useViews(slug)`가 POST +1 → GET 파이프라인을 실행.
- *
- * 상태별 렌더:
- * - 로딩: `조회수 불러오는 중` aria-label + `animate-pulse` 스켈레톤
- * - 성공: `조회수 N회` aria-label + `toLocaleString("ko-KR")` 포맷
- * - 실패: `조회수 정보 없음` aria-label + `— 회` 문구
- */
 export function ViewCounter({ slug }: ViewCounterProps) {
 	const { views, failed } = useViews(slug);
 

@@ -15,11 +15,7 @@ type SeriesDetailPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
-/**
- * 렌더 패스 내에서 단일 시리즈 lookup을 한 번만 계산한다.
- * generateMetadata와 SeriesDetailPage가 같은 렌더 트리 내에서 이 cache를 공유.
- * (generateStaticParams는 렌더 트리 외부 — 별도 호출)
- */
+// generateMetadata + Page가 동일 렌더 트리에서 lookup 공유 (generateStaticParams는 별도 트리).
 const findSeriesBySlug = cache((slug: string) => getSeriesDetail(getPublicPosts(), slug));
 
 export async function generateStaticParams() {
@@ -38,14 +34,7 @@ export async function generateMetadata({ params }: SeriesDetailPageProps): Promi
 	});
 }
 
-/**
- * 레거시 /series/[slug] 디자인 참조:
- * - header mb-12: h1 text-4xl sm:text-5xl + 메타(BookOpen + 편수) + hr
- * - 본문: 번호 원 뱃지 + 제목·설명·날짜 카드 (seriesOrder 오름차순, getAllSeries 내부 정렬 완료)
- *
- * series slug는 한글·특수문자를 포함할 수 있어 normalizeSlug 대신 직접 문자열 lookup 사용.
- * generateStaticParams로 생성된 경로 외에는 Next.js SSG가 자연스럽게 404 처리.
- */
+// series slug는 한글 허용이라 normalizeSlug 대신 직접 lookup — generateStaticParams 외 경로는 Next.js SSG가 404 처리.
 export default async function SeriesDetailPage({ params }: SeriesDetailPageProps) {
 	const { slug } = await params;
 	const series = findSeriesBySlug(decodeURIComponent(slug));

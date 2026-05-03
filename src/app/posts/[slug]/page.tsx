@@ -71,7 +71,6 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	if (!detail) notFound();
 	const summary = detail;
 
-	// 전체 포스트를 변수로 캐싱 — find* 함수들과 getSeriesDetail이 같은 입력을 공유한다.
 	const allPosts = getPublicPosts();
 	const adjacent = findAdjacentPosts(allPosts, summary.slug);
 	const related = findRelatedPostsByTags(allPosts, summary);

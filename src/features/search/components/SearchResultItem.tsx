@@ -38,14 +38,7 @@ function findMatchIndices(
 	return match?.indices ?? [];
 }
 
-/**
- * Fuse match indices 기반 하이라이트 렌더.
- *
- * cursor는 지금까지 chunks에 담긴 끝 오프셋.
- * - 완전 중첩(sliceEnd <= cursor)은 건너뜀
- * - 부분 중첩은 effectiveStart = max(start, cursor)로 잘라 새 mark 생성
- * - 이로써 직전 mark 내용을 수정하지 않고도 텍스트 소실 없이 병합 효과.
- */
+// 중첩된 Fuse match indices를 cursor 기반으로 처리 — 완전 중첩은 skip, 부분 중첩은 effectiveStart=max(start,cursor)로 새 mark.
 function renderHighlighted(source: string, indices: ReadonlyArray<readonly [number, number]>): ReactNode {
 	if (indices.length === 0) return source;
 

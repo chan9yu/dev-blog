@@ -66,16 +66,8 @@ const MDX_COMPONENTS = {
 	Callout
 } as const;
 
-/**
- * MDX 렌더러 (M2-19~21, ADR-001).
- * next-mdx-remote/rsc의 MDXRemote로 MDX를 서버에서 렌더하며,
- * Shiki 듀얼 테마(github-light/github-dark) + remarkGfm + remarkBreaks 파이프라인을 주입한다.
- *
- * - rehypeShikiFromHighlighter: CSS 변수 방식 듀얼 테마(defaultColor: false)로
- *   span에 --shiki-light / --shiki-dark 를 주입. 색상 표시는 shiki.css가 담당.
- * - remarkGfm: GFM 테이블·체크박스·취소선 지원.
- * - remarkBreaks: 개행 문자를 <br>로 변환 (한국어 블로그 특성).
- */
+// Shiki: defaultColor=false로 CSS 변수(--shiki-light/--shiki-dark) 주입 → 실제 색상은 shiki.css가 토글.
+// remarkBreaks: 한국어 블로그 특성상 개행을 <br>로 보존.
 export async function CustomMDX({ source }: CustomMDXProps) {
 	const highlighter = await getShikiHighlighter();
 

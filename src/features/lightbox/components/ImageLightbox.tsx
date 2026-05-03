@@ -15,13 +15,8 @@ type ImageLightboxProps = {
 	onClose: () => void;
 };
 
-/**
- * 이미지 확대 오버레이 — ROADMAP M3-16.
- *
- * Radix Dialog primitive가 포커스 트랩·ESC·포커스 복원·body scroll lock을 제공.
- * 다중 이미지(`images.length > 1`) 시 좌우 화살표 + ArrowLeft/ArrowRight 키보드 nav (circular).
- * `next/image` fill + unoptimized + object-contain으로 원본 비율 보존 + 최적화 파이프라인 정합.
- */
+// Radix Dialog primitive 위임: 포커스 트랩·ESC·포커스 복원·body scroll lock.
+// `unoptimized` + `object-contain`: 원본 비율 보존 + Next.js 이미지 최적화 파이프라인 우회.
 export function ImageLightbox({ images, index, onNext, onPrev, onClose }: ImageLightboxProps) {
 	const current = images[index];
 	const hasMultiple = images.length > 1;

@@ -35,11 +35,6 @@ export async function generateMetadata({ params }: TagDetailPageProps): Promise<
 	});
 }
 
-/**
- * 레거시 /tags/[tag] 디자인:
- * - header mb-12: TagIcon accent size-8 + #태그명 h1 + "총 N개의 글" + hr
- * - FilteredBlogPosts defaultView="grid" 대신 우리 PostList(뷰 토글) 재사용
- */
 export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const { tag } = await params;
 

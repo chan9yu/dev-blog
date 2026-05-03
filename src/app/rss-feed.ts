@@ -41,15 +41,7 @@ function buildItemXml(siteUrl: string, authorName: string, authorEmail: string, 
 	return lines.join("\n");
 }
 
-/**
- * RSS 2.0 XML 빌더.
- *
- * - 최대 50편 (RSS_ITEM_LIMIT)
- * - private 제외 책임은 호출자 (`getPublicPosts()` 사용)
- * - guid는 영구 링크 (포스트 상세 URL)
- * - author는 RFC 4287 형식 `email (name)`
- * - pubDate는 RFC 822 (Date.toUTCString)
- */
+// author는 RFC 4287 형식 `email (name)`, pubDate는 RFC 822 — RSS 2.0 표준 호환.
 export function buildRssFeed(input: BuildRssFeedInput): string {
 	const { siteUrl, siteTitle, siteDescription, authorName, authorEmail, locale, posts } = input;
 	const language = locale.replace("_", "-");

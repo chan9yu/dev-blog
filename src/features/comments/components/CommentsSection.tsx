@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 
 type CommentsSectionProps = {
 	slug: string;
-	/** frontmatter.private 값. true면 Giscus 로드 금지 (개인 포스트 노출 방지). */
 	isPrivate?: boolean;
 };
 
@@ -19,10 +18,6 @@ type GiscusConfig = {
 const GISCUS_ORIGIN = "https://giscus.app";
 const GISCUS_SCRIPT_SRC = `${GISCUS_ORIGIN}/client.js`;
 
-/**
- * Giscus 환경변수 4종을 읽고 누락 여부를 반환. `NEXT_PUBLIC_` 접두어 덕에 클라이언트 번들에 인라인.
- * `as const` 타입 assertion으로 Next.js 빌드 타임 string literal 치환과 호환.
- */
 function readGiscusConfig(): GiscusConfig | null {
 	const repo = process.env.NEXT_PUBLIC_GISCUS_REPO;
 	const repoId = process.env.NEXT_PUBLIC_GISCUS_REPO_ID;
@@ -39,25 +34,14 @@ function resolveGiscusTheme(resolvedTheme: string | undefined) {
 	return resolvedTheme === "dark" ? "dark" : "light";
 }
 
-/**
- * CommentsSection — Giscus(GitHub Discussions) 댓글. ROADMAP M3-12.
- *
- * 라이프사이클:
- * 1. `isPrivate=true` → 비렌더 (개인 포스트)
- * 2. 환경변수 누락 → placeholder + 설정 안내
- * 3. IntersectionObserver 진입 → `giscus.app/client.js` script 주입
- * 4. 테마 변경 → `postMessage` 전파로 iframe 동기화
- * 5. 언마운트 → script 요소 정리
- *
- * **DIY 로더**: `@giscus/react` 미설치 상태라 공식 스크립트를 직접 주입하는 경량 wrapper로 동등 기능 구현.
- */
+// `@giscus/react` 미설치 — 공식 `giscus.app/client.js` script 직접 주입하는 DIY 로더 (경량 wrapper).
+// IntersectionObserver lazy-mount + 테마 변경 시 postMessage로 iframe 테마 동기화.
 export function CommentsSection({ slug, isPrivate = false }: CommentsSectionProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [shouldLoad, setShouldLoad] = useState(false);
 	const { resolvedTheme } = useTheme();
 	const config = readGiscusConfig();
 
-	// IntersectionObserver 기반 lazy-mount — private 여부는 effect 밖에서 처리.
 	useEffect(() => {
 		const container = containerRef.current;
 		if (!container) return;
@@ -79,7 +63,6 @@ export function CommentsSection({ slug, isPrivate = false }: CommentsSectionProp
 		};
 	}, []);
 
-	// Giscus script 주입 — intersection 후 config 확보 시점에만 실행.
 	useEffect(() => {
 		if (!shouldLoad || !config) return;
 		const container = containerRef.current;
@@ -107,14 +90,12 @@ export function CommentsSection({ slug, isPrivate = false }: CommentsSectionProp
 
 		return () => {
 			if (script.parentNode) script.parentNode.removeChild(script);
-			// 스크립트 실행으로 생성된 iframe도 정리.
 			container.querySelector("iframe.giscus-frame")?.remove();
 		};
-		// `resolvedTheme`은 postMessage 전파 effect가 처리하므로 재주입 회피를 위해 deps에서 제외.
+		// resolvedTheme은 아래 postMessage effect에서 처리하므로 재주입 회피를 위해 deps 제외.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [shouldLoad, slug, config]);
 
-	// 테마 변경 시 Giscus iframe에 postMessage — 스크립트 재주입 없이 테마만 전파.
 	useEffect(() => {
 		if (!shouldLoad || !config) return;
 		const iframe = containerRef.current?.querySelector<HTMLIFrameElement>("iframe.giscus-frame");

@@ -14,17 +14,6 @@ export const metadata: Metadata = buildMetadata({
 	path: "/series"
 });
 
-/**
- * 레거시 /series 디자인 참조:
- * - 헤더: 시리즈 h1 + subtitle
- * - 그리드 sm:grid-cols-2 lg:grid-cols-3
- * - 카드: rounded-xl border p-6
- *   - BookOpen 아이콘(size-6) bg-muted size-12 rounded-lg
- *   - 시리즈명 text-lg font-bold
- *   - "총 N개의 포스트"
- *   - 상위 3개 포스트 미리보기 (번호 badge + 제목 line-clamp-1)
- *   - +N개 더보기 (3 초과 시)
- */
 export default function SeriesHubPage() {
 	const series = getAllSeries(getPublicPosts());
 

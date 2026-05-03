@@ -23,12 +23,7 @@ type LightboxProviderProps = {
 	children: ReactNode;
 };
 
-/**
- * 라이트박스 Context Provider — ROADMAP M3-16.
- *
- * 상태 모델: `{ images: Array, index }`. `images.length === 0`이면 닫힘 상태.
- * `open(single)`은 `openMany([single], 0)`의 sugar. useCallback/useMemo는 React 19 컴파일러 위임.
- */
+// 상태 모델: `images.length === 0`이면 닫힘 상태. `open(single)`은 `openMany([single], 0)` sugar.
 export function LightboxProvider({ children }: LightboxProviderProps) {
 	const [state, setState] = useState<LightboxState>(INITIAL_STATE);
 

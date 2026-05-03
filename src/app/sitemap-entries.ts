@@ -10,21 +10,7 @@ type BuildSitemapEntriesInput = {
 	series: Series[];
 };
 
-/**
- * Sitemap entry 빌더 — `app/sitemap.ts` 의 default export가 services를 모아 호출.
- *
- * priority/changefreq는 PRD_TECHNICAL §10.4 표를 그대로 반영.
- *  - /              1.0 daily
- *  - /posts         0.9 daily
- *  - /posts/[slug]  0.8 weekly
- *  - /series        0.7 weekly
- *  - /series/[slug] 0.6 weekly
- *  - /tags          0.6 weekly
- *  - /tags/[tag]    0.5 weekly
- *  - /about         0.5 monthly
- *
- * Private 포스트 제외 책임은 호출자(`getPublicPosts()` 사용)에 있다.
- */
+// priority/changefreq는 PRD_TECHNICAL §10.4 매핑 — 변경 시 PRD와 동기화 필수.
 export function buildSitemapEntries(input: BuildSitemapEntriesInput): MetadataRoute.Sitemap {
 	const now = new Date();
 	const { siteUrl, publicPosts, tags, series } = input;

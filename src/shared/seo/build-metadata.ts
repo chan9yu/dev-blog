@@ -18,21 +18,9 @@ function resolveOgImage(input: BuildMetadataInput): string {
 	return `/og?title=${encodeURIComponent(input.title)}`;
 }
 
-/**
- * 모든 라우트의 generateMetadata에서 호출하는 표준 Metadata 빌더.
- *
- * - title/description/canonical/og/twitter 일관 적용
- * - image 미지정 시 동적 OG 라우트(/og?title=...)로 fallback
- * - type='article' 분기를 처음부터 union으로 빌드 (`OpenGraphArticle` 직렬화 안전)
- * - noIndex=true면 robots noindex/nofollow (Private 포스트 정책)
- *
- * metadataBase는 layout.tsx 루트에서 1회 설정. 여기 path는 루트 기준 상대 경로.
- *
- * **OpenGraph union 안전성**: Next.js 16의 `Metadata["openGraph"]`는 type별 union이라
- * 객체 mutation(`og.publishedTime = ...`) 방식은 serializer가 type 분기를 잃을 수 있다.
- * 처음부터 article/website 두 갈래로 객체를 build해야 `<meta property="article:published_time">`
- * 출력이 보장된다.
- */
+// Next.js 16 `Metadata["openGraph"]`는 type별 union — 객체 mutation으로 publishedTime을 추가하면
+// serializer가 article 분기를 잃어 `<meta property="article:published_time">`가 누락된다.
+// 처음부터 article/website 두 갈래로 build해야 안전.
 export function buildMetadata(input: BuildMetadataInput): Metadata {
 	const ogImage = resolveOgImage(input);
 	const ogCommon = {
@@ -77,14 +65,7 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
 	return meta;
 }
 
-/**
- * 동적 라우트의 잘못된 slug fallback metadata.
- *
- * - title은 검색 결과 스니펫 위생을 위해 "404 Not Found"로 명시
- * - robots noindex/nofollow로 SEO 인덱싱 차단 (E2E D2)
- *
- * canonical/og는 의도적으로 생략 — 존재하지 않는 페이지에 정규 URL을 부여하지 않는다.
- */
+// 동적 라우트의 잘못된 slug fallback. canonical/og 의도적 생략 — 존재하지 않는 페이지에 정규 URL 부여 금지.
 export const NOT_FOUND_METADATA: Metadata = {
 	title: "404 Not Found",
 	description: "요청하신 페이지를 찾을 수 없습니다.",

@@ -15,14 +15,6 @@ export const metadata: Metadata = buildMetadata({
 	path: "/tags"
 });
 
-/**
- * 레거시 /tags 디자인 참조:
- * - 헤더: h1 + subtitle
- * - 그리드 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
- * - 카드 rounded-xl border p-6:
- *   - 좌측: TagIcon accent + 태그명 + "N개의 포스트"
- *   - 우측: ChevronRight (hover translate-x-1)
- */
 export default function TagsHubPage() {
 	const tags = getTagCounts(getPublicPosts());
 

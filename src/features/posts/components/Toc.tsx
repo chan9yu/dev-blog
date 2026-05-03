@@ -29,7 +29,6 @@ const tocLink = cva(
 	}
 );
 
-// Portal guard: SSR=false, CSR=true — useSyncExternalStore로 hydration-safe하게 구현
 function subscribe() {
 	return () => {};
 }
@@ -40,24 +39,17 @@ function getServerSnapshot() {
 	return false;
 }
 
-// MDX 작성 레벨 기준 들여쓰기: # → 0, ## → 한 단계, ### → 두 단계
+// MDX 작성 레벨 기준 들여쓰기 (CustomMDX의 +1 시프트 전 원본 레벨).
 const LEVEL_PADDING_CLASS: Record<1 | 2 | 3, string> = {
 	1: "pl-0",
 	2: "pl-3",
 	3: "pl-6"
 };
 
-/**
- * 레거시 TableOfContents + BlogLayout(mobile) 디자인 참조:
- * - Desktop: nav space-y-4 / h2 uppercase text-xs 목차 / ul max-h overflow-y-auto
- * - Mobile: createPortal → fixed FAB(left-6 bottom-6) + bottom-sheet 드로어(AnimatePresence)
- * - 링크: 레벨별 pl-0/pl-3/pl-6, hover:translate-x-1, active text-accent font-semibold
- * - 클릭 시 HEADER_OFFSET_PX(120) offset 이동 + hash 업데이트 + mobile sheet 닫기
- */
 export function Toc({ items }: TocProps) {
 	const [activeId, setActiveId] = useState<string | null>(null);
 	const [isMobileOpen, setIsMobileOpen] = useState(false);
-	// Portal guard: SSR=false, CSR=true (useSyncExternalStore로 hydration-safe 구현)
+	// createPortal hydration-safe 가드 — SSR에서는 렌더 금지.
 	const mounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
 	const mobileTitleId = useId();
 
@@ -100,7 +92,6 @@ export function Toc({ items }: TocProps) {
 		};
 	}, [items]);
 
-	// ESC 키로 모바일 드로어 닫기 (a11y)
 	useEffect(() => {
 		if (!isMobileOpen) return;
 
@@ -129,7 +120,6 @@ export function Toc({ items }: TocProps) {
 		const offsetTop = element.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX;
 		window.scrollTo({ top: offsetTop, behavior: "smooth" });
 		window.history.replaceState(null, "", `#${id}`);
-		// 모바일 드로어: TOC 항목 클릭 시 자동 닫기
 		setIsMobileOpen(false);
 	};
 
@@ -158,17 +148,15 @@ export function Toc({ items }: TocProps) {
 
 	return (
 		<>
-			{/* Desktop TOC — aside(hidden lg:block) 내부에서 렌더 */}
 			<nav aria-label="목차" className="space-y-4">
 				<h2 className="text-muted-foreground text-xs font-bold tracking-wider uppercase">목차</h2>
 				<ul className="max-h-toc space-y-2.5 overflow-y-auto pr-2">{tocItems}</ul>
 			</nav>
 
-			{/* Mobile TOC — createPortal로 body에 직접 마운트 (aside hidden 영향 없음) */}
 			{mounted &&
 				createPortal(
 					<>
-						{/* FAB 버튼: ScrollToTop(right-8 bottom-8)과 겹치지 않도록 left 배치 */}
+						{/* FAB: ScrollToTop(right)과 겹치지 않도록 left 배치. */}
 						<button
 							type="button"
 							onClick={() => setIsMobileOpen(true)}
@@ -180,11 +168,9 @@ export function Toc({ items }: TocProps) {
 							<AlignLeft className="size-5" aria-hidden />
 						</button>
 
-						{/* Bottom Sheet 드로어 */}
 						<AnimatePresence>
 							{isMobileOpen && (
 								<>
-									{/* 배경 오버레이 */}
 									<motion.div
 										key="toc-backdrop"
 										initial={{ opacity: 0 }}
@@ -196,7 +182,6 @@ export function Toc({ items }: TocProps) {
 										aria-hidden="true"
 									/>
 
-									{/* Bottom Sheet */}
 									<motion.div
 										key="toc-sheet"
 										id="mobile-toc-sheet"
@@ -209,7 +194,6 @@ export function Toc({ items }: TocProps) {
 										transition={{ type: "spring", damping: 30, stiffness: 300 }}
 										className="bg-background max-h-mobile-sheet fixed inset-x-0 bottom-0 z-50 overflow-y-auto rounded-t-2xl shadow-2xl lg:hidden"
 									>
-										{/* 헤더 */}
 										<div className="border-border-subtle bg-background/80 sticky top-0 z-10 flex items-center justify-between border-b px-6 py-4 backdrop-blur-sm">
 											<h2 id={mobileTitleId} className="text-lg font-bold">
 												목차
@@ -224,7 +208,6 @@ export function Toc({ items }: TocProps) {
 											</button>
 										</div>
 
-										{/* TOC 목록 */}
 										<nav aria-label="목차 (모바일)" className="p-6">
 											<ul className="space-y-2.5">{tocItems}</ul>
 										</nav>

@@ -15,15 +15,8 @@ type GetAllPostsOptions = {
 	includePrivate?: boolean;
 };
 
-/**
- * contents/posts/ 디렉토리를 스캔해 PostSummary[] 를 반환한다 (M2-13 / M3-21).
- *
- * - @ 로 시작하는 디렉토리(@template 등)는 건너뛴다.
- * - frontmatter 파싱·검증 오류가 있는 포스트는 기본적으로 건너뛴다 (dev 관용).
- * - **`STRICT_FRONTMATTER=1` 환경변수 설정 시** 첫 번째 오류에서 throw — CI/빌드에서 스키마 위반 즉시 실패.
- * - 기본적으로 private: false 포스트만 반환한다.
- * - 결과는 날짜 내림차순 정렬.
- */
+// frontmatter 검증 오류는 기본적으로 건너뛰지만, `STRICT_FRONTMATTER=1`이면 첫 오류에서 throw — CI 빌드에서 스키마 위반 차단.
+// `@` 로 시작하는 디렉토리(@template 등)는 스캔 대상에서 제외.
 export function getAllPosts(options: GetAllPostsOptions = {}): PostSummary[] {
 	const { includePrivate = false } = options;
 	const strict = process.env.STRICT_FRONTMATTER === "1";
