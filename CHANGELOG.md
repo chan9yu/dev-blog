@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-03
+
+**🎉 첫 Production 배포** — M0~M7 전 마일스톤 완료. main 브랜치 머지로 Vercel 자동 배포 + v1.0.0 태깅.
+
+### M7 마무리
+
+- **[M7-09]** Vercel 환경변수 전 환경(dev/preview/prod) 매트릭스 완성 — `NEXT_PUBLIC_SITE_URL`, GISCUS 4종, KV 5종, `GITHUB_REPO_CLONE_TOKEN`.
+- **[M7-10]** CI/CD 파이프라인 확정 — GitHub Actions(`ci.yaml`) + Vercel auto deploy. PR 생성 시 CI 녹색 + Preview URL, main 머지 시 Production 배포.
+- **[M7-11]** Production 첫 배포 + 24h CWV 모니터링 — Speed Insights 5개 지표(LCP·INP·CLS·FCP·TTFB) green 확인.
+- **[M7-12]** Change Log 확정 + v1.0.0 태깅.
+
+### 마일스톤 누적 결과
+
+- **M0**: Foundation (디자인 토큰, 레이아웃 7종, shadcn 설치)
+- **M1**: Page-First Skeleton (홈·posts·tags·series·about 더미 fixture 완성)
+- **M2**: MDX Pipeline (frontmatter 스키마, Shiki 듀얼 테마, TOC, CommonMark §6.4 우회)
+- **M3**: 검색·조회수·댓글·라이트박스·테마 (Fuse.js, Vercel KV, Giscus DIY 로더, Radix Dialog 라이트박스)
+- **M4**: SSG 데이터 레이어 (services 분리, ADR-007 빌드 안전 KV fallback, 시리즈/태그 분리)
+- **M5**: SEO·Syndication (sitemap, RSS, JSON-LD 4종, OG Edge Route)
+- **M6**: A11y & Performance (WCAG 2.1 AA, axe 0 critical, Vitals 통과)
+- **M7**: Polish (E2E Playwright 5종, P2 스토리, 한글 slug 영역별 분리 정책, Production 배포)
+
 ### Added — M7 Polish 자율 영역 5건 (2026-04-27)
 
 **M7-13 모바일 PostCard priority 정밀화** (E2E D4)

@@ -367,10 +367,10 @@
 
 ### Production
 
-- [ ] [M7-09] Vercel 환경변수 전 환경 설정
-- [ ] [M7-10] CI/CD 파이프라인 확정
-- [ ] [M7-11] Production 첫 배포 + 24h CWV 확인
-- [ ] [M7-12] Change Log 확정 + v1.0.0 태깅
+- [x] [M7-09] Vercel 환경변수 전 환경 설정
+- [x] [M7-10] CI/CD 파이프라인 확정
+- [x] [M7-11] Production 첫 배포 + 24h CWV 확인
+- [x] [M7-12] Change Log 확정 + v1.0.0 태깅
 
 ### A11y · Perf 후속 (M6 E2E 발견 결함 이월)
 
