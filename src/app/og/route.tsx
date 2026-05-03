@@ -8,7 +8,7 @@ const MAX_TAG = 32;
 // Next.js 16 `cacheComponents` 활성 시 `runtime = "edge"`와 충돌 → 기본 node runtime 사용.
 // satori는 woff2 미지원이라 한글 폰트 임베딩이 미적용 — 영문 fallback으로 동작.
 
-function truncate(input: string, max: number): string {
+function truncate(input: string, max: number) {
 	if (input.length <= max) return input;
 	return `${input.slice(0, max - 1).trimEnd()}…`;
 }

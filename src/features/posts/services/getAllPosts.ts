@@ -17,7 +17,7 @@ type GetAllPostsOptions = {
 
 // frontmatter 검증 오류는 기본적으로 건너뛰지만, `STRICT_FRONTMATTER=1`이면 첫 오류에서 throw — CI 빌드에서 스키마 위반 차단.
 // `@` 로 시작하는 디렉토리(@template 등)는 스캔 대상에서 제외.
-export function getAllPosts(options: GetAllPostsOptions = {}): PostSummary[] {
+export function getAllPosts(options: GetAllPostsOptions = {}) {
 	const { includePrivate = false } = options;
 	const strict = process.env.STRICT_FRONTMATTER === "1";
 

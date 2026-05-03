@@ -3,8 +3,6 @@ import { join } from "node:path";
 
 import matter from "gray-matter";
 
-import type { PostDetail } from "@/shared/types";
-
 import { calculateReadingTime } from "../utils/calculateReadingTime";
 import { extractTocFromMarkdown } from "../utils/extractTocFromMarkdown";
 import { parseFrontmatter } from "../utils/parseFrontmatter";
@@ -12,7 +10,7 @@ import { POSTS_DIR } from "./paths";
 
 // CommonMark §6.4 Emphasis: 닫는 `**` 앞에 `)` 등 구두점 + 뒤에 한글이 붙으면 닫힘 조건 불충족 → 리터럴 `**` 출력.
 // MDX 파서 도달 전에 HTML로 교체해 우회. 작성자 통제 콘텐츠라 raw HTML 신뢰 전제.
-function preprocessMdxContent(content: string): string {
+function preprocessMdxContent(content: string) {
 	const fences: string[] = [];
 	const inlines: string[] = [];
 
@@ -36,7 +34,7 @@ function preprocessMdxContent(content: string): string {
 }
 
 // private 필터링은 호출자 책임 — 이 함수는 private 포스트도 반환한다.
-export function getPostDetail(slug: string): PostDetail | null {
+export function getPostDetail(slug: string) {
 	const filePath = join(POSTS_DIR, slug, "index.mdx");
 
 	try {

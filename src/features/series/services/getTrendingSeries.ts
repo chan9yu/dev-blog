@@ -1,11 +1,11 @@
-import type { PostSummary, Series } from "@/shared/types";
+import type { PostSummary } from "@/shared/types";
 
 import { getAllSeries } from "./getAllSeries";
 import { getSeriesStats } from "./getSeriesStats";
 
 const DEFAULT_LIMIT = 3;
 
-export function getTrendingSeries(posts: PostSummary[], limit = DEFAULT_LIMIT): Series[] {
+export function getTrendingSeries(posts: PostSummary[], limit = DEFAULT_LIMIT) {
 	return getAllSeries(posts)
 		.map((series) => ({ series, lastUpdated: getSeriesStats(series).lastUpdated ?? "" }))
 		.sort((a, b) => {

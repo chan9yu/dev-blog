@@ -5,20 +5,13 @@ import { useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 
-type UseThemeReturn = {
-	resolvedTheme: Theme | null;
-	toggleTheme: () => void;
-	setTheme: (theme: Theme) => void;
-	mounted: boolean;
-};
-
 const emptySubscribe = () => () => undefined;
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
 // next-themes wrapper: (1) useSyncExternalStore 기반 mounted로 hydration 이전 null 반환해 FOUC 차단,
 // (2) View Transitions API progressive enhancement (미지원 브라우저는 즉시 apply).
-export function useTheme(): UseThemeReturn {
+export function useTheme() {
 	const { resolvedTheme, setTheme: setNextTheme } = useNextTheme();
 	const mounted = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
 

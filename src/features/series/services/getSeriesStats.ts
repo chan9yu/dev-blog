@@ -1,6 +1,6 @@
-import type { Series, SeriesStats } from "@/shared/types";
+import type { Series } from "@/shared/types";
 
-export function getSeriesStats(series: Series): SeriesStats {
+export function getSeriesStats(series: Series) {
 	const dates = series.posts.map((post) => post.date);
 
 	if (dates.length === 0) {

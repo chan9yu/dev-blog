@@ -10,7 +10,7 @@ function isViewsResponse(value: unknown): value is ViewsResponse {
 	return typeof value === "object" && value !== null && typeof (value as { views?: unknown }).views === "number";
 }
 
-export async function fetchPostViewsOrNull(slug: string): Promise<number | null> {
+export async function fetchPostViewsOrNull(slug: string) {
 	try {
 		const res = await fetch(`${VIEWS_ENDPOINT}?slug=${encodeURIComponent(slug)}`, { cache: "no-store" });
 		if (!res.ok) {
@@ -53,7 +53,7 @@ export async function incrementPostViews(slug: string) {
 }
 
 // 중복 slug 자동 dedup. 반환 키 순회 순서는 보장 안 함 — 호출자는 slug로 직접 lookup할 것.
-export async function getBatchPostViews(slugs: ReadonlyArray<string>): Promise<Record<string, number>> {
+export async function getBatchPostViews(slugs: ReadonlyArray<string>) {
 	if (slugs.length === 0) return {};
 
 	const unique = Array.from(new Set(slugs));

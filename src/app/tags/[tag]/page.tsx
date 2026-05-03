@@ -1,5 +1,4 @@
 import { Tag } from "lucide-react";
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -19,7 +18,7 @@ export async function generateStaticParams() {
 	return getAllTags(getPublicPosts()).map((tag) => ({ tag }));
 }
 
-export async function generateMetadata({ params }: TagDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: TagDetailPageProps) {
 	const { tag } = await params;
 	const decoded = decodeURIComponent(tag);
 	if (!decoded) return NOT_FOUND_METADATA;

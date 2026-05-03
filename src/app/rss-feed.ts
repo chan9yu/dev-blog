@@ -12,7 +12,7 @@ type BuildRssFeedInput = {
 	posts: PostSummary[];
 };
 
-function escapeXml(value: string): string {
+function escapeXml(value: string) {
 	return value
 		.replace(/&/g, "&amp;")
 		.replace(/</g, "&lt;")
@@ -21,7 +21,7 @@ function escapeXml(value: string): string {
 		.replace(/'/g, "&apos;");
 }
 
-function buildItemXml(siteUrl: string, authorName: string, authorEmail: string, post: PostSummary): string {
+function buildItemXml(siteUrl: string, authorName: string, authorEmail: string, post: PostSummary) {
 	const url = `${siteUrl}/posts/${post.slug}`;
 	const pubDate = new Date(post.date).toUTCString();
 	const categories = post.tags.map((tag) => `      <category>${escapeXml(tag)}</category>`).join("\n");
@@ -42,7 +42,7 @@ function buildItemXml(siteUrl: string, authorName: string, authorEmail: string, 
 }
 
 // author는 RFC 4287 형식 `email (name)`, pubDate는 RFC 822 — RSS 2.0 표준 호환.
-export function buildRssFeed(input: BuildRssFeedInput): string {
+export function buildRssFeed(input: BuildRssFeedInput) {
 	const { siteUrl, siteTitle, siteDescription, authorName, authorEmail, locale, posts } = input;
 	const language = locale.replace("_", "-");
 

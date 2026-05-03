@@ -1,6 +1,6 @@
-import type { PostSummary, TagCount } from "@/shared/types";
+import type { PostSummary } from "@/shared/types";
 
-export function getTagCounts(posts: PostSummary[]): TagCount[] {
+export function getTagCounts(posts: PostSummary[]) {
 	const countMap = new Map<string, number>();
 
 	for (const post of posts) {

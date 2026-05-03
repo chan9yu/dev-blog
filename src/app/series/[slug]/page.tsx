@@ -1,5 +1,4 @@
 import { BookOpen, Calendar } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
 	return getAllSeries(getPublicPosts()).map((series) => ({ slug: series.slug }));
 }
 
-export async function generateMetadata({ params }: SeriesDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: SeriesDetailPageProps) {
 	const { slug } = await params;
 	const series = findSeriesBySlug(decodeURIComponent(slug));
 	if (!series) return NOT_FOUND_METADATA;

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -39,7 +38,7 @@ export function generateStaticParams() {
 	return getPublicPosts().map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({ params }: PostDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PostDetailPageProps) {
 	const { slug } = await params;
 
 	const normalized = normalizeSlug(slug);

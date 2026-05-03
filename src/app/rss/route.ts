@@ -3,7 +3,7 @@ import { getSiteUrl, siteMetadata, siteSocials } from "@/shared/config/site";
 
 import { buildRssFeed } from "../rss-feed";
 
-function resolveAuthorEmail(): string {
+function resolveAuthorEmail() {
 	const mailLink = siteSocials.find((s) => s.iconName === "Mail");
 	if (mailLink && mailLink.href.startsWith("mailto:")) {
 		return mailLink.href.slice("mailto:".length);

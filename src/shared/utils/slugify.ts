@@ -11,7 +11,7 @@
  * - "Step 1: A - B"  → "step-1-a---b"   (` - ` → 공백→`-`, `-`, 공백→`-`)
  * - "명시적 > 암묵적" → "명시적--암묵적"  (` > ` → 공백→`-`, `>` 제거, 공백→`-`)
  */
-export function slugify(text: string): string {
+export function slugify(text: string) {
 	return text
 		.toLowerCase()
 		.replace(/\s/g, "-")

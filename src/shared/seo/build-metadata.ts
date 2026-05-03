@@ -13,7 +13,7 @@ type BuildMetadataInput = {
 	noIndex?: boolean;
 };
 
-function resolveOgImage(input: BuildMetadataInput): string {
+function resolveOgImage(input: BuildMetadataInput) {
 	if (input.image) return input.image;
 	return `/og?title=${encodeURIComponent(input.title)}`;
 }
@@ -21,7 +21,7 @@ function resolveOgImage(input: BuildMetadataInput): string {
 // Next.js 16 `Metadata["openGraph"]`는 type별 union — 객체 mutation으로 publishedTime을 추가하면
 // serializer가 article 분기를 잃어 `<meta property="article:published_time">`가 누락된다.
 // 처음부터 article/website 두 갈래로 build해야 안전.
-export function buildMetadata(input: BuildMetadataInput): Metadata {
+export function buildMetadata(input: BuildMetadataInput) {
 	const ogImage = resolveOgImage(input);
 	const ogCommon = {
 		url: input.path,

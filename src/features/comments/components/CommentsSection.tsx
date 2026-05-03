@@ -18,7 +18,7 @@ type GiscusConfig = {
 const GISCUS_ORIGIN = "https://giscus.app";
 const GISCUS_SCRIPT_SRC = `${GISCUS_ORIGIN}/client.js`;
 
-function readGiscusConfig(): GiscusConfig | null {
+function readGiscusConfig() {
 	const repo = process.env.NEXT_PUBLIC_GISCUS_REPO;
 	const repoId = process.env.NEXT_PUBLIC_GISCUS_REPO_ID;
 	const category = process.env.NEXT_PUBLIC_GISCUS_CATEGORY;

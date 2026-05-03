@@ -5,16 +5,6 @@ type WebSiteInput = {
 	authorName: string;
 };
 
-type WebSiteJsonLd = {
-	"@context": "https://schema.org";
-	"@type": "WebSite";
-	url: string;
-	name: string;
-	description: string;
-	author: { "@type": "Person"; name: string };
-	inLanguage?: string;
-};
-
 type BlogPostingInput = {
 	siteUrl: string;
 	authorName: string;
@@ -51,19 +41,6 @@ type BreadcrumbInput = {
 	items: BreadcrumbItem[];
 };
 
-type BreadcrumbListItem = {
-	"@type": "ListItem";
-	position: number;
-	name: string;
-	item: string;
-};
-
-type BreadcrumbJsonLd = {
-	"@context": "https://schema.org";
-	"@type": "BreadcrumbList";
-	itemListElement: BreadcrumbListItem[];
-};
-
 type PersonInput = {
 	name: string;
 	url?: string;
@@ -78,13 +55,13 @@ type PersonJsonLd = {
 	sameAs?: string[];
 };
 
-function toAbsolute(siteUrl: string, path: string): string {
+function toAbsolute(siteUrl: string, path: string) {
 	if (path.startsWith("http://") || path.startsWith("https://")) return path;
 	if (path.startsWith("/")) return `${siteUrl}${path}`;
 	return `${siteUrl}/${path}`;
 }
 
-export function buildWebSiteJsonLd(input: WebSiteInput): WebSiteJsonLd {
+export function buildWebSiteJsonLd(input: WebSiteInput) {
 	return {
 		"@context": "https://schema.org",
 		"@type": "WebSite",
@@ -96,7 +73,7 @@ export function buildWebSiteJsonLd(input: WebSiteInput): WebSiteJsonLd {
 	};
 }
 
-export function buildBlogPostingJsonLd(input: BlogPostingInput): BlogPostingJsonLd {
+export function buildBlogPostingJsonLd(input: BlogPostingInput) {
 	const url = `${input.siteUrl}/posts/${input.slug}`;
 	const image = input.image
 		? toAbsolute(input.siteUrl, input.image)
@@ -120,7 +97,7 @@ export function buildBlogPostingJsonLd(input: BlogPostingInput): BlogPostingJson
 	return ld;
 }
 
-export function buildBreadcrumbJsonLd(input: BreadcrumbInput): BreadcrumbJsonLd {
+export function buildBreadcrumbJsonLd(input: BreadcrumbInput) {
 	return {
 		"@context": "https://schema.org",
 		"@type": "BreadcrumbList",
@@ -133,7 +110,7 @@ export function buildBreadcrumbJsonLd(input: BreadcrumbInput): BreadcrumbJsonLd 
 	};
 }
 
-export function buildPersonJsonLd(input: PersonInput): PersonJsonLd {
+export function buildPersonJsonLd(input: PersonInput) {
 	const ld: PersonJsonLd = {
 		"@context": "https://schema.org",
 		"@type": "Person",

@@ -36,7 +36,7 @@ export function resolveThumbnailSrc(thumbnail: string | null, slug?: string) {
 	return slug ? placeholderForSlug(slug) : DEFAULT_FALLBACK;
 }
 
-export function resolvePostThumbnails(posts: PostSummary[]): PostSummary[] {
+export function resolvePostThumbnails(posts: PostSummary[]) {
 	return posts.map((post) => ({
 		...post,
 		thumbnail: resolveThumbnailSrc(post.thumbnail, post.slug)
