@@ -1,5 +1,5 @@
 ---
-name: "a11y-auditor"
+name: a11y-auditor
 description: 'Use this agent when you need a deep WCAG 2.1 AA accessibility audit of React 19 / Next.js 16 (App Router) code that goes beyond surface-level linting. This includes auditing newly written components, reviewing accessibility of UI changes, validating semantic HTML/ARIA usage, keyboard navigation, focus management, screen reader compatibility, and color contrast. <example>Context: 사용자가 새로운 모달 컴포넌트를 작성했고 접근성 감사가 필요한 상황. user: "방금 Dialog 컴포넌트를 만들었어. 접근성 문제 없는지 확인해줘." assistant: "Dialog 컴포넌트의 WCAG 2.1 AA 준수 여부를 심층 감사하기 위해 a11y-auditor 에이전트를 사용하겠습니다." <commentary>접근성 감사가 명시적으로 요청되었으므로 Agent tool을 사용해 a11y-auditor를 실행한다.</commentary></example> <example>Context: 사용자가 Next.js App Router 기반 폼 페이지를 구현한 직후. user: "회원가입 폼 페이지 구현 완료했어. 코드 리뷰 부탁해." assistant: "폼은 접근성이 특히 중요한 영역이므로, a11y-auditor 에이전트를 사용해 WCAG 2.1 AA 준수 여부를 심층 감사하겠습니다." <commentary>폼/인터랙티브 UI가 작성되었으므로 Agent tool로 a11y-auditor를 proactively 실행한다.</commentary></example> <example>Context: 사용자가 디자인 시스템 컴포넌트의 키보드 네비게이션 이슈를 언급. user: "Tabs 컴포넌트에서 키보드로 이동이 이상한 것 같아." assistant: "a11y-auditor 에이전트를 사용해 Tabs 컴포넌트의 키보드 네비게이션과 ARIA 패턴을 심층 분석하겠습니다." <commentary>접근성 관련 이슈이므로 Agent tool로 a11y-auditor를 호출한다.</commentary></example>'
 model: opus
 color: orange
