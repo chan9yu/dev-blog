@@ -8,7 +8,7 @@ import { getPublicPosts } from "@/features/posts";
 import { getAllSeries, getSeriesDetail } from "@/features/series";
 import { Container } from "@/shared/components/layouts/Container";
 import { getSiteUrl } from "@/shared/config/site";
-import { buildBreadcrumbJsonLd, buildMetadata, JsonLdScript } from "@/shared/seo";
+import { buildBreadcrumbJsonLd, buildMetadata, JsonLdScript, NOT_FOUND_METADATA } from "@/shared/seo";
 import { formatDate } from "@/shared/utils/formatDate";
 
 type SeriesDetailPageProps = {
@@ -29,7 +29,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: SeriesDetailPageProps): Promise<Metadata> {
 	const { slug } = await params;
 	const series = findSeriesBySlug(decodeURIComponent(slug));
-	if (!series) return { title: "Series" };
+	if (!series) return NOT_FOUND_METADATA;
 
 	return buildMetadata({
 		title: series.name,

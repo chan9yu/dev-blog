@@ -1,9 +1,19 @@
+import { Rss } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { Container } from "./Container";
 
-const FOOTER_LINKS = [
-	{ href: "/rss", label: "RSS", external: false },
+type FooterLink = {
+	href: string;
+	label: string;
+	external: boolean;
+	icon?: ReactNode;
+};
+
+// RSS는 XML 응답이므로 같은 탭에서 열면 raw XML이 노출되어 UX가 나쁘다 → external: true.
+const FOOTER_LINKS: ReadonlyArray<FooterLink> = [
+	{ href: "/rss", label: "RSS", external: true, icon: <Rss className="size-4" aria-hidden /> },
 	{ href: "https://github.com/chan9yu", label: "GitHub", external: true },
 	{ href: "mailto:dev.cgyeo@gmail.com", label: "Email", external: false }
 ];
@@ -33,15 +43,16 @@ export function Footer() {
 						</p>
 					</div>
 
-					<nav className="flex flex-wrap gap-6" aria-label="푸터 링크">
+					<nav className="flex flex-wrap items-center gap-6" aria-label="푸터 링크">
 						{FOOTER_LINKS.map((link) => (
 							<Link
 								key={link.href}
 								href={link.href}
 								target={link.external ? "_blank" : undefined}
 								rel={link.external ? "noopener noreferrer" : undefined}
-								className="text-muted-foreground hover:text-accent focus-visible:ring-ring rounded text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+								className="text-muted-foreground hover:text-accent focus-visible:ring-ring inline-flex items-center gap-1.5 rounded text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 							>
+								{link.icon}
 								{link.label}
 								{link.external && <span className="sr-only"> (새 창에서 열림)</span>}
 							</Link>

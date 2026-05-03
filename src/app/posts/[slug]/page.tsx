@@ -21,7 +21,13 @@ import { ViewCounter } from "@/features/views";
 import { Container } from "@/shared/components/layouts/Container";
 import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
-import { buildBlogPostingJsonLd, buildBreadcrumbJsonLd, buildMetadata, JsonLdScript } from "@/shared/seo";
+import {
+	buildBlogPostingJsonLd,
+	buildBreadcrumbJsonLd,
+	buildMetadata,
+	JsonLdScript,
+	NOT_FOUND_METADATA
+} from "@/shared/seo";
 import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
 import { normalizeSlug } from "@/shared/utils/slug";
 
@@ -37,10 +43,10 @@ export async function generateMetadata({ params }: PostDetailPageProps): Promise
 	const { slug } = await params;
 
 	const normalized = normalizeSlug(slug);
-	if (!normalized) return { title: "Post" };
+	if (!normalized) return NOT_FOUND_METADATA;
 
 	const post = getPostDetail(normalized);
-	if (!post) return { title: "Post" };
+	if (!post) return NOT_FOUND_METADATA;
 
 	return buildMetadata({
 		title: post.title,
