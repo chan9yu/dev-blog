@@ -35,11 +35,15 @@
 - XSS 방어: `JSON.stringify(data).replace(/</g, "\\u003c")`로 `</script>` 인젝션 차단.
 - 구현체: `src/shared/seo/JsonLdScript.tsx` — `id`·`data` props를 받아 위 패턴을 캡슐화.
 
-## Slug & URL 규약
+## Slug & URL 규약 (영역별 분리, 2026 best practice)
 
-- 포스트 slug: 영문 소문자+숫자+하이픈만. 한글 슬러그 금지(디코딩 이슈).
-- slug 변경 시 **301 리다이렉트 필수** — `next.config.ts`의 `redirects()`에 추가하고, 동일 slug 재사용 금지 (검색 엔진 인덱스 충돌).
-- 태그/시리즈 slug도 동일 규칙 적용.
+- **포스트 slug** (`/posts/{slug}`): 영문 소문자+숫자+하이픈만. 디렉토리=URL이므로 도구·CDN·외부 링크 호환을 위해 영문 강제.
+- **태그 slug** (`/tags/{tag}`): 영문·한글 모두 허용. kebab-case 선호. 공백·특수문자(RFC 3986 sub-delim `!*'();:@&=+$,/?#[]`) 금지.
+- **시리즈 slug** (`/series/{slug}`): 영문·한글 모두 허용. **공백→hyphen 정규화 + 특수문자 제거 필수** (메신저·SNS link 종료 충돌 방지).
+- 표시명 변환은 `src/shared/utils/formatLocalizedSlug.ts`가 담당 — 한글 포함 slug는 hyphen→공백 자동 역변환.
+- 포스트 slug 변경 시 **301 redirect 필수** — `next.config.ts`의 `redirects()`. 태그·시리즈는 frontmatter 갱신만으로 충분 (외부 인입 많은 경우 redirect 별도 추가 권장).
+- 동일 slug 재사용 금지 (검색 엔진 인덱스 충돌).
+- 근거: Google Search Central "Use words in your audience's language in the URL" + UTF-8 percent-encoding 정상 인덱싱 + velog/tistory ecosystem 표준 + Next.js `decodeURIComponent` 네이티브 지원.
 
 ## Performance 예산 (SEO Core Web Vitals)
 
@@ -54,6 +58,6 @@
 - [ ] title 60자 이내, 브랜드 접미사 포함
 - [ ] openGraph.images 해상도 1200×630
 - [ ] canonical 설정 확인 (특히 시리즈·페이지네이션)
-- [ ] slug가 소문자+영숫자+하이픈 패턴 준수
+- [ ] **포스트** slug가 소문자+영숫자+하이픈 패턴 준수 (태그·시리즈는 한글 허용 + 공백·특수문자 금지)
 - [ ] sitemap에 새 포스트 entry 포함 확인
 - [ ] `pnpm build` 성공 (메타데이터 타입 오류 차단)
