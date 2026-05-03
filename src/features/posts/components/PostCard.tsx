@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { PostSummary } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
 import { formatDate } from "@/shared/utils/formatDate";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
 
 const cardImageWrapper = cva("relative w-full overflow-hidden", {
 	variants: {
@@ -92,6 +93,7 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 						alt={post.title}
 						fill
 						priority={priority}
+						loading={priority ? "eager" : "lazy"}
 						className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
 						sizes={IMAGE_SIZES[variant]}
 					/>
@@ -120,7 +122,7 @@ export function PostCard({ post, variant = "grid", priority = false }: PostCardP
 									className="border-border-subtle text-muted-foreground hover:border-accent/50 hover:bg-accent-subtle hover:text-accent rounded border px-2 py-0.5 font-mono text-xs transition-colors"
 								>
 									<span aria-hidden>#</span>
-									{tag}
+									{formatLocalizedSlug(tag)}
 								</span>
 							))}
 							{hiddenCount > 0 && <span className="text-muted-foreground text-xs">+{hiddenCount}</span>}

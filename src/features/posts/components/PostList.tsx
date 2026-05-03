@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { PostSummary } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
+import { EASE_OUT } from "@/shared/utils/motion";
 
 import { useViewMode } from "../hooks/useViewMode";
 import { PostCard } from "./PostCard";
@@ -12,13 +13,12 @@ import { ViewToggle } from "./ViewToggle";
 
 const PAGE_SIZE = 12;
 
-/** 포스트 카드 mount/exit/layout 애니메이션 — 기존 버전 패턴 */
 const cardVariants = {
 	hidden: { opacity: 0, scale: 0.95 },
 	visible: {
 		opacity: 1,
 		scale: 1,
-		transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }
+		transition: { duration: 0.3, ease: EASE_OUT }
 	},
 	exit: {
 		opacity: 0,
@@ -27,8 +27,8 @@ const cardVariants = {
 	}
 };
 
-/** 컨테이너: staggerChildren으로 카드들이 순차적으로 진입 */
 const containerVariants = {
+	hidden: {},
 	visible: {
 		transition: { staggerChildren: 0.05 }
 	}
@@ -110,7 +110,7 @@ export function PostList({ posts }: PostListProps) {
 			<motion.div
 				layout
 				variants={containerVariants}
-				initial="hidden"
+				initial={false}
 				animate="visible"
 				className={cn(
 					view === "list"
@@ -119,11 +119,17 @@ export function PostList({ posts }: PostListProps) {
 				)}
 			>
 				<AnimatePresence mode="popLayout">
-					{visiblePosts.map((post, index) => (
-						<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
-							<PostCard post={post} variant={view} priority={index < 2} />
-						</motion.div>
-					))}
+					{visiblePosts.map((post, index) => {
+						// 첫 카드: priority + framer-motion 우회 — LCP candidate paint timing 안정화 + preload hint 일치.
+						if (index === 0) {
+							return <PostCard key={post.slug} post={post} variant={view} priority />;
+						}
+						return (
+							<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+								<PostCard post={post} variant={view} />
+							</motion.div>
+						);
+					})}
 				</AnimatePresence>
 			</motion.div>
 

@@ -60,10 +60,22 @@ describe("SearchModal", () => {
 		expect(input).toHaveFocus();
 	});
 
-	it("빈 상태에서는 안내 메시지와 총 포스트 수를 보여준다", async () => {
+	it("빈 상태에서는 추천 영역(인기 태그·최근 포스트)과 총 포스트 수를 보여준다", async () => {
 		render(<SearchModal open={true} onOpenChange={vi.fn()} posts={posts} />);
-		expect(await screen.findByText("검색어를 입력하세요")).toBeInTheDocument();
+		expect(await screen.findByRole("heading", { name: /인기 태그/ })).toBeInTheDocument();
+		expect(screen.getByRole("heading", { name: /최근 포스트/ })).toBeInTheDocument();
 		expect(screen.getByText(new RegExp(`총 ${posts.length}개`))).toBeInTheDocument();
+	});
+
+	it("빈 상태 추천 링크에서 ArrowDown 키로 다음 링크로 포커스 이동한다", async () => {
+		const user = userEvent.setup();
+		render(<SearchModal open={true} onOpenChange={vi.fn()} posts={posts} />);
+
+		await screen.findByRole("heading", { name: /인기 태그/ });
+		await user.keyboard("{ArrowDown}");
+
+		const focused = document.activeElement;
+		expect(focused?.tagName).toBe("A");
 	});
 
 	it("타이핑 후 debounce(200ms)를 거쳐 결과가 렌더된다", async () => {

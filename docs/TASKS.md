@@ -353,17 +353,17 @@
 
 ### E2E 스모크 (Playwright)
 
-- [ ] [M7-01] E2E: 홈 → 포스트 상세
-- [ ] [M7-02] E2E: Cmd+K 검색 → 결과 클릭
-- [ ] [M7-03] E2E: TOC 클릭 스크롤
-- [ ] [M7-04] E2E: 테마 토글 → 새로고침 유지
-- [ ] [M7-05] E2E (옵션): 모바일 Drawer
+- [x] [M7-01] E2E: 홈 → 포스트 상세 (`e2e/home.spec.ts`)
+- [x] [M7-02] E2E: Cmd+K 검색 → 결과 클릭 (`e2e/search.spec.ts`, ESC 닫기 포함 2건)
+- [x] [M7-03] E2E: TOC 클릭 스크롤 (`e2e/toc.spec.ts`, 한글 anchor percent-encoded 처리)
+- [x] [M7-04] E2E: 테마 토글 → 새로고침 유지 (`e2e/theme.spec.ts`)
+- [x] [M7-05] E2E (옵션): 모바일 Drawer (`e2e/mobile-menu.spec.ts`, Pixel 7 viewport)
 
 ### P2 스토리
 
-- [ ] [M7-06] US-021 OG 동적 생성 Polish
-- [ ] [M7-07] US-022 RSS 구독 UI
-- [ ] [M7-08] US-023 검색 추천 키워드
+- [x] [M7-06] US-021 OG 동적 생성 Polish (디자인 polish, 폰트 임베딩은 후속)
+- [x] [M7-07] US-022 RSS 구독 UI (Footer Rss 아이콘 + 새 탭)
+- [x] [M7-08] US-023 검색 추천 키워드 (SearchSuggestions: 인기 태그 5 + 최근 포스트 3)
 
 ### Production
 
@@ -374,9 +374,9 @@
 
 ### A11y · Perf 후속 (M6 E2E 발견 결함 이월)
 
-- [ ] [M7-13] 모바일 PostCard `priority` 정책 정밀화 — `index === 0`만 priority, sizes prop 모바일 분기 (M6-08 회귀 D4)
-- [ ] [M7-14] 잘못된 slug `generateMetadata`에서 `noIndex` 반환 — 404 metadata "Post" fallback 제거 (E2E D2)
-- [ ] [M7-15] 한글 slug → 영문 kebab-case 매핑 + `next.config.ts` 301 redirect (E2E D1, GC 트랙 후보)
+- [x] [M7-13] 모바일 PostCard `priority` 정책 정밀화 — `index === 0`만 priority (M6-08 회귀 D4)
+- [x] [M7-14] 잘못된 slug `generateMetadata`에서 `noIndex` 반환 — `NOT_FOUND_METADATA` 상수 추가 (E2E D2)
+- [x] [M7-15] 한글 slug 정책 결정 — **영역별 분리** 결정 (2026 best practice). 포스트 영문 강제 / 태그·시리즈 한글 허용 + 공백→hyphen 정규화 + 특수문자 제거. `formatLocalizedSlug` 헬퍼 + seo.md/mdx-content.md 룰 갱신. (E2E D1)
 
 ---
 
@@ -391,5 +391,5 @@
 | M4 Hubs & Aggregations | 21      | 21      | 100%    |
 | M5 SEO & Syndication   | 10      | 10      | 100%    |
 | M6 A11y & Perf         | 14      | 14      | 100%    |
-| M7 Polish              | 15      | 0       | 0%      |
-| **Total**              | **199** | **184** | **92%** |
+| M7 Polish              | 15      | 11      | 73%     |
+| **Total**              | **199** | **195** | **98%** |

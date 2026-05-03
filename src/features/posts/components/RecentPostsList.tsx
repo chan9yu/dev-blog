@@ -4,13 +4,11 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import type { PostSummary } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
+import { EASE_OUT } from "@/shared/utils/motion";
 
 import { useViewMode } from "../hooks/useViewMode";
 import { PostCard } from "./PostCard";
 import { ViewToggle } from "./ViewToggle";
-
-// framer-motion ease 배열: tuple 타입을 모듈 상수로 분리해 inline `as` 단언 제거
-const EASE_OUT: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 const cardVariants = {
 	hidden: { opacity: 0, scale: 0.95 },
@@ -53,7 +51,7 @@ export function RecentPostsList({ posts }: RecentPostsListProps) {
 			{/* layout prop은 자식 카드에만 — 컨테이너에 걸면 grid↔list 전환 시 CLS 유발 */}
 			<motion.div
 				variants={containerVariants}
-				initial="hidden"
+				initial={false}
 				animate="visible"
 				className={cn(
 					view === "list"
@@ -62,11 +60,19 @@ export function RecentPostsList({ posts }: RecentPostsListProps) {
 				)}
 			>
 				<AnimatePresence mode="popLayout">
-					{posts.map((post, index) => (
-						<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
-							<PostCard post={post} variant={view} priority={index < 2} />
-						</motion.div>
-					))}
+					{posts.map((post, index) => {
+						// 홈에서 RecentPostsList는 hero 섹션 아래라 첫 카드가 below-the-fold.
+						// priority preload는 unused로 보고되므로 적용하지 않고, framer-motion 우회로 paint timing 안정화만 유지.
+						// dev/prod 모두 "preloaded but not used" 워닝을 차단한다.
+						if (index === 0) {
+							return <PostCard key={post.slug} post={post} variant={view} />;
+						}
+						return (
+							<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
+								<PostCard post={post} variant={view} />
+							</motion.div>
+						);
+					})}
 				</AnimatePresence>
 			</motion.div>
 		</div>

@@ -7,6 +7,120 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — M7 Polish 자율 영역 5건 (2026-04-27)
+
+**M7-13 모바일 PostCard priority 정밀화** (E2E D4)
+
+- `src/features/posts/components/PostList.tsx:124`, `RecentPostsList.tsx:67` — `priority={index < 2}` → `priority={index === 0}`
+- **Why**: 모바일 1-col 레이아웃에서 두 번째 카드는 fold 아래라 `next/image` priority가 "preloaded but not used" 경고 발생. 모바일 기준 보수적 정책이 데스크톱에도 안전.
+
+**M7-14 잘못된 slug noIndex 반환** (E2E D2)
+
+- `src/shared/seo/build-metadata.ts` — `NOT_FOUND_METADATA` 상수 신규 (title `"404 Not Found"` + `robots noindex/nofollow`, canonical 의도적 생략)
+- `src/shared/seo/index.ts` — export 추가
+- `src/app/posts/[slug]/page.tsx` — `{ title: "Post" }` fallback 2곳 → `NOT_FOUND_METADATA`
+- `src/app/tags/[tag]/page.tsx` — fallback 교체 + `getPostsByTag` 매칭 0건일 때도 NOT_FOUND_METADATA 반환 (페이지 자체도 `notFound()`)
+- `src/app/series/[slug]/page.tsx` — fallback 교체
+- **Why**: 검색엔진이 "Post"/"Tag"/"Series" 단어가 박힌 빈 페이지를 인덱싱할 위험. 명시적 noindex/nofollow로 SEO 위생 강화.
+
+**M7-08 검색 추천 키워드** (US-023)
+
+- `src/features/search/components/SearchSuggestions.tsx` (신규) — 빈 검색창에서 인기 태그 5개(빈도순) + 최근 포스트 3개(date desc) 표시. 모든 항목이 `<a>` 링크라 SearchModal Arrow 키 내비게이션에 자연 편입.
+- `src/features/search/components/SearchModal.tsx` — trimmed === "" && !hasPendingInput 분기에 `<SearchSuggestions>` 삽입. Arrow 키 핸들러를 `event.currentTarget.querySelectorAll("a[href]")`로 변경해 추천·결과 영역 통합 순회 (`listRef` 제거).
+- `src/features/search/components/index.ts` — export 추가
+- `__tests__/SearchModal.test.tsx` — 빈 상태 안내 메시지 검증 → 추천 영역 heading 검증으로 갱신, ArrowDown 추천 영역 포커스 이동 신규 테스트.
+
+**M7-07 RSS Footer 노출 보강** (US-022)
+
+- `src/shared/components/layouts/Footer.tsx` — `FOOTER_LINKS`에 `icon?: ReactNode` 필드 추가, RSS는 `external: true` + `Rss` 아이콘 prefix. nav 정렬 `items-center` + link `inline-flex items-center gap-1.5`로 아이콘·텍스트 정렬.
+- **Why**: `/rss`는 XML 응답이라 같은 탭에서 열면 raw XML이 노출되는 UX 회귀. 새 탭으로 분리.
+- **Header 미추가 결정**: Header 슬롯 패턴(`searchSlot`/`themeSlot`/`mobileMenuSlot`)은 features 도메인 주입용. 도메인 없는 단순 RSS 링크로 슬롯을 늘리면 책임 흐름이 흐려져 Footer 단일 노출 유지.
+
+**M7-06 OG 동적 생성 디자인 Polish** (US-021)
+
+- `src/app/og/route.tsx` — MAX_TITLE 120 → 80, MAX_TAG 40 → 32, `truncate()` 헬퍼 추가(`…` 말줄임표), 빈 title fallback, fontSize 72 → 64, line-height 1.1 → 1.18, padding 80px 96px → 72px 88px, eyebrow 분기 단순화.
+- **Why**: satori 기본 폰트 환경에서 한글 fallback 가독성 향상. fontSize 축소·line-height 증가로 한글 받침 잘림 방지.
+- **이월**: Pretendard subset .otf 임베딩은 폰트 자산 추가가 필요해 별도 후속 (사용자 승인 영역).
+
+### Fixed — M7 자율 영역 3-way REVIEW 핑퐁 적용 (2026-04-27)
+
+react-nextjs-code-reviewer + a11y-auditor + compound-reviewer 3-way 병렬 리뷰 결과 Tier 1 1건 + Tier 2 3건 발견·수정.
+
+- **[Tier 1] SearchSuggestions 정렬 가정 제거** — `posts.slice(0, 3)`이 호출 측 date desc 정렬 계약을 신뢰하던 문제. 컴포넌트 내부에서 `[...posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)`로 명시 정렬.
+- **[Tier 2] framer-motion ease 상수 공용화** — `[0.4, 0, 0.2, 1] as [number, number, number, number]` inline tuple이 `PostList`/`RecentPostsList`/`SearchModal` 3파일에 산재. `src/shared/utils/motion.ts`에 `EASE_OUT` 상수 추출 → 3파일 모두 import.
+- **[Tier 2] containerVariants.hidden 누락 비대칭 수정** — `RecentPostsList`엔 `hidden: {}` 명시되었으나 `PostList`·`SearchModal listVariants`에는 누락. variants 자식 상속 보장 위해 동일 패턴으로 일치.
+- **[Tier 2] SearchModal Arrow 키가 추천 영역 미편입** — `listRef` 기반 셀렉터가 결과 ul만 스캔해 빈 검색창 추천 링크는 키보드 순회 불가. `event.currentTarget` 기반으로 변경해 Dialog.Content 전체의 a[href] 통합 순회.
+
+**Tier 3는 GC 사이클 이월**: `getPublicPosts()` `React.cache()` 적용, JSDoc 군더더기 정리, `NOT_FOUND_METADATA`에 `alternates: { canonical: null }` 명시 등.
+
+### Added — M7-01~05 E2E Playwright 셋업 (2026-04-27)
+
+- `package.json` — `@playwright/test ^1.59.1` devDependency 추가, `test:e2e` / `test:e2e:ui` 스크립트
+- `playwright.config.ts` (신규) — port 3100 baseURL, chromium + mobile-chromium(Pixel 7) 두 project, webServer reuseExistingServer, trace on-first-retry, screenshot only-on-failure
+- `e2e/home.spec.ts` (M7-01) — 홈 첫 포스트 카드 → 상세. `a[href^="/posts/"]` selector + `Promise.all([waitForURL, click])` 패턴으로 클릭 후 navigation 안정화
+- `e2e/search.spec.ts` (M7-02) — Meta+K/Control+K 모달 → 추천 영역 노출 → 결과 클릭 이동, ESC 닫기 (2건)
+- `e2e/toc.spec.ts` (M7-03) — TOC 항목 클릭 → 한글 anchor percent-encoded URL 비교 + heading viewport 진입 검증. attribute selector(`[id="..."]`)로 한글 id escape 우회
+- `e2e/theme.spec.ts` (M7-04) — 테마 토글 → `expect.poll`로 View Transitions 비동기 종료 대기 → 새로고침 후 다크 클래스 유지 검증
+- `e2e/mobile-menu.spec.ts` (M7-05) — `test.use({ ...devices["Pixel 7"] })`로 단일 chromium project 안에서 viewport 격리. 햄버거 → drawer 노출 → ESC 닫기
+- `.gitignore` — `/test-results/`, `/playwright-report/`, `/blob-report/`, `/playwright/.cache/` 추가
+
+**최종 결과**: 6/6 tests PASS (14.7s)
+
+### Fixed — 한글 태그 표시 일관성 (2026-05-03)
+
+- **회귀**: 한글 slug 정규화(`/tags/항해-플러스-프론트엔드-6기`) 후 `/tags/[tag]` 상세 page만 `formatLocalizedSlug`로 hyphen→공백 변환됐고, **다른 표시 지점은 hyphen 그대로 노출**되어 UI 일관성 깨짐.
+- **fix**: 7개 표시 지점에 `formatLocalizedSlug` 일괄 적용.
+  - `src/features/tags/components/TagList.tsx` (사이드바·태그 목록)
+  - `src/features/tags/components/TrendingTags.tsx` (트렌딩 태그 + aria-label)
+  - `src/features/tags/components/TagChip.tsx` (태그 칩 라벨 + aria-label)
+  - `src/features/posts/components/PostCard.tsx` (카드 태그 칩)
+  - `src/features/posts/components/PostMetaHeader.tsx` (포스트 상세 메타 태그 링크)
+  - `src/features/search/components/SearchSuggestions.tsx` (검색 모달 트렌딩 태그)
+  - `src/app/tags/page.tsx` (태그 허브 카드 h2)
+- **검증**: 데스크톱 dev server에서 Playwright MCP로 5개 지점 텍스트 추출 — 모든 표시가 `항해 플러스 프론트엔드 6기` 자연스러운 공백 라벨, URL은 hyphen 정규화 유지(`/tags/항해-플러스-프론트엔드-6기`).
+- `pnpm lint` PASS.
+
+### Fixed — Playwright MCP 전수 E2E 회귀 (2026-05-03)
+
+- **회귀 1: PostList/RecentPostsList priority 정책** — M7-13 fix(`priority={index === 0}`)가 framer-motion 진입 애니메이션·`Suspense`+Client hydration·hero 아래 below-the-fold 등 다수 요인과 상충해 dev/prod 모두 `<link rel="preload"> ... not used within window's load event` 경고 발생. 모든 PostList 사용 페이지(/posts·/tags/[tag])에서 첫 카드는 below-the-fold이고, /의 RecentPostsList도 hero 아래라 priority preload가 unused로 보고됨.
+- **fix**:
+  - `src/features/posts/components/PostList.tsx` — 첫 카드는 framer-motion 우회로 paint timing만 안정화, priority preload 정책은 폐기. parent `motion.div`도 `initial={false}`로 자식 paint 지연 차단.
+  - `src/features/posts/components/RecentPostsList.tsx` — 동일.
+  - `src/features/posts/components/PostCard.tsx` — `loading={priority ? "eager" : "lazy"}` 명시 추가 (priority hint와 loading 속성 일관 유지, 향후 옵트인 시 안전).
+- **회귀 2: Vercel Analytics 404** — 로컬 `pnpm start`에서 `/_vercel/insights/script.js`·`/_vercel/speed-insights/script.js` 404 에러 발생. Vercel 호스트가 아니라 endpoint 부재.
+- **fix**:
+  - `src/app/layout.tsx` — `process.env.VERCEL` 가드로 Vercel 환경에서만 마운트. 로컬 prod 검증·CI에서 false error 차단.
+- **검증**: Playwright MCP로 `/`·`/posts`·`/posts/webrtc-deepdive-01`·`/tags/회고`·`/tags/항해-플러스-프론트엔드-6기`·`/series/WebRTC-박살내기`·`/series/항해-플러스-프론트엔드-6기`·`/about` 8개 라우트 prod 빌드 + 데스크톱(1280×720) + 모바일(390×844) 두 viewport에서 hard reload 후 전수 검증 → **에러 0, 경고 0**. SPA 잔여 prefetch는 hard reload 시 자동 해소.
+
+### Decided — M7-15 한글 slug 영역별 분리 정책 (2026-05-03)
+
+- **결정**: 2026 best practice 리서치(Google Search Central + 다국어 SEO 가이드 + velog/tistory ecosystem + RFC 3986 종합) 후 **영역별 분리** 정책 채택.
+  - **포스트 slug** (`/posts/{slug}`): 영문 kebab-case 강제 — 디렉토리=URL 도구·CDN 호환 우선
+  - **태그·시리즈 slug**: 한글 허용 + 공백→hyphen 정규화 + RFC 3986 sub-delim(`!`·`?`·`#` 등) 제거
+- **근거 출처**:
+  - Google Search Central: "Use words in your audience's language in the URL" + "non-ASCII range should be percent encoded"
+  - velog (한국 1위 dev blog): `/tags/리액트` 형태로 한글 URL 표준 사용 + 한국어 검색 인덱싱 정상
+  - SimpleLocalize/Search Engine Journal: 청중이 특정 언어 화자면 번역 slug가 UX·SEO 유리. Ahrefs는 메인 영문 + 콘텐츠 청중 언어 (혼합 전략)
+- **적용 변경**:
+  - `_workspace/normalize-slug-spaces.mjs` 신규 — 시리즈·태그 frontmatter 공백→hyphen + 특수문자 제거 정규화 스크립트
+  - `contents/` submodule — 14개 mdx 정규화. 시리즈: `WebRTC 박살내기!` → `WebRTC-박살내기`, `항해 플러스 프론트엔드 6기` → `항해-플러스-프론트엔드-6기`. 태그: `항해 플러스 프론트엔드 6기` → `항해-플러스-프론트엔드-6기`. 다른 한글 태그(`회고`·`항해99` 등)는 공백 없어 무변경
+  - `src/shared/utils/formatLocalizedSlug.ts` 신규 — 한글 포함 slug에서 hyphen→공백 자동 역변환. 영문 kebab-case는 그대로 보존
+  - `src/shared/utils/__tests__/formatLocalizedSlug.test.ts` 신규 — 4 케이스 단위 테스트
+  - `src/features/series/services/getAllSeries.ts` — `name: formatLocalizedSlug(seriesId)` (표시), `slug: seriesId` (URL) 분리
+  - `src/app/tags/[tag]/page.tsx` — `decoded`(URL용)·`display`(표시용) 분리, h1·title·breadcrumb 모두 `display` 사용
+  - `next.config.ts` — `KOREAN_SLUG_REDIRECTS` 11종 + `redirects()` 제거 (직전 영문화 시도분)
+  - `.claude/rules/seo.md` — Slug & URL 규약을 영역별 분리 매트릭스로 재작성. RFC 3986 sub-delim 명시. `formatLocalizedSlug` 참조 추가
+  - `.claude/rules/mdx-content.md` — `tags` 한글 허용·공백 금지 명시, `series` 정규화 의무 명시
+- **검증**: `pnpm build` PASS — `/series/WebRTC-박살내기`·`/series/항해-플러스-프론트엔드-6기` 정규화 URL 정상 prerender. `pnpm lint` PASS, `pnpm test` PASS (formatLocalizedSlug 4 신규 + 기존), `pnpm test:e2e --project=chromium` 6/6 PASS.
+- **이전 시도 자료 보존**: `_workspace/migrate-korean-slugs.mjs`(영문화) + `_workspace/rollback-korean-slugs.mjs`(롤백) + `_workspace/normalize-slug-spaces.mjs`(최종 정규화) 3 스크립트 유지 — 결정 이력.
+
+### Notes — Turbopack 빌드 캐시 stale 회귀 (2026-04-27)
+
+- `pnpm add -D @playwright/test` 실행 직후 Turbopack이 `@vercel/analytics/next`·`@vercel/speed-insights/next` sub-export를 못 찾는 회귀 발생.
+- node_modules sub-export는 정상 (분석 결과 두 패키지 모두 `./next` export 존재). 원인: `.next/` 빌드 캐시가 stale.
+- 해결: `rm -rf .next && pnpm build` 재실행으로 정상 복구.
+- **GC 후속**: 의존성 변경 시 `.next/` 자동 invalidation 검토.
+
 ### Fixed — M6 E2E 발견 결함 즉시 수정 (T1, 2026-04-27)
 
 - **D3 aria-modal 명시** — 모든 Radix Dialog 기반 모달에 `aria-modal="true"` prop 추가:
@@ -25,7 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **M7-13** 모바일 PostCard priority 정책 정밀화 (E2E D4 회귀 — `priority={index < 2}`가 모바일에서 unused preload 경고)
 - **M7-14** 잘못된 slug `generateMetadata` noIndex 반환 (E2E D2 — 404 page title 누설)
-- **M7-15** 한글 slug 영문화 + 301 redirect (E2E D1 — seo.md 룰 위반, GC 트랙 후보 / contents/ 변경 동반으로 사용자 승인 필수)
+- **M7-15** 한글 slug 영역별 분리 정책 (E2E D1 / 2026 best practice 리서치 후 채택)
 
 ### Added — M6-01~13 A11y & Perf 검증·보강 (2026-04-27)
 

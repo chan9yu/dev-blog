@@ -6,7 +6,7 @@
 
 - 포스트 경로: `contents/posts/{slug}/index.mdx` — slug는 kebab-case, 영문 소문자+숫자만 (예: `react-19-use-hook`)
 - 첨부 이미지: `contents/posts/{slug}/images/` 하위. 코드블록 외의 자산은 포스트 디렉토리에 격리.
-- 시리즈 포스트: frontmatter의 `series.slug`를 공유. 포스트 파일 자체는 `contents/posts/{slug}/` 독립 배치.
+- 시리즈 포스트: frontmatter의 `series` 또는 `series.slug`를 공유. 한글·영문 모두 허용하되 **공백→hyphen 정규화 + 특수문자 제거** (`/series/항해-플러스-프론트엔드-6기` ⭕, `/series/항해 플러스 프론트엔드 6기!` ❌). 표시명은 services 레이어의 `formatLocalizedSlug`가 hyphen→공백 역변환을 자동 처리.
 
 ## Frontmatter 필수 필드
 
@@ -16,7 +16,7 @@ title: "React 19 use() 훅 완벽 이해" # 60자 이내 권장
 description: "use() 훅의 동작 원리와 Suspense 통합..." # 120~160자, 검색 스니펫에 직접 노출됨
 date: "2026-04-13" # ISO 8601, 발행일
 updated: "2026-04-15" # 선택, 수정 시 필수
-tags: ["react", "react-19", "suspense"] # 3~5개, kebab-case, 영문
+tags: ["react", "react-19", "리액트", "회고"] # 3~5개. kebab-case 권장. 영문/한글 모두 허용. 공백·특수문자(`!`·`?`·`#` 등) 금지 — 공백은 hyphen으로 정규화.
 series: # 선택
   slug: "react-19-deep-dive"
   order: 2

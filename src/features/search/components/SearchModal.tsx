@@ -3,26 +3,26 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
 import type { ChangeEvent, KeyboardEvent } from "react";
-import { useRef } from "react";
 
 import { Dialog } from "@/shared/components/ui/Dialog";
 import type { PostSummary } from "@/shared/types";
+import { EASE_OUT } from "@/shared/utils/motion";
 
 import { useSearch } from "../hooks/useSearch";
 import { SearchResultItem } from "./SearchResultItem";
+import { SearchSuggestions } from "./SearchSuggestions";
 
-/** staggerChildren으로 각 항목이 순차 진입 */
 const listVariants = {
+	hidden: {},
 	visible: { transition: { staggerChildren: 0.04 } }
 };
 
-/** 개별 결과 항목 — fade + slide-up */
 const itemVariants = {
 	hidden: { opacity: 0, y: 8 },
 	visible: {
 		opacity: 1,
 		y: 0,
-		transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] }
+		transition: { duration: 0.25, ease: EASE_OUT }
 	},
 	exit: {
 		opacity: 0,
@@ -48,7 +48,6 @@ type SearchModalProps = {
  */
 export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 	const { query, debouncedQuery, setQuery, results } = useSearch({ posts });
-	const listRef = useRef<HTMLUListElement>(null);
 
 	// 분기 기준은 debouncedQuery.trim()로 통일 — results와 동일 소스.
 	// query.trim()을 쓰면 공백 입력 시 "검색 결과 없음"이 깜빡 뜨는 회귀.
@@ -66,10 +65,9 @@ export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 
 	const handleContentKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
 		if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-		const list = listRef.current;
-		if (!list) return;
 
-		const links = Array.from(list.querySelectorAll<HTMLAnchorElement>("a[href]"));
+		// 추천 영역(빈 검색)·결과 영역 모두 동일한 a[href] 셀렉터로 순회 — Dialog.Content 전체 스캔.
+		const links = Array.from(event.currentTarget.querySelectorAll<HTMLAnchorElement>("a[href]"));
 		if (links.length === 0) return;
 
 		const activeIndex = links.findIndex((link) => link === document.activeElement);
@@ -121,12 +119,16 @@ export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 
 				<div className="max-h-modal-content overflow-y-auto p-2">
 					{trimmed === "" ? (
-						<div
-							className="text-muted-foreground flex items-center justify-center py-12 text-center text-sm"
-							aria-live="polite"
-						>
-							{hasPendingInput ? "검색 중..." : "검색어를 입력하세요"}
-						</div>
+						hasPendingInput ? (
+							<div
+								className="text-muted-foreground flex items-center justify-center py-12 text-center text-sm"
+								aria-live="polite"
+							>
+								검색 중...
+							</div>
+						) : (
+							<SearchSuggestions posts={posts} onSelect={handleSelect} />
+						)
 					) : results.length === 0 ? (
 						<div className="text-muted-foreground flex items-center justify-center py-12 text-center text-sm">
 							<div>
@@ -138,7 +140,6 @@ export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 						<AnimatePresence mode="wait">
 							<motion.ul
 								key={trimmed}
-								ref={listRef}
 								className="space-y-1"
 								aria-label="검색 결과"
 								variants={listVariants}

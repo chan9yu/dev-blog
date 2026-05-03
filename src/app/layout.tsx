@@ -107,8 +107,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					<Footer />
 					<ScrollToTop />
 				</Providers>
-				<Analytics />
-				<SpeedInsights />
+				{/* Vercel 호스트 환경에서만 마운트 — 로컬 `pnpm start`에서는 `_vercel/insights/script.js` 404 회귀 차단. */}
+				{process.env.VERCEL ? (
+					<>
+						<Analytics />
+						<SpeedInsights />
+					</>
+				) : null}
 			</body>
 		</html>
 	);

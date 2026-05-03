@@ -76,3 +76,17 @@ export function buildMetadata(input: BuildMetadataInput): Metadata {
 
 	return meta;
 }
+
+/**
+ * 동적 라우트의 잘못된 slug fallback metadata.
+ *
+ * - title은 검색 결과 스니펫 위생을 위해 "404 Not Found"로 명시
+ * - robots noindex/nofollow로 SEO 인덱싱 차단 (E2E D2)
+ *
+ * canonical/og는 의도적으로 생략 — 존재하지 않는 페이지에 정규 URL을 부여하지 않는다.
+ */
+export const NOT_FOUND_METADATA: Metadata = {
+	title: "404 Not Found",
+	description: "요청하신 페이지를 찾을 수 없습니다.",
+	robots: { index: false, follow: false }
+};
