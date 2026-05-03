@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { cn } from "@/shared/utils/cn";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
 
 type TagChipProps = {
 	tag: string;
@@ -12,7 +13,8 @@ type TagChipProps = {
 
 export function TagChip({ tag, slug, count, size = "md", className }: TagChipProps) {
 	const href = `/tags/${slug ?? tag}`;
-	const label = count !== undefined ? `${tag} 태그, ${count}개 글` : `${tag} 태그`;
+	const display = formatLocalizedSlug(tag);
+	const label = count !== undefined ? `${display} 태그, ${count}개 글` : `${display} 태그`;
 
 	return (
 		<Link
@@ -25,7 +27,7 @@ export function TagChip({ tag, slug, count, size = "md", className }: TagChipPro
 			)}
 		>
 			<span aria-hidden>#</span>
-			<span>{tag}</span>
+			<span>{display}</span>
 			{count !== undefined && (
 				<span aria-hidden className="text-xs opacity-70">
 					{count}

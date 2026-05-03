@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { TagCount } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
 
 type TagListProps = {
 	tags: TagCount[];
@@ -38,7 +39,7 @@ export function TagList({ tags, currentTag, variant = "navigation", className }:
 				</Link>
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={getHref(tag)} className={itemClass(currentTag === tag.slug)}>
-						{tag.tag} ({tag.count})
+						{formatLocalizedSlug(tag.tag)} ({tag.count})
 					</Link>
 				))}
 			</div>

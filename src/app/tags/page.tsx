@@ -6,6 +6,7 @@ import { getPublicPosts } from "@/features/posts";
 import { getTagCounts } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 import { buildMetadata } from "@/shared/seo";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
 
 export const metadata: Metadata = buildMetadata({
 	title: "태그",
@@ -51,7 +52,7 @@ export default function TagsHubPage() {
 											<div className="flex min-w-0 items-center gap-2">
 												<Tag className="text-accent size-5 shrink-0" aria-hidden />
 												<h2 className="text-card-foreground group-hover:text-accent min-w-0 flex-1 truncate font-semibold tracking-tight transition-colors">
-													{item.tag}
+													{formatLocalizedSlug(item.tag)}
 												</h2>
 											</div>
 											<p className="text-muted-foreground text-sm">{item.count}개의 포스트</p>

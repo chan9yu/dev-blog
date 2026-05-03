@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import type { PostSummary } from "@/shared/types";
 import { formatDate } from "@/shared/utils/formatDate";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
 
 type PostMetaHeaderProps = {
 	post: PostSummary;
@@ -49,7 +50,7 @@ export function PostMetaHeader({ post, shareSlot, viewCounterSlot }: PostMetaHea
 									className="bg-muted text-muted-foreground border-border-subtle focus-visible:ring-ring inline-flex min-h-9 items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all duration-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:hover:-translate-y-0.5 motion-safe:hover:scale-[1.03] sm:px-3 sm:text-sm"
 								>
 									<Tag className="size-3 sm:size-3.5" aria-hidden />
-									{tag}
+									{formatLocalizedSlug(tag)}
 								</Link>
 							</li>
 						))}
