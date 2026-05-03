@@ -52,6 +52,7 @@ public/posts
 # claude
 .claude/agent-memory
 .claude/plans
+.claude/scheduled_tasks.lock
 .lint-needed-default
 
 # harness workspace (compound engineering intermediate artifacts)
@@ -66,3 +67,6 @@ _workspace/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# backup
+.backup

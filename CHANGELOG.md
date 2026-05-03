@@ -1122,7 +1122,7 @@ M1 UI Skeleton 진입 첫 구간. 더미 fixture 5종을 생성해 이후 모든
 
 ### Added (M1-16~M1-21: 홈 FEAT-HOME UI)
 
-홈 페이지의 Hero·최근 포스트·사이드바(Popular Posts·Trending Series·Trending Tags)를 더미 fixture 기반으로 완성. 레거시 `.existing_version/src/app/page.tsx` UX를 현 프로젝트 토큰·규약(shadcn alias·Tailwind 4 표준)으로 번역.
+홈 페이지의 Hero·최근 포스트·사이드바(Popular Posts·Trending Series·Trending Tags)를 더미 fixture 기반으로 완성. 레거시 `.backup/src/app/page.tsx` UX를 현 프로젝트 토큰·규약(shadcn alias·Tailwind 4 표준)으로 번역.
 
 - **[M1-16]** `src/app/HomeHero.tsx` — H1 + 소개 2문단 + "최신 글 보기" CTA + SocialLinks. `lucide-react` 최신 버전에서 Github/Linkedin 브랜드 마크가 제거되어 `Code2`/`Briefcase`로 임시 대체(향후 `@svgr/webpack` 도입 시 공식 브랜드 SVG로 교체).
 - **[M1-17]** `src/features/posts/components/PostCard.tsx` — RSC 카드(`variant: "list" | "grid"`). `fs.existsSync`로 썸네일 파일 존재 확인 + `/posts/placeholder.svg` 폴백. `priority` prop으로 LCP 후보 2장 지정. `motion-safe:` 가드로 prefers-reduced-motion 존중.

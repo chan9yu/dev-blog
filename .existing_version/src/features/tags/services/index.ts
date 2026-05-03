@@ -1,1 +1,0 @@
-export { getTagCounts } from "./api";
