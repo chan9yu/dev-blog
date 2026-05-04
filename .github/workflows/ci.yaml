@@ -52,6 +52,9 @@ jobs:
           // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
           EOF
 
+      - name: Generate search index (gitignore된 빌드 시점 emit JSON, type:check 의존)
+        run: node scripts/build-search-index.mjs
+
       - name: Typecheck
         run: pnpm type:check
 
