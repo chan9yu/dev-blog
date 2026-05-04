@@ -1,5 +1,8 @@
+import Image from "next/image";
+
 import { SocialLinks } from "@/shared/components/common/SocialLinks";
 import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
+import { siteMetadata } from "@/shared/config/site";
 
 import { getAboutContent } from "../services";
 import { socialItems } from "../utils/socialItems";
@@ -15,8 +18,15 @@ export function AboutProfile() {
 			</header>
 
 			<div className="mb-12 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-				<div className="bg-muted relative size-32 shrink-0 overflow-hidden rounded-xl" aria-hidden>
-					<div className="absolute inset-0 bg-linear-to-br from-indigo-500 via-fuchsia-500 to-pink-500" />
+				<div className="bg-muted relative size-32 shrink-0 overflow-hidden rounded-xl">
+					<Image
+						src={siteMetadata.avatar}
+						alt={`${siteMetadata.author} 프로필 사진`}
+						fill
+						sizes="128px"
+						className="object-cover"
+						priority
+					/>
 				</div>
 				<div className="flex-1 text-center sm:text-left">
 					<h2 className="text-foreground mb-2 text-2xl font-bold">여찬규 (Chan9yu)</h2>

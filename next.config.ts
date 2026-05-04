@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
 	reactCompiler: true,
 	poweredByHeader: false,
 	images: {
-		formats: ["image/avif", "image/webp"]
+		formats: ["image/avif", "image/webp"],
+		remotePatterns: [{ protocol: "https", hostname: "avatars.githubusercontent.com" }]
 	},
 	// Vercel Function 사이즈 한계(300MB) 대응. file-tracing이 RSC의 fs.readFileSync 경로를
 	// 따라가 contents/ 전체(157MB)를 lambda에 포함시켜 310MB로 부풀던 회귀 차단.

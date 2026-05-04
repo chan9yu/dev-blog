@@ -20,6 +20,7 @@ export const siteMetadata = {
 	author: "chan9yu",
 	locale: "ko_KR",
 	ogImage: "/default-og-image.png",
+	avatar: "https://avatars.githubusercontent.com/u/80776262?v=4",
 	themeColor: "#4f46e5"
 } as const;
 
