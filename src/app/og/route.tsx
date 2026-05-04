@@ -5,7 +5,7 @@ import { siteMetadata } from "@/shared/config/site";
 const MAX_TITLE = 80;
 const MAX_TAG = 32;
 
-// Next.js 16 `cacheComponents` 활성 시 `runtime = "edge"`와 충돌 → 기본 node runtime 사용.
+// 기본 node runtime 사용 (요청별 searchParams 동적 — `/og?title=...&tag=...`).
 // satori는 woff2 미지원이라 한글 폰트 임베딩이 미적용 — 영문 fallback으로 동작.
 
 function truncate(input: string, max: number) {

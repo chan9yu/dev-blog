@@ -1,30 +1,24 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
-import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
+import { getPublicPosts, PostList } from "@/features/posts";
 import { getTagCounts, TagList } from "@/features/tags";
 import { Container } from "@/shared/components/layouts/Container";
 import { buildMetadata } from "@/shared/seo";
 import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
-type PostsPageProps = {
-	searchParams: Promise<{ tag?: string }>;
-};
-
 export const metadata: Metadata = buildMetadata({
 	title: "포스트",
 	description:
-		"chan9yu 개발 블로그의 전체 포스트 목록. React, TypeScript, Next.js, WebRTC 등 프론트엔드 실무 경험과 학습 기록을 모은 기술 글 모음으로, 태그·시리즈별로 검색하고 필터링할 수 있습니다.",
+		"chan9yu 개발 블로그의 전체 포스트 목록. React, TypeScript, Next.js, WebRTC 등 프론트엔드 실무 경험과 학습 기록을 모은 기술 글 모음으로, 태그·시리즈별로 탐색할 수 있습니다.",
 	path: "/posts"
 });
 
-export default async function PostsPage({ searchParams }: PostsPageProps) {
-	const { tag } = await searchParams;
-
+// SSG-first(PRD G-1) — 태그 필터링은 /tags/[tag] 라우트로 일원화하여 본 페이지를 정적 prerender.
+// `cacheComponents: false` + searchParams 제거로 runtime contents/ 의존 0% (v1.1.2).
+export default function PostsPage() {
 	const basePosts = getPublicPosts();
 	const allTags = getTagCounts(basePosts);
-	const filtered = tag ? basePosts.filter((post) => post.tags.includes(tag)) : basePosts;
-	const resolvedPosts = resolvePostThumbnails(filtered);
+	const resolvedPosts = resolvePostThumbnails(basePosts);
 
 	return (
 		<Container>
@@ -38,16 +32,14 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
 				<div className="flex gap-8">
 					<aside
-						aria-label="태그 필터"
+						aria-label="태그 목록"
 						className="lg:max-h-sidebar hidden lg:sticky lg:top-24 lg:block lg:w-56 lg:shrink-0 lg:overflow-y-auto"
 					>
-						<TagList tags={allTags} currentTag={tag} variant="filter" />
+						<TagList tags={allTags} variant="navigation" />
 					</aside>
 
 					<div className="min-w-0 flex-1">
-						<Suspense fallback={<PostListSkeleton count={6} />}>
-							<PostList posts={resolvedPosts} />
-						</Suspense>
+						<PostList posts={resolvedPosts} />
 					</div>
 				</div>
 			</div>
