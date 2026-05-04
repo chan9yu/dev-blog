@@ -80,7 +80,7 @@ pnpm format       # Prettier 포매팅
 
 | 문서                        | 용도                                        |
 | --------------------------- | ------------------------------------------- |
-| `docs/TASKS.md`             | M0~M7 태스크 체크리스트 (현재 M0 진행 중)   |
+| `docs/TASKS.md`             | M0~M7 태스크 체크리스트 (199/199 완료)      |
 | `docs/ROADMAP.md`           | 마일스톤별 상세 — 검증 기준, Entry/Exit     |
 | `docs/PRD_PRODUCT.md`       | 제품 스펙 — FEAT, US, 성공 지표             |
 | `docs/PRD_TECHNICAL.md`     | 기술 계약 — MOD, RT, ADR, 데이터 모델       |

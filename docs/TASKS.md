@@ -382,14 +382,14 @@
 
 ## 진행 현황 요약
 
-| Phase                  | 태스크  | 완료    | 진행률  |
-| ---------------------- | ------- | ------- | ------- |
-| M0 Foundation          | 33      | 33      | 100%    |
-| M1 UI Skeleton         | 61      | 61      | 100%    |
-| M2 Content Pipeline    | 24      | 24      | 100%    |
-| M3 Feature Wiring      | 21      | 21      | 100%    |
-| M4 Hubs & Aggregations | 21      | 21      | 100%    |
-| M5 SEO & Syndication   | 10      | 10      | 100%    |
-| M6 A11y & Perf         | 14      | 14      | 100%    |
-| M7 Polish              | 15      | 11      | 73%     |
-| **Total**              | **199** | **195** | **98%** |
+| Phase                  | 태스크  | 완료    | 진행률   |
+| ---------------------- | ------- | ------- | -------- |
+| M0 Foundation          | 33      | 33      | 100%     |
+| M1 UI Skeleton         | 61      | 61      | 100%     |
+| M2 Content Pipeline    | 24      | 24      | 100%     |
+| M3 Feature Wiring      | 21      | 21      | 100%     |
+| M4 Hubs & Aggregations | 21      | 21      | 100%     |
+| M5 SEO & Syndication   | 10      | 10      | 100%     |
+| M6 A11y & Perf         | 14      | 14      | 100%     |
+| M7 Polish              | 15      | 15      | 100%     |
+| **Total**              | **199** | **199** | **100%** |
