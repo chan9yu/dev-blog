@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-05-04
+
+🎯 **v1.1.2 후속 정리 + Next.js 16 best practice audit + a11y Tier 2 개선** — v1.1.2 Notes에서 격리 약속한 `/api/views` 500 본질 fix와 React #418 hydration mismatch 본질 fix, search-index pre-bake over-engineering 제거, sitemap·a11y·SEO 정합성 보강을 묶어 release. 100건 이상 라우트·인터랙티브 시나리오 Playwright MCP E2E 검증 통과 (console 0 errors / 0 warnings).
+
+### Fixed
+
+- **`/api/views` 500 본질 fix** — `@vercel/kv` lazy 초기화가 환경변수 누락 시 _sync_ throw하는 패턴을 `isKvConfigured` 가드 + try/catch로 흡수. KV 미설정 환경에서 GET 200 + `views=0`, POST 204 응답으로 fail-soft. 이전 `.catch()`는 promise rejection만 잡아 sync throw 우회 불가했음.
+- **React #418 hydration mismatch (`/posts` localStorage="grid" 시나리오)** — `useViewMode`처럼 server snapshot(false)과 client snapshot(localStorage 값)이 다른 hook을 직접 className에 사용해 mismatch 발생. `set-state-in-effect` 룰을 위반하지 않는 `useHydrated` 훅(`useSyncExternalStore` 기반: server=false, client=true)으로 일관 게이팅하여 mismatch 0건.
+- **PostList 첫 카드 priority preload hint** — view-mode 전환 시 list/grid sizes 불일치로 `_next/image was preloaded but not used` 워닝 발생. `RecentPostsList`의 동일 회피 패턴(라인 65 주석)과 정렬해 priority 제거, framer-motion 우회로 paint timing 안정화만 유지.
+
+### Added
+
+- **`useHydrated` 공유 훅 (`src/shared/hooks/useHydrated.ts`)** — `useSyncExternalStore`로 server/client first hydration 일치를 보장. `useTheme`·`PageTransition`·`PostList`의 인라인 `useState + useEffect(() => setMounted(true), [])` 중복(`set-state-in-effect` 룰 위반)을 한 곳으로 통합.
+- **PostFrontmatter `updated?: string` optional 필드** — Zod schema에 ISO 8601 regex 추가. sitemap `lastmod`가 `frontmatter.updated ?? frontmatter.date`를 사용하도록 정렬 (seo.md §Sitemap 룰 정합).
+- **`.claude/rules/comments.md` 신규 룰** — "No comments by default" + Why-over-What + 4가지 허용 케이스(비명시적 제약·subtle invariant·workaround·회귀 차단) 명문화. AI 협업 코드의 과도 주석 회귀 차단.
+- **`react.md`에 Hydration mismatch / mounted gate 패턴 절** — `set-state-in-effect` 위반 anti-pattern + `useHydrated` 권장 패턴 명문화.
+
+### Changed
+
+- **a11y Tier 2 개선 (WAI-ARIA APG 정합)**
+  - `MdxImage`: `useId()`로 figcaption `id` 발급 + button `aria-describedby` 연결 (스크린 리더 캡션 정밀 안내).
+  - `ViewToggle`: `role="group"` → `role="toolbar"` + `aria-label="뷰 모드"` (toolbar pattern). `aria-pressed` 정상 전이.
+  - `SearchModal`: sr-only `role="status" aria-live="polite" aria-atomic="true"` 항상 mount, 검색 상태("검색 중"/"검색 결과 없음"/"검색 결과 N개") 동적 안내.
+  - `CommentsSection`: lazy 안내에 `role="status" aria-live="polite"` 적용.
+- **`/og` 라우트** — `export const dynamic = "force-dynamic"` 명시 (Next.js 16 type checking 정합 + searchParams 동적 의도 표현).
+- **홈 라우트 ISR 명시** — `app/page.tsx`에 `export const revalidate = 3600` (1시간 갱신) 명시.
+- **`/manifest.webmanifest`** — `MetadataRoute.Manifest` 타입 명시 (Next.js 16 strict 정합).
+- **`/tags/[tag]` page** — `generateMetadata` + Page가 동일 `getPostsByTag` 결과를 React `cache()`로 공유 (lookup dedupe, `series/[slug]` 패턴과 일관).
+- **하네스 자산 카운트 갱신**: 16개 → 17개 규칙 (CLAUDE.md, README.md, AI_WORKFLOW_GUIDE.md 동기화).
+
+### Removed
+
+- **`scripts/build-search-index.mjs` + `src/shared/data/search-index.json` pre-bake 접근 제거** — v1.1.2의 fail-soft 보강책으로 도입했으나, `cacheComponents: false`로 SSG-first가 정착된 시점에는 `getPublicPosts()`가 빌드 타임에만 호출되므로 runtime fs 의존이 원천적으로 없음. 빌드 단계 추가·`.gitignore`·CI step·prebuild script 모두 over-engineering으로 판단되어 제거 (사용자 지시: "심플하게 가자고"). `app/layout.tsx`는 `getPublicPosts()` 직접 호출로 회귀.
+
+### Notes
+
+- **검증 baseline**: `pnpm type:check` PASS, `pnpm lint` PASS, `pnpm test` 250/250 PASS, `pnpm build` 97 정적 페이지 0 warnings, `.next/server` 48MB (Vercel 250MB 한계 대비 안전), Lambda nft.json contents/images 0건 trace.
+- **Playwright MCP E2E** (port 3110): 17개 라우트(홈·posts·series·tags·about·sitemap·rss·robots·og·manifest·404 한글 slug 포함) + 6개 인터랙티브(⌘K 검색·다크모드·모바일 메뉴·ViewToggle·SPA navigation) 모두 console 0 errors / 0 warnings. v1.1.0~v1.1.2 회귀 패턴 5종(streaming stuck·React #418·/api/views 500·images over-tracing·lambda size) 0건 재현.
+- **자율 영역만 처리** — 10개 포스트 frontmatter description 120-160자 확장(seo.md 룰)은 contents/ 사용자 승인 영역으로 v1.1.3에서 보류.
+
 ## [1.1.2] - 2026-05-04
 
 🚑 **프로덕션 streaming stuck 핫픽스 (root cause fix)** — v1.1.0 production 직후 ~30분 시점부터 시작된 무한 `loading.tsx` stuck을 **본질적으로 해결**. v1.1.1의 `outputFileTracingIncludes` fix로는 부족했던 진짜 root cause는 `cacheComponents: true`(Next.js 16 PPR)가 모든 RSC를 default dynamic으로 만들어 매 요청 `fs.readdirSync(contents/)` 호출 → Vercel lambda contents/ 부재 시 ENOENT throw → streaming chunk close → 모든 dynamic 라우트(`/`, `/posts`, `/series`, `/tags`, `/posts/[slug]`, `/sitemap.xml`, `/og`) stuck.
