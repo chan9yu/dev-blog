@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { useHydrated } from "@/shared/hooks/useHydrated";
 import type { PostSummary } from "@/shared/types";
 import { cn } from "@/shared/utils/cn";
 import { EASE_OUT } from "@/shared/utils/motion";
@@ -38,14 +39,15 @@ type PostListProps = {
 	posts: PostSummary[];
 };
 
-// rAF로 IntersectionObserver setState를 다음 paint 사이클로 지연 — 레이아웃 스래싱 방지.
-// AnimatePresence mode="popLayout": 뷰 전환 시 퇴장 카드가 레이아웃을 즉시 해제해 진입 카드 정렬 안정.
+// hydrated gate — useViewMode server="list" vs client=localStorage 미스매치(React #418) 차단.
 export function PostList({ posts }: PostListProps) {
 	const { view } = useViewMode();
+	const hydrated = useHydrated();
 	const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const rafRef = useRef<number | undefined>(undefined);
 
+	const effectiveView = hydrated ? view : "list";
 	const visiblePosts = posts.slice(0, displayCount);
 	const hasMore = visiblePosts.length < posts.length;
 
@@ -99,20 +101,20 @@ export function PostList({ posts }: PostListProps) {
 				initial={false}
 				animate="visible"
 				className={cn(
-					view === "list"
+					effectiveView === "list"
 						? "flex flex-col gap-3 sm:gap-4 md:gap-6"
 						: "grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
 				)}
 			>
 				<AnimatePresence mode="popLayout">
 					{visiblePosts.map((post, index) => {
-						// 첫 카드: priority + framer-motion 우회 — LCP candidate paint timing 안정화 + preload hint 일치.
+						// 첫 카드: framer-motion 우회로 paint timing만 안정화 — priority preload는 view-mode 전환 시 sizes 불일치로 unused 워닝 발생하므로 제거.
 						if (index === 0) {
-							return <PostCard key={post.slug} post={post} variant={view} priority />;
+							return <PostCard key={post.slug} post={post} variant={effectiveView} />;
 						}
 						return (
 							<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
-								<PostCard post={post} variant={view} />
+								<PostCard post={post} variant={effectiveView} />
 							</motion.div>
 						);
 					})}

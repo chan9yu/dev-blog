@@ -109,9 +109,9 @@ describe("PostList", () => {
 
 	it("ViewToggle 컨트롤 존재 (리스트/격자 전환 버튼)", () => {
 		render(<PostList posts={[makePost()]} />);
-		// role=group + aria-label="뷰 모드" 래퍼 안에 aria-pressed를 가진 2개 버튼
-		const group = screen.getByRole("group", { name: "뷰 모드" });
-		expect(within(group).getByRole("button", { name: "리스트 보기" })).toBeInTheDocument();
-		expect(within(group).getByRole("button", { name: "격자 보기" })).toBeInTheDocument();
+		// role=toolbar + aria-label="뷰 모드" 래퍼 안에 aria-pressed를 가진 2개 버튼 (WAI-ARIA APG)
+		const toolbar = screen.getByRole("toolbar", { name: "뷰 모드" });
+		expect(within(toolbar).getByRole("button", { name: "리스트 보기" })).toBeInTheDocument();
+		expect(within(toolbar).getByRole("button", { name: "격자 보기" })).toBeInTheDocument();
 	});
 });
