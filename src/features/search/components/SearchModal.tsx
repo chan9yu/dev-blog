@@ -88,6 +88,16 @@ export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 				<Dialog.Title className="sr-only">포스트 검색</Dialog.Title>
 				<Dialog.Description className="sr-only">제목·설명·태그로 포스트를 검색합니다.</Dialog.Description>
 
+				<div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+					{hasPendingInput
+						? "검색 중"
+						: trimmed === ""
+							? ""
+							: results.length === 0
+								? "검색 결과 없음"
+								: `검색 결과 ${results.length}개`}
+				</div>
+
 				<div className="border-border-subtle flex items-center gap-3 border-b px-4 py-4">
 					<Search className="text-muted-foreground size-5 shrink-0" aria-hidden />
 					<input
@@ -110,10 +120,7 @@ export function SearchModal({ open, onOpenChange, posts }: SearchModalProps) {
 				<div className="max-h-modal-content overflow-y-auto p-2">
 					{trimmed === "" ? (
 						hasPendingInput ? (
-							<div
-								className="text-muted-foreground flex items-center justify-center py-12 text-center text-sm"
-								aria-live="polite"
-							>
+							<div className="text-muted-foreground flex items-center justify-center py-12 text-center text-sm">
 								검색 중...
 							</div>
 						) : (

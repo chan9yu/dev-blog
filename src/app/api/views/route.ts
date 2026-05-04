@@ -3,14 +3,12 @@ import type { NextRequest } from "next/server";
 
 import { validateSlug } from "@/shared/utils/slug";
 
-// 응답 shape `{ views }` 고정 — slug 누설 금지(테스트가 Object.keys === ["views"] 단언) + MSW handlers와 계약 동일.
-// runtime 명시 금지: cacheComponents=true(PPR)가 Route segment runtime export를 빌드 에러로 차단.
-// KV 장애 시 GET=0 fallback, POST=silent fail — 조회수 실패가 페이지 500을 일으키지 않도록 보호.
-
 const NO_STORE_HEADERS = { "cache-control": "no-store" } as const;
-
-// 운영 KV에 이미 저장된 키 패턴 호환 — 변경 시 기존 카운트가 모두 0으로 초기화됨.
 const VIEW_KEY_PREFIX = "views:post:";
+
+const isKvConfigured = Boolean(
+	process.env.KV_REST_API_URL || process.env.KV_URL || process.env.KV_REST_API_READ_ONLY_TOKEN
+);
 
 function viewsKey(slug: string) {
 	return `${VIEW_KEY_PREFIX}${slug}`;
@@ -22,9 +20,17 @@ export async function GET(req: NextRequest) {
 		return Response.json({ error: "invalid slug" }, { status: 400, headers: NO_STORE_HEADERS });
 	}
 
-	const stored = await kv.get<number>(viewsKey(slug)).catch(() => null);
-	const views = stored ?? 0;
-	return Response.json({ views }, { headers: NO_STORE_HEADERS });
+	if (!isKvConfigured) {
+		return Response.json({ views: 0 }, { headers: NO_STORE_HEADERS });
+	}
+
+	try {
+		const stored = await kv.get<number>(viewsKey(slug));
+		return Response.json({ views: stored ?? 0 }, { headers: NO_STORE_HEADERS });
+	} catch (error) {
+		console.warn(`[views] GET ${slug} kv error`, error);
+		return Response.json({ views: 0 }, { headers: NO_STORE_HEADERS });
+	}
 }
 
 export async function POST(req: NextRequest) {
@@ -38,7 +44,15 @@ export async function POST(req: NextRequest) {
 		return Response.json({ error: "invalid slug" }, { status: 400, headers: NO_STORE_HEADERS });
 	}
 
-	// fire-and-forget — incr 반환값 미사용(KV가 원자적 카운트 관리).
-	await kv.incr(viewsKey(slug)).catch(() => undefined);
+	if (!isKvConfigured) {
+		return new Response(null, { status: 204, headers: NO_STORE_HEADERS });
+	}
+
+	try {
+		await kv.incr(viewsKey(slug));
+	} catch (error) {
+		console.warn(`[views] POST ${slug} kv error`, error);
+	}
+
 	return new Response(null, { status: 204, headers: NO_STORE_HEADERS });
 }

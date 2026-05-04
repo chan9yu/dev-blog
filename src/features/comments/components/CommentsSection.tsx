@@ -127,7 +127,11 @@ export function CommentsSection({ slug, isPrivate = false }: CommentsSectionProp
 			)}
 
 			{config && !shouldLoad && (
-				<div className="bg-muted text-muted-foreground min-h-32 rounded-md p-6 text-center text-sm">
+				<div
+					role="status"
+					aria-live="polite"
+					className="bg-muted text-muted-foreground min-h-32 rounded-md p-6 text-center text-sm"
+				>
 					스크롤하면 댓글이 로드됩니다.
 				</div>
 			)}

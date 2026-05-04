@@ -25,7 +25,7 @@ export function buildSitemapEntries(input: BuildSitemapEntriesInput) {
 
 	const postEntries: MetadataRoute.Sitemap = publicPosts.map((post) => ({
 		url: `${siteUrl}/posts/${post.slug}`,
-		lastModified: new Date(post.date),
+		lastModified: new Date(post.updated ?? post.date),
 		changeFrequency: "weekly",
 		priority: 0.8
 	}));

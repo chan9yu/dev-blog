@@ -2,11 +2,10 @@ import { ImageResponse } from "next/og";
 
 import { siteMetadata } from "@/shared/config/site";
 
+export const dynamic = "force-dynamic";
+
 const MAX_TITLE = 80;
 const MAX_TAG = 32;
-
-// 기본 node runtime 사용 (요청별 searchParams 동적 — `/og?title=...&tag=...`).
-// satori는 woff2 미지원이라 한글 폰트 임베딩이 미적용 — 영문 fallback으로 동작.
 
 function truncate(input: string, max: number) {
 	if (input.length <= max) return input;
