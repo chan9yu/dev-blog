@@ -1,42 +1,68 @@
 "use client";
 
-import { createContext, type ReactNode, use } from "react";
+import dynamic from "next/dynamic";
+import type { ReactNode } from "react";
+import { useState } from "react";
 
-import { useLightbox } from "@/features/lightbox/hooks";
-import type { LightboxImage } from "@/features/lightbox/types";
+import type { LightboxImage } from "../contexts/LightboxContext";
+import { LightboxContext } from "../contexts/LightboxContext";
 
-import { ImageLightbox } from "./ImageLightbox";
+/** 초기 번들에서 제외해 LCP 개선 — 라이트박스는 사용자 인터랙션 후에만 필요 */
+const ImageLightbox = dynamic(() => import("./ImageLightbox").then((mod) => ({ default: mod.ImageLightbox })), {
+	ssr: false
+});
 
-type LightboxContextValue = {
-	openLightbox: (images: LightboxImage[], index?: number) => void;
+type LightboxState = {
+	images: ReadonlyArray<LightboxImage>;
+	index: number;
 };
 
-const LightboxContext = createContext<LightboxContextValue | null>(null);
-
-export function useLightboxContext() {
-	const context = use(LightboxContext);
-	if (!context) {
-		throw new Error("useLightboxContext must be used within LightboxProvider");
-	}
-	return context;
-}
+const INITIAL_STATE: LightboxState = { images: [], index: 0 };
 
 type LightboxProviderProps = {
 	children: ReactNode;
 };
 
-/**
- * Lightbox Context Provider
- * - 전역 lightbox 상태 관리
- * - MDX 이미지에서 사용
- */
+// 상태 모델: `images.length === 0`이면 닫힘 상태. `open(single)`은 `openMany([single], 0)` sugar.
 export function LightboxProvider({ children }: LightboxProviderProps) {
-	const { isOpen, currentIndex, images, openLightbox, closeLightbox } = useLightbox();
+	const [state, setState] = useState<LightboxState>(INITIAL_STATE);
+
+	const open = (image: LightboxImage) => {
+		setState({ images: [image], index: 0 });
+	};
+
+	const openMany = (images: ReadonlyArray<LightboxImage>, startIndex = 0) => {
+		if (images.length === 0) return;
+		const bounded = Math.max(0, Math.min(startIndex, images.length - 1));
+		setState({ images, index: bounded });
+	};
+
+	const close = () => {
+		setState(INITIAL_STATE);
+	};
+
+	const goNext = () => {
+		setState((prev) => {
+			if (prev.images.length === 0) return prev;
+			return { ...prev, index: (prev.index + 1) % prev.images.length };
+		});
+	};
+
+	const goPrev = () => {
+		setState((prev) => {
+			if (prev.images.length === 0) return prev;
+			return { ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length };
+		});
+	};
+
+	const isOpen = state.images.length > 0;
 
 	return (
-		<LightboxContext value={{ openLightbox }}>
+		<LightboxContext value={{ open, openMany, close }}>
 			{children}
-			<ImageLightbox isOpen={isOpen} onClose={closeLightbox} images={images} currentIndex={currentIndex} />
+			{isOpen && (
+				<ImageLightbox images={state.images} index={state.index} onNext={goNext} onPrev={goPrev} onClose={close} />
+			)}
 		</LightboxContext>
 	);
 }

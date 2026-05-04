@@ -1,26 +1,20 @@
 /**
- * URL-safe slug 생성 (한글 유지, 특수문자 제거, 대소문자 유지)
+ * 텍스트를 URL/ID 안전 slug로 변환한다.
  *
- * 기능:
- * - 영문자, 숫자, 한글, 공백, 하이픈만 허용
- * - 공백을 하이픈(-)으로 변환
- * - 연속된 하이픈을 하나로 정리
- * - 앞뒤 하이픈 제거
- * - 대소문자 유지 (WebRTC → WebRTC)
+ * **rehype-slug(github-slugger)와 동일한 결과를 보장하는 연산 순서**:
+ * 1. 소문자 변환
+ * 2. 각 공백을 개별 하이픈으로 변환 (`\s` 하나씩, `\s+` collapse 금지)
+ * 3. 허용 문자 외 제거 (이미 변환된 하이픈은 유지)
+ * 4. 앞뒤 하이픈 제거
  *
- * 사용처: 태그, 시리즈, TOC 앵커 등 모든 URL slug 생성
- *
- * 예시:
- * - "항해 플러스 프론트엔드 6기" → "항해-플러스-프론트엔드-6기"
- * - "WebRTC 박살내기!" → "WebRTC-박살내기"
- * - "Hello  World--Test" → "Hello-World-Test"
+ * 예:
+ * - "Step 1: A - B"  → "step-1-a---b"   (` - ` → 공백→`-`, `-`, 공백→`-`)
+ * - "명시적 > 암묵적" → "명시적--암묵적"  (` > ` → 공백→`-`, `>` 제거, 공백→`-`)
  */
-export function slugify(str: string): string {
-	return str
-		.toString()
-		.trim()
-		.replace(/[^\w가-힣\s-]/g, "") // 영문, 숫자, 한글, 공백, 하이픈만 허용
-		.replace(/\s+/g, "-") // 공백을 하이픈으로
-		.replace(/-+/g, "-") // 연속된 하이픈을 하나로
-		.replace(/^-+|-+$/g, ""); // 앞뒤 하이픈 제거
+export function slugify(text: string) {
+	return text
+		.toLowerCase()
+		.replace(/\s/g, "-")
+		.replace(/[^a-z0-9가-힣-]/g, "")
+		.replace(/^-+|-+$/g, "");
 }

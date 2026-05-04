@@ -1,52 +1,69 @@
-import type { HTMLAttributes, ReactElement } from "react";
-import { codeToHtml } from "shiki";
+"use client";
 
-import { ShikiCodeBlock } from "./ShikiCodeBlock";
+import { Check, Copy } from "lucide-react";
+import type { ComponentProps } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export async function MdxPre({ children, ...props }: HTMLAttributes<HTMLPreElement>) {
-	const childElement = children as ReactElement<{ className?: string; children?: string }>;
-	const isCodeBlock = childElement?.props?.className?.startsWith("language-");
+import { cn } from "@/shared/utils/cn";
 
-	if (isCodeBlock && typeof childElement.props.children === "string") {
-		const language = childElement.props.className?.replace("language-", "") || "plaintext";
-		const code = childElement.props.children;
+const COPIED_FEEDBACK_MS = 2000;
 
-		// codeToHtml 실행 (try/catch는 JSX 반환 전에만)
-		let codeHTML: string;
+type MdxPreProps = ComponentProps<"pre"> & {
+	filename?: string;
+};
+
+/**
+ * 복사 버튼이 있는 코드 블록 컨테이너. 자식 <code>의 text를 클립보드에 복사.
+ * M2에서 Shiki 서버 렌더링 결과를 감싸며 filename/lang 메타는 remark/rehype에서 주입.
+ * setTimeout 사용은 useEffect cleanup 루프로 격리 (workflow.md 준수).
+ */
+export function MdxPre({ filename, className, children, ...rest }: MdxPreProps) {
+	const preRef = useRef<HTMLPreElement>(null);
+	const [copied, setCopied] = useState(false);
+
+	useEffect(() => {
+		if (!copied) return;
+		const timerId = window.setTimeout(() => setCopied(false), COPIED_FEEDBACK_MS);
+		return () => window.clearTimeout(timerId);
+	}, [copied]);
+
+	const handleCopy = async () => {
+		const code = preRef.current?.innerText ?? "";
 
 		try {
-			codeHTML = await codeToHtml(code, {
-				lang: language,
-				themes: {
-					light: "github-light",
-					dark: "github-dark"
-				}
-			});
+			await navigator.clipboard.writeText(code);
+			setCopied(true);
 		} catch {
-			// 지원하지 않는 언어는 text로 fallback
-			console.warn(`Shiki: Language "${language}" is not supported. Falling back to "text".`);
-
-			try {
-				codeHTML = await codeToHtml(code, {
-					lang: "text",
-					themes: {
-						light: "github-light",
-						dark: "github-dark"
-					}
-				});
-			} catch (fallbackError) {
-				// fallback도 실패하면 일반 pre 태그로 렌더링
-				console.error("Shiki fallback failed:", fallbackError);
-				return (
-					<pre {...props}>
-						<code>{code}</code>
-					</pre>
-				);
-			}
+			setCopied(false);
 		}
+	};
 
-		return <ShikiCodeBlock html={codeHTML} />;
-	}
-
-	return <pre {...props}>{children}</pre>;
+	return (
+		<div className="group relative my-6">
+			{filename && (
+				<div className="border-border-subtle bg-muted text-muted-foreground rounded-t-md border border-b-0 px-4 py-1.5 font-mono text-xs">
+					{filename}
+				</div>
+			)}
+			<pre
+				ref={preRef}
+				className={cn(
+					"border-border-subtle bg-muted overflow-x-auto border p-4 font-mono text-sm leading-relaxed",
+					filename ? "rounded-b-md" : "rounded-md",
+					className
+				)}
+				{...rest}
+			>
+				{children}
+			</pre>
+			<button
+				type="button"
+				onClick={handleCopy}
+				aria-label={copied ? "복사됨" : "코드 복사"}
+				className="bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring absolute top-2 right-2 inline-flex size-9 items-center justify-center rounded-md opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+			>
+				{copied ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
+			</button>
+		</div>
+	);
 }

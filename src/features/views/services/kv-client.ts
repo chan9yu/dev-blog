@@ -1,64 +1,63 @@
-import { kv } from "@vercel/kv";
+// 조회수는 부가 기능 — KV 실패가 UI를 throw로 중단하지 않도록 모든 함수가 silent fail + console.warn.
 
-/**
- * Vercel KV 클라이언트
- * Redis 기반 키-값 저장소를 사용하여 조회수를 추적합니다.
- */
+const VIEWS_ENDPOINT = "/api/views";
 
-const VIEW_KEY_PREFIX = "views:post:";
+type ViewsResponse = {
+	views: number;
+};
 
-/**
- * 포스트 조회수 키 생성
- */
-function getViewKey(slug: string): string {
-	return `${VIEW_KEY_PREFIX}${slug}`;
+function isViewsResponse(value: unknown): value is ViewsResponse {
+	return typeof value === "object" && value !== null && typeof (value as { views?: unknown }).views === "number";
 }
 
-/**
- * 포스트 조회수 증가
- * @param slug - 포스트 slug
- * @returns 증가 후 조회수
- */
-export async function incrementPostViews(slug: string): Promise<number> {
-	const key = getViewKey(slug);
-	const views = await kv.incr(key);
-	return views;
-}
+export async function fetchPostViewsOrNull(slug: string) {
+	try {
+		const res = await fetch(`${VIEWS_ENDPOINT}?slug=${encodeURIComponent(slug)}`, { cache: "no-store" });
+		if (!res.ok) {
+			console.warn(`[views] GET ${slug} failed: ${res.status}`);
+			return null;
+		}
 
-/**
- * 포스트 조회수 조회
- * @param slug - 포스트 slug
- * @returns 현재 조회수
- */
-export async function getPostViews(slug: string): Promise<number> {
-	const key = getViewKey(slug);
-	const views = await kv.get<number>(key);
-	return views ?? 0;
-}
+		const data: unknown = await res.json();
+		if (!isViewsResponse(data)) {
+			console.warn(`[views] GET ${slug} returned malformed payload`);
+			return null;
+		}
 
-/**
- * 여러 포스트의 조회수 일괄 조회
- * @param slugs - 포스트 slug 배열
- * @returns slug를 키로 하는 조회수 맵
- */
-export async function getBatchPostViews(slugs: string[]): Promise<Record<string, number>> {
-	if (slugs.length === 0) {
-		return {};
+		return data.views;
+	} catch (error) {
+		console.warn(`[views] GET ${slug} network error`, error);
+		return null;
 	}
+}
 
-	const keys = slugs.map(getViewKey);
-	const pipeline = kv.pipeline();
+export async function getPostViews(slug: string) {
+	const value = await fetchPostViewsOrNull(slug);
+	return value ?? 0;
+}
 
-	keys.forEach((key) => {
-		pipeline.get<number>(key);
-	});
+export async function incrementPostViews(slug: string) {
+	try {
+		const res = await fetch(VIEWS_ENDPOINT, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ slug })
+		});
 
-	const results = await pipeline.exec<(number | null)[]>();
+		if (!res.ok) {
+			console.warn(`[views] POST ${slug} failed: ${res.status}`);
+		}
+	} catch (error) {
+		console.warn(`[views] POST ${slug} network error`, error);
+	}
+}
 
-	const viewsMap: Record<string, number> = {};
-	slugs.forEach((slug, index) => {
-		viewsMap[slug] = results[index] ?? 0;
-	});
+// 중복 slug 자동 dedup. 반환 키 순회 순서는 보장 안 함 — 호출자는 slug로 직접 lookup할 것.
+export async function getBatchPostViews(slugs: ReadonlyArray<string>) {
+	if (slugs.length === 0) return {};
 
-	return viewsMap;
+	const unique = Array.from(new Set(slugs));
+	const entries = await Promise.all(unique.map(async (slug) => [slug, await getPostViews(slug)] as const));
+
+	return Object.fromEntries(entries);
 }

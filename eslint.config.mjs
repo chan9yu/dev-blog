@@ -13,11 +13,12 @@ const eslintConfig = defineConfig([
 		},
 		rules: {
 			"simple-import-sort/imports": "error",
-			"simple-import-sort/exports": "error"
+			"simple-import-sort/exports": "error",
+			"@next/next/no-img-element": "off"
 		}
 	},
 	prettierConfig,
-	globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", ".claude/**"])
+	globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", ".backup/**", ".claude/**"])
 ]);
 
 export default eslintConfig;

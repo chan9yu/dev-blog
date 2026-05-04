@@ -1,36 +1,20 @@
 import type { MetadataRoute } from "next";
 
-import { baseUrl } from "@/shared/constants";
+import { getSiteUrl } from "@/shared/config/site";
 
+// preview/local 환경은 색인 전체 차단 — production만 sitemap 노출.
+// Private URL은 sitemap에서 자체 제외되므로 별도 Disallow 불필요 (PRD §10.6).
 export default function robots(): MetadataRoute.Robots {
-	const IS_PROD = process.env.VERCEL_ENV === "production";
+	const isProduction = process.env.VERCEL_ENV === "production";
 
-	// 프로덕션: 모든 크롤러 허용, 불필요한 경로 차단
-	// 개발/프리뷰: 모든 크롤링 차단
-	if (IS_PROD) {
+	if (!isProduction) {
 		return {
-			rules: [
-				{
-					userAgent: "*",
-					allow: "/",
-					disallow: [
-						"/_next/static/", // Next.js 정적 빌드 파일
-						"/_next/image/", // Next.js 이미지 최적화 API
-						"/api/" // API 라우트 (있다면)
-					]
-				}
-			],
-			sitemap: `${baseUrl}/sitemap.xml`
+			rules: { userAgent: "*", disallow: "/" }
 		};
 	}
 
-	// 개발/프리뷰 환경: 모든 크롤링 차단
 	return {
-		rules: [
-			{
-				userAgent: "*",
-				disallow: "/"
-			}
-		]
+		rules: { userAgent: "*", allow: "/", disallow: "/api/" },
+		sitemap: `${getSiteUrl()}/sitemap.xml`
 	};
 }

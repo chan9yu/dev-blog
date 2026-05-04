@@ -1,1 +1,0 @@
-export { useLightbox } from "./useLightbox";

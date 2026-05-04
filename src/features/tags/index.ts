@@ -1,8 +1,6 @@
 // Components
-export { TagList } from "./components";
+export { TagChip, TagList, TrendingTags } from "./components";
 
-// Services
-export { getTagCounts } from "./services";
-
-// Types
-export type { TagCount } from "./types";
+// Services (서버 전용)
+export { getAllTags, getPostsByTag, getTagCounts, getTrendingTags } from "./services";
+export type { TagCount } from "@/shared/types";

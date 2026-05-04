@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 
-import type { SearchResult } from "@/features/search/types";
-import { cn } from "@/shared/utils";
+import type { SearchResult } from "../types";
 
 type SearchResultItemProps = {
 	result: SearchResult;
@@ -11,49 +11,57 @@ type SearchResultItemProps = {
 };
 
 export function SearchResultItem({ result, onSelect }: SearchResultItemProps) {
-	const { post } = result;
+	const titleIndices = findMatchIndices(result, "title");
+	const descriptionIndices = findMatchIndices(result, "description");
 
 	return (
 		<Link
-			href={`/posts/${post.slug}`}
+			href={`/posts/${result.post.slug}`}
 			onClick={onSelect}
-			className={cn(
-				"block rounded-lg p-4 transition-colors",
-				"hover:bg-secondary focus:bg-secondary focus:outline-none"
-			)}
+			className="hover:bg-muted focus-visible:bg-muted focus-visible:ring-ring block rounded-md px-3 py-2 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
 		>
-			<div className="space-y-1">
-				{/* 제목 */}
-				<h3 className="text-primary line-clamp-1 text-base font-semibold">{post.title}</h3>
-
-				{/* 설명 */}
-				<p className="text-secondary line-clamp-2 text-sm">{post.description}</p>
-
-				{/* 날짜 및 태그 */}
-				<div className="flex items-center gap-2 text-xs">
-					<time className="text-tertiary" dateTime={post.date}>
-						{new Date(post.date).toLocaleDateString("ko-KR", {
-							year: "numeric",
-							month: "long",
-							day: "numeric"
-						})}
-					</time>
-
-					{post.tags.length > 0 && (
-						<>
-							<span className="text-tertiary">·</span>
-							<div className="flex flex-wrap gap-1">
-								{post.tags.slice(0, 3).map((tag) => (
-									<span key={tag} className="text-tertiary rounded bg-gray-100 px-2 py-0.5 dark:bg-gray-800">
-										#{tag}
-									</span>
-								))}
-								{post.tags.length > 3 && <span className="text-tertiary">+{post.tags.length - 3}</span>}
-							</div>
-						</>
-					)}
-				</div>
-			</div>
+			<p className="text-foreground line-clamp-1 text-sm font-medium">
+				{renderHighlighted(result.post.title, titleIndices)}
+			</p>
+			<p className="text-muted-foreground line-clamp-1 text-xs">
+				{renderHighlighted(result.post.description, descriptionIndices)}
+			</p>
 		</Link>
 	);
+}
+
+function findMatchIndices(result: SearchResult, key: "title" | "description") {
+	const match = result.matches?.find((m) => m.key === key);
+	return match?.indices ?? [];
+}
+
+// 중첩된 Fuse match indices를 cursor 기반으로 처리 — 완전 중첩은 skip, 부분 중첩은 effectiveStart=max(start,cursor)로 새 mark.
+function renderHighlighted(source: string, indices: ReadonlyArray<readonly [number, number]>) {
+	if (indices.length === 0) return source;
+
+	const sorted = [...indices].sort((a, b) => a[0] - b[0]);
+	const chunks: ReactNode[] = [];
+	let cursor = 0;
+
+	sorted.forEach(([start, end]) => {
+		const sliceEnd = end + 1;
+		if (sliceEnd <= cursor) return;
+
+		const effectiveStart = Math.max(start, cursor);
+		if (effectiveStart > cursor) {
+			chunks.push(source.slice(cursor, effectiveStart));
+		}
+		chunks.push(
+			<mark key={effectiveStart} className="bg-primary/20 text-foreground rounded-sm px-0.5">
+				{source.slice(effectiveStart, sliceEnd)}
+			</mark>
+		);
+		cursor = sliceEnd;
+	});
+
+	if (cursor < source.length) {
+		chunks.push(source.slice(cursor));
+	}
+
+	return chunks;
 }

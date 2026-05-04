@@ -1,68 +1,56 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { BlogPostCardSkeleton, FilteredBlogPosts, getAllPosts } from "@/features/blog";
+import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
 import { getTagCounts, TagList } from "@/features/tags";
-import { SITE } from "@/shared/config";
+import { Container } from "@/shared/components/layouts/Container";
+import { buildMetadata } from "@/shared/seo";
+import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
 
-export const metadata: Metadata = {
-	title: "포스트",
-	description: "프론트엔드 개발 경험과 학습 내용을 기록합니다. React, TypeScript, Next.js 등 다양한 주제를 다룹니다.",
-	openGraph: {
-		title: "포스트 · chan9yu",
-		description: "프론트엔드 개발 경험과 학습 내용을 기록합니다",
-		type: "website",
-		url: `${SITE.url}/posts`,
-		images: [
-			{
-				url: SITE.defaultOG,
-				width: 1200,
-				height: 630,
-				alt: "포스트 · chan9yu"
-			}
-		]
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "포스트 · chan9yu",
-		description: "프론트엔드 개발 경험과 학습 내용을 기록합니다",
-		images: [SITE.defaultOG]
-	},
-	alternates: {
-		canonical: `${SITE.url}/posts`
-	}
+type PostsPageProps = {
+	searchParams: Promise<{ tag?: string }>;
 };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ tag?: string }> }) {
-	const [posts, tagCounts] = await Promise.all([getAllPosts(), getTagCounts()]);
+export const metadata: Metadata = buildMetadata({
+	title: "포스트",
+	description:
+		"chan9yu 개발 블로그의 전체 포스트 목록. React, TypeScript, Next.js, WebRTC 등 프론트엔드 실무 경험과 학습 기록을 모은 기술 글 모음으로, 태그·시리즈별로 검색하고 필터링할 수 있습니다.",
+	path: "/posts"
+});
+
+export default async function PostsPage({ searchParams }: PostsPageProps) {
 	const { tag } = await searchParams;
 
+	const basePosts = getPublicPosts();
+	const allTags = getTagCounts(basePosts);
+	const filtered = tag ? basePosts.filter((post) => post.tags.includes(tag)) : basePosts;
+	const resolvedPosts = resolvePostThumbnails(filtered);
+
 	return (
-		<div className="space-y-10">
-			<header className="space-y-4">
-				<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl">포스트</h1>
-				<p className="text-secondary text-sm leading-relaxed sm:text-base">개발하면서 배운 것들을 기록합니다</p>
-			</header>
+		<Container>
+			<div className="space-y-8 py-8 lg:py-10">
+				<header className="space-y-3">
+					<h1 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">포스트</h1>
+					<p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
+						개발하면서 배운 것들을 기록합니다
+					</p>
+				</header>
 
-			<div className="flex gap-8">
-				<aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-7rem)] lg:w-[220px] lg:overflow-y-auto">
-					<TagList tagCounts={tagCounts} currentTag={tag} variant="filter" />
-				</aside>
-
-				<main className="min-w-0 flex-1">
-					<Suspense
-						fallback={
-							<div className="space-y-6">
-								{Array.from({ length: 6 }).map((_, i) => (
-									<BlogPostCardSkeleton key={i} variant="list" />
-								))}
-							</div>
-						}
+				<div className="flex gap-8">
+					<aside
+						aria-label="태그 필터"
+						className="lg:max-h-sidebar hidden lg:sticky lg:top-24 lg:block lg:w-56 lg:shrink-0 lg:overflow-y-auto"
 					>
-						<FilteredBlogPosts posts={posts} selectedTag={tag} />
-					</Suspense>
-				</main>
+						<TagList tags={allTags} currentTag={tag} variant="filter" />
+					</aside>
+
+					<div className="min-w-0 flex-1">
+						<Suspense fallback={<PostListSkeleton count={6} />}>
+							<PostList posts={resolvedPosts} />
+						</Suspense>
+					</div>
+				</div>
 			</div>
-		</div>
+		</Container>
 	);
 }

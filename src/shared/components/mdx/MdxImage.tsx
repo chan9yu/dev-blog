@@ -1,31 +1,58 @@
 "use client";
 
-import Image from "next/image";
-import type { ComponentProps } from "react";
+import type { ComponentProps, MouseEvent } from "react";
 
-import { useLightboxContext } from "@/features/lightbox";
+import { type LightboxImage, useLightbox } from "@/features/lightbox";
+import { cn } from "@/shared/utils/cn";
 
-export function MdxImage({ alt, ...props }: ComponentProps<typeof Image>) {
-	return <Image className="mx-auto" alt={alt || ""} {...props} />;
-}
+type MdxImageProps = ComponentProps<"img"> & {
+	alt: string;
+	caption?: string;
+};
 
-export function MdxImg({ alt, src, ...props }: ComponentProps<"img">) {
-	const { openLightbox } = useLightboxContext();
+// MDX `![alt](src)` 구문은 width/height를 전달하지 않으므로 next/image 대신 네이티브 <img> 사용.
+// 클릭 시 같은 <article> 내 figure 이미지를 수집해 라이트박스 carousel로 표시.
+export function MdxImage({ alt, caption, className, src, ...rest }: MdxImageProps) {
+	const { openMany } = useLightbox();
 
-	const handleClick = () => {
-		if (src && typeof src === "string") {
-			openLightbox([{ src, alt }], 0);
-		}
+	const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
+		if (typeof src !== "string" || !src) return;
+
+		const article = event.currentTarget.closest("article");
+		const root: ParentNode = article ?? document;
+		const imgs = Array.from(root.querySelectorAll<HTMLImageElement>("figure img"));
+
+		const images: LightboxImage[] = imgs
+			.map((img) => ({ src: img.currentSrc || img.src, alt: img.alt }))
+			.filter((image) => Boolean(image.src));
+
+		if (images.length === 0) return;
+
+		const triggerImg = event.currentTarget.querySelector<HTMLImageElement>("img");
+		const triggerIndex = triggerImg ? imgs.indexOf(triggerImg) : -1;
+		const startIndex = triggerIndex >= 0 ? triggerIndex : 0;
+
+		openMany(images, startIndex);
 	};
 
 	return (
-		// eslint-disable-next-line @next/next/no-img-element -- MDX 마크다운 이미지 렌더링용
-		<img
-			className="mx-auto cursor-pointer transition-opacity hover:opacity-80"
-			alt={alt || ""}
-			src={src}
-			onClick={handleClick}
-			{...props}
-		/>
+		<figure className="my-6">
+			<button
+				type="button"
+				onClick={handleOpen}
+				aria-label={`${alt} — 확대 보기`}
+				className="mx-auto block w-fit cursor-zoom-in rounded-lg border-0 bg-transparent p-0"
+			>
+				<img
+					alt={alt}
+					loading="lazy"
+					decoding="async"
+					src={typeof src === "string" ? src : undefined}
+					className={cn("block h-auto max-w-full rounded-lg", className)}
+					{...rest}
+				/>
+			</button>
+			{caption && <figcaption className="text-muted-foreground mt-2 text-center text-xs italic">{caption}</figcaption>}
+		</figure>
 	);
 }

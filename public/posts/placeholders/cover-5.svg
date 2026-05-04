@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="포스트 썸네일">
+  <defs>
+    <linearGradient id="g5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="50%" stop-color="#3f3f46"/>
+      <stop offset="100%" stop-color="#a1a1aa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g5)"/>
+  <g opacity="0.25" fill="none" stroke="white" stroke-width="1">
+    <line x1="100" y1="100" x2="1100" y2="100"/>
+    <line x1="100" y1="200" x2="1100" y2="200"/>
+    <line x1="100" y1="300" x2="1100" y2="300"/>
+    <line x1="100" y1="400" x2="1100" y2="400"/>
+    <line x1="100" y1="500" x2="1100" y2="500"/>
+  </g>
+  <g opacity="0.35" fill="white" font-family="ui-monospace, monospace" font-size="20">
+    <text x="140" y="150">const blog = () =></text>
+    <text x="140" y="250">  code.write()</text>
+    <text x="140" y="350">    .then(share)</text>
+  </g>
+  <text x="80" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="white" opacity="0.6">chan9yu</text>
+</svg>

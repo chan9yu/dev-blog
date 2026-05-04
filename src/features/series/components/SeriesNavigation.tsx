@@ -1,96 +1,103 @@
+import { BookOpen, ChevronLeft, ChevronRight, List } from "lucide-react";
 import Link from "next/link";
 
-import type { PostSummary } from "@/features/blog";
-import BookOpenIcon from "@/shared/assets/icons/book-open.svg";
-import ChevronLeftIcon from "@/shared/assets/icons/chevron-left.svg";
-import ChevronRightIcon from "@/shared/assets/icons/chevron-right.svg";
-import ListIcon from "@/shared/assets/icons/list.svg";
-import { slugify } from "@/shared/utils";
+import type { Series } from "@/shared/types";
+
+import { getAdjacentInSeries } from "../services";
 
 type SeriesNavigationProps = {
-	seriesName: string;
-	currentIndex: number;
-	allPosts: PostSummary[];
+	series: Series;
+	currentSlug: string;
 };
 
-export function SeriesNavigation({ seriesName, currentIndex, allPosts }: SeriesNavigationProps) {
-	const seriesSlug = slugify(seriesName);
-	const sortedPosts = [...allPosts].sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0));
-	const currentPostIndex = sortedPosts.findIndex((p) => p.seriesOrder === currentIndex);
-	const prevPost = currentPostIndex > 0 ? sortedPosts[currentPostIndex - 1] : null;
-	const nextPost = currentPostIndex < sortedPosts.length - 1 ? sortedPosts[currentPostIndex + 1] : null;
+/**
+ * 레거시 SeriesNavigation 디자인:
+ * - bg-muted rounded-xl p-6
+ * - 헤더 row: BookOpen 아이콘 배경 box + "시리즈" label + 시리즈명 + 인덱스(N/M)
+ * - 이전/다음 버튼 2개 (bg-card rounded-lg p-3, 없으면 opacity-50)
+ * - 하단: 시리즈 전체 보기 버튼 (List 아이콘)
+ */
+export function SeriesNavigation({ series, currentSlug }: SeriesNavigationProps) {
+	const { prev, next, order, total } = getAdjacentInSeries(series, currentSlug);
+	if (order === null) return null;
 
 	return (
-		<div className="bg-secondary border-primary space-y-4 rounded-xl border p-6">
-			{/* Series Header */}
-			<div className="flex items-center justify-between">
+		<aside className="bg-muted border-border-subtle space-y-4 rounded-xl border p-6">
+			<div className="flex items-center justify-between gap-3">
 				<div className="flex items-center gap-2">
-					<div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-						<BookOpenIcon className="text-accent size-4" aria-hidden="true" />
+					<div className="bg-card flex size-8 items-center justify-center rounded-lg">
+						<BookOpen className="text-accent size-4" aria-hidden />
 					</div>
 					<div>
-						<p className="text-tertiary text-xs font-medium tracking-wider uppercase">시리즈</p>
-						<Link href={`/series/${seriesSlug}`} className="text-primary hover-accent font-semibold transition-colors">
-							{seriesName}
+						<p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">시리즈</p>
+						<Link
+							href={`/series/${series.slug}`}
+							className="text-foreground hover:text-accent focus-visible:text-accent font-semibold transition-colors focus-visible:outline-none"
+						>
+							{series.name}
 						</Link>
 					</div>
 				</div>
-				<span className="text-tertiary text-sm font-medium">
-					{currentIndex} / {sortedPosts.length}
+				<span className="text-muted-foreground shrink-0 text-sm font-medium tabular-nums">
+					{order} / {total}
 				</span>
 			</div>
 
-			{/* Navigation Buttons */}
 			<div className="flex gap-3">
-				{prevPost ? (
+				{prev ? (
 					<Link
-						href={`/posts/${prevPost.slug}`}
-						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm"
+						href={`/posts/${prev.slug}`}
+						className="group bg-card border-border-subtle focus-visible:ring-ring flex flex-1 flex-col gap-1 rounded-lg border p-3 transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 					>
-						<span className="text-tertiary flex items-center gap-1 text-xs font-medium">
-							<ChevronLeftIcon className="size-3" aria-hidden="true" />
+						<span className="text-muted-foreground flex items-center gap-1 text-xs font-medium">
+							<ChevronLeft className="size-3" aria-hidden />
 							이전 글
 						</span>
-						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
-							{prevPost.title}
+						<span className="text-foreground group-hover:text-accent line-clamp-1 text-sm font-medium transition-colors">
+							{prev.title}
 						</span>
 					</Link>
 				) : (
-					<div className="bg-primary border-primary flex flex-1 flex-col gap-1 rounded-lg border p-3 opacity-50">
-						<span className="text-tertiary text-xs font-medium">이전 글</span>
-						<span className="text-tertiary text-sm">첫 번째 글입니다</span>
+					<div
+						aria-hidden
+						className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 opacity-50"
+					>
+						<span className="text-muted-foreground text-xs font-medium">이전 글</span>
+						<span className="text-muted-foreground text-sm">첫 번째 글입니다</span>
 					</div>
 				)}
 
-				{nextPost ? (
+				{next ? (
 					<Link
-						href={`/posts/${nextPost.slug}`}
-						className="bg-primary border-primary group flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right transition-all hover:shadow-sm"
+						href={`/posts/${next.slug}`}
+						className="group bg-card border-border-subtle focus-visible:ring-ring flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 					>
-						<span className="text-tertiary flex items-center justify-end gap-1 text-xs font-medium">
+						<span className="text-muted-foreground flex items-center justify-end gap-1 text-xs font-medium">
 							다음 글
-							<ChevronRightIcon className="size-3" aria-hidden="true" />
+							<ChevronRight className="size-3" aria-hidden />
 						</span>
-						<span className="text-secondary group-hover-accent line-clamp-1 text-sm font-medium transition-colors">
-							{nextPost.title}
+						<span className="text-foreground group-hover:text-accent line-clamp-1 text-sm font-medium transition-colors">
+							{next.title}
 						</span>
 					</Link>
 				) : (
-					<div className="bg-primary border-primary flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right opacity-50">
-						<span className="text-tertiary text-xs font-medium">다음 글</span>
-						<span className="text-tertiary text-sm">마지막 글입니다</span>
+					<div
+						aria-hidden
+						className="bg-card border-border-subtle flex flex-1 flex-col gap-1 rounded-lg border p-3 text-right opacity-50"
+					>
+						<span className="text-muted-foreground text-xs font-medium">다음 글</span>
+						<span className="text-muted-foreground text-sm">마지막 글입니다</span>
 					</div>
 				)}
 			</div>
 
-			{/* Series Link */}
 			<Link
-				href={`/series/${seriesSlug}`}
-				className="bg-primary border-primary text-secondary flex items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium transition-all hover:shadow-sm"
+				href={`/series/${series.slug}`}
+				className="bg-card border-border-subtle text-muted-foreground hover:text-foreground focus-visible:ring-ring flex items-center justify-center gap-2 rounded-lg border py-2 text-sm font-medium transition-all hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 			>
-				<ListIcon className="size-4" aria-hidden="true" />
+				<List className="size-4" aria-hidden />
 				시리즈 전체 보기
 			</Link>
-		</div>
+		</aside>
 	);
 }

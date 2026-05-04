@@ -1,109 +1,24 @@
 import "@/shared/styles/globals.css";
 
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { cookies } from "next/headers";
-import Script from "next/script";
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
+import { Suspense } from "react";
 
-import { MotionProvider, ScrollReset, ScrollToTop, SiteFooter, SiteNavbar } from "@/shared/components";
-import { SITE } from "@/shared/config";
-import { type Theme, themeInitScript } from "@/shared/utils";
+import { getPublicPosts } from "@/features/posts";
+import { SearchTrigger } from "@/features/search";
+import { ThemeSwitcher } from "@/features/theme";
+import { ScrollReset } from "@/shared/components/common/ScrollReset";
+import { ScrollToTop } from "@/shared/components/common/ScrollToTop";
+import { Footer } from "@/shared/components/layouts/Footer";
+import { Header } from "@/shared/components/layouts/Header";
+import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
+import { getSiteUrl, siteMetadata } from "@/shared/config/site";
+import { buildWebSiteJsonLd, JsonLdScript } from "@/shared/seo";
 
-const baseUrl = new URL(SITE.url);
-
-export const metadata: Metadata = {
-	metadataBase: baseUrl,
-	applicationName: SITE.name,
-	title: {
-		default: SITE.title,
-		template: SITE.titleTemplate
-	},
-	description: SITE.description,
-	keywords: [...SITE.keywords],
-	authors: [
-		{
-			name: SITE.author.name,
-			url: SITE.author.url
-		}
-	],
-	creator: SITE.author.nickname,
-	publisher: SITE.author.nickname,
-	formatDetection: {
-		telephone: false,
-		email: false,
-		address: false
-	},
-	alternates: {
-		canonical: SITE.url,
-		languages: {
-			"ko-KR": SITE.url
-		},
-		types: {
-			"application/rss+xml": `${SITE.url}/rss`
-		}
-	},
-	openGraph: {
-		title: SITE.title,
-		description: SITE.description,
-		url: SITE.url,
-		siteName: SITE.name,
-		locale: SITE.locale,
-		type: "website",
-		images: [
-			{
-				url: SITE.defaultOG,
-				width: 1200,
-				height: 630,
-				alt: `${SITE.title} - ${SITE.shortDescription}`,
-				type: "image/png"
-			}
-		]
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: SITE.title,
-		description: SITE.description,
-		images: [SITE.defaultOG],
-		creator: SITE.social.twitter ?? undefined
-	},
-	robots: {
-		index: process.env.VERCEL_ENV === "production",
-		follow: true,
-		googleBot: {
-			index: process.env.VERCEL_ENV === "production",
-			follow: true,
-			"max-video-preview": -1,
-			"max-image-preview": "large",
-			"max-snippet": -1
-		}
-	},
-	verification: {
-		google: SITE.verification.google ?? undefined,
-		...(SITE.verification.naver && {
-			other: {
-				"naver-site-verification": SITE.verification.naver
-			}
-		})
-	},
-	icons: {
-		icon: [
-			{ url: "/favicons/favicon.ico", sizes: "any" },
-			{ url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-			{ url: "/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" }
-		],
-		apple: [{ url: "/favicons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-		other: [{ rel: "mask-icon", url: "/favicons/favicon.ico" }]
-	},
-	category: "technology",
-	classification: "Technology Blog"
-};
-
-type RootLayoutProps = {
-	readonly children: ReactNode;
-};
+import { Providers } from "./providers";
 
 const pretendard = localFont({
 	src: "../../public/fonts/PretendardVariable.woff2",
@@ -115,77 +30,90 @@ const pretendard = localFont({
 	adjustFontFallback: "Arial"
 });
 
-export default async function RootLayout({ children }: RootLayoutProps) {
-	const cookieStore = await cookies();
-	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+const ROOT_OG_IMAGE = `/og?title=${encodeURIComponent(siteMetadata.name)}`;
 
-	const htmlClassName = `${theme === "dark" ? "dark" : ""} ${pretendard.variable}`.trim();
+export const metadata: Metadata = {
+	metadataBase: new URL(getSiteUrl()),
+	title: {
+		default: siteMetadata.title,
+		template: `%s | ${siteMetadata.name}`
+	},
+	description: siteMetadata.description,
+	alternates: { canonical: "/" },
+	openGraph: {
+		type: "website",
+		siteName: siteMetadata.name,
+		locale: siteMetadata.locale,
+		url: "/",
+		title: siteMetadata.title,
+		description: siteMetadata.description,
+		images: [{ url: ROOT_OG_IMAGE, width: 1200, height: 630, alt: siteMetadata.title }]
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: siteMetadata.title,
+		description: siteMetadata.description,
+		images: [ROOT_OG_IMAGE]
+	},
+	icons: {
+		icon: [
+			{ url: "/favicons/favicon.ico", sizes: "any" },
+			{ url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+			{ url: "/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" }
+		],
+		apple: [{ url: "/favicons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+		other: [{ rel: "mask-icon", url: "/favicons/favicon.ico" }]
+	}
+};
+
+const websiteJsonLd = buildWebSiteJsonLd({
+	siteUrl: siteMetadata.url,
+	siteName: siteMetadata.name,
+	description: siteMetadata.description,
+	authorName: siteMetadata.author
+});
+
+export default function RootLayout({ children }: PropsWithChildren) {
+	const searchablePosts = getPublicPosts();
 
 	return (
-		<html lang="ko" className={htmlClassName}>
-			<body className="font-sans antialiased">
-				{/* Theme initialization script - must run before React hydration */}
-				<Script
-					id="theme-init"
-					strategy="beforeInteractive"
-					dangerouslySetInnerHTML={{
-						__html: themeInitScript
-					}}
-				/>
-				{/* JSON-LD Structured Data */}
-				<script
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify({
-							"@context": "https://schema.org",
-							"@type": "WebSite",
-							name: SITE.title,
-							description: SITE.description,
-							url: SITE.url,
-							author: {
-								"@type": "Person",
-								name: SITE.author.name,
-								url: SITE.author.url,
-								email: SITE.author.email,
-								jobTitle: "Frontend Developer",
-								description: SITE.author.bio,
-								knowsAbout: [
-									"React",
-									"TypeScript",
-									"Next.js",
-									"WebRTC",
-									"WebSocket",
-									"Real-time Communication",
-									"Web Development",
-									"Frontend Development"
-								],
-								sameAs: [SITE.social.github, SITE.social.linkedin].filter(Boolean)
-							},
-							publisher: {
-								"@type": "Person",
-								name: SITE.author.name,
-								url: SITE.author.url
-							},
-							inLanguage: "ko-KR",
-							potentialAction: {
-								"@type": "SearchAction",
-								target: `${SITE.url}/search?q={search_term_string}`,
-								"query-input": "required name=search_term_string"
-							}
-						})
-					}}
-				/>
-				<MotionProvider>
-					<ScrollReset />
-					<SiteNavbar />
-					<div className="mx-auto max-w-6xl px-6 pb-12 sm:px-8 lg:px-12">
-						<main className="mt-20">{children}</main>
-						<SiteFooter />
-					</div>
+		<html lang="ko" className={pretendard.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
+			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
+				<JsonLdScript id="website-json-ld" data={websiteJsonLd} />
+				<Providers>
+					<Suspense fallback={null}>
+						<ScrollReset />
+					</Suspense>
+					<a
+						href="#main-content"
+						className="focus-visible:ring-ring bg-background text-foreground sr-only z-50 rounded-md px-4 py-2 font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2 focus-visible:outline-none"
+					>
+						본문 바로가기
+					</a>
+					<Suspense
+						fallback={
+							<div aria-hidden className="border-border-subtle bg-background sticky top-0 z-40 h-16 border-b" />
+						}
+					>
+						<Header
+							searchSlot={<SearchTrigger posts={searchablePosts} />}
+							themeSlot={<ThemeSwitcher />}
+							mobileMenuSlot={<MobileMenu />}
+						/>
+					</Suspense>
+					<main id="main-content" tabIndex={-1} className="flex-1">
+						{children}
+					</main>
+					<Footer />
 					<ScrollToTop />
-				</MotionProvider>
-				<Analytics />
-				<SpeedInsights />
+				</Providers>
+				{/* Vercel 호스트 환경에서만 마운트 — 로컬 `pnpm start`에서는 `_vercel/insights/script.js` 404 회귀 차단. */}
+				{process.env.VERCEL ? (
+					<>
+						<Analytics />
+						<SpeedInsights />
+					</>
+				) : null}
 			</body>
 		</html>
 	);

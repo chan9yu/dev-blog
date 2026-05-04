@@ -1,41 +1,13 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentProps } from "react";
 
-export function MdxTable(props: ComponentPropsWithoutRef<"table">) {
+import { cn } from "@/shared/utils/cn";
+
+type MdxTableProps = ComponentProps<"table">;
+
+export function MdxTable({ className, ...rest }: MdxTableProps) {
 	return (
-		<div className="my-6 w-full overflow-x-auto">
-			<table className="border-primary w-full border-collapse text-sm" style={{ tableLayout: "fixed" }} {...props} />
+		<div className="border-border-subtle my-6 overflow-x-auto rounded-md border">
+			<table className={cn("w-full text-left text-sm", className)} {...rest} />
 		</div>
-	);
-}
-
-export function MdxThead(props: ComponentPropsWithoutRef<"thead">) {
-	return <thead className="border-primary border-b-2" {...props} />;
-}
-
-export function MdxTbody(props: ComponentPropsWithoutRef<"tbody">) {
-	return <tbody {...props} />;
-}
-
-export function MdxTr(props: ComponentPropsWithoutRef<"tr">) {
-	return <tr className="border-primary border-b" {...props} />;
-}
-
-export function MdxTh(props: ComponentPropsWithoutRef<"th">) {
-	return (
-		<th
-			className="bg-secondary text-primary px-3 py-3 text-left text-xs font-semibold sm:px-4 sm:text-sm"
-			style={{ wordWrap: "break-word" }}
-			{...props}
-		/>
-	);
-}
-
-export function MdxTd(props: ComponentPropsWithoutRef<"td">) {
-	return (
-		<td
-			className="text-secondary px-3 py-3 text-xs sm:px-4 sm:text-sm"
-			style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
-			{...props}
-		/>
 	);
 }

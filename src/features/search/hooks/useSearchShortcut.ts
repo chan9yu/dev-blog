@@ -1,18 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-/**
- * 검색 키보드 단축키 훅 (Cmd/Ctrl + K)
- * @param onTrigger - 단축키가 눌렸을 때 실행할 콜백
- */
-export function useSearchShortcut(onTrigger: () => void) {
+// Cmd+K (macOS) / Ctrl+K. callback ref 패턴으로 stale closure 방지 + 이벤트 리스너 1회만 등록.
+export function useSearchShortcut(callback: () => void) {
+	const callbackRef = useRef(callback);
+
 	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			// Cmd+K (Mac) 또는 Ctrl+K (Windows/Linux)
-			if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-				e.preventDefault(); // 브라우저 기본 동작 방지
-				onTrigger();
+		callbackRef.current = callback;
+	});
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+				event.preventDefault();
+				callbackRef.current();
 			}
 		};
 
@@ -21,5 +23,5 @@ export function useSearchShortcut(onTrigger: () => void) {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [onTrigger]);
+	}, []);
 }

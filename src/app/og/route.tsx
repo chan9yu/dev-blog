@@ -1,18 +1,93 @@
 import { ImageResponse } from "next/og";
 
-export function GET(request: Request) {
-	const url = new URL(request.url);
-	const title = url.searchParams.get("title") || "Next.js Portfolio Starter";
+import { siteMetadata } from "@/shared/config/site";
+
+const MAX_TITLE = 80;
+const MAX_TAG = 32;
+
+// Next.js 16 `cacheComponents` 활성 시 `runtime = "edge"`와 충돌 → 기본 node runtime 사용.
+// satori는 woff2 미지원이라 한글 폰트 임베딩이 미적용 — 영문 fallback으로 동작.
+
+function truncate(input: string, max: number) {
+	if (input.length <= max) return input;
+	return `${input.slice(0, max - 1).trimEnd()}…`;
+}
+
+export function GET(req: Request) {
+	const { searchParams } = new URL(req.url);
+	const rawTitle = searchParams.get("title")?.trim();
+	const title = truncate(rawTitle && rawTitle.length > 0 ? rawTitle : siteMetadata.name, MAX_TITLE);
+	const tagParam = searchParams.get("tag")?.trim();
+	const tag = tagParam ? truncate(tagParam, MAX_TAG) : null;
+	const thumbnail = searchParams.get("thumbnail");
+
+	if (thumbnail && /^https?:\/\//i.test(thumbnail)) {
+		return Response.redirect(thumbnail, 302);
+	}
+
+	if (thumbnail && thumbnail.startsWith("/")) {
+		const origin = new URL(req.url).origin;
+		return Response.redirect(`${origin}${thumbnail}`, 302);
+	}
+
+	const eyebrow = tag ? `#${tag}` : `${siteMetadata.name}.dev`;
 
 	return new ImageResponse(
-		<div tw="flex flex-col w-full h-full items-center justify-center bg-white">
-			<div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
-				<h2 tw="flex flex-col text-4xl font-bold tracking-tight text-left">{title}</h2>
+		<div
+			style={{
+				width: "100%",
+				height: "100%",
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "flex-start",
+				justifyContent: "space-between",
+				backgroundImage: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #4f46e5 100%)",
+				color: "#f8fafc",
+				fontFamily: "sans-serif",
+				padding: "72px 88px"
+			}}
+		>
+			<div
+				style={{
+					display: "flex",
+					fontSize: 24,
+					fontWeight: 600,
+					letterSpacing: "0.04em",
+					color: "#c7d2fe",
+					textTransform: "uppercase"
+				}}
+			>
+				{eyebrow}
+			</div>
+
+			<div
+				style={{
+					display: "flex",
+					fontSize: 64,
+					fontWeight: 800,
+					lineHeight: 1.18,
+					letterSpacing: "-0.02em",
+					maxWidth: "92%",
+					color: "#f8fafc"
+				}}
+			>
+				{title}
+			</div>
+
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					width: "100%",
+					fontSize: 22,
+					color: "#a5b4fc"
+				}}
+			>
+				<span>{siteMetadata.url.replace(/^https?:\/\//, "")}</span>
+				<span style={{ fontWeight: 700, color: "#f8fafc" }}>{siteMetadata.name}</span>
 			</div>
 		</div>,
-		{
-			width: 1200,
-			height: 630
-		}
+		{ width: 1200, height: 630 }
 	);
 }

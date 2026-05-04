@@ -1,236 +1,156 @@
-/* ============================================
-  MDX Prose Styles - Modern Typography
-============================================ */
+/**
+ * MDX 본문 스타일. `.prose` 스코프로 FEAT-POST-DETAIL 본문에만 적용.
+ * MDX 전용 커스텀 컴포넌트(MdxHeading, MdxPre 등)가 이 규칙을 상속/오버라이드.
+ */
 
 .prose {
-	@apply max-w-none;
-}
-
-.prose .anchor {
-	@apply invisible absolute no-underline opacity-0 transition-opacity;
-	margin-left: -1.25em;
-	padding-right: 0.5em;
-	width: 80%;
-	max-width: 700px;
-	cursor: pointer;
-}
-
-.prose *:hover > .anchor {
-	@apply visible opacity-100;
-}
-
-.prose .anchor::after {
-	content: "#";
-	color: var(--text-tertiary);
-	font-weight: 400;
-}
-
-.prose a {
-	@apply font-medium no-underline transition-colors;
-	color: var(--brand-accent);
-	text-decoration: underline;
-	text-decoration-color: color-mix(in srgb, var(--brand-accent) 30%, transparent);
-	text-decoration-thickness: 0.1em;
-	text-underline-offset: 0.2em;
-}
-
-.prose a:hover {
-	color: var(--brand-accent-hover);
-	text-decoration-color: color-mix(in srgb, var(--brand-accent) 80%, transparent);
-}
-
-.prose pre {
-	@apply my-4 overflow-x-auto rounded-lg border px-3 py-3 text-xs leading-relaxed sm:my-6 sm:rounded-xl sm:px-4 sm:py-4 sm:text-sm;
-	background-color: var(--bg-secondary);
-	border-color: var(--border-primary);
-}
-
-.prose code {
-	@apply rounded px-1 py-0.5 font-mono text-xs sm:rounded-md sm:px-1.5 sm:text-sm;
-	background-color: var(--bg-tertiary);
-	color: var(--text-primary);
-	font-weight: 500;
-}
-
-.prose pre code {
-	@apply bg-transparent p-0;
-	border: none;
-	line-height: 1.7;
-	font-weight: 400;
-}
-
-.prose code span {
-	@apply font-medium;
-}
-
-.prose img {
-	@apply my-8;
-}
-
-.prose p {
-	@apply my-4 leading-relaxed sm:my-6;
-	color: var(--text-secondary);
-	font-size: 0.9375rem;
+	color: var(--color-text-primary);
+	font-size: 1rem;
 	line-height: 1.75;
 }
 
-@media (min-width: 640px) {
-	.prose p {
-		font-size: 1.0625rem;
-		line-height: 1.8;
-	}
+.prose > * + * {
+	margin-top: 1.5em;
 }
 
-.prose h1 {
-	@apply mt-8 mb-4 text-2xl font-bold tracking-tight sm:mt-12 sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl;
-	color: var(--text-primary);
-	line-height: 1.2;
-}
-
+/*
+ * heading 크기 기준:
+ * CustomMDX에서 # → <h2>, ## → <h3>, ### → <h4> (+1 시프트)
+ * 각 태그가 이전 레벨의 시각적 크기를 이어받도록 조정.
+ *
+ *   #  (MDX) → <h2> 2rem    ← 기존 native <h1> 브라우저 기본값과 동일
+ *   ## (MDX) → <h3> 1.75rem ← 기존 .prose h2 크기
+ *   ### (MDX)→ <h4> 1.375rem ← 기존 .prose h3 크기
+ */
 .prose h2 {
-	@apply mt-8 mb-3 text-xl font-bold tracking-tight sm:mt-12 sm:mb-4 sm:text-2xl md:text-3xl;
-	color: var(--text-primary);
-	line-height: 1.3;
+	font-size: 2rem;
+	font-weight: 700;
+	line-height: 1.25;
+	margin-top: 2.5em;
+	margin-bottom: 0.75em;
+	scroll-margin-top: 5rem;
 }
 
 .prose h3 {
-	@apply mt-6 mb-3 text-lg font-semibold tracking-tight sm:mt-10 sm:mb-4 sm:text-xl md:text-2xl;
-	color: var(--text-primary);
+	font-size: 1.75rem;
+	font-weight: 600;
+	line-height: 1.35;
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+	scroll-margin-top: 5rem;
 }
 
 .prose h4 {
-	@apply mt-6 mb-2 text-base font-semibold tracking-tight sm:mt-8 sm:mb-3 sm:text-lg md:text-xl;
-	color: var(--text-primary);
+	font-size: 1.375rem;
+	font-weight: 600;
+	line-height: 1.4;
+	margin-top: 1.75em;
+	margin-bottom: 0.5em;
+	scroll-margin-top: 5rem;
 }
 
-.prose h5 {
-	@apply mt-4 mb-2 text-base font-semibold sm:mt-6 sm:text-lg;
-	color: var(--text-primary);
+.prose p {
+	line-height: 1.75;
 }
 
-.prose h6 {
-	@apply mt-4 mb-2 text-sm font-semibold sm:mt-6 sm:text-base;
-	color: var(--text-primary);
+.prose a {
+	color: var(--color-accent-default);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: color 150ms ease;
+}
+
+.prose a:hover {
+	color: var(--color-accent-hover);
 }
 
 .prose strong {
-	@apply font-bold;
-	color: var(--text-primary);
-	font-weight: 700;
+	font-weight: 600;
+	color: var(--color-text-primary);
 }
 
 .prose em {
-	@apply italic;
-	color: var(--text-secondary);
+	font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+	padding-left: 1.5em;
+	margin-top: 1em;
+	margin-bottom: 1em;
 }
 
 .prose ul {
-	@apply my-4 list-disc space-y-1.5 pl-5 sm:my-6 sm:space-y-2 sm:pl-6;
-	color: var(--text-secondary);
-	font-size: 0.9375rem;
-}
-
-@media (min-width: 640px) {
-	.prose ul {
-		font-size: 1rem;
-	}
+	list-style: disc;
 }
 
 .prose ol {
-	@apply my-4 list-decimal space-y-1.5 pl-5 sm:my-6 sm:space-y-2 sm:pl-6;
-	color: var(--text-secondary);
-	font-size: 0.9375rem;
-}
-
-@media (min-width: 640px) {
-	.prose ol {
-		font-size: 1rem;
-	}
+	list-style: decimal;
 }
 
 .prose li {
-	@apply leading-relaxed;
+	margin-top: 0.5em;
 }
 
 .prose li::marker {
-	color: var(--text-tertiary);
+	color: var(--color-text-tertiary);
 }
 
 .prose blockquote {
-	@apply my-4 border-l-4 pl-4 sm:my-6 sm:pl-6;
-	border-color: var(--border-primary);
-	color: var(--text-secondary);
-	font-size: 0.9375rem;
+	border-left: 3px solid var(--color-accent-default);
+	padding: 0.5em 1em;
+	color: var(--color-text-secondary);
+	font-style: italic;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
 }
 
-@media (min-width: 640px) {
-	.prose blockquote {
-		font-size: 1rem;
-	}
+.prose :not(pre) > code {
+	background-color: var(--color-code-inline-bg);
+	color: var(--color-code-inline-fg);
+	padding: 0.15em 0.4em;
+	border-radius: var(--radius-xs);
+	font-size: 0.9em;
+	font-family: var(--font-mono);
+}
+
+.prose pre {
+	background-color: var(--color-code-bg);
+	color: var(--color-text-primary);
+	padding: 1em 1.25em;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--color-code-border);
+	overflow-x: auto;
+	line-height: 1.6;
+	font-size: 0.875rem;
 }
 
 .prose hr {
-	@apply my-8 border-0 border-t sm:my-12;
-	border-color: var(--border-primary);
+	border: 0;
+	border-top: 1px solid var(--color-border-subtle);
+	margin: 3em 0;
+}
+
+.prose img {
+	border-radius: var(--radius-md);
+	margin: 0 auto;
 }
 
 .prose table {
-	@apply my-4 w-full overflow-x-auto text-xs sm:my-6 sm:text-sm;
-	display: block;
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9375rem;
 }
 
-.prose thead {
-	border-bottom: 2px solid var(--border-primary);
+.prose th,
+.prose td {
+	padding: 0.75em 1em;
+	text-align: left;
+	border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .prose th {
-	@apply px-2 py-2 text-left font-semibold sm:px-4 sm:py-3;
-	color: var(--text-primary);
-}
-
-.prose td {
-	@apply px-2 py-2 sm:px-4 sm:py-3;
-	color: var(--text-secondary);
-	border-top: 1px solid var(--border-secondary);
-}
-
-.prose > :first-child {
-	margin-top: 0 !important;
-}
-
-.prose > :last-child {
-	margin-bottom: 0 !important;
-}
-
-/* Custom scrollbar for code blocks */
-pre::-webkit-scrollbar {
-	height: 8px;
-}
-
-pre::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-pre::-webkit-scrollbar-thumb {
-	background: var(--border-primary);
-	border-radius: 4px;
-}
-
-pre::-webkit-scrollbar-thumb:hover {
-	background: var(--text-tertiary);
-}
-
-pre {
-	scrollbar-width: thin; /* Firefox */
-	scrollbar-color: var(--border-primary) transparent;
-}
-
-/* TOC scroll offset */
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4,
-.prose h5,
-.prose h6 {
-	scroll-margin-top: 120px;
+	font-weight: 600;
+	background-color: var(--color-bg-subtle);
 }

@@ -1,8 +1,7 @@
 // Components
-export { PopularSeries, SeriesNavigation, SeriesPosts } from "./components";
+export { SeriesNavigation, TrendingSeries } from "./components";
 
-// Services
-export { getAllSeries, getSeriesDetail, getSeriesStats } from "./services";
-
-// Types
-export type { SeriesBucket } from "./types";
+// Services (서버 전용)
+export type { SeriesAdjacency } from "./services";
+export { getAdjacentInSeries, getAllSeries, getSeriesDetail, getSeriesStats, getTrendingSeries } from "./services";
+export type { Series, SeriesStats } from "@/shared/types";

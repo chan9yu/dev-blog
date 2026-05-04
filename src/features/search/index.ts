@@ -1,8 +1,5 @@
 // Components
-export { SearchButton, SearchModal, SearchResultItem } from "./components";
-
-// Hooks
+export { SearchButton, SearchModal, SearchResultItem, SearchTrigger } from "./components";
+// Hooks (클라이언트 전용)
 export { useSearch, useSearchShortcut } from "./hooks";
-
-// Types
-export type { SearchablePost, SearchMatch, SearchOptions, SearchResult } from "./types";
+export type { SearchResult } from "./types";

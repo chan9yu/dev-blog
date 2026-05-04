@@ -10,8 +10,9 @@
 		"module": "preserve",
 		"moduleDetection": "force",
 		"resolveJsonModule": true,
+		"allowArbitraryExtensions": true,
 		"verbatimModuleSyntax": true,
-		"esModuleInterop": true,
+		"isolatedModules": true,
 
 		/* Type Checking */
 		"strict": true,
@@ -25,12 +26,10 @@
 		"allowJs": true,
 		"skipLibCheck": true,
 		"plugins": [{ "name": "next" }],
-
-		/* Path Aliases */
 		"paths": {
 			"@/*": ["./src/*"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", ".next/types/**/*.ts", ".next/dev/types/**/*.ts"],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", ".backup"]
 }

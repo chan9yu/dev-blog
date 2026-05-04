@@ -1,27 +1,40 @@
 "use client";
 
-import { useViews } from "@/features/views/hooks";
+import { Eye } from "lucide-react";
+
+import { useViews } from "../hooks/useViews";
 
 type ViewCounterProps = {
 	slug: string;
-	className?: string;
 };
 
-/**
- * 포스트 조회수 표시 컴포넌트
- * - 자동으로 조회수 증가
- * - 현재 조회수 표시
- */
-export function ViewCounter({ slug, className }: ViewCounterProps) {
-	const { views, isLoading } = useViews(slug);
+export function ViewCounter({ slug }: ViewCounterProps) {
+	const { views, failed } = useViews(slug);
 
-	if (isLoading) {
+	if (failed) {
 		return (
-			<span className={className}>
-				<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
+			<span className="text-muted-foreground inline-flex items-center gap-1.5 text-sm" aria-label="조회수 정보 없음">
+				<Eye className="size-4" aria-hidden />
+				<span aria-hidden>— 회</span>
 			</span>
 		);
 	}
 
-	return <span className={className}>{views !== null ? views.toLocaleString("ko-KR") : "0"}회</span>;
+	if (views === null) {
+		return (
+			<span className="text-muted-foreground inline-flex items-center gap-1.5 text-sm" aria-label="조회수 불러오는 중">
+				<Eye className="size-4" aria-hidden />
+				<span aria-hidden className="bg-muted inline-block h-4 w-12 animate-pulse rounded" />
+			</span>
+		);
+	}
+
+	const label = `조회수 ${views}회`;
+
+	return (
+		<span className="text-muted-foreground inline-flex items-center gap-1.5 text-sm" aria-label={label}>
+			<Eye className="size-4" aria-hidden />
+			<span aria-hidden>{`${views.toLocaleString("ko-KR")}회`}</span>
+		</span>
+	);
 }

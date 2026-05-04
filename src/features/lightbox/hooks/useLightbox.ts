@@ -1,39 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { use } from "react";
 
-import type { LightboxImage } from "@/features/lightbox/types";
+import { LightboxContext } from "../contexts/LightboxContext";
 
-const CLOSE_ANIMATION_DURATION_MS = 300;
-
-/**
- * Lightbox 상태 관리 훅
- */
 export function useLightbox() {
-	const [isOpen, setIsOpen] = useState(false);
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [images, setImages] = useState<LightboxImage[]>([]);
+	const context = use(LightboxContext);
+	if (!context) {
+		throw new Error("useLightbox는 <LightboxProvider> 내부에서만 호출할 수 있습니다.");
+	}
 
-	const openLightbox = (imageList: LightboxImage[], index = 0) => {
-		setImages(imageList);
-		setCurrentIndex(index);
-		setIsOpen(true);
-	};
-
-	const closeLightbox = () => {
-		setIsOpen(false);
-		// 애니메이션 종료 후 state 초기화
-		setTimeout(() => {
-			setImages([]);
-			setCurrentIndex(0);
-		}, CLOSE_ANIMATION_DURATION_MS);
-	};
-
-	return {
-		isOpen,
-		currentIndex,
-		images,
-		openLightbox,
-		closeLightbox
-	};
+	return context;
 }

@@ -1,8 +1,3 @@
-// Components
-export { ImageLightbox, LightboxProvider, useLightboxContext } from "./components";
-
-// Hooks
-export { useLightbox } from "./hooks";
-
-// Types
-export type { LightboxImage } from "./types";
+export { ImageLightbox, LightboxProvider } from "./components";
+export type { LightboxImage } from "./contexts/LightboxContext";
+export { useLightbox } from "./hooks/useLightbox";

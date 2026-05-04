@@ -1,299 +1,156 @@
-import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
-import remarkBreaks from "remark-breaks";
-import remarkGfm from "remark-gfm";
 
+import { CommentsSection } from "@/features/comments";
 import {
-	BlogLayout,
-	extractTocFromMarkdown,
 	findAdjacentPosts,
 	findRelatedPostsByTags,
-	formatDate,
-	getAllPosts,
 	getPostDetail,
+	getPublicPosts,
+	PostMetaHeader,
 	PostNavigation,
+	PostTocAside,
+	ReadingProgress,
 	RelatedPosts,
-	sortPostsByDateDescending
-} from "@/features/blog";
-import { LightboxProvider } from "@/features/lightbox";
-import { getAllSeries, SeriesNavigation } from "@/features/series";
+	ShareButtons
+} from "@/features/posts";
+import { getSeriesDetail, SeriesNavigation } from "@/features/series";
 import { ViewCounter } from "@/features/views";
-import CalendarIcon from "@/shared/assets/icons/calendar.svg";
-import EyeIcon from "@/shared/assets/icons/eye.svg";
-import TagIcon from "@/shared/assets/icons/tag.svg";
-import { CommentsSection, ReadingProgress, ShareButton } from "@/shared/components";
+import { Container } from "@/shared/components/layouts/Container";
+import { CustomMDX } from "@/shared/components/mdx/CustomMDX";
+import { getSiteUrl, siteMetadata } from "@/shared/config/site";
 import {
-	createHeading,
-	MdxCode,
-	MdxImage,
-	MdxImg,
-	MdxLink,
-	MdxPre,
-	MdxTable,
-	MdxTbody,
-	MdxTd,
-	MdxTh,
-	MdxThead,
-	MdxTr
-} from "@/shared/components/mdx";
-import { SITE } from "@/shared/config";
-import { slugify, type Theme } from "@/shared/utils";
+	buildBlogPostingJsonLd,
+	buildBreadcrumbJsonLd,
+	buildMetadata,
+	JsonLdScript,
+	NOT_FOUND_METADATA
+} from "@/shared/seo";
+import { resolveThumbnailSrc } from "@/shared/utils/resolveThumbnail";
+import { normalizeSlug } from "@/shared/utils/slug";
 
-const components = {
-	h1: createHeading(1),
-	h2: createHeading(2),
-	h3: createHeading(3),
-	h4: createHeading(4),
-	h5: createHeading(5),
-	h6: createHeading(6),
-	Image: MdxImage,
-	img: MdxImg,
-	a: MdxLink,
-	pre: MdxPre,
-	code: MdxCode,
-	table: MdxTable,
-	thead: MdxThead,
-	tbody: MdxTbody,
-	tr: MdxTr,
-	th: MdxTh,
-	td: MdxTd
+type PostDetailPageProps = {
+	params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-	const posts = await getAllPosts();
-
-	return posts.map((post) => ({
-		slug: post.slug
-	}));
+export function generateStaticParams() {
+	return getPublicPosts().map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({
-	params
-}: {
-	params: Promise<{ slug: string }>;
-}): Promise<Metadata | undefined> {
+export async function generateMetadata({ params }: PostDetailPageProps) {
 	const { slug } = await params;
 
-	const post = await getPostDetail(slug);
-	if (!post) return;
+	const normalized = normalizeSlug(slug);
+	if (!normalized) return NOT_FOUND_METADATA;
 
-	const IS_PROD = process.env.VERCEL_ENV === "production";
+	const post = getPostDetail(normalized);
+	if (!post) return NOT_FOUND_METADATA;
 
-	const { title, date: publishedTime, description, thumbnail, slug: postSlug, tags, private: isPrivate } = post;
-
-	const canonical = `${SITE.url}/posts/${postSlug}`;
-	const ogImage = thumbnail || `${SITE.url}/og?title=${encodeURIComponent(title)}`;
-
-	const allowIndex =
-		IS_PROD &&
-		!isPrivate &&
-		((): boolean => {
-			if (!publishedTime) return true;
-			const ts = Date.parse(publishedTime);
-			return Number.isFinite(ts) ? ts <= Date.now() : true;
-		})();
-
-	return {
-		title,
-		description,
-		alternates: { canonical },
-		openGraph: {
-			title,
-			description,
-			type: "article",
-			url: canonical,
-			siteName: SITE.name,
-			locale: SITE.locale,
-			publishedTime,
-			tags,
-			images: [{ url: ogImage, width: 1200, height: 630, alt: title, type: "image/png" }],
-			authors: [SITE.author.name]
-		},
-		twitter: {
-			card: "summary_large_image",
-			title,
-			description,
-			images: [ogImage],
-			creator: SITE.social.twitter ?? undefined
-		},
-		robots: {
-			index: allowIndex,
-			follow: true,
-			googleBot: {
-				index: allowIndex,
-				follow: true,
-				"max-image-preview": "large",
-				"max-video-preview": -1,
-				"max-snippet": -1
-			}
-		},
-		authors: [{ name: SITE.author.name, url: SITE.author.url }]
-	};
+	return buildMetadata({
+		title: post.title,
+		description: post.description,
+		path: `/posts/${post.slug}`,
+		image: post.thumbnail ?? undefined,
+		type: "article",
+		publishedAt: post.date,
+		authors: [siteMetadata.author],
+		tags: post.tags,
+		noIndex: post.private
+	});
 }
 
-export default async function Blog({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PostDetailPage({ params }: PostDetailPageProps) {
 	const { slug } = await params;
-	const post = await getPostDetail(slug);
 
-	if (!post) {
-		notFound();
-	}
+	const normalized = normalizeSlug(slug);
+	if (!normalized) notFound();
 
-	const tocItems = extractTocFromMarkdown(post.content);
+	const detail = getPostDetail(normalized);
+	if (!detail) notFound();
+	const summary = detail;
 
-	// 시리즈 포스트 정보 가져오기
-	const allSeries =
-		post.series && post.seriesOrder !== undefined && post.seriesOrder !== null ? await getAllSeries() : [];
-	const currentSeries = allSeries.find((s) => s.name === post.series);
-	const seriesPosts = currentSeries?.posts || [];
+	const allPosts = getPublicPosts();
+	const adjacent = findAdjacentPosts(allPosts, summary.slug);
+	const related = findRelatedPostsByTags(allPosts, summary);
+	const currentSeries = summary.series ? getSeriesDetail(allPosts, summary.series) : null;
+	const siteUrl = getSiteUrl();
+	const shareUrl = `${siteUrl}/posts/${summary.slug}`;
+	const thumbnailSrc = resolveThumbnailSrc(summary.thumbnail, summary.slug);
 
-	// 이전글/다음글 찾기 (날짜 순으로 정렬 - 최신순)
-	const allPosts = await getAllPosts();
-	const sortedPosts = sortPostsByDateDescending(allPosts);
-	const { prevPost, nextPost } = findAdjacentPosts(sortedPosts, slug);
+	const blogPostingLd = summary.private
+		? null
+		: buildBlogPostingJsonLd({
+				siteUrl,
+				authorName: siteMetadata.author,
+				slug: summary.slug,
+				title: summary.title,
+				description: summary.description,
+				date: summary.date,
+				tags: summary.tags,
+				image: summary.thumbnail ?? null
+			});
 
-	// 관련 포스트 찾기 (같은 태그 기반)
-	const relatedPosts = findRelatedPostsByTags(allPosts, slug, post.tags);
-
-	// 서버사이드에서 테마 쿠키 읽기 (댓글 초기 테마 설정용)
-	const cookieStore = await cookies();
-	const theme = (cookieStore.get("theme")?.value as Theme) || "light";
+	const breadcrumbLd = summary.private
+		? null
+		: buildBreadcrumbJsonLd({
+				siteUrl,
+				items: [
+					{ name: "홈", path: "/" },
+					{ name: "포스트", path: "/posts" },
+					{ name: summary.title, path: `/posts/${summary.slug}` }
+				]
+			});
 
 	return (
-		<BlogLayout tocItems={tocItems}>
+		<>
+			{blogPostingLd && <JsonLdScript id="blogposting-json-ld" data={blogPostingLd} />}
+			{breadcrumbLd && <JsonLdScript id="breadcrumb-json-ld" data={breadcrumbLd} />}
 			<ReadingProgress />
-			<LightboxProvider>
-				<article className="min-w-0 flex-1 pb-12 sm:pb-16">
-					<script
-						type="application/ld+json"
-						suppressHydrationWarning
-						dangerouslySetInnerHTML={{
-							__html: JSON.stringify({
-								"@context": "https://schema.org",
-								"@type": "BlogPosting",
-								headline: post.title,
-								datePublished: post.date,
-								description: post.description,
-								image: post.thumbnail
-									? `${SITE.url}${post.thumbnail}`
-									: `${SITE.url}/og?title=${encodeURIComponent(post.title)}`,
-								url: `${SITE.url}/posts/${post.slug}`,
-								author: {
-									"@type": "Person",
-									name: SITE.author.name,
-									url: SITE.author.url
-								},
-								publisher: {
-									"@type": "Person",
-									name: SITE.author.name
-								},
-								keywords: post.tags,
-								inLanguage: SITE.language
-							})
-						}}
-					/>
-
-					{/* Header */}
-					<header className="mb-10 space-y-5 sm:mb-14 sm:space-y-7">
-						<div className="space-y-4 sm:space-y-5">
-							<h1 className="title text-primary text-2xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-3xl md:text-4xl lg:text-5xl">
-								{post.title}
-							</h1>
-							<p className="text-secondary text-base leading-relaxed text-pretty break-keep sm:text-lg">
-								{post.description}
-							</p>
-						</div>
-
-						{/* Meta Info */}
-						<div className="text-tertiary flex flex-wrap items-center justify-between gap-3 text-xs sm:gap-4 sm:text-sm">
-							<time dateTime={post.date} className="flex items-center gap-1.5 sm:gap-2">
-								<CalendarIcon className="size-3.5 sm:size-4" aria-hidden="true" />
-								{formatDate(post.date)}
-							</time>
-							<div className="flex items-center gap-1.5 px-4 sm:gap-2">
-								<EyeIcon className="size-3.5 sm:size-4" aria-hidden="true" />
+			<Container>
+				<div className="flex flex-col py-8 lg:flex-row lg:py-10">
+					<article className="min-w-0 flex-1 space-y-10 pb-12 sm:pb-16">
+						<PostMetaHeader
+							post={summary}
+							shareSlot={<ShareButtons title={summary.title} url={shareUrl} />}
+							viewCounterSlot={
 								<Suspense
-									fallback={
-										<span className="inline-block w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700">&nbsp;</span>
-									}
+									fallback={<span className="bg-muted inline-block h-4 w-12 animate-pulse rounded" aria-hidden />}
 								>
-									<ViewCounter slug={post.slug} />
+									<ViewCounter slug={summary.slug} />
 								</Suspense>
-							</div>
-						</div>
-
-						{/* Tags & Share */}
-						<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-							{post.tags && post.tags.length > 0 && (
-								<div className="flex flex-wrap gap-1.5 sm:gap-2">
-									{post.tags.map((tag) => (
-										<Link
-											key={tag}
-											href={`/tags/${slugify(tag)}`}
-											className="bg-secondary text-secondary border-primary inline-flex min-h-[36px] items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 hover:scale-105 hover:shadow-md sm:min-h-0 sm:px-3 sm:py-1.5 sm:text-sm"
-										>
-											<TagIcon className="size-3 sm:size-3.5" aria-hidden="true" />
-											{tag}
-										</Link>
-									))}
-								</div>
-							)}
-
-							<ShareButton title={post.title} text={post.description} url={`${SITE.url}/posts/${post.slug}`} />
-						</div>
-
-						<hr className="border-primary" />
-					</header>
-
-					{/* Series Navigation */}
-					{post.series && post.seriesOrder !== undefined && post.seriesOrder !== null && seriesPosts.length > 0 && (
-						<div className="mb-6 sm:mb-8">
-							<SeriesNavigation seriesName={post.series} currentIndex={post.seriesOrder} allPosts={seriesPosts} />
-						</div>
-					)}
-
-					{/* Thumbnail */}
-					{post.thumbnail && (
-						<div className="relative mb-6 aspect-[2/1] w-full overflow-hidden rounded-xl sm:mb-8 sm:rounded-2xl">
-							<Image
-								src={post.thumbnail}
-								alt={post.title}
-								fill
-								priority
-								className="object-cover"
-								sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
-							/>
-						</div>
-					)}
-
-					{/* Content */}
-					<div className="prose prose-sm sm:prose-base md:prose-lg">
-						<MDXRemote
-							source={post.content}
-							components={components}
-							options={{
-								mdxOptions: {
-									remarkPlugins: [remarkGfm, remarkBreaks]
-								}
-							}}
+							}
 						/>
-					</div>
 
-					{/* Post Navigation */}
-					<PostNavigation prevPost={prevPost} nextPost={nextPost} />
+						{currentSeries && <SeriesNavigation series={currentSeries} currentSlug={summary.slug} />}
 
-					{/* Related Posts */}
-					<RelatedPosts posts={relatedPosts} />
+						{thumbnailSrc && (
+							<div className="relative aspect-2/1 w-full overflow-hidden rounded-xl sm:rounded-2xl">
+								<Image
+									src={thumbnailSrc}
+									alt={summary.title}
+									fill
+									priority
+									className="object-cover"
+									sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
+								/>
+							</div>
+						)}
 
-					{/* Comments */}
-					<CommentsSection initialTheme={theme} />
-				</article>
-			</LightboxProvider>
-		</BlogLayout>
+						<section aria-label="본문" className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
+							<CustomMDX source={detail.contentMdx} />
+						</section>
+
+						<PostNavigation adjacent={adjacent} />
+
+						<RelatedPosts posts={related} />
+
+						<CommentsSection slug={summary.slug} isPrivate={summary.private} />
+					</article>
+
+					<PostTocAside items={detail.toc} />
+				</div>
+			</Container>
+		</>
 	);
 }

@@ -1,94 +1,83 @@
-import type { Metadata } from "next";
+import { Tag } from "lucide-react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { getAllTags, getPostsByTag } from "@/features/blog";
-import { FilteredBlogPosts } from "@/features/blog";
-import TagIcon from "@/shared/assets/icons/tag.svg";
-import { SITE } from "@/shared/config";
-import { slugify } from "@/shared/utils";
+import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
+import { getAllTags, getPostsByTag } from "@/features/tags";
+import { Container } from "@/shared/components/layouts/Container";
+import { getSiteUrl } from "@/shared/config/site";
+import { buildBreadcrumbJsonLd, buildMetadata, JsonLdScript, NOT_FOUND_METADATA } from "@/shared/seo";
+import { formatLocalizedSlug } from "@/shared/utils/formatLocalizedSlug";
+import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
+
+type TagDetailPageProps = {
+	params: Promise<{ tag: string }>;
+};
 
 export async function generateStaticParams() {
-	const allTags = await getAllTags();
-
-	return allTags.map((item) => ({
-		tag: slugify(item.tag)
-	}));
+	return getAllTags(getPublicPosts()).map((tag) => ({ tag }));
 }
 
-export async function generateMetadata({
-	params
-}: {
-	params: Promise<{ tag: string }>;
-}): Promise<Metadata | undefined> {
-	const { tag: encodedTag } = await params;
-	// URL 디코딩 (한글 처리)
-	const tagSlug = decodeURIComponent(encodedTag);
-	const posts = await getPostsByTag(tagSlug);
+export async function generateMetadata({ params }: TagDetailPageProps) {
+	const { tag } = await params;
+	const decoded = decodeURIComponent(tag);
+	if (!decoded) return NOT_FOUND_METADATA;
 
-	if (posts.length === 0) return;
+	const matched = getPostsByTag(getPublicPosts(), decoded);
+	if (matched.length === 0) return NOT_FOUND_METADATA;
 
-	// 원본 태그명 추출 (첫 번째 포스트의 태그에서)
-	const originalTag = posts[0]?.tags.find((tag) => slugify(tag) === tagSlug) || tagSlug;
-	const description = `${originalTag} 태그가 포함된 포스트 ${posts.length}개를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`;
-
-	return {
-		title: `#${originalTag}`,
-		description,
-		openGraph: {
-			title: `#${originalTag} · chan9yu`,
-			description,
-			type: "website",
-			url: `${SITE.url}/tags/${tagSlug}`,
-			images: [
-				{
-					url: SITE.defaultOG,
-					width: 1200,
-					height: 630,
-					alt: `#${originalTag} · chan9yu`
-				}
-			]
-		},
-		twitter: {
-			card: "summary_large_image",
-			title: `#${originalTag} · chan9yu`,
-			description,
-			images: [SITE.defaultOG]
-		},
-		alternates: {
-			canonical: `${SITE.url}/tags/${tagSlug}`
-		}
-	};
+	const display = formatLocalizedSlug(decoded);
+	return buildMetadata({
+		title: `#${display}`,
+		description: `${display} 태그가 포함된 포스트를 확인하세요. 관련 주제의 글을 한눈에 탐색할 수 있습니다.`,
+		path: `/tags/${encodeURIComponent(decoded)}`
+	});
 }
 
-export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
-	const { tag: encodedTag } = await params;
-	// URL 디코딩 (한글 처리)
-	const tagSlug = decodeURIComponent(encodedTag);
-	const posts = await getPostsByTag(tagSlug);
+export default async function TagDetailPage({ params }: TagDetailPageProps) {
+	const { tag } = await params;
 
-	if (posts.length === 0) {
+	const decoded = decodeURIComponent(tag);
+	if (!decoded) notFound();
+
+	const filtered = resolvePostThumbnails(getPostsByTag(getPublicPosts(), decoded));
+	if (filtered.length === 0) {
 		notFound();
 	}
 
-	// 원본 태그명 추출 (첫 번째 포스트의 태그에서)
-	const originalTag = posts[0]?.tags.find((tag) => slugify(tag) === tagSlug) || tagSlug;
+	const display = formatLocalizedSlug(decoded);
+	const breadcrumbLd = buildBreadcrumbJsonLd({
+		siteUrl: getSiteUrl(),
+		items: [
+			{ name: "홈", path: "/" },
+			{ name: "태그", path: "/tags" },
+			{ name: `#${display}`, path: `/tags/${encodeURIComponent(decoded)}` }
+		]
+	});
 
 	return (
-		<div className="mx-auto max-w-6xl">
-			{/* Header */}
-			<header className="mb-12 space-y-6">
-				<div className="space-y-4">
-					<div className="flex items-center gap-3">
-						<TagIcon className="text-accent size-8" aria-hidden="true" />
-						<h1 className="title text-primary text-4xl font-bold tracking-tight sm:text-5xl">#{originalTag}</h1>
-					</div>
-					<p className="text-secondary text-lg">총 {posts.length}개의 글</p>
-				</div>
-				<hr className="border-primary" />
-			</header>
+		<>
+			<JsonLdScript id="tag-breadcrumb-json-ld" data={breadcrumbLd} />
+			<Container>
+				<div className="py-8 lg:py-10">
+					<header className="mb-12 space-y-6">
+						<div className="space-y-4">
+							<div className="flex items-center gap-3">
+								<Tag className="text-accent size-8" aria-hidden />
+								<h1 className="text-foreground text-3xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-4xl md:text-5xl">
+									#{display}
+								</h1>
+							</div>
+							<p className="text-muted-foreground text-base sm:text-lg">총 {filtered.length}개의 글</p>
+						</div>
+						<hr className="border-border" />
+					</header>
 
-			{/* Posts with View Toggle */}
-			<FilteredBlogPosts posts={posts} defaultView="grid" />
-		</div>
+					<Suspense fallback={<PostListSkeleton count={3} />}>
+						<PostList posts={filtered} />
+					</Suspense>
+				</div>
+			</Container>
+		</>
 	);
 }

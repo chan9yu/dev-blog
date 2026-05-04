@@ -1,100 +1,104 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-import { BlogPosts, getAllPosts, sortPostsByDateDescending, TrendingPosts, TrendingTags } from "@/features/blog";
-import { PopularSeries } from "@/features/series";
-import { PageTransition, SocialLinks } from "@/shared/components";
+import { HomeHero } from "@/features/about";
+import { getPublicPosts, getTrendingPosts, PopularPosts, RecentPostsList } from "@/features/posts";
+import { getTrendingSeries, TrendingSeries } from "@/features/series";
+import { getTrendingTags, TrendingTags } from "@/features/tags";
+import { Container } from "@/shared/components/layouts/Container";
+import { buildMetadata } from "@/shared/seo";
+import { resolvePostThumbnails } from "@/shared/utils/resolveThumbnail";
+
+export const metadata: Metadata = buildMetadata({
+	title: "chan9yu | 프론트엔드 개발 블로그",
+	description:
+		"프론트엔드 엔지니어 chan9yu의 기술 블로그. React 19, TypeScript, Next.js App Router 실무 경험과 WebRTC, 웹 성능 최적화 등 다양한 주제를 깊이 있게 다루며 최신 학습 내용을 정리해 공유합니다.",
+	path: "/"
+});
 
 const RECENT_POSTS_LIMIT = 6;
+const POPULAR_POSTS_LIMIT = 5;
+const TRENDING_SERIES_LIMIT = 3;
+const TRENDING_TAGS_LIMIT = 10;
 
-export default async function Page() {
-	const allPosts = await getAllPosts();
-	const recentPosts = sortPostsByDateDescending(allPosts).slice(0, RECENT_POSTS_LIMIT);
+export default async function HomePage() {
+	const allPosts = getPublicPosts();
+	const recentPosts = resolvePostThumbnails(allPosts.slice(0, RECENT_POSTS_LIMIT));
+
+	const trending = await getTrendingPosts(allPosts, POPULAR_POSTS_LIMIT);
+	const popularPosts = resolvePostThumbnails(trending.posts);
+
+	const trendingSeries = getTrendingSeries(allPosts, TRENDING_SERIES_LIMIT);
+	const trendingTags = getTrendingTags(allPosts, TRENDING_TAGS_LIMIT);
 
 	return (
-		<PageTransition>
-			<div className="flex flex-col gap-10 lg:flex-row">
-				{/* Main Content */}
+		<Container>
+			<div className="flex flex-col gap-10 py-8 lg:flex-row lg:py-10">
 				<div className="min-w-0 flex-1 space-y-10 sm:space-y-14">
-					{/* Hero Section */}
-					<section className="space-y-4 sm:space-y-6">
-						<div className="space-y-3 sm:space-y-4">
-							<h1 className="text-primary text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
-								안녕하세요 👋
-								<br />
-								<span className="text-accent">프론트엔드 개발자</span> 여찬규입니다.
-							</h1>
-							<div className="text-secondary max-w-2xl space-y-3 text-sm leading-relaxed sm:space-y-4 sm:text-base md:text-lg">
-								<p>
-									사용자 경험과 인터페이스 개선에 중점을 두고 끊임없이 배우고 성장하는 개발자입니다.
-									<br />
-									디자인과 개발 사이에서 최적의 균형을 찾는 데 열정을 가지고 있습니다.
-								</p>
-								<p>
-									이 블로그는 프론트엔드 개발 과정에서 배운 것들과 경험을 기록하고 공유하는 공간입니다.
-									<br />
-									React, TypeScript, 웹 성능 최적화 등 실무에서 마주하는 다양한 주제를 다룹니다.
-								</p>
-							</div>
-						</div>
+					<HomeHero />
 
-						{/* Quick Links */}
-						<SocialLinks />
-					</section>
-
-					{/* Recent Posts */}
-					<section className="space-y-4 sm:space-y-6">
+					<section aria-labelledby="recent-posts-title" className="space-y-4 sm:space-y-6">
 						<div className="flex items-center justify-between">
-							<h2 className="text-primary flex items-center gap-2 text-lg font-bold tracking-tight sm:gap-3 sm:text-xl md:text-2xl">
-								<span className="bg-accent h-6 w-1 rounded-full sm:h-7" />
+							<h2
+								id="recent-posts-title"
+								className="text-foreground flex items-center gap-2 text-lg font-bold tracking-tight sm:gap-3 sm:text-xl md:text-2xl"
+							>
+								<span className="bg-accent h-6 w-1 rounded-full sm:h-7" aria-hidden />
 								최근 포스트
 							</h2>
 							<Link
 								href="/posts"
-								className="text-accent text-xs font-medium transition-colors hover:underline sm:text-sm"
+								aria-label="최근 포스트 전체 보기"
+								className="text-accent focus-visible:ring-ring rounded text-xs font-medium transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:text-sm"
 							>
-								전체 보기 →
+								전체 보기 <span aria-hidden>→</span>
 							</Link>
 						</div>
-						<BlogPosts posts={recentPosts} />
+						<RecentPostsList posts={recentPosts} />
 					</section>
 				</div>
 
-				{/* Sidebar - Hidden on mobile/tablet */}
-				<aside className="hidden w-64 lg:block">
+				<aside aria-label="추천 블록" className="hidden lg:block lg:w-64 lg:shrink-0">
 					<div className="sticky top-24 space-y-6">
-						{/* Popular Posts */}
-						<section className="space-y-3">
-							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
-								<span className="bg-accent size-1.5 rounded-full" />
-								Popular Posts
+						<section aria-labelledby="popular-posts-title" className="space-y-3">
+							<h2
+								id="popular-posts-title"
+								className="text-muted-foreground flex items-center gap-2 text-sm font-semibold"
+							>
+								<span className="bg-accent size-1.5 rounded-full" aria-hidden />
+								<span lang="en">Popular Posts</span>
 							</h2>
-							<TrendingPosts />
+							<PopularPosts posts={popularPosts} />
 						</section>
 
-						<hr className="border-primary" />
+						<hr className="border-border" />
 
-						{/* Popular Series */}
-						<section className="space-y-3">
-							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
-								<span className="bg-accent size-1.5 rounded-full" />
-								Popular Series
+						<section aria-labelledby="trending-series-title" className="space-y-3">
+							<h2
+								id="trending-series-title"
+								className="text-muted-foreground flex items-center gap-2 text-sm font-semibold"
+							>
+								<span className="bg-accent size-1.5 rounded-full" aria-hidden />
+								<span lang="en">Popular Series</span>
 							</h2>
-							<PopularSeries />
+							<TrendingSeries series={trendingSeries} />
 						</section>
 
-						<hr className="border-primary" />
+						<hr className="border-border" />
 
-						{/* Popular Tags */}
-						<section className="space-y-3">
-							<h2 className="text-secondary flex items-center gap-2 text-sm font-semibold">
-								<span className="bg-accent size-1.5 rounded-full" />
-								Popular Tags
+						<section aria-labelledby="trending-tags-title" className="space-y-3">
+							<h2
+								id="trending-tags-title"
+								className="text-muted-foreground flex items-center gap-2 text-sm font-semibold"
+							>
+								<span className="bg-accent size-1.5 rounded-full" aria-hidden />
+								<span lang="en">Popular Tags</span>
 							</h2>
-							<TrendingTags />
+							<TrendingTags tags={trendingTags} />
 						</section>
 					</div>
 				</aside>
 			</div>
-		</PageTransition>
+		</Container>
 	);
 }
