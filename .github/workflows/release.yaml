@@ -1,0 +1,51 @@
+name: Release
+
+# `v*.*.*` 형식의 tag가 push되면 자동으로 GitHub Release 생성.
+# CHANGELOG.md의 해당 버전 섹션(`## [X.Y.Z] - ...` ~ 다음 `## [...]` 직전)을 release notes로 추출.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          NOTES_FILE="$RUNNER_TEMP/release_notes.md"
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { flag = 1; next }
+            /^## \[/ && flag { exit }
+            flag { print }
+          ' CHANGELOG.md > "$NOTES_FILE"
+          if [ ! -s "$NOTES_FILE" ]; then
+            echo "::error::CHANGELOG.md에서 [${VERSION}] 섹션을 찾지 못했습니다. release notes 추가 후 다시 tag를 push 하세요."
+            exit 1
+          fi
+          echo "notes_file=$NOTES_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file "${{ steps.notes.outputs.notes_file }}" \
+            --target main

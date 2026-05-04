@@ -2,6 +2,8 @@ import { Rss } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { APP_VERSION } from "@/shared/config/site";
+
 import { Container } from "./Container";
 
 type FooterLink = {
@@ -53,8 +55,17 @@ export function Footer() {
 					</nav>
 				</div>
 
-				<div className="border-border-subtle text-muted-foreground mt-8 border-t pt-6 text-center text-sm">
-					© {BUILD_YEAR} chan9yu. All rights reserved.
+				<div className="border-border-subtle text-muted-foreground mt-8 flex flex-col items-center justify-center gap-2 border-t pt-6 text-center text-sm sm:flex-row sm:gap-3">
+					<span>© {BUILD_YEAR} chan9yu. All rights reserved.</span>
+					<a
+						href={`https://github.com/chan9yu/dev-blog/releases/tag/v${APP_VERSION}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="hover:text-accent focus-visible:ring-ring rounded text-xs opacity-70 transition-colors hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+						aria-label={`현재 배포 버전 v${APP_VERSION} (GitHub Release 보기)`}
+					>
+						v{APP_VERSION}
+					</a>
 				</div>
 			</Container>
 		</footer>
