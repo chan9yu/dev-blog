@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-05-04
+
+🚑 **프로덕션 streaming stuck 핫픽스** — v1.1.0 배포 후 ~30분 시점부터 모든 dynamic 라우트(`/`, `/posts`, `/series`, `/tags`, `/posts/[slug]`)가 `loading.tsx` fallback에서 영구 stuck. 즉시 회복.
+
+### Fixed
+
+- **`next.config.ts` lambda file tracing** — `outputFileTracingExcludes`가 `contents/**/*` 전체를 lambda에서 제외했으나, `app/layout.tsx`의 `getPublicPosts()`가 매 요청마다 `readdirSync(contents/posts)` + `readFileSync(*.mdx)`를 호출 (검색 인덱스 빌드 목적). `cacheComponents`(PPR) layout 캐시 만료 시 runtime fallback이 발생하면서 `ENOENT` throw → streaming chunk close → 모든 dynamic 페이지 영구 stuck.
+- **해결**: `outputFileTracingIncludes`로 `contents/posts/**/*.mdx` + `contents/about/**/*` 명시 포함. `outputFileTracingExcludes`는 `contents/**/images/**`로 좁힘 — images만 제외 (155MB), MDX 텍스트(576KB)는 lambda에 포함. `readdirSync`는 dynamic fs라 trace heuristic이 자식 파일을 자동 포함하지 못하므로 explicit include로 안전판 강화.
+- **검증**: 로컬 `pnpm build` lambda trace에 `contents/posts/**/*.mdx` 24개 포함, image 0개 확인. lambda 사이즈 영향 +576KB (300MB 한계 대비 충분).
+
+### Added
+
+- **GitHub Actions CI** (`.github/workflows/ci.yaml`) — PR/push to develop·main 트리거, Typecheck + Vitest 단일 job, 10min timeout. private contents 서브모듈 access는 `REPO_CLONE_TOKEN` PAT 사용.
+- **PR 템플릿** (`.github/PULL_REQUEST_TEMPLATE.md`) — `workflow.md`의 PR 형식을 GitHub 표준 위치로 분리. `gh pr create` UI 호출 시 자동 prepopulate.
+- **`type:check` npm 스크립트** — `tsc --noEmit` (workflow.md PR 템플릿이 이미 참조하던 명령과 정합).
+
+### Changed
+
+- **README v1.1.0 production 정합** — "예정 도입 (M2+)" 섹션 제거 (Vitest·Playwright·Vercel KV·Zod 모두 v1.1.0에 포함되어 있으므로). Stack에 Turbopack·Shiki·Zod·Testing 명시. 배포 섹션에 `chan9yu.dev` 링크 + `KV_REST_API_URL`/`KV_REST_API_TOKEN` 정확한 env 이름 명시. Release 배지 추가.
+- **Vercel MCP 통합** (이전 commit `b13e26d`) — 읽기 전용 호출(`get_deployment`·`list_deployments`·`get_deployment_build_logs`·`get_runtime_logs`·`get_project`·`list_projects`·`search_vercel_documentation`) 자율 범주 등록. 쓰기 명령(`deploy_to_vercel` 등)은 사용자 승인 필수.
+
+### Notes
+
+- **`/api/views` 500은 별개 fault** — `@vercel/kv`가 환경변수 누락 시 sync throw하는데 route handler의 `.catch()`는 promise rejection만 catch. 본 핫픽스 범위 외 — 후속 작업으로 환경변수 점검 + sync throw 방어 코드 추가 예정.
+
 ## [1.1.0] - 2026-05-04
 
 🎉 **첫 Production 배포** — Next.js 16 App Router 기반 SSG-first 1인 저자 기술 블로그. M0~M7 8개 마일스톤(약 130 태스크) 완료, main 브랜치 머지로 Vercel 자동 배포 + `v1.1.0` 태깅.
@@ -67,5 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `git log --oneline` — 모든 commit 이력
 - 첫 production tag을 `v1.1.0`으로 채택. M0~M7 누적 변경량과 "완전 리팩토링 후 첫 안정 릴리스" 의미 반영 (사용자 결정).
 
-[Unreleased]: https://github.com/chan9yu/dev-blog/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/chan9yu/dev-blog/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/chan9yu/dev-blog/releases/tag/v1.1.1
 [1.1.0]: https://github.com/chan9yu/dev-blog/releases/tag/v1.1.0
