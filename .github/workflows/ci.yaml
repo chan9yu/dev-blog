@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Typecheck + Vitest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout (with private contents submodule)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # contents 서브모듈(`dev-blog-archive`)이 private이므로 fine-grained PAT 필요.
+          # GH Actions는 `GITHUB_*` prefix를 예약어로 거부하므로 secret 이름은 REPO_CLONE_TOKEN.
+          token: ${{ secrets.REPO_CLONE_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm type:check
+
+      - name: Vitest
+        run: pnpm test
