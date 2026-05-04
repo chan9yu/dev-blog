@@ -10,7 +10,7 @@ status: Draft
 
 ## 1. Executive Summary
 
-본 문서는 chan9yu 개발 블로그의 **기술 계약(Technical Contract)** 을 정의한다. Next.js 16 App Router 위에 React 19(React Compiler), TypeScript 5.9 strict, Tailwind CSS 4를 조합하고, MDX 기반 콘텐츠를 Git Submodule로 주입하는 **SSG-first** 아키텍처를 채택한다. 도메인은 `features/` 하위 9개 독립 모듈로 분리되며, 각 모듈은 `index.ts`를 통한 Public API로만 외부와 연결된다. 본 PRD는 Product PRD가 정의한 `FEAT-###`·`US-###`·`NFR-###`에 대응하는 `MOD-*`·`RT-*`·`ADR-###` 계약을 원문으로 제공하며, 구현자가 별도 협의 없이 빌드를 시작할 수 있는 수준의 정보를 포함한다.
+본 문서는 chan9yu 개발 블로그의 **기술 계약(Technical Contract)** 을 정의한다. Next.js 16 App Router 위에 React 19(React Compiler), TypeScript 6 strict, Tailwind CSS 4를 조합하고, MDX 기반 콘텐츠를 Git Submodule로 주입하는 **SSG-first** 아키텍처를 채택한다. 도메인은 `features/` 하위 9개 독립 모듈로 분리되며, 각 모듈은 `index.ts`를 통한 Public API로만 외부와 연결된다. 본 PRD는 Product PRD가 정의한 `FEAT-###`·`US-###`·`NFR-###`에 대응하는 `MOD-*`·`RT-*`·`ADR-###` 계약을 원문으로 제공하며, 구현자가 별도 협의 없이 빌드를 시작할 수 있는 수준의 정보를 포함한다.
 
 **Definition of Done**: 본 문서만으로 빈 레포에서 프로덕션 빌드까지의 모든 기술적 질문(스택·라우팅·데이터·배포·품질)에 답할 수 있다.
 

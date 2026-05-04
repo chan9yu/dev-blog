@@ -63,10 +63,35 @@ AI가 생성한 코드의 기술 부채를 주기적으로 정화하고, 반복 
 - **실제 .claude/agents/ vs .claude/skills/의 참조** — 스킬이 참조하는 에이전트가 실재하는지
 - **CHANGELOG Unreleased vs 실제 커밋 히스토리** — 누락된 변경사항
 
+#### 3.1 일관성 매트릭스 (필수 자동 검증)
+
+`hardcoded SSOT` 위반은 GC에서 가장 빈번한 drift 원인이므로 매 GC마다 다음 매트릭스를 그렙으로 자동 검증한다 (2026-05-03 v1.0.0 GC에서 4건 동시 발견되어 도입):
+
+| 항목                        | 진실 공급원 (SSOT)                       | 검증 대상                                                                                                                      |
+| --------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 프로젝트 버전               | `package.json` `version`                 | `CHANGELOG.md` 최신 헤더, `docs/TASKS.md` Exit, `docs/ROADMAP.md` 진행률                                                       |
+| TypeScript 버전             | `package.json` `dependencies.typescript` | `CLAUDE.md`, `README.md`, `docs/PRD_TECHNICAL.md`, `.claude/agents/**/*.md`, `.claude/rules/**/*.md`, `.claude/skills/**/*.md` |
+| Next.js·React·Tailwind 버전 | `package.json` `dependencies`            | 위와 동일                                                                                                                      |
+| features 개수               | `ls src/features/` 실제 카운트           | `CLAUDE.md` "9개 도메인 모듈", `docs/PRD_TECHNICAL.md` 모듈 매트릭스                                                           |
+| agents·skills·rules 카운트  | `ls .claude/{agents,skills,rules}/`      | `CLAUDE.md`, `docs/AI_WORKFLOW_GUIDE.md`                                                                                       |
+| 사이트 메타·소셜 링크       | `src/shared/config/site.ts`              | `src/app/**/page.tsx`의 `metadata` (페이지 specific description은 예외)                                                        |
+
+**탐지 명령** (예시):
+
+```bash
+# 버전 카운트 매트릭스
+diff <(grep '"version"' package.json | head -1) <(grep -E "## \[[0-9]" CHANGELOG.md | head -1)
+# TypeScript 버전 텍스트 매트릭스
+grep -rn "TypeScript [0-9]" CLAUDE.md docs/ .claude/ README.md
+# 카운트 매트릭스
+expr $(ls -1 src/features/ | wc -l) - 9   # 0이 아니면 drift
+```
+
 드리프트 건당 제안:
 
 - 문서가 뒤처진 경우: 문서 수정 제안 (자율 범위 내)
 - 코드가 문서와 다른 경우: 사용자 질의 (의도적인지 실수인지 판단 불가)
+- **SSOT 외 hardcoded 버전 발견** 시: 해당 텍스트 일괄 수정 (자율) + GC 리포트의 트래킹 ID 발급
 
 ### 4. 하네스 평가 (100점)
 
