@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-05-04
+
+🚑 **프로덕션 streaming stuck 핫픽스 (root cause fix)** — v1.1.0 production 직후 ~30분 시점부터 시작된 무한 `loading.tsx` stuck을 **본질적으로 해결**. v1.1.1의 `outputFileTracingIncludes` fix로는 부족했던 진짜 root cause는 `cacheComponents: true`(Next.js 16 PPR)가 모든 RSC를 default dynamic으로 만들어 매 요청 `fs.readdirSync(contents/)` 호출 → Vercel lambda contents/ 부재 시 ENOENT throw → streaming chunk close → 모든 dynamic 라우트(`/`, `/posts`, `/series`, `/tags`, `/posts/[slug]`, `/sitemap.xml`, `/og`) stuck.
+
+### Fixed
+
+- **`cacheComponents: false`** — SSG-first 블로그(PRD G-1)에 ISR/dynamic이 불필요. PPR 비활성화로 Next.js가 모든 페이지를 빌드 타임에 정적 prerender → runtime contents/ 의존 0%. v1.1.0~v1.1.1에서 잘못 적용된 PPR 모드를 정정.
+- **검색 인덱스 빌드 타임 pre-bake** — `scripts/build-search-index.mjs`가 `contents/posts/*` MDX를 스캔해 `src/shared/data/search-index.json` (gitignore) 정적 emit. `prebuild`에 포함. `app/layout.tsx`는 이 JSON을 정적 import → runtime `fs.readdirSync` 호출 제거.
+- **로컬 production 시뮬레이션 검증** — `pnpm build && pnpm start -p 3100` 환경에서 `contents/`를 일시 제거 후 `/`, `/posts`, `/series`, `/tags`, `/about`, `/sitemap.xml`, `/api/views`, `/og` 모두 fetch → ENOENT throw 0건, Suspense pending 0건 확인.
+
+### Added
+
+- **`.claude/rules/no-fallback.md` 신규 룰** — try/catch + 빈 값 반환·임시 플래그·setTimeout 우회 같은 fallback/workaround 안티패턴을 거부하고 본질 fix로 가이드. v1.1.1에서 잘못 시도한 fail-soft 회피책 패턴이 이 룰의 회고 사례.
+- **하네스 자산 카운트 갱신**: 15개 → 16개 규칙 (CLAUDE.md, README.md, AI_WORKFLOW_GUIDE.md 동기화).
+
+### Changed
+
+- **`outputFileTracingExcludes` 단순화** — `cacheComponents: false`로 runtime fs 의존이 사라지므로 `contents/**/images/**`만 명시적 제외(155MB lambda 사이즈 절감), include 패턴은 빌드 정적 자원만 trace로 자동 포함되도록 위임.
+
+### Notes
+
+- v1.1.1의 lambda tracing fix(`outputFileTracingIncludes`)는 trace에 MDX는 포함했으나 `cacheComponents: true` 모드의 dynamic RSC 자체는 막지 못해 stuck 지속. v1.1.2의 PPR 비활성화가 진짜 fix.
+- `/api/views` 500은 별개 fault(KV sync throw 미흡수). 본 핫픽스 범위 외, 후속 v1.1.3로 격리 처리 예정.
+
 ## [1.1.1] - 2026-05-04
 
 🚑 **프로덕션 streaming stuck 핫픽스** — v1.1.0 배포 후 ~30분 시점부터 모든 dynamic 라우트(`/`, `/posts`, `/series`, `/tags`, `/posts/[slug]`)가 `loading.tsx` fallback에서 영구 stuck. 즉시 회복.
@@ -92,6 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `git log --oneline` — 모든 commit 이력
 - 첫 production tag을 `v1.1.0`으로 채택. M0~M7 누적 변경량과 "완전 리팩토링 후 첫 안정 릴리스" 의미 반영 (사용자 결정).
 
-[Unreleased]: https://github.com/chan9yu/dev-blog/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/chan9yu/dev-blog/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/chan9yu/dev-blog/releases/tag/v1.1.2
 [1.1.1]: https://github.com/chan9yu/dev-blog/releases/tag/v1.1.1
 [1.1.0]: https://github.com/chan9yu/dev-blog/releases/tag/v1.1.0

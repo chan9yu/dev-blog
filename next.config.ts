@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	cacheComponents: true,
+	// `cacheComponents: true`(Next.js 16 PPR)는 RSC를 default dynamic으로 만들어 매 요청 fs.readdirSync(contents/)를
+	// 호출 → Vercel lambda에 contents/ 부재 시 ENOENT throw → 모든 dynamic 페이지 streaming stuck (v1.1.0 incident).
+	// 이 프로젝트는 SSG-first(PRD G-1)이며 ISR/dynamic이 필요한 페이지가 없으므로 PPR 의미 없음. 비활성화 → Next.js 기본
+	// `next build` 시점에 모든 페이지 정적 prerender → runtime contents/ 의존 0% (v1.1.2 fix).
+	cacheComponents: false,
 	reactCompiler: true,
 	poweredByHeader: false,
 	images: {

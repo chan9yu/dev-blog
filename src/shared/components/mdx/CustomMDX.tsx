@@ -1,5 +1,3 @@
-"use cache";
-
 import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Children, type ComponentProps, isValidElement } from "react";
@@ -53,7 +51,7 @@ function MdxP({ children, ...props }: ComponentProps<"p">) {
 	return <p {...props}>{children}</p>;
 }
 
-/** MDXRemote components 맵. 모듈 상수로 선언해 "use cache" 경계에서 안정적 참조 보장. */
+/** MDXRemote components 맵. 모듈 상수로 선언해 안정적 참조 보장 + 빌드 타임 정적 prerender 호환. */
 const MDX_COMPONENTS = {
 	h1: MdxH1,
 	h2: MdxH2,

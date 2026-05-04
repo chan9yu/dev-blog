@@ -116,7 +116,7 @@ pnpm test:e2e     # Playwright E2E (5 spec)
 
 - **15개 에이전트** (`orchestration` · `developer` · `planning` · `quality` · `content` · `documentation`)
 - **12개 스킬** (오케스트레이션 3 · 도메인 작업 3 · 참조 지식 6)
-- **15개 규칙** (아키텍처·스타일·품질·하네스·아이콘·REVIEW 강제)
+- **16개 규칙** (아키텍처·스타일·품질·하네스·아이콘·REVIEW 강제·No-Fallback)
 - **9개 슬래시 커맨드** (수동 단일 작업용)
 
 상세 동작은 [`docs/AI_WORKFLOW_GUIDE.md`](./docs/AI_WORKFLOW_GUIDE.md) 참조.
