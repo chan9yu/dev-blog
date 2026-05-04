@@ -4,7 +4,7 @@
 
 - **프로젝트**: chan9yu 개발 블로그 -- 한국어권 프론트엔드 엔지니어를 위한 1인 저자 기술 블로그
 - **PRD 버전**: Product PRD v0.3.0 / Engineering PRD v0.4.0
-- **최종 업데이트**: 2026-04-27
+- **최종 업데이트**: 2026-05-04
 - **핵심 목표**: 깊이 있는 기술 기록, 시리즈 중심 학습 경로, 빠르고 접근성 좋은 독서 경험
 
 ### 개발 철학 -- Page-First Skeleton
@@ -235,261 +235,261 @@ Browser (Client)
 
 #### Fixture 데이터
 
-- [ ] **[M1-01]** `src/shared/fixtures/posts.ts` -- 더미 PostSummary 배열 (12건 이상, thumbnail 있는/없는 혼합, private 포함)
+- [x] **[M1-01]** `src/shared/fixtures/posts.ts` -- 더미 PostSummary 배열 (12건 이상, thumbnail 있는/없는 혼합, private 포함)
   - 대응: US-001, US-002, FEAT-HOME, FEAT-POSTS-LIST, FEAT-POST-DETAIL
   - 검증: 타입이 `PostSummary`와 일치, thumbnail null/string 혼합, private true 포함
 
-- [ ] **[M1-02]** `src/shared/fixtures/post-details.ts` -- 더미 PostDetail 배열 (TOC 항목, MDX 본문 포함)
+- [x] **[M1-02]** `src/shared/fixtures/post-details.ts` -- 더미 PostDetail 배열 (TOC 항목, MDX 본문 포함)
   - 대응: US-002, FEAT-POST-DETAIL
   - 검증: `contentMdx`, `toc` 필드가 포함된 상세 데이터
 
-- [ ] **[M1-03]** `src/shared/fixtures/tags.ts` -- 더미 TagCount 배열
+- [x] **[M1-03]** `src/shared/fixtures/tags.ts` -- 더미 TagCount 배열
   - 대응: US-011, FEAT-TAGS-HUB, FEAT-TAG-DETAIL, MOD-tags
   - 검증: tag/slug/count 필드가 올바른 타입
 
-- [ ] **[M1-04]** `src/shared/fixtures/series.ts` -- 더미 Series 배열 (각 시리즈에 포스트 3~5편)
+- [x] **[M1-04]** `src/shared/fixtures/series.ts` -- 더미 Series 배열 (각 시리즈에 포스트 3~5편)
   - 대응: US-012, FEAT-SERIES-HUB, FEAT-SERIES-DETAIL, MOD-series
   - 검증: Series 타입과 일치, seriesOrder 오름차순 포스트 포함
 
-- [ ] **[M1-05]** `src/shared/fixtures/trending.ts` -- 더미 TrendingSnapshot (Popular Posts 5건, Trending Series 3건, Trending Tags 10건)
+- [x] **[M1-05]** `src/shared/fixtures/trending.ts` -- 더미 TrendingSnapshot (Popular Posts 5건, Trending Series 3건, Trending Tags 10건)
   - 대응: US-016, FEAT-HOME, ADR-007
   - 검증: TrendingSnapshot 타입과 일치
 
 #### Feature 모듈 뼈대 (Public API index.ts)
 
-- [ ] **[M1-06]** `features/posts/index.ts` -- MOD-posts Public API 뼈대
+- [x] **[M1-06]** `features/posts/index.ts` -- MOD-posts Public API 뼈대
   - 대응: MOD-posts
   - 검증: 컴포넌트/서비스/타입 export 존재 (더미 구현)
 
-- [ ] **[M1-07]** `features/tags/index.ts` -- MOD-tags Public API 뼈대
+- [x] **[M1-07]** `features/tags/index.ts` -- MOD-tags Public API 뼈대
   - 대응: MOD-tags
   - 검증: 컴포넌트/서비스/타입 export 존재
 
-- [ ] **[M1-08]** `features/series/index.ts` -- MOD-series Public API 뼈대
+- [x] **[M1-08]** `features/series/index.ts` -- MOD-series Public API 뼈대
   - 대응: MOD-series
   - 검증: 컴포넌트/서비스/타입 export 존재
 
-- [ ] **[M1-09]** `features/search/index.ts` -- MOD-search Public API 뼈대
+- [x] **[M1-09]** `features/search/index.ts` -- MOD-search Public API 뼈대
   - 대응: MOD-search
   - 검증: SearchButton, SearchModal, useSearchShortcut export 존재
 
-- [ ] **[M1-10]** `features/views/index.ts` -- MOD-views Public API 뼈대
+- [x] **[M1-10]** `features/views/index.ts` -- MOD-views Public API 뼈대
   - 대응: MOD-views
   - 검증: ViewCounter export 존재
 
-- [ ] **[M1-11]** `features/comments/index.ts` -- MOD-comments Public API 뼈대
+- [x] **[M1-11]** `features/comments/index.ts` -- MOD-comments Public API 뼈대
   - 대응: MOD-comments
   - 검증: CommentsSection export 존재
 
-- [ ] **[M1-12]** `features/theme/index.ts` -- MOD-theme Public API 뼈대
+- [x] **[M1-12]** `features/theme/index.ts` -- MOD-theme Public API 뼈대
   - 대응: MOD-theme
   - 검증: ThemeSwitcher, useTheme export 존재
 
-- [ ] **[M1-13]** `features/lightbox/index.ts` -- MOD-lightbox Public API 뼈대
+- [x] **[M1-13]** `features/lightbox/index.ts` -- MOD-lightbox Public API 뼈대
   - 대응: MOD-lightbox
   - 검증: ImageLightbox, LightboxProvider export 존재
 
-- [ ] **[M1-14]** `features/about/index.ts` -- MOD-about Public API 뼈대
+- [x] **[M1-14]** `features/about/index.ts` -- MOD-about Public API 뼈대
   - 대응: MOD-about
   - 검증: AboutProfile export 존재
 
 #### 공통 타입 정의
 
-- [ ] **[M1-15]** `shared/types/` -- 공용 타입 정의 (PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot 등)
+- [x] **[M1-15]** `shared/types/` -- 공용 타입 정의 (PostSummary, PostDetail, TocItem, Series, TagCount, AdjacentPosts, RelatedPost, TrendingSnapshot 등)
   - 대응: 전체 MOD-\*
   - 검증: 모든 feature에서 import 가능한 공용 타입
 
 #### 홈 페이지 (FEAT-HOME)
 
-- [ ] **[M1-16]** Hero 섹션 -- 저자 소개 1~2줄, 프로필 이미지, CTA ("최신 글 보기")
+- [x] **[M1-16]** Hero 섹션 -- 저자 소개 1~2줄, 프로필 이미지, CTA ("최신 글 보기")
   - 대응: FEAT-HOME, US-001
   - 검증: Hero가 렌더되고 CTA 클릭 시 `/posts`로 이동
 
-- [ ] **[M1-17]** 최근 포스트 카드 섹션 -- 더미 PostCard 6장 (thumbnail 있는/없는 혼합)
+- [x] **[M1-17]** 최근 포스트 카드 섹션 -- 더미 PostCard 6장 (thumbnail 있는/없는 혼합)
   - 대응: FEAT-HOME, US-001
   - 검증: 카드 6장이 날짜 내림차순으로 표시, 16:9 thumbnail 또는 텍스트 카드
 
-- [ ] **[M1-18]** 사이드바 Popular Posts 위젯 -- 더미 5건
+- [x] **[M1-18]** 사이드바 Popular Posts 위젯 -- 더미 5건
   - 대응: FEAT-HOME, US-016, ADR-007
   - 검증: Popular Posts 위젯에 5건이 조회수 순으로 표시
 
-- [ ] **[M1-19]** 사이드바 Trending Series 위젯 -- 더미 3건
+- [x] **[M1-19]** 사이드바 Trending Series 위젯 -- 더미 3건
   - 대응: FEAT-HOME, US-016, ADR-007
   - 검증: 시리즈 카드 3건이 포스트 수 순으로 표시
 
-- [ ] **[M1-20]** 사이드바 Trending Tags 위젯 -- 더미 10건
+- [x] **[M1-20]** 사이드바 Trending Tags 위젯 -- 더미 10건
   - 대응: FEAT-HOME, US-016, ADR-007
   - 검증: 태그 칩 10건이 포스트 수 순으로 표시
 
-- [ ] **[M1-21]** 홈 반응형 레이아웃 -- md 이상 2-column, md 미만 1-column (사이드바 아래)
+- [x] **[M1-21]** 홈 반응형 레이아웃 -- md 이상 2-column, md 미만 1-column (사이드바 아래)
   - 대응: FEAT-HOME
   - 검증: breakpoint 전환 시 레이아웃 변경 확인
 
 #### 포스트 목록 (FEAT-POSTS-LIST)
 
-- [ ] **[M1-22]** `PostCard.tsx` -- 썸네일 이미지/텍스트 전용 카드 (제목, 설명, 태그 chip, 날짜)
+- [x] **[M1-22]** `PostCard.tsx` -- 썸네일 이미지/텍스트 전용 카드 (제목, 설명, 태그 chip, 날짜)
   - 대응: FEAT-POSTS-LIST, US-001
   - 검증: thumbnail 유무에 따른 카드 레이아웃 분기, 태그 chip 노출
 
-- [ ] **[M1-23]** `PostList.tsx` -- 포스트 카드 그리드/리스트 뷰 렌더
+- [x] **[M1-23]** `PostList.tsx` -- 포스트 카드 그리드/리스트 뷰 렌더
   - 대응: FEAT-POSTS-LIST, US-001
   - 검증: 더미 데이터로 카드 목록 렌더
 
-- [ ] **[M1-24]** 뷰 토글 (그리드/리스트) -- localStorage에 선택 상태 저장
+- [x] **[M1-24]** 뷰 토글 (그리드/리스트) -- localStorage에 선택 상태 저장
   - 대응: FEAT-POSTS-LIST
   - 검증: 그리드/리스트 아이콘 토글, 새로고침 후 상태 복원
 
-- [ ] **[M1-25]** 태그 필터 패널 -- 좌측(데스크톱)/상단 chip(모바일), "전체" 리셋 버튼
+- [x] **[M1-25]** 태그 필터 패널 -- 좌측(데스크톱)/상단 chip(모바일), "전체" 리셋 버튼
   - 대응: FEAT-POSTS-LIST, US-001
   - 검증: 태그 클릭 시 필터링, 활성 태그 하이라이트, "전체" 리셋
 
-- [ ] **[M1-26]** 무한 스크롤 -- 초기 12장, 스크롤 도달 시 12장 추가
+- [x] **[M1-26]** 무한 스크롤 -- 초기 12장, 스크롤 도달 시 12장 추가
   - 대응: FEAT-POSTS-LIST
   - 검증: 스크롤 하단 도달 시 추가 카드 로드
 
-- [ ] **[M1-27]** 빈 상태/Suspense fallback -- "포스트가 아직 없어요" 메시지, 카드 스켈레톤 6장
+- [x] **[M1-27]** 빈 상태/Suspense fallback -- "포스트가 아직 없어요" 메시지, 카드 스켈레톤 6장
   - 대응: FEAT-POSTS-LIST
   - 검증: 필터 결과 0건일 때 빈 상태 메시지, 로딩 시 스켈레톤
 
 #### 포스트 상세 (FEAT-POST-DETAIL)
 
-- [ ] **[M1-28]** 메타 헤더 -- 제목(h1), 설명, 발행일, 읽기 시간, 태그 chip, 조회수 placeholder
+- [x] **[M1-28]** 메타 헤더 -- 제목(h1), 설명, 발행일, 읽기 시간, 태그 chip, 조회수 placeholder
   - 대응: FEAT-POST-DETAIL, US-002, US-008, US-013
   - 검증: 더미 데이터로 모든 메타 필드 표시
 
-- [ ] **[M1-29]** `ReadingProgress.tsx` -- 상단 2px 프로그레스 바 (GPU scaleX)
+- [x] **[M1-29]** `ReadingProgress.tsx` -- 상단 2px 프로그레스 바 (GPU scaleX)
   - 대응: FEAT-READING-AIDS, US-002
   - 검증: 스크롤에 따라 프로그레스 바 진행, 본문 < 800자일 때 숨김
 
-- [ ] **[M1-30]** `Toc.tsx` -- lg 이상 좌측 sticky TOC, lg 미만 상단 접힘 Accordion
+- [x] **[M1-30]** `Toc.tsx` -- lg 이상 좌측 sticky TOC, lg 미만 상단 접힘 Accordion
   - 대응: FEAT-POST-DETAIL, FEAT-READING-AIDS, US-002
   - 검증: TOC 항목 클릭 시 앵커 스크롤, URL hash 반영, 반응형 전환
 
-- [ ] **[M1-31]** MDX 본문 렌더 영역 -- prose 스타일 적용된 placeholder 콘텐츠
+- [x] **[M1-31]** MDX 본문 렌더 영역 -- prose 스타일 적용된 placeholder 콘텐츠
   - 대응: FEAT-POST-DETAIL, US-002
   - 검증: 코드 블록, 이미지, 제목이 포함된 더미 본문 렌더
 
-- [ ] **[M1-32]** `MdxHeading.tsx` -- 자동 id 생성, 앵커 링크(#) 노출
+- [x] **[M1-32]** `MdxHeading.tsx` -- 자동 id 생성, 앵커 링크(#) 노출
   - 대응: FEAT-POST-DETAIL
   - 검증: h2/h3에 hover 시 앵커 아이콘 표시
 
-- [ ] **[M1-33]** `ShikiCodeBlock.tsx` / `MdxPre.tsx` -- 코드 블록 + 복사 버튼 (2초 "Copied!" 피드백)
+- [x] **[M1-33]** `ShikiCodeBlock.tsx` / `MdxPre.tsx` -- 코드 블록 + 복사 버튼 (2초 "Copied!" 피드백)
   - 대응: FEAT-POST-DETAIL, US-002
   - 검증: 복사 아이콘 클릭 시 클립보드 복사, 피드백 표시
 
-- [ ] **[M1-34]** `MdxImage.tsx` -- 이미지 컴포넌트 (클릭 시 Lightbox 연동 슬롯)
+- [x] **[M1-34]** `MdxImage.tsx` -- 이미지 컴포넌트 (클릭 시 Lightbox 연동 슬롯)
   - 대응: FEAT-POST-DETAIL, FEAT-LIGHTBOX, US-014
   - 검증: 이미지에 alt 표시, 클릭 이벤트 연동 준비
 
-- [ ] **[M1-35]** `MdxLink.tsx` -- 외부 링크 새 탭, 내부 링크 클라이언트 네비
+- [x] **[M1-35]** `MdxLink.tsx` -- 외부 링크 새 탭, 내부 링크 클라이언트 네비
   - 대응: FEAT-POST-DETAIL
   - 검증: 외부 URL에 `target="_blank"`, 내부 경로는 Next.js Link
 
-- [ ] **[M1-36]** `MdxTable.tsx` -- 반응형 테이블 래퍼
+- [x] **[M1-36]** `MdxTable.tsx` -- 반응형 테이블 래퍼
   - 대응: FEAT-POST-DETAIL
   - 검증: overflow-x scroll 적용
 
-- [ ] **[M1-37]** `Callout.tsx` -- 주의/팁/경고 박스 (MDX 커스텀 컴포넌트)
+- [x] **[M1-37]** `Callout.tsx` -- 주의/팁/경고 박스 (MDX 커스텀 컴포넌트)
   - 대응: FEAT-POST-DETAIL
   - 검증: 타입별 아이콘/색상 분기 렌더
 
-- [ ] **[M1-38]** 시리즈 네비게이션 -- 시리즈 소속 시 상단 배지 + 이전/다음 시리즈 포스트 링크
+- [x] **[M1-38]** 시리즈 네비게이션 -- 시리즈 소속 시 상단 배지 + 이전/다음 시리즈 포스트 링크
   - 대응: FEAT-POST-DETAIL, FEAT-SERIES-DETAIL, US-012
   - 검증: 시리즈 포스트에 "1/5", "2/5" 순서 표시, 이전/다음 링크
 
-- [ ] **[M1-39]** `PostNavigation.tsx` -- 이전/다음 포스트 카드
+- [x] **[M1-39]** `PostNavigation.tsx` -- 이전/다음 포스트 카드
   - 대응: FEAT-POST-DETAIL, US-002
   - 검증: 더미 데이터로 이전/다음 포스트 카드 렌더
 
-- [ ] **[M1-40]** `RelatedPosts.tsx` -- 관련 포스트 3장 (태그 겹침 기반, 2장 미만이면 숨김)
+- [x] **[M1-40]** `RelatedPosts.tsx` -- 관련 포스트 3장 (태그 겹침 기반, 2장 미만이면 숨김)
   - 대응: FEAT-POST-DETAIL, US-015
   - 검증: 더미 데이터로 관련 포스트 카드 3장 표시
 
-- [ ] **[M1-41]** `ShareButtons.tsx` -- 링크 복사 / X(Twitter) / LinkedIn, Web Share API 분기
+- [x] **[M1-41]** `ShareButtons.tsx` -- 링크 복사 / X(Twitter) / LinkedIn, Web Share API 분기
   - 대응: FEAT-POST-DETAIL, US-007
   - 검증: 공유 버튼 렌더, 링크 복사 클릭 시 클립보드 복사
 
-- [ ] **[M1-42]** `ScrollToTop.tsx` -- 우하단 버튼 (스크롤 > 400px 시 노출)
+- [x] **[M1-42]** `ScrollToTop.tsx` -- 우하단 버튼 (스크롤 > 400px 시 노출)
   - 대응: FEAT-READING-AIDS, US-002
   - 검증: 스크롤 400px 초과 시 버튼 표시, 클릭 시 상단 이동
 
-- [ ] **[M1-43]** `ScrollReset.tsx` -- 페이지 전환 시 스크롤 상단 초기화
+- [x] **[M1-43]** `ScrollReset.tsx` -- 페이지 전환 시 스크롤 상단 초기화
   - 대응: FEAT-READING-AIDS
   - 검증: 라우트 변경 시 스크롤 위치 (0, 0) 복원
 
 #### 태그 (FEAT-TAGS-HUB, FEAT-TAG-DETAIL)
 
-- [ ] **[M1-44]** `TagHub` 페이지 -- 태그 카드 그리드 (태그명 + 포스트 수, 포스트 수 기준 정렬)
+- [x] **[M1-44]** `TagHub` 페이지 -- 태그 카드 그리드 (태그명 + 포스트 수, 포스트 수 기준 정렬)
   - 대응: FEAT-TAGS-HUB, US-011, MOD-tags
   - 검증: 더미 TagCount로 3~4 column 그리드 렌더
 
-- [ ] **[M1-45]** `TagDetail` 페이지 -- 태그 헤더 + 해당 태그 포스트 목록 (날짜 내림차순)
+- [x] **[M1-45]** `TagDetail` 페이지 -- 태그 헤더 + 해당 태그 포스트 목록 (날짜 내림차순)
   - 대응: FEAT-TAG-DETAIL, US-011, MOD-tags
   - 검증: 더미 데이터로 필터된 포스트 목록 렌더, 한글 태그 URL encoding/decoding 처리
 
-- [ ] **[M1-46]** `TagChip.tsx` -- 태그 칩 컴포넌트 (클릭 시 `/tags/[tag]` 이동)
+- [x] **[M1-46]** `TagChip.tsx` -- 태그 칩 컴포넌트 (클릭 시 `/tags/[tag]` 이동)
   - 대응: FEAT-TAGS-HUB, FEAT-TAG-DETAIL, MOD-tags
   - 검증: 클릭 시 태그 상세로 이동
 
 #### 시리즈 (FEAT-SERIES-HUB, FEAT-SERIES-DETAIL)
 
-- [ ] **[M1-47]** `SeriesHub` 페이지 -- 시리즈 카드 (아이콘, 이름, 총 포스트 수, 첫 3개 미리보기, "전체 보기")
+- [x] **[M1-47]** `SeriesHub` 페이지 -- 시리즈 카드 (아이콘, 이름, 총 포스트 수, 첫 3개 미리보기, "전체 보기")
   - 대응: FEAT-SERIES-HUB, US-012, MOD-series
   - 검증: 더미 Series로 카드 렌더, 1편짜리 시리즈는 미리보기 생략
 
-- [ ] **[M1-48]** `SeriesDetail` 페이지 -- 시리즈 헤더(이름/설명/총 편수) + 순서 네비 + 포스트 목록 (seriesOrder 오름차순)
+- [x] **[M1-48]** `SeriesDetail` 페이지 -- 시리즈 헤더(이름/설명/총 편수) + 순서 네비 + 포스트 목록 (seriesOrder 오름차순)
   - 대응: FEAT-SERIES-DETAIL, US-012, MOD-series
   - 검증: 더미 데이터로 순서 네비게이션(1/5, 2/5 ...) 표시
 
-- [ ] **[M1-49]** `SeriesNavigation.tsx` -- 시리즈 이전/다음 포스트 네비게이션
+- [x] **[M1-49]** `SeriesNavigation.tsx` -- 시리즈 이전/다음 포스트 네비게이션
   - 대응: FEAT-SERIES-DETAIL, US-012, MOD-series
   - 검증: 이전/다음 포스트 링크 렌더
 
 #### About (FEAT-ABOUT)
 
-- [ ] **[M1-50]** `AboutProfile` 컴포넌트 -- 프로필 사진, 이름, 직무 타이틀, 소셜 링크, 마크다운 본문 placeholder
+- [x] **[M1-50]** `AboutProfile` 컴포넌트 -- 프로필 사진, 이름, 직무 타이틀, 소셜 링크, 마크다운 본문 placeholder
   - 대응: FEAT-ABOUT, MOD-about
   - 검증: 더미 프로필 정보와 마크다운 영역 렌더
 
 #### 검색 (FEAT-SEARCH)
 
-- [ ] **[M1-51]** `SearchButton.tsx` -- 헤더 내 검색 아이콘 (클릭/단축키로 모달 오픈)
+- [x] **[M1-51]** `SearchButton.tsx` -- 헤더 내 검색 아이콘 (클릭/단축키로 모달 오픈)
   - 대응: FEAT-SEARCH, US-003, MOD-search
   - 검증: 아이콘 클릭 시 SearchModal 오픈
 
-- [ ] **[M1-52]** `SearchModal.tsx` -- 상단 중앙 모달, 입력창, 결과 리스트, 키보드 네비
+- [x] **[M1-52]** `SearchModal.tsx` -- 상단 중앙 모달, 입력창, 결과 리스트, 키보드 네비
   - 대응: FEAT-SEARCH, US-003, MOD-search
   - 검증: 모달 오픈 시 입력창 포커스, 더미 결과 표시, Esc로 닫기
 
-- [ ] **[M1-53]** `useSearchShortcut` -- Cmd+K / Ctrl+K 단축키 훅
+- [x] **[M1-53]** `useSearchShortcut` -- Cmd+K / Ctrl+K 단축키 훅
   - 대응: FEAT-SEARCH, US-003, MOD-search
   - 검증: 단축키 입력 시 모달 오픈 콜백 호출
 
-- [ ] **[M1-54]** 검색 결과 0건 상태 -- "검색 결과 없음" 안내 + 관련 태그 추천 3개
+- [x] **[M1-54]** 검색 결과 0건 상태 -- "검색 결과 없음" 안내 + 관련 태그 추천 3개
   - 대응: FEAT-SEARCH, US-003
   - 검증: 결과 0건일 때 빈 상태 UI 렌더
 
 #### 조회수 (FEAT-VIEW-COUNTER)
 
-- [ ] **[M1-55]** `ViewCounter.tsx` -- 아이콘 + 숫자 placeholder (Suspense fallback 포함)
+- [x] **[M1-55]** `ViewCounter.tsx` -- 아이콘 + 숫자 placeholder (Suspense fallback 포함)
   - 대응: FEAT-VIEW-COUNTER, US-013, MOD-views
   - 검증: 더미 숫자 표시, fallback은 동일 크기 placeholder
 
 #### 테마 (FEAT-THEME)
 
-- [ ] **[M1-56]** `ThemeSwitcher.tsx` -- Sun/Moon 아이콘 토글 (next-themes 기반)
+- [x] **[M1-56]** `ThemeSwitcher.tsx` -- Sun/Moon 아이콘 토글 (next-themes 기반)
   - 대응: FEAT-THEME, US-004, MOD-theme
   - 검증: 클릭 시 light/dark 전환, FOUC 없음, `prefers-reduced-motion`이면 트랜지션 비활성
 
 #### 라이트박스 (FEAT-LIGHTBOX)
 
-- [ ] **[M1-57]** `LightboxProvider.tsx` + `ImageLightbox.tsx` -- 이미지 모달 뷰어 (fade 300ms, Esc/백드롭 닫기, 화살표 carousel)
+- [x] **[M1-57]** `LightboxProvider.tsx` + `ImageLightbox.tsx` -- 이미지 모달 뷰어 (fade 300ms, Esc/백드롭 닫기, 화살표 carousel)
   - 대응: FEAT-LIGHTBOX, US-014, MOD-lightbox
   - 검증: 더미 이미지 클릭 시 라이트박스 오픈, 키보드 네비, 1장일 때 화살표 숨김
 
 #### 댓글 (FEAT-COMMENTS)
 
-- [ ] **[M1-58]** `CommentsSection.tsx` -- Giscus placeholder (lazy load 슬롯)
+- [x] **[M1-58]** `CommentsSection.tsx` -- Giscus placeholder (lazy load 슬롯)
   - 대응: FEAT-COMMENTS, US-005, MOD-comments
   - 검증: 포스트 하단에 댓글 영역 placeholder 렌더, private 포스트에서 비활성
 
@@ -507,7 +507,7 @@ Browser (Client)
 
 #### shadcn/ui 프리미티브
 
-- [ ] **[M1-61]** 필요한 shadcn/ui 프리미티브 설치 -- Dialog, DropdownMenu, Toast, Tooltip, Badge, Accordion 등
+- [x] **[M1-61]** 필요한 shadcn/ui 프리미티브 설치 -- Dialog, DropdownMenu, Toast, Tooltip, Badge, Accordion 등
   - 대응: ADR-010, 전체 FEAT
   - 검증: `src/shared/ui/`에 PascalCase로 존재, 직접 경로 import 가능
 
@@ -525,109 +525,109 @@ Browser (Client)
 
 #### Submodule 설정
 
-- [ ] **[M2-01]** `contents/` Git Submodule 구성 (`.gitmodules`)
+- [x] **[M2-01]** `contents/` Git Submodule 구성 (`.gitmodules`)
   - 대응: US-006, ADR-004
   - 검증: `git submodule update --init --recursive`로 콘텐츠 clone 성공
 
-- [ ] **[M2-02]** `scripts/vercel-submodule-workaround.sh` -- Vercel 빌드 환경 submodule clone 스크립트
+- [x] **[M2-02]** `scripts/vercel-submodule-workaround.sh` -- Vercel 빌드 환경 submodule clone 스크립트
   - 대응: US-006
   - 검증: SSH URL -> HTTPS + 토큰 치환 후 submodule update 성공
 
 #### 파싱 파이프라인 (TDD: 테스트 먼저 작성)
 
-- [ ] **[M2-03]** **[TDD Red]** `parseFrontmatter` Unit 테스트 작성 -- 정상 파싱, `--`->`---` 보정, 스키마 위반 시 에러, slug/디렉토리 불일치 에러
+- [x] **[M2-03]** **[TDD Red]** `parseFrontmatter` Unit 테스트 작성 -- 정상 파싱, `--`->`---` 보정, 스키마 위반 시 에러, slug/디렉토리 불일치 에러
   - 대응: US-006, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패 (구현 미존재)
 
-- [ ] **[M2-04]** **[TDD Green]** `parseFrontmatter` 구현 -- gray-matter + PostFrontmatterSchema(Zod) + `--`->`---` 보정 + slug 검증
+- [x] **[M2-04]** **[TDD Green]** `parseFrontmatter` 구현 -- gray-matter + PostFrontmatterSchema(Zod) + `--`->`---` 보정 + slug 검증
   - 대응: US-006, MOD-posts
   - 검증: M2-03 테스트 녹색
 
-- [ ] **[M2-05]** `PostFrontmatterSchema` Zod 스키마 (`features/posts/schemas/frontmatter.ts`)
+- [x] **[M2-05]** `PostFrontmatterSchema` Zod 스키마 (`features/posts/schemas/frontmatter.ts`)
   - 대응: MOD-posts
   - 검증: series/seriesOrder 쌍 검증 refine 포함
 
-- [ ] **[M2-06]** **[TDD Red]** `calculateReadingTime` Unit 테스트 작성 -- 한국어 500자/분, 코드/이미지/수식 제외, 최소 1분, 포스트별 다른 값
+- [x] **[M2-06]** **[TDD Red]** `calculateReadingTime` Unit 테스트 작성 -- 한국어 500자/분, 코드/이미지/수식 제외, 최소 1분, 포스트별 다른 값
   - 대응: US-008, ADR-008, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-07]** **[TDD Green]** `calculateReadingTime` 구현 -- 코드 블록/이미지/수식 제거 -> 문자 수 / 500 -> ceil -> max(1, result)
+- [x] **[M2-07]** **[TDD Green]** `calculateReadingTime` 구현 -- 코드 블록/이미지/수식 제거 -> 문자 수 / 500 -> ceil -> max(1, result)
   - 대응: US-008, ADR-008, MOD-posts
   - 검증: M2-06 테스트 녹색
 
-- [ ] **[M2-08]** **[TDD Red]** `extractTocFromMarkdown` Unit 테스트 작성 -- h2/h3 추출, id slugify, level 정확도
+- [x] **[M2-08]** **[TDD Red]** `extractTocFromMarkdown` Unit 테스트 작성 -- h2/h3 추출, id slugify, level 정확도
   - 대응: FEAT-POST-DETAIL, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-09]** **[TDD Green]** `extractTocFromMarkdown` 구현 -- 마크다운 h2/h3 파싱 -> TocItem[] 생성
+- [x] **[M2-09]** **[TDD Green]** `extractTocFromMarkdown` 구현 -- 마크다운 h2/h3 파싱 -> TocItem[] 생성
   - 대응: FEAT-POST-DETAIL, MOD-posts
   - 검증: M2-08 테스트 녹색
 
-- [ ] **[M2-10]** **[TDD Red]** `slugify` Unit 테스트 작성
+- [x] **[M2-10]** **[TDD Red]** `slugify` Unit 테스트 작성
   - 대응: 전체 MOD-\*
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-11]** **[TDD Green]** `slugify` 구현
+- [x] **[M2-11]** **[TDD Green]** `slugify` 구현
   - 대응: 전체 MOD-\*
   - 검증: M2-10 테스트 녹색
 
 #### 서비스 함수 (TDD)
 
-- [ ] **[M2-12]** **[TDD Red]** `getAllPosts` Unit 테스트 -- 날짜 내림차순 정렬, includePrivate 옵션, private 제외 기본
+- [x] **[M2-12]** **[TDD Red]** `getAllPosts` Unit 테스트 -- 날짜 내림차순 정렬, includePrivate 옵션, private 제외 기본
   - 대응: US-001, US-006, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-13]** **[TDD Green]** `getAllPosts` 구현 -- `contents/posts/*/index.mdx` 스캔 -> parseFrontmatter -> sort
+- [x] **[M2-13]** **[TDD Green]** `getAllPosts` 구현 -- `contents/posts/*/index.mdx` 스캔 -> parseFrontmatter -> sort
   - 대응: US-001, US-006, MOD-posts
   - 검증: M2-12 테스트 녹색
 
-- [ ] **[M2-14]** **[TDD Red]** `getPostDetail` Unit 테스트 -- slug로 상세 조회, 없으면 null
+- [x] **[M2-14]** **[TDD Red]** `getPostDetail` Unit 테스트 -- slug로 상세 조회, 없으면 null
   - 대응: US-002, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-15]** **[TDD Green]** `getPostDetail` 구현 -- 파일 읽기 -> parseFrontmatter -> TOC 추출 -> readingTime 계산 -> PostDetail 조립
+- [x] **[M2-15]** **[TDD Green]** `getPostDetail` 구현 -- 파일 읽기 -> parseFrontmatter -> TOC 추출 -> readingTime 계산 -> PostDetail 조립
   - 대응: US-002, MOD-posts
   - 검증: M2-14 테스트 녹색
 
-- [ ] **[M2-16]** **[TDD Red]** `sortPostsByDateDescending` Unit 테스트
+- [x] **[M2-16]** **[TDD Red]** `sortPostsByDateDescending` Unit 테스트
   - 대응: MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M2-17]** **[TDD Green]** `sortPostsByDateDescending` 구현
+- [x] **[M2-17]** **[TDD Green]** `sortPostsByDateDescending` 구현
   - 대응: MOD-posts
   - 검증: M2-16 테스트 녹색
 
 #### 이미지 복사 스크립트
 
-- [ ] **[M2-18]** `scripts/copy-content-images.mjs` -- `contents/posts/*/images/**` -> `public/posts/{slug}/images/**` (mtime 비교, 멱등, prune)
+- [x] **[M2-18]** `scripts/copy-content-images.mjs` -- `contents/posts/*/images/**` -> `public/posts/{slug}/images/**` (mtime 비교, 멱등, prune)
   - 대응: US-006
   - 검증: 빌드 전 실행 시 이미지 복사 성공, 삭제된 원본 prune
 
 #### MDX 렌더링
 
-- [ ] **[M2-19]** `next-mdx-remote/rsc` 통합 -- `CustomMDX.tsx` 컴포넌트 맵 (MdxHeading, MdxImage, MdxPre, MdxLink, MdxTable, ShikiCodeBlock, Callout)
+- [x] **[M2-19]** `next-mdx-remote/rsc` 통합 -- `CustomMDX.tsx` 컴포넌트 맵 (MdxHeading, MdxImage, MdxPre, MdxLink, MdxTable, ShikiCodeBlock, Callout)
   - 대응: US-002, FEAT-POST-DETAIL, ADR-006
   - 검증: MDX 본문이 커스텀 컴포넌트로 렌더
 
-- [ ] **[M2-20]** Shiki 3 서버 하이라이팅 설정 -- `github-light`/`github-dark` 듀얼 테마
+- [x] **[M2-20]** Shiki 3 서버 하이라이팅 설정 -- `github-light`/`github-dark` 듀얼 테마
   - 대응: US-002, FEAT-POST-DETAIL, ADR-001
   - 검증: 코드 블록이 light/dark 테마에 맞게 하이라이트
 
-- [ ] **[M2-21]** remark/rehype 플러그인 설정 -- `remark-gfm`, `remark-breaks`
+- [x] **[M2-21]** remark/rehype 플러그인 설정 -- `remark-gfm`, `remark-breaks`
   - 대응: FEAT-POST-DETAIL
   - 검증: GFM 테이블, 체크박스, 한국어 줄바꿈 정상 렌더
 
 #### 더미 -> 실데이터 교체
 
-- [ ] **[M2-22]** `RT-/posts/[slug]`에 `generateStaticParams` 연결 -- 모든 public 포스트 slug 사전 생성
+- [x] **[M2-22]** `RT-/posts/[slug]`에 `generateStaticParams` 연결 -- 모든 public 포스트 slug 사전 생성
   - 대응: RT-/posts/[slug]
   - 검증: 빌드 시 모든 포스트 정적 페이지 생성
 
-- [ ] **[M2-23]** 홈, 포스트 목록, 포스트 상세 페이지에서 fixture import 제거 -> 실 서비스 함수 호출
+- [x] **[M2-23]** 홈, 포스트 목록, 포스트 상세 페이지에서 fixture import 제거 -> 실 서비스 함수 호출
   - 대응: US-001, US-002, FEAT-HOME, FEAT-POSTS-LIST, FEAT-POST-DETAIL
   - 검증: 샘플 MDX 10편이 실데이터로 렌더
 
-- [ ] **[M2-24]** `src/shared/fixtures/` 의존 완전 제거 (또는 테스트 전용으로 격리)
+- [x] **[M2-24]** `src/shared/fixtures/` 의존 완전 제거 (또는 테스트 전용으로 격리)
   - 대응: ADR-009
   - 검증: 프로덕션 코드에서 fixture import 0건
 
@@ -645,99 +645,99 @@ Browser (Client)
 
 #### 검색 (MOD-search, FEAT-SEARCH)
 
-- [ ] **[M3-01]** **[TDD Red]** `useSearch` Integration 테스트 -- Fuse.js 인덱싱, 200ms 디바운스, 최대 10결과, 스코어 순, 0건 시 빈 배열
+- [x] **[M3-01]** **[TDD Red]** `useSearch` Integration 테스트 -- Fuse.js 인덱싱, 200ms 디바운스, 최대 10결과, 스코어 순, 0건 시 빈 배열
   - 대응: US-003, MOD-search
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-02]** **[TDD Green]** `useSearch` 구현 -- Fuse.js 인덱스 (가중치: title 0.5, description 0.3, tags 0.2), threshold 0.4, limit 10
+- [x] **[M3-02]** **[TDD Green]** `useSearch` 구현 -- Fuse.js 인덱스 (가중치: title 0.5, description 0.3, tags 0.2), threshold 0.4, limit 10
   - 대응: US-003, MOD-search, ADR-002
   - 검증: M3-01 테스트 녹색
 
-- [ ] **[M3-03]** **[TDD Red]** SearchModal Integration 테스트 -- 모달 오픈/닫기, 타이핑 -> 결과 갱신, 결과 클릭 이동, Esc 닫기, 0건 시 태그 추천
+- [x] **[M3-03]** **[TDD Red]** SearchModal Integration 테스트 -- 모달 오픈/닫기, 타이핑 -> 결과 갱신, 결과 클릭 이동, Esc 닫기, 0건 시 태그 추천
   - 대응: US-003, MOD-search
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-04]** **[TDD Green]** SearchModal에 실 Fuse.js 인덱스 연결 -- 결과 하이라이트, 키보드 화살표 포커스, Enter 이동
+- [x] **[M3-04]** **[TDD Green]** SearchModal에 실 Fuse.js 인덱스 연결 -- 결과 하이라이트, 키보드 화살표 포커스, Enter 이동
   - 대응: US-003, MOD-search
   - 검증: M3-03 테스트 녹색
 
 #### 조회수 (MOD-views, FEAT-VIEW-COUNTER)
 
-- [ ] **[M3-05]** **[TDD Red]** `getPostViews` / `incrementPostViews` / `getBatchPostViews` Unit 테스트 (MSW로 `/api/views` 모킹)
+- [x] **[M3-05]** **[TDD Red]** `getPostViews` / `incrementPostViews` / `getBatchPostViews` Unit 테스트 (MSW로 `/api/views` 모킹)
   - 대응: US-013, MOD-views
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-06]** **[TDD Green]** KV 클라이언트 구현 -- `@vercel/kv` 연동, `incr`/`mget` 파이프라인, N+1 방지
+- [x] **[M3-06]** **[TDD Green]** KV 클라이언트 구현 -- `@vercel/kv` 연동, `incr`/`mget` 파이프라인, N+1 방지
   - 대응: US-013, MOD-views, ADR-003
   - 검증: M3-05 테스트 녹색
 
-- [ ] **[M3-07]** **[TDD Red]** `RT-/api/views` Route Handler 테스트 -- GET(slug -> views), POST(slug -> 204), 잘못된 요청 400
+- [x] **[M3-07]** **[TDD Red]** `RT-/api/views` Route Handler 테스트 -- GET(slug -> views), POST(slug -> 204), 잘못된 요청 400
   - 대응: RT-/api/views, MOD-views
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-08]** **[TDD Green]** `RT-/api/views` Route Handler 구현 -- GET/POST 핸들러, Cache-Control: no-store
+- [x] **[M3-08]** **[TDD Green]** `RT-/api/views` Route Handler 구현 -- GET/POST 핸들러, Cache-Control: no-store
   - 대응: RT-/api/views, MOD-views
   - 검증: M3-07 테스트 녹색
 
-- [ ] **[M3-09]** **[TDD Red]** ViewCounter Integration 테스트 -- Suspense fallback -> 실 숫자, KV 실패 시 "---" fallback, 동일 세션 중복 방지 best-effort
+- [x] **[M3-09]** **[TDD Red]** ViewCounter Integration 테스트 -- Suspense fallback -> 실 숫자, KV 실패 시 "---" fallback, 동일 세션 중복 방지 best-effort
   - 대응: US-013, MOD-views
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-10]** **[TDD Green]** ViewCounter에 실 KV 연결 -- 포스트 mount 시 +1 POST, Suspense boundary
+- [x] **[M3-10]** **[TDD Green]** ViewCounter에 실 KV 연결 -- 포스트 mount 시 +1 POST, Suspense boundary
   - 대응: US-013, MOD-views
   - 검증: M3-09 테스트 녹색
 
 #### 댓글 (MOD-comments, FEAT-COMMENTS)
 
-- [ ] **[M3-11]** **[TDD Red]** CommentsSection Integration 테스트 -- Giscus lazy mount, 테마 연동, private 포스트 비활성, 로드 실패 시 placeholder + 재시도
+- [x] **[M3-11]** **[TDD Red]** CommentsSection Integration 테스트 -- Giscus lazy mount, 테마 연동, private 포스트 비활성, 로드 실패 시 placeholder + 재시도
   - 대응: US-005, MOD-comments
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-12]** **[TDD Green]** CommentsSection 구현 -- `@giscus/react` IntersectionObserver lazy mount, 환경변수 4종 주입, 테마 전환 동기화
+- [x] **[M3-12]** **[TDD Green]** CommentsSection 구현 -- `@giscus/react` IntersectionObserver lazy mount, 환경변수 4종 주입, 테마 전환 동기화
   - 대응: US-005, MOD-comments
   - 검증: M3-11 테스트 녹색
 
 #### 테마 Persistence (MOD-theme, FEAT-THEME)
 
-- [ ] **[M3-13]** **[TDD Red]** ThemeSwitcher Integration 테스트 -- 시스템 테마 감지, 토글 시 `.dark` 클래스, 재방문 시 cookie/localStorage 복원, FOUC 없음, View Transitions API 분기
+- [x] **[M3-13]** **[TDD Red]** ThemeSwitcher Integration 테스트 -- 시스템 테마 감지, 토글 시 `.dark` 클래스, 재방문 시 cookie/localStorage 복원, FOUC 없음, View Transitions API 분기
   - 대응: US-004, MOD-theme, ADR-011
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-14]** **[TDD Green]** ThemeSwitcher + useTheme 완성 -- next-themes 래퍼, `useSyncExternalStore` mounted 감지, `document.startViewTransition` progressive enhancement
+- [x] **[M3-14]** **[TDD Green]** ThemeSwitcher + useTheme 완성 -- next-themes 래퍼, `useSyncExternalStore` mounted 감지, `document.startViewTransition` progressive enhancement
   - 대응: US-004, MOD-theme, ADR-011
   - 검증: M3-13 테스트 녹색
 
 #### 라이트박스 (MOD-lightbox, FEAT-LIGHTBOX)
 
-- [ ] **[M3-15]** **[TDD Red]** ImageLightbox Integration 테스트 -- 이미지 클릭 -> 라이트박스 오픈(fade 300ms), Esc/백드롭 닫기, 화살표 carousel, 1장일 때 화살표 숨김
+- [x] **[M3-15]** **[TDD Red]** ImageLightbox Integration 테스트 -- 이미지 클릭 -> 라이트박스 오픈(fade 300ms), Esc/백드롭 닫기, 화살표 carousel, 1장일 때 화살표 숨김
   - 대응: US-014, MOD-lightbox
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-16]** **[TDD Green]** ImageLightbox + LightboxProvider 구현 -- `yet-another-react-lightbox` 연동, `next/dynamic` 지연 로드
+- [x] **[M3-16]** **[TDD Green]** ImageLightbox + LightboxProvider 구현 -- `yet-another-react-lightbox` 연동, `next/dynamic` 지연 로드
   - 대응: US-014, MOD-lightbox
   - 검증: M3-15 테스트 녹색
 
 #### 포스트 목록 / 상세 AC 완성
 
-- [ ] **[M3-17]** **[TDD Red]** PostList Integration 테스트 -- 최신순 정렬, 카드 6장(홈)/전체(목록), thumbnail 유무 분기, 카드 클릭 이동
+- [x] **[M3-17]** **[TDD Red]** PostList Integration 테스트 -- 최신순 정렬, 카드 6장(홈)/전체(목록), thumbnail 유무 분기, 카드 클릭 이동
   - 대응: US-001
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-18]** **[TDD Green]** PostList에 실 서비스 연결 완성
+- [x] **[M3-18]** **[TDD Green]** PostList에 실 서비스 연결 완성
   - 대응: US-001
   - 검증: M3-17 테스트 녹색, US-001 AC 전부 충족
 
-- [ ] **[M3-19]** **[TDD Red]** PostDetail Integration 테스트 -- 메타 헤더, TOC 클릭 앵커 스크롤, 코드 복사, 이전/다음 포스트
+- [x] **[M3-19]** **[TDD Red]** PostDetail Integration 테스트 -- 메타 헤더, TOC 클릭 앵커 스크롤, 코드 복사, 이전/다음 포스트
   - 대응: US-002
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M3-20]** **[TDD Green]** PostDetail 완성 -- TOC 앵커 + URL hash, 코드 블록 복사, 읽기 시간 실수치
+- [x] **[M3-20]** **[TDD Green]** PostDetail 완성 -- TOC 앵커 + URL hash, 코드 블록 복사, 읽기 시간 실수치
   - 대응: US-002, US-008
   - 검증: M3-19 테스트 녹색, US-002/US-008 AC 전부 충족
 
 #### 저자 발행 워크플로우
 
-- [ ] **[M3-21]** `pnpm build` 파이프라인 통합 -- submodule workaround -> copy-content-images -> next build
+- [x] **[M3-21]** `pnpm build` 파이프라인 통합 -- submodule workaround -> copy-content-images -> next build
   - 대응: US-006
   - 검증: frontmatter 스키마 위반 시 빌드 실패 + slug/필드 에러 메시지 출력
 
@@ -755,97 +755,97 @@ Browser (Client)
 
 #### 태그 집계 (MOD-tags)
 
-- [ ] **[M4-01]** **[TDD Red]** `getAllTags` / `getPostsByTag` / `getTagCounts` Unit 테스트 -- private 제외, 포스트 수 정렬
+- [x] **[M4-01]** **[TDD Red]** `getAllTags` / `getPostsByTag` / `getTagCounts` Unit 테스트 -- private 제외, 포스트 수 정렬
   - 대응: US-011, MOD-tags
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-02]** **[TDD Green]** 태그 서비스 구현 -- 전체 포스트에서 태그 추출, 카운트 집계, private 제외
+- [x] **[M4-02]** **[TDD Green]** 태그 서비스 구현 -- 전체 포스트에서 태그 추출, 카운트 집계, private 제외
   - 대응: US-011, MOD-tags
   - 검증: M4-01 테스트 녹색
 
-- [ ] **[M4-03]** **[TDD Red]** `getTrendingTags` Unit 테스트 -- public 포스트 수 내림차순 상위 N, private 기여분 제외
+- [x] **[M4-03]** **[TDD Red]** `getTrendingTags` Unit 테스트 -- public 포스트 수 내림차순 상위 N, private 기여분 제외
   - 대응: US-016, MOD-tags, ADR-007
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-04]** **[TDD Green]** `getTrendingTags` 구현
+- [x] **[M4-04]** **[TDD Green]** `getTrendingTags` 구현
   - 대응: US-016, MOD-tags, ADR-007
   - 검증: M4-03 테스트 녹색
 
-- [ ] **[M4-05]** `RT-/tags` + `RT-/tags/[tag]`에 `generateStaticParams` 연결 + 실 서비스 호출
+- [x] **[M4-05]** `RT-/tags` + `RT-/tags/[tag]`에 `generateStaticParams` 연결 + 실 서비스 호출
   - 대응: RT-/tags, RT-/tags/[tag], US-011
   - 검증: 빌드 시 모든 태그 정적 페이지 생성, 한글 태그 URL encoding/decoding 정상
 
 #### 시리즈 집계 (MOD-series)
 
-- [ ] **[M4-06]** **[TDD Red]** `getAllSeries` / `getSeriesDetail` / `getSeriesStats` Unit 테스트 -- seriesOrder 오름차순, private 제외
+- [x] **[M4-06]** **[TDD Red]** `getAllSeries` / `getSeriesDetail` / `getSeriesStats` Unit 테스트 -- seriesOrder 오름차순, private 제외
   - 대응: US-012, MOD-series
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-07]** **[TDD Green]** 시리즈 서비스 구현 -- 포스트의 series/seriesOrder로 그룹핑, 정렬
+- [x] **[M4-07]** **[TDD Green]** 시리즈 서비스 구현 -- 포스트의 series/seriesOrder로 그룹핑, 정렬
   - 대응: US-012, MOD-series
   - 검증: M4-06 테스트 녹색
 
-- [ ] **[M4-08]** **[TDD Red]** `getTrendingSeries` Unit 테스트 -- 소속 public 포스트 수 내림차순, 동률 시 최근 편 발행일 우선, private 제외
+- [x] **[M4-08]** **[TDD Red]** `getTrendingSeries` Unit 테스트 -- 소속 public 포스트 수 내림차순, 동률 시 최근 편 발행일 우선, private 제외
   - 대응: US-016, MOD-series, ADR-007
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-09]** **[TDD Green]** `getTrendingSeries` 구현
+- [x] **[M4-09]** **[TDD Green]** `getTrendingSeries` 구현
   - 대응: US-016, MOD-series, ADR-007
   - 검증: M4-08 테스트 녹색
 
-- [ ] **[M4-10]** `RT-/series` + `RT-/series/[slug]`에 `generateStaticParams` 연결 + 실 서비스 호출
+- [x] **[M4-10]** `RT-/series` + `RT-/series/[slug]`에 `generateStaticParams` 연결 + 실 서비스 호출
   - 대응: RT-/series, RT-/series/[slug], US-012
   - 검증: 빌드 시 모든 시리즈 정적 페이지 생성
 
 #### Popular 빌드 타임 스냅샷 (ADR-007)
 
-- [ ] **[M4-11]** **[TDD Red]** `getTrendingPosts` Unit 테스트 -- KV 누적 조회수 내림차순 5건, 동률 시 최근 발행일, private 제외, KV 실패 시 최근 발행순 fallback
+- [x] **[M4-11]** **[TDD Red]** `getTrendingPosts` Unit 테스트 -- KV 누적 조회수 내림차순 5건, 동률 시 최근 발행일, private 제외, KV 실패 시 최근 발행순 fallback
   - 대응: US-016, MOD-posts, ADR-007
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-12]** **[TDD Green]** `getTrendingPosts` 구현 -- 빌드 타임 KV 스냅샷 + fallback 로직
+- [x] **[M4-12]** **[TDD Green]** `getTrendingPosts` 구현 -- 빌드 타임 KV 스냅샷 + fallback 로직
   - 대응: US-016, MOD-posts, ADR-007
   - 검증: M4-11 테스트 녹색
 
-- [ ] **[M4-13]** `TrendingSnapshot` 생성 로직 -- popularPosts + trendingSeries + trendingTags + generatedAt + fallback 플래그
+- [x] **[M4-13]** `TrendingSnapshot` 생성 로직 -- popularPosts + trendingSeries + trendingTags + generatedAt + fallback 플래그
   - 대응: US-016, ADR-007
   - 검증: 빌드 시 TrendingSnapshot 타입의 정적 데이터 생성
 
-- [ ] **[M4-14]** 홈 사이드바 Popular 3블록을 실데이터(빌드 타임 스냅샷)로 교체
+- [x] **[M4-14]** 홈 사이드바 Popular 3블록을 실데이터(빌드 타임 스냅샷)로 교체
   - 대응: US-016, FEAT-HOME
   - 검증: 홈에서 Popular Posts 5건, Trending Series 3건, Trending Tags 10건 실데이터 렌더
 
 #### 관련 포스트 / 인접 포스트
 
-- [ ] **[M4-15]** **[TDD Red]** `findRelatedPostsByTags` Unit 테스트 -- 태그 겹침 기반 상위 3건, overlapScore 정확도, 2장 미만이면 빈 배열
+- [x] **[M4-15]** **[TDD Red]** `findRelatedPostsByTags` Unit 테스트 -- 태그 겹침 기반 상위 3건, overlapScore 정확도, 2장 미만이면 빈 배열
   - 대응: US-015, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-16]** **[TDD Green]** `findRelatedPostsByTags` 구현
+- [x] **[M4-16]** **[TDD Green]** `findRelatedPostsByTags` 구현
   - 대응: US-015, MOD-posts
   - 검증: M4-15 테스트 녹색
 
-- [ ] **[M4-17]** **[TDD Red]** `findAdjacentPosts` Unit 테스트 -- 날짜순 이전/다음, 첫/마지막 포스트 엣지케이스
+- [x] **[M4-17]** **[TDD Red]** `findAdjacentPosts` Unit 테스트 -- 날짜순 이전/다음, 첫/마지막 포스트 엣지케이스
   - 대응: US-002, MOD-posts
   - 검증: 테스트가 올바른 이유로 실패
 
-- [ ] **[M4-18]** **[TDD Green]** `findAdjacentPosts` 구현
+- [x] **[M4-18]** **[TDD Green]** `findAdjacentPosts` 구현
   - 대응: US-002, MOD-posts
   - 검증: M4-17 테스트 녹색
 
-- [ ] **[M4-19]** 포스트 상세에 관련 포스트 + 인접 포스트 실데이터 연결
+- [x] **[M4-19]** 포스트 상세에 관련 포스트 + 인접 포스트 실데이터 연결
   - 대응: US-015, FEAT-POST-DETAIL
   - 검증: 포스트 하단에 관련 포스트 3장 + 이전/다음 카드 렌더
 
 #### About 실데이터
 
-- [ ] **[M4-20]** `getAboutContent` 구현 -- `contents/about/index.md` 파싱 및 MdxRemote 렌더
+- [x] **[M4-20]** `getAboutContent` 구현 -- `contents/about/index.md` 파싱 및 MdxRemote 렌더
   - 대응: FEAT-ABOUT, MOD-about
   - 검증: About 페이지에 실제 마크다운 본문 렌더
 
 #### Private 포스트 정책 Integration 테스트
 
-- [ ] **[M4-21]** **[TDD]** Private 포스트 제외 정책 Integration 테스트 -- 목록/검색/관련/인접/태그 집계/시리즈 집계/사이드바 모두에서 private 제외
+- [x] **[M4-21]** **[TDD]** Private 포스트 제외 정책 Integration 테스트 -- 목록/검색/관련/인접/태그 집계/시리즈 집계/사이드바 모두에서 private 제외
   - 대응: US-001~US-016 전체, FEAT-POSTS-LIST
   - 검증: `private: true` 포스트가 6군데 노출 면에서 모두 제외됨을 증명
 
@@ -863,53 +863,53 @@ Browser (Client)
 
 #### Metadata 공통 인프라
 
-- [ ] **[M5-01]** `buildMetadata` 공통 헬퍼 (`shared/seo/build-metadata.ts`) -- title/description/canonical/og/twitter 표준화
+- [x] **[M5-01]** `buildMetadata` 공통 헬퍼 (`shared/seo/build-metadata.ts`) -- title/description/canonical/og/twitter 표준화
   - 대응: FEAT-METADATA-OG
   - 검증: `buildMetadata({ title, description, path, image, type, publishedAt, noIndex })` 호출 시 올바른 Metadata 객체 반환
 
-- [ ] **[M5-02]** 전 라우트에 `generateMetadata` 적용 -- 정적 페이지 + 동적 페이지 (포스트/태그/시리즈)
+- [x] **[M5-02]** 전 라우트에 `generateMetadata` 적용 -- 정적 페이지 + 동적 페이지 (포스트/태그/시리즈)
   - 대응: FEAT-METADATA-OG, RT-\* 전체
   - 검증: 모든 페이지에서 title/description/og 메타 태그 존재
 
-- [ ] **[M5-03]** Private 포스트 `noindex` + JSON-LD 생략 처리
+- [x] **[M5-03]** Private 포스트 `noindex` + JSON-LD 생략 처리
   - 대응: FEAT-METADATA-OG
   - 검증: `private: true` 포스트 상세에 `<meta name="robots" content="noindex, nofollow" />` + JSON-LD 미출력
 
 #### JSON-LD
 
-- [ ] **[M5-04]** `WebSite` JSON-LD -- 루트 `layout.tsx`에 1회
+- [x] **[M5-04]** `WebSite` JSON-LD -- 루트 `layout.tsx`에 1회
   - 대응: FEAT-METADATA-OG
   - 검증: Rich Results Test에서 WebSite 구조화 데이터 인식
 
-- [ ] **[M5-05]** `BlogPosting` JSON-LD -- 포스트 상세에 1회 (headline, datePublished, author, keywords, image, url)
+- [x] **[M5-05]** `BlogPosting` JSON-LD -- 포스트 상세에 1회 (headline, datePublished, author, keywords, image, url)
   - 대응: FEAT-METADATA-OG
   - 검증: Rich Results Test에서 BlogPosting 인식
 
-- [ ] **[M5-06]** `BreadcrumbList` JSON-LD -- 포스트/태그/시리즈 상세에 계층 1->2->3
+- [x] **[M5-06]** `BreadcrumbList` JSON-LD -- 포스트/태그/시리즈 상세에 계층 1->2->3
   - 대응: FEAT-METADATA-OG
   - 검증: Rich Results Test에서 BreadcrumbList 인식
 
 #### OG 이미지
 
-- [ ] **[M5-07]** `RT-/og` Edge Handler 완성 -- thumbnail 있으면 프록시, 없으면 `@vercel/og` ImageResponse (1200x630, 다크 그라디언트, title 48px, tag 20px, 로고)
+- [x] **[M5-07]** `RT-/og` Edge Handler 완성 -- thumbnail 있으면 프록시, 없으면 `@vercel/og` ImageResponse (1200x630, 다크 그라디언트, title 48px, tag 20px, 로고)
   - 대응: RT-/og, US-021, FEAT-METADATA-OG
   - 검증: `/og?title=...&tag=...` 호출 시 1200x630 이미지 반환, title 120자 초과 시 truncate
 
 #### Sitemap
 
-- [ ] **[M5-08]** `RT-/sitemap.xml` 완성 -- 정적 페이지 + 모든 public 포스트/시리즈/태그, priority/changefreq 표 준수, private 제외
+- [x] **[M5-08]** `RT-/sitemap.xml` 완성 -- 정적 페이지 + 모든 public 포스트/시리즈/태그, priority/changefreq 표 준수, private 제외
   - 대응: RT-/sitemap.xml, FEAT-SITEMAP
   - 검증: 유효한 XML, private 포스트 미포함, priority 값 일치
 
 #### RSS
 
-- [ ] **[M5-09]** `RT-/rss` Route Handler 완성 -- RSS 2.0 XML, 최신 50편, private 제외, title/link/guid/description/pubDate/author/category
+- [x] **[M5-09]** `RT-/rss` Route Handler 완성 -- RSS 2.0 XML, 최신 50편, private 제외, title/link/guid/description/pubDate/author/category
   - 대응: RT-/rss, FEAT-RSS, US-022
   - 검증: 유효한 RSS 2.0 XML, private 포스트 미포함
 
 #### Robots
 
-- [ ] **[M5-10]** `RT-/robots.txt` 완성 -- `/*` allow, sitemap URL 포함
+- [x] **[M5-10]** `RT-/robots.txt` 완성 -- `/*` allow, sitemap URL 포함
   - 대응: RT-/robots.txt
   - 검증: 유효한 robots.txt, Sitemap 경로 포함
 
@@ -927,63 +927,63 @@ Browser (Client)
 
 #### 접근성
 
-- [ ] **[M6-01]** Skip link 추가 -- `<a href="#main">본문 바로가기</a>`
+- [x] **[M6-01]** Skip link 추가 -- `<a href="#main">본문 바로가기</a>`
   - 대응: FEAT-NAVIGATION
   - 검증: Tab 키로 Skip link 접근, 활성화 시 main 영역으로 포커스 이동
 
-- [ ] **[M6-02]** 전 버튼/아이콘 링크에 `aria-label` 검수
+- [x] **[M6-02]** 전 버튼/아이콘 링크에 `aria-label` 검수
   - 대응: 전체 FEAT
   - 검증: axe-core 자동 감사에서 aria-label 관련 경고 0건
 
-- [ ] **[M6-03]** 모달/드로어 접근성 -- `role="dialog"` + `aria-modal="true"` + 포커스 트랩
+- [x] **[M6-03]** 모달/드로어 접근성 -- `role="dialog"` + `aria-modal="true"` + 포커스 트랩
   - 대응: FEAT-SEARCH, FEAT-NAVIGATION, FEAT-LIGHTBOX
   - 검증: SearchModal/Drawer/Lightbox에서 Tab이 내부에 트랩, Esc로 닫기
 
-- [ ] **[M6-04]** 포커스 링 전역 스타일 -- `focus-visible` 2px outline
+- [x] **[M6-04]** 포커스 링 전역 스타일 -- `focus-visible` 2px outline
   - 대응: 전체 FEAT
   - 검증: 키보드 탐색 시 모든 인터랙티브 요소에 포커스 링 표시
 
-- [ ] **[M6-05]** 명암 대비 검수 -- 본문 4.5:1, 대제목 3:1, 코드 하이라이트 7:1(AAA) 목표
+- [x] **[M6-05]** 명암 대비 검수 -- 본문 4.5:1, 대제목 3:1, 코드 하이라이트 7:1(AAA) 목표
   - 대응: 전체 FEAT
   - 검증: Chrome DevTools Contrast Checker로 기준 충족
 
-- [ ] **[M6-06]** `prefers-reduced-motion` 존중 -- 모션 비활성화
+- [x] **[M6-06]** `prefers-reduced-motion` 존중 -- 모션 비활성화
   - 대응: 전체 FEAT
   - 검증: reduced-motion 설정 시 framer-motion/View Transitions 비활성
 
-- [ ] **[M6-07]** 키보드 맵 검증 -- Cmd+K(검색), Esc(닫기), 화살표(라이트박스), Tab(포커스)
+- [x] **[M6-07]** 키보드 맵 검증 -- Cmd+K(검색), Esc(닫기), 화살표(라이트박스), Tab(포커스)
   - 대응: 전체 FEAT
   - 검증: 키보드만으로 홈 -> 포스트 -> 검색 -> 라이트박스 전체 경로 탐색 가능
 
 #### 성능
 
-- [ ] **[M6-08]** LCP 최적화 -- `next/image` + sharp, 이미지 width/height 명시, priority 설정
+- [x] **[M6-08]** LCP 최적화 -- `next/image` + sharp, 이미지 width/height 명시, priority 설정
   - 대응: NFR-001 (LCP < 2.5s)
   - 검증: Speed Insights p75 mobile LCP < 2.5s
 
-- [ ] **[M6-09]** CLS 방지 -- 이미지 dimension 예약, 폰트 swap 안정화
+- [x] **[M6-09]** CLS 방지 -- 이미지 dimension 예약, 폰트 swap 안정화
   - 대응: NFR-002 (CLS < 0.1)
   - 검증: Speed Insights CLS < 0.1
 
-- [ ] **[M6-10]** INP 최적화 -- 인터랙션 핸들러 비동기 처리, `framer-motion`/`yet-another-react-lightbox` 지연 로드
+- [x] **[M6-10]** INP 최적화 -- 인터랙션 핸들러 비동기 처리, `framer-motion`/`yet-another-react-lightbox` 지연 로드
   - 대응: NFR-003 (INP < 200ms)
   - 검증: Speed Insights INP < 200ms
 
-- [ ] **[M6-11]** JS Transfer 최적화 -- 홈 기준 < 120KB gzipped
+- [x] **[M6-11]** JS Transfer 최적화 -- 홈 기준 < 120KB gzipped
   - 대응: NFR-005
   - 검증: `next build` 분석에서 홈 JS transfer < 120KB
 
-- [ ] **[M6-12]** 폰트 서브셋 최적화 -- Pretendard Variable korean + latin
+- [x] **[M6-12]** 폰트 서브셋 최적화 -- Pretendard Variable korean + latin
   - 대응: NFR-006 (FOUT < 100ms)
   - 검증: next/font 서브셋 적용, FOUT < 100ms
 
-- [ ] **[M6-13]** Lighthouse Performance 검증 -- >= 95점
+- [x] **[M6-13]** Lighthouse Performance 검증 -- >= 95점
   - 대응: NFR-004
   - 검증: Lighthouse Performance >= 95
 
 #### 관측
 
-- [ ] **[M6-14]** `@vercel/analytics` + `@vercel/speed-insights` 루트 layout 주입
+- [x] **[M6-14]** `@vercel/analytics` + `@vercel/speed-insights` 루트 layout 주입
   - 대응: NFR-001~004
   - 검증: `<Analytics />` + `<SpeedInsights />` 렌더
 
