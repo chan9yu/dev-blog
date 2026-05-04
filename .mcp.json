@@ -32,6 +32,10 @@
 		"shadcn": {
 			"args": ["shadcn@latest", "mcp"],
 			"command": "npx"
+		},
+		"vercel": {
+			"type": "http",
+			"url": "https://mcp.vercel.com"
 		}
 	}
 }
