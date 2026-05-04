@@ -75,7 +75,7 @@ describe("CommentsSection", () => {
 		expect(script?.dataset.repoId).toBe(giscusEnv.NEXT_PUBLIC_GISCUS_REPO_ID);
 		expect(script?.dataset.category).toBe(giscusEnv.NEXT_PUBLIC_GISCUS_CATEGORY);
 		expect(script?.dataset.categoryId).toBe(giscusEnv.NEXT_PUBLIC_GISCUS_CATEGORY_ID);
-		expect(script?.dataset.term).toBe("react-19-use");
+		expect(script?.dataset.term).toBe("posts/react-19-use");
 		expect(script?.dataset.mapping).toBe("specific");
 		expect(script?.crossOrigin).toBe("anonymous");
 		expect(script?.async).toBe(true);
@@ -85,11 +85,11 @@ describe("CommentsSection", () => {
 		for (const [k, v] of Object.entries(giscusEnv)) vi.stubEnv(k, v);
 
 		const { container: c1 } = render(<CommentsSection slug="post-a" />);
-		expect(c1.querySelector<HTMLScriptElement>('script[src*="giscus.app"]')?.dataset.term).toBe("post-a");
+		expect(c1.querySelector<HTMLScriptElement>('script[src*="giscus.app"]')?.dataset.term).toBe("posts/post-a");
 		cleanup();
 
 		const { container: c2 } = render(<CommentsSection slug="post-b" />);
-		expect(c2.querySelector<HTMLScriptElement>('script[src*="giscus.app"]')?.dataset.term).toBe("post-b");
+		expect(c2.querySelector<HTMLScriptElement>('script[src*="giscus.app"]')?.dataset.term).toBe("posts/post-b");
 	});
 
 	it("언마운트 시 script 정리 (메모리 누수 방지)", () => {
