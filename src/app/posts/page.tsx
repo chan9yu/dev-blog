@@ -13,8 +13,7 @@ export const metadata: Metadata = buildMetadata({
 	path: "/posts"
 });
 
-// SSG-first(PRD G-1) — 태그 필터링은 /tags/[tag] 라우트로 일원화하여 본 페이지를 정적 prerender.
-// `cacheComponents: false` + searchParams 제거로 runtime contents/ 의존 0% (v1.1.2).
+// SSG-first(PRD G-1) — 태그 필터링은 /tags/[tag]로 분리, 본 페이지는 정적 prerender (v1.1.2 회귀 차단).
 export default function PostsPage() {
 	const basePosts = getPublicPosts();
 	const allTags = getTagCounts(basePosts);

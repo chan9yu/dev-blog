@@ -7,6 +7,7 @@ import localFont from "next/font/local";
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
 
+import { getPublicPosts } from "@/features/posts";
 import { SearchTrigger } from "@/features/search";
 import { ThemeSwitcher } from "@/features/theme";
 import { ScrollReset } from "@/shared/components/common/ScrollReset";
@@ -15,9 +16,7 @@ import { Footer } from "@/shared/components/layouts/Footer";
 import { Header } from "@/shared/components/layouts/Header";
 import { MobileMenu } from "@/shared/components/layouts/MobileMenu";
 import { getSiteUrl, siteMetadata } from "@/shared/config/site";
-import searchIndexJson from "@/shared/data/search-index.json";
 import { buildWebSiteJsonLd, JsonLdScript } from "@/shared/seo";
-import type { PostSummary } from "@/shared/types";
 
 import { Providers } from "./providers";
 
@@ -40,7 +39,12 @@ export const metadata: Metadata = {
 		template: `%s | ${siteMetadata.name}`
 	},
 	description: siteMetadata.description,
-	alternates: { canonical: "/" },
+	alternates: {
+		canonical: "/",
+		types: {
+			"application/rss+xml": "/rss"
+		}
+	},
 	openGraph: {
 		type: "website",
 		siteName: siteMetadata.name,
@@ -74,20 +78,15 @@ const websiteJsonLd = buildWebSiteJsonLd({
 	authorName: siteMetadata.author
 });
 
-// JSON import의 TypeScript 추론 타입은 series/seriesOrder가 모두 null인 경우 union 정보를 잃을 수 있어
-// 모듈 경계에서 단 한 번 PostSummary[]로 narrow. 빌드 스크립트(scripts/build-search-index.mjs)가 schema를
-// 1:1 mirror하고 STRICT_FRONTMATTER=1 빌드 path가 동일 contents/를 재검증하므로 cast 안전성 확보.
-const searchablePosts = searchIndexJson as PostSummary[];
-
 export default function RootLayout({ children }: PropsWithChildren) {
+	const searchablePosts = getPublicPosts();
+
 	return (
 		<html lang="ko" className={pretendard.variable} data-scroll-behavior="smooth" suppressHydrationWarning>
 			<body className="bg-background text-foreground flex min-h-screen flex-col font-sans antialiased">
 				<JsonLdScript id="website-json-ld" data={websiteJsonLd} />
 				<Providers>
-					<Suspense fallback={null}>
-						<ScrollReset />
-					</Suspense>
+					<ScrollReset />
 					<a
 						href="#main-content"
 						className="focus-visible:ring-ring bg-background text-foreground sr-only z-50 rounded-md px-4 py-2 font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:ring-2 focus-visible:outline-none"
