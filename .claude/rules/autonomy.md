@@ -13,6 +13,7 @@
 - 컴파운드 사이클 내 팀원 간 `SendMessage`·`TaskUpdate`
 - shadcn MCP로 기존 쉐드씨엔 컴포넌트 추가 (`src/shared/components/ui/`)
 - context7 MCP로 라이브러리 문서 조회
+- vercel MCP **읽기 전용** 호출 — 배포 상태(`get_deployment`·`list_deployments`), 빌드/런타임 로그(`get_deployment_build_logs`·`get_runtime_logs`), 프로젝트 메타(`get_project`·`list_projects`), Vercel 공식 문서 검색(`search_vercel_documentation`)
 
 ## 사용자 확인 필수 (반드시 질문 → 승인 대기)
 
@@ -26,6 +27,7 @@
 - **Git 쓰기 작업**: `git commit`, `git push`, `git reset`, `gh pr create`, 브랜치 삭제 등 (workflow.md의 절대 금지 규칙 참조)
 - **contents/ 변경**: 포스트 발행·삭제·대규모 수정 (초안은 `_workspace/`에서 승인 후 이동)
 - **프로덕션 환경에 영향 주는 변경**: Vercel 배포 설정, 환경 변수, 리다이렉트 규칙
+- **Vercel MCP 쓰기 명령**: `mcp__vercel__deploy_to_vercel` 등 신규 배포·환경 변경·도메인 조작 호출은 자동 실행 금지 (읽기 전용 호출은 위 자율 범주 참조)
 
 ## 확인 절차 (AskUserQuestion)
 
