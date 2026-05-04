@@ -25,7 +25,7 @@ export function ViewToggle() {
 	return (
 		<div
 			className="bg-secondary/50 hidden items-center gap-1 rounded-lg p-1 backdrop-blur-sm sm:flex"
-			role="group"
+			role="toolbar"
 			aria-label="뷰 모드"
 		>
 			<button

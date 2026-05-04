@@ -1,6 +1,6 @@
 import { Tag } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 
 import { getPublicPosts, PostList, PostListSkeleton } from "@/features/posts";
 import { getAllTags, getPostsByTag } from "@/features/tags";
@@ -14,6 +14,9 @@ type TagDetailPageProps = {
 	params: Promise<{ tag: string }>;
 };
 
+// generateMetadata + Page가 동일 렌더 트리에서 lookup 공유 (series/[slug] 패턴 일관).
+const findPostsByTag = cache((decoded: string) => getPostsByTag(getPublicPosts(), decoded));
+
 export async function generateStaticParams() {
 	return getAllTags(getPublicPosts()).map((tag) => ({ tag }));
 }
@@ -23,7 +26,7 @@ export async function generateMetadata({ params }: TagDetailPageProps) {
 	const decoded = decodeURIComponent(tag);
 	if (!decoded) return NOT_FOUND_METADATA;
 
-	const matched = getPostsByTag(getPublicPosts(), decoded);
+	const matched = findPostsByTag(decoded);
 	if (matched.length === 0) return NOT_FOUND_METADATA;
 
 	const display = formatLocalizedSlug(decoded);
@@ -40,7 +43,7 @@ export default async function TagDetailPage({ params }: TagDetailPageProps) {
 	const decoded = decodeURIComponent(tag);
 	if (!decoded) notFound();
 
-	const filtered = resolvePostThumbnails(getPostsByTag(getPublicPosts(), decoded));
+	const filtered = resolvePostThumbnails(findPostsByTag(decoded));
 	if (filtered.length === 0) {
 		notFound();
 	}

@@ -1,6 +1,8 @@
+import type { MetadataRoute } from "next";
+
 import { siteMetadata } from "@/shared/config/site";
 
-export default function manifest() {
+export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: siteMetadata.title,
 		short_name: siteMetadata.name,

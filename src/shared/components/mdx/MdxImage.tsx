@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps, MouseEvent } from "react";
+import { type ComponentProps, type MouseEvent, useId } from "react";
 
 import { type LightboxImage, useLightbox } from "@/features/lightbox";
 import { cn } from "@/shared/utils/cn";
@@ -14,6 +14,7 @@ type MdxImageProps = ComponentProps<"img"> & {
 // 클릭 시 같은 <article> 내 figure 이미지를 수집해 라이트박스 carousel로 표시.
 export function MdxImage({ alt, caption, className, src, ...rest }: MdxImageProps) {
 	const { openMany } = useLightbox();
+	const captionId = useId();
 
 	const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
 		if (typeof src !== "string" || !src) return;
@@ -41,6 +42,7 @@ export function MdxImage({ alt, caption, className, src, ...rest }: MdxImageProp
 				type="button"
 				onClick={handleOpen}
 				aria-label={`${alt} — 확대 보기`}
+				aria-describedby={caption ? captionId : undefined}
 				className="mx-auto block w-fit cursor-zoom-in rounded-lg border-0 bg-transparent p-0"
 			>
 				<img
@@ -52,7 +54,11 @@ export function MdxImage({ alt, caption, className, src, ...rest }: MdxImageProp
 					{...rest}
 				/>
 			</button>
-			{caption && <figcaption className="text-muted-foreground mt-2 text-center text-xs italic">{caption}</figcaption>}
+			{caption && (
+				<figcaption id={captionId} className="text-muted-foreground mt-2 text-center text-xs italic">
+					{caption}
+				</figcaption>
+			)}
 		</figure>
 	);
 }

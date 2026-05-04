@@ -16,6 +16,9 @@ export const metadata: Metadata = buildMetadata({
 	path: "/"
 });
 
+// SSG-first(PRD G-1) — 트렌딩 KV 호출은 빌드 타임에 박제. 1시간 단위 갱신.
+export const revalidate = 3600;
+
 const RECENT_POSTS_LIMIT = 6;
 const POPULAR_POSTS_LIMIT = 5;
 const TRENDING_SERIES_LIMIT = 3;
