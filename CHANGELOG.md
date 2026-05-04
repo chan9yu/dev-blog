@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-05-04
+
+🚑 **production hotfix — 댓글 표시 회귀·React #418 잔재·Header sticky·배포 버전 가시화 + 자동 release workflow** — v1.1.3 production 검증에서 발견한 3개 회귀와 사용자 요청 2건을 묶은 hotfix release. Playwright MCP로 production 직접 검증한 결과를 즉시 정정.
+
+### Fixed
+
+- **Giscus 댓글 표시 회귀 ([#30](https://github.com/chan9yu/dev-blog/issues/30))** — `CommentsSection.tsx:80`의 `data-term`이 `${slug}` 형식이지만 GitHub Discussion title은 `posts/${slug}` 형식으로 자동 생성되어 mapping="specific" 매칭 실패. 모든 23개 포스트 페이지에서 `Discussion not found` 404 + 빈 댓글 영역. `data-term`을 `posts/${slug}`로 정정해 기존 5개 discussion(#13·#14·#15·#17 등)과 즉시 매칭. 회귀 테스트 assertion 동시 갱신.
+- **`/posts` React #418 hydration mismatch 잔재** — v1.1.3에서 `PostList`는 `useHydrated`로 게이팅했으나 동일 hook(`useViewMode`)을 쓰는 `ViewToggle`이 누락되어 server snapshot "list" vs client localStorage "grid" 불일치 시 `aria-pressed`·`className` 텍스트 mismatch 재발생. `ViewToggle`에도 `useHydrated` 게이팅 적용해 incomplete fix 보완.
+- **Header sticky 회귀** — `Header.tsx:21`의 className이 `relative top-0`(의미 없는 조합)이어서 스크롤 시 헤더가 같이 흘러감. `sticky top-0`로 정정. layout.tsx의 Suspense fallback(`sticky top-0 z-40 h-16`)과 마크업 정합 복원.
+
+### Added
+
+- **Footer에 배포 버전 UI** — `package.json` version을 `src/shared/config/site.ts`의 `APP_VERSION`으로 export(JSON import는 ES2025 표준 `with { type: "json" }` 구문 사용), Footer 카피라이트 옆에 `v{APP_VERSION}` 작은 링크로 표시. GitHub Release tag(`/releases/tag/v{version}`)로 직접 연결되어 배포된 빌드의 버전과 release notes를 즉시 확인 가능. 사용자 명시 요청.
+- **자동 GitHub Release workflow** (`.github/workflows/release.yaml`) — `v*.*.*` tag push 시 CHANGELOG의 해당 버전 섹션을 awk로 추출해 `gh release create`로 자동 publish. 다음 release부터 수동 `gh release create` 단계 제거. 사용자 명시 요청.
+
+### Notes
+
+- 본 hotfix는 v1.1.3 production 검증(Playwright MCP) 사이클에서 사용자 직접 신고로 발견. v1.1.3의 회귀 가드에 "댓글 iframe 응답 200/404"와 "ViewToggle hydration" 항목이 누락되어 통과시킨 케이스. 다음 회귀 가드에 두 항목 추가.
+- v1.1.3 GitHub Release notes의 "PostList 첫 카드 priority preload hint 정리"는 효과 유지. ViewToggle hydration fix는 그 보완 (PostList + ViewToggle 둘 다 동일 hook 사용).
+- 추가 production Playwright 검증: `/`, `/series`, `/tags`, `/tags/뉴스봇`, `/about`, `/posts/react-set-state-in-effect`, `/sitemap.xml`, `/rss`, `/og`, `/robots.txt`, `/api/views` 모두 console 0 errors / 0 warnings + 정상 응답.
+
 ## [1.1.3] - 2026-05-04
 
 🎯 **v1.1.2 후속 정리 + Next.js 16 best practice audit + a11y Tier 2 개선** — v1.1.2 Notes에서 격리 약속한 `/api/views` 500 본질 fix와 React #418 hydration mismatch 본질 fix, search-index pre-bake over-engineering 제거, sitemap·a11y·SEO 정합성 보강을 묶어 release. 100건 이상 라우트·인터랙티브 시나리오 Playwright MCP E2E 검증 통과 (console 0 errors / 0 warnings).
