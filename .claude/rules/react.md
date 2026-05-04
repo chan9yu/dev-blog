@@ -27,6 +27,22 @@ paths: ["src/**/*.tsx"]
 - 외부 스토어(localStorage 등) 구독 시 `useSyncExternalStore` 사용
 - Effect는 외부 시스템과의 동기화(DOM 조작, 이벤트 구독)에만 사용
 
+### Hydration mismatch / mounted gate 패턴
+
+server snapshot과 client snapshot이 다른 hook(예: `useViewMode` localStorage 기반)을 직접 className·attribute에 사용하면 hydration mismatch(React #418). `useEffect(() => setMounted(true), [])` 패턴 **금지** — `set-state-in-effect` 룰 위반.
+
+```tsx
+// ❌ 금지 — set-state-in-effect 위반
+const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+
+// ✅ 권장 — useHydrated (`@/shared/hooks/useHydrated`)
+const hydrated = useHydrated();
+const effectiveView = hydrated ? view : serverFallback;
+```
+
+`useHydrated`는 `useSyncExternalStore` 기반: server snapshot=`false`, client snapshot=`true` → server·client first hydration이 일치 → mismatch 0, cascading render 0.
+
 ## 성능
 
 - `useCallback`/`useMemo`: React Compiler가 처리하므로 수동 사용 최소화, Context Provider value 안정성 등 명확한 이유가 있을 때만
