@@ -7,16 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-05-03
+## [1.1.0] - 2026-05-04
 
-**🎉 첫 Production 배포** — M0~M7 전 마일스톤 완료. main 브랜치 머지로 Vercel 자동 배포 + v1.0.0 태깅.
+**🎉 첫 Production 배포** — M0~M7 전 마일스톤 완료 + v1.0.0 → v1.1.0 통일성 정합. main 브랜치 머지로 Vercel 자동 배포 + v1.1.0 태깅.
 
 ### M7 마무리
 
 - **[M7-09]** Vercel 환경변수 전 환경(dev/preview/prod) 매트릭스 완성 — `NEXT_PUBLIC_SITE_URL`, GISCUS 4종, KV 5종, `GITHUB_REPO_CLONE_TOKEN`.
 - **[M7-10]** CI/CD 파이프라인 확정 — GitHub Actions(`ci.yaml`) + Vercel auto deploy. PR 생성 시 CI 녹색 + Preview URL, main 머지 시 Production 배포.
 - **[M7-11]** Production 첫 배포 + 24h CWV 모니터링 — Speed Insights 5개 지표(LCP·INP·CLS·FCP·TTFB) green 확인.
-- **[M7-12]** Change Log 확정 + v1.0.0 태깅.
+- **[M7-12]** Change Log 확정 + v1.1.0 태깅.
 
 ### 마일스톤 누적 결과
 
