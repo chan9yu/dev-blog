@@ -18,7 +18,7 @@ type HeaderProps = {
 export function Header({ navItems = siteNav, searchSlot, themeSlot, mobileMenuSlot, className }: HeaderProps) {
 	return (
 		<header
-			className={cn("bg-background/80 header-scroll-border relative top-0 z-40 backdrop-blur-lg md:mt-12", className)}
+			className={cn("bg-background/80 header-scroll-border sticky top-0 z-40 backdrop-blur-lg md:mt-12", className)}
 		>
 			<Container>
 				<nav className="flex items-center justify-between gap-4 py-4 md:py-6" aria-label="주요 메뉴">
