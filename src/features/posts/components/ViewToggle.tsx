@@ -3,6 +3,8 @@
 import { cva } from "class-variance-authority";
 import { LayoutGrid, List } from "lucide-react";
 
+import { useHydrated } from "@/shared/hooks/useHydrated";
+
 import { useViewMode } from "../hooks/useViewMode";
 
 const toggleButton = cva(
@@ -19,6 +21,10 @@ const toggleButton = cva(
 
 export function ViewToggle() {
 	const { view, setView } = useViewMode();
+	const hydrated = useHydrated();
+	// hydrated gate — server snapshot "list" vs client localStorage "grid" 미스매치(React #418) 차단. PostList와 정합.
+	const effectiveView = hydrated ? view : "list";
+
 	const handleSelectListView = () => setView("list");
 	const handleSelectGridView = () => setView("grid");
 
@@ -32,8 +38,8 @@ export function ViewToggle() {
 				type="button"
 				onClick={handleSelectListView}
 				aria-label="리스트 보기"
-				aria-pressed={view === "list"}
-				className={toggleButton({ active: view === "list" })}
+				aria-pressed={effectiveView === "list"}
+				className={toggleButton({ active: effectiveView === "list" })}
 			>
 				<List className="size-4 transition-transform group-hover:scale-110" aria-hidden />
 			</button>
@@ -41,8 +47,8 @@ export function ViewToggle() {
 				type="button"
 				onClick={handleSelectGridView}
 				aria-label="격자 보기"
-				aria-pressed={view === "grid"}
-				className={toggleButton({ active: view === "grid" })}
+				aria-pressed={effectiveView === "grid"}
+				className={toggleButton({ active: effectiveView === "grid" })}
 			>
 				<LayoutGrid className="size-4 transition-transform group-hover:scale-110" aria-hidden />
 			</button>
