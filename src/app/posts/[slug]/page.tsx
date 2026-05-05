@@ -54,6 +54,7 @@ export async function generateMetadata({ params }: PostDetailPageProps) {
 		image: post.thumbnail ?? undefined,
 		type: "article",
 		publishedAt: post.date,
+		modifiedAt: post.updated,
 		authors: [siteMetadata.author],
 		tags: post.tags,
 		noIndex: post.private
@@ -87,6 +88,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 				title: summary.title,
 				description: summary.description,
 				date: summary.date,
+				modified: summary.updated,
 				tags: summary.tags,
 				image: summary.thumbnail ?? null
 			});
