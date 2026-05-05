@@ -6,6 +6,8 @@ owner: chan9yu
 status: Draft
 ---
 
+> **버전 표기 안내**: 본 frontmatter `version`은 PRD 문서 자체 버전(스펙 변경 추적용)이며 `package.json`의 코드 릴리스 버전과 의도적으로 분리 운영한다.
+
 # Engineering PRD — chan9yu 개발 블로그
 
 ## 1. Executive Summary
