@@ -1,6 +1,6 @@
 ---
 name: ai-seo
-description: "When the user wants to optimize content for AI search engines, get cited by LLMs, or appear in AI-generated answers. Also use when the user mentions 'AI SEO,' 'AEO,' 'GEO,' 'LLMO,' 'answer engine optimization,' 'generative engine optimization,' 'LLM optimization,' 'AI Overviews,' 'optimize for ChatGPT,' 'optimize for Perplexity,' 'AI citations,' 'AI visibility,' 'zero-click search,' 'how do I show up in AI answers,' 'LLM mentions,' or 'optimize for Claude/Gemini.' Use this whenever someone wants their content to be cited or surfaced by AI assistants and AI search engines. For traditional technical and on-page SEO audits, see seo-audit. For structured data implementation, see schema-markup."
+description: "AI 검색 인용 최적화 보조 참고서(ChatGPT·Perplexity·Google AI Overviews·Gemini·Claude). 사용자가 'AI SEO', 'AEO', 'GEO', 'LLMO', 'AI 검색 노출', 'ChatGPT/Perplexity 인용', 'AI Overviews 노출', 'AEO 최적화', 'AI visibility', 'zero-click search', 'LLM 인용', 또는 영문 'AI SEO', 'optimize for ChatGPT/Perplexity/Claude/Gemini', 'AI citations' 같은 표현을 쓸 때만 트리거. **dev-blog 도메인 SEO baseline은 `.claude/rules/seo.md`가 단일 진실 공급원이므로 충돌 시 본 스킬보다 룰을 우선**. 일반 SEO audit는 seo-audit, 대량 페이지 SEO는 programmatic-seo 참조."
 metadata:
   version: 1.2.0
 ---

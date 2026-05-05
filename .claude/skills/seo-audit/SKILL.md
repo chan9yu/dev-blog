@@ -1,6 +1,6 @@
 ---
 name: seo-audit
-description: When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions "SEO audit," "technical SEO," "why am I not ranking," "SEO issues," "on-page SEO," "meta tags review," "SEO health check," "my traffic dropped," "lost rankings," "not showing up in Google," "site isn't ranking," "Google update hit me," "page speed," "core web vitals," "crawl errors," or "indexing issues." Use this even if the user just says something vague like "my SEO is bad" or "help with SEO" — start with an audit. For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema-markup. For AI search optimization, see ai-seo.
+description: "사이트 SEO 진단·audit 보조 참고서. 사용자가 'SEO audit', 'SEO 진단', '왜 검색 노출이 안 되지', '랭킹 떨어짐', 'on-page SEO 점검', '메타 태그 리뷰', 'core web vitals', 'crawl error', '인덱싱 문제', 'Google 업데이트 영향', 또는 영문 'SEO audit', 'why am I not ranking', 'lost rankings', 'site isn't ranking', 'page speed' 같은 표현을 쓸 때만 트리거. **dev-blog 도메인 정기 audit은 `seo-auditor` 에이전트가 `.claude/rules/seo.md` 기준으로 수행하며 본 스킬은 외부 사이트 audit 보조 참조용**. 일반 audit 절차·AI writing detection·international SEO 레퍼런스 제공. 대량 페이지 SEO는 programmatic-seo, AI 검색 인용은 ai-seo 참조."
 metadata:
   version: 1.2.0
 ---

@@ -1,6 +1,6 @@
 ---
 name: programmatic-seo
-description: When the user wants to create SEO-driven pages at scale using templates and data. Also use when the user mentions "programmatic SEO," "template pages," "pages at scale," "directory pages," "location pages," "[keyword] + [city] pages," "comparison pages," "integration pages," "building many pages for SEO," "pSEO," "generate 100 pages," "data-driven pages," or "templated landing pages." Use this whenever someone wants to create many similar pages targeting different keywords or locations. For auditing existing SEO issues, see seo-audit. For content strategy planning, see content-strategy.
+description: "템플릿 + 데이터로 대량 SEO 페이지를 생성하는 패턴 보조 참고서. 사용자가 '프로그래매틱 SEO', 'pSEO', '템플릿 페이지', '대량 SEO 페이지', '디렉토리 페이지', '비교 페이지 자동 생성', '[키워드] × [지역] 페이지', 또는 영문 'programmatic SEO', 'pages at scale', 'template pages', 'data-driven pages' 같은 표현을 쓸 때만 트리거. **chan9yu 1인 블로그는 본 스킬을 적극 사용하지 않으며**, dev-blog 도메인 SEO baseline은 `.claude/rules/seo.md`가 단일 진실 공급원. 외부 사이드 프로젝트 컨설팅 용도 위주. 일반 SEO audit는 seo-audit, AI 검색 인용은 ai-seo 참조."
 metadata:
   version: 1.1.0
 ---
