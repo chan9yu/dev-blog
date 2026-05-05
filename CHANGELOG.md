@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+🚀 **SEO 정합성 강화 + 실험 항목 정리** — velog 벤치마크 후 진짜 효과 있는 baseline만 유지. 사용자 요청 "모든 아티클이 Google 첫 페이지"를 위한 **시스템화**(회귀 자동 차단)에 집중하고, Google이 rich result 자격을 축소했거나 효과 미검증인 항목은 도입 보류 (회고는 `.claude/rules/seo.md` 하단).
+
+### Added
+
+- **빌드 타임 frontmatter SEO 검증** (`scripts/validate-frontmatter-seo.mjs`) — title ≤60자, description 120~160자, slug 영문 강제, slug↔디렉토리명 정합 검증. `prebuild`에 통합되어 위반 시 `pnpm build` 자동 실패. **신규 포스트 발행 시 SEO 회귀 자동 차단** — 사용자 요청 "모든 아티클" baseline 강제 메커니즘. 가장 결정적인 변경.
+- **`docs/SEO_EXTERNAL.md`** — 코드로 해결 못 하는 외부 SEO 작업 체크리스트. Google Search Console·Bing Webmaster·Naver Search Advisor 등록, dev.to/Medium/Hashnode canonical 유지 크로스 포스팅, Otterly·Peec·ZipTie AI visibility 모니터링, news.hada/Disquiet/OKKY/Hacker News/Lobste.rs 공유 가이드, 위키피디아 인용 전략. velog 같은 platform 도메인 권위 추격은 코드 외 작업이 결정적.
+- **`pnpm validate:seo` 스크립트** — 빌드 없이 frontmatter SEO만 검증.
+
+### Changed
+
+- **frontmatter description 일괄 정합화 (11개 포스트)** — `mqtt-protocol-overview`(26→141자, 가장 시급), `webrtc-deepdive-02`·`03`·`04`, `2025-retrospective`, `goormthon-13th-jeju-retrospective`, `hanghae-plus-wil10`, `harness-engineering-thoughts`, `separating-react-app-to-sdk` 모두 120~160자 범위로 보강. 검색 스니펫 잘림 방지 + 본문 자동 추출 차단(메타 통제권 회복).
+- **BlogPosting JSON-LD `dateModified` + article OG `modified_time` 정합** — `posts/[slug]/page.tsx`에서 `frontmatter.updated`를 `buildBlogPostingJsonLd.modified`와 `buildMetadata.modifiedAt`에 동시 전달. sitemap `lastmod`(이미 정합)와 시그널 통일.
+
+### Removed
+
+- **실험적 SEO 인프라 일괄 정리** — 동일 사이클 안에서 추가했다가 효과 검증 부족·Google rich result 자격 축소로 모두 제거:
+  - `/llms.txt` 라우트 (`src/app/llms.txt/route.ts`) — llmstxt.org 표준 제안이지만 ChatGPT/Claude/Perplexity 공식 활용 발표 X. YAGNI.
+  - robots.txt AI 크롤러 11종 명시 Allow → wildcard `User-Agent: *`만 유지. "명시가 인용 시그널"이라는 주장 검증 안 됨.
+  - `FAQPage` JSON-LD 빌더 + frontmatter `faq[]` optional 필드 — 2023년 9월 Google이 rich result 자격을 정부·건강 사이트로 축소. 일반 블로그 SERP 효과 없음.
+  - `HowTo` JSON-LD 빌더 + frontmatter `howTo` optional 필드 — 동일. mobile 사실상 미노출.
+  - `Organization` JSON-LD (root layout) — Google은 1인 사이트에 `Person`만 권장. Organization은 회사 entity 신호.
+  - `CreativeWorkSeries` JSON-LD (시리즈 상세) — schema.org 정식이지만 Google이 적극 활용한다는 증거 약함. velog 등 대형 platform도 미사용.
+  - SEO 보조 스킬(ai-seo·programmatic-seo·seo-audit) 에이전트 정의 통합 — 일반 SEO 컨설팅 지식 통합은 dev-blog 룰과 우선순위 충돌만 키움. `seo.md` 단일 진실 공급원 유지.
+  - dead config: `src/shared/config/site.ts`의 `siteMetadata.ogImage` (사용처 0건, GC 발견) 삭제.
+- **결과**: schema.org JSON-LD 4종(WebSite·Person·BlogPosting·BreadcrumbList)으로 정착. 코드량 ~250줄 감소.
+
+### Notes
+
+- **velog 분석 결과**: velog의 head는 매우 미니멀합니다 (`<title>velog</title>`, description 1개, `og:image` 정적 1개, JSON-LD 0종, Twitter Card 누락, `/sitemap.xml` 404). 도메인 권위(DA 70+)가 압도적이라 기술 SEO에 덜 의존. **우리는 이미 기술 SEO에서 velog를 앞섭니다** — 진짜 갭은 (1) 도메인 권위, (2) 외부 백링크, (3) 콘텐츠 깊이. 코드로 해결 불가.
+- **회고 — 왜 추가했다가 빼는가**: 사용자 솔직 평가 요청에 따라 2026년 5월 기준 실효성 재검토. "코드 SEO baseline 상한선"을 넘긴 항목들은 유지보수 비용만 누적. `.claude/rules/seo.md` "회고 — 도입 보류한 항목" 섹션에 결정 근거 명문화. 미래에 효과 입증 시 재도입 가능.
+- **남은 핵심 가치**: (1) 빌드 게이트 — 모든 신규 포스트 SEO 회귀 자동 차단 (시스템화), (2) JSON-LD 4종 — 표준 baseline, (3) frontmatter description 정합화 — 검색 스니펫 통제, (4) `SEO_EXTERNAL.md` — 코드로 못 하는 외부 작업 가이드.
+- **다음 우선순위 — 콘텐츠 자체**: WebRTC 시리즈 본문 보강(첫 단락 키워드, 시리즈 내부 링크, Featured Snippet 대상 자연어 heading). 새 대화에서 `content-engineer 에이전트로 WebRTC 시리즈 본문 보강 진행해줘`. 그리고 외부 백링크 작업(`docs/SEO_EXTERNAL.md` § 3) — ROI가 코드보다 훨씬 높음.
+
 ## [1.1.4] - 2026-05-04
 
 🚑 **production hotfix — 댓글 표시 회귀·React #418 잔재·Header sticky·배포 버전 가시화 + 자동 release workflow** — v1.1.3 production 검증에서 발견한 3개 회귀와 사용자 요청 2건을 묶은 hotfix release. Playwright MCP로 production 직접 검증한 결과를 즉시 정정.
