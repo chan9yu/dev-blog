@@ -80,6 +80,7 @@ color: orange
 
 ## 협업
 
-- **기준 규칙**: `.claude/rules/seo.md`
+- **기준 규칙**: `.claude/rules/seo.md` (단일 진실 공급원 — 충돌 시 본 룰 우선)
 - **보완 검수자**: a11y-auditor (heading 계층·이미지 alt는 a11y 쪽 책임), react-nextjs-code-reviewer (metadata 로직의 타입 안전성)
 - **참조**: Next.js 16 App Router metadata API (context7 MCP로 최신 문서 조회 필요)
+- **외부 인프라 가이드**: `docs/SEO_EXTERNAL.md` — GSC/Bing/Naver 등록·크로스포스팅·도메인 권위 빌드 (코드로 해결 못 하는 영역)

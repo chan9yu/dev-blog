@@ -54,10 +54,26 @@
 
 ## 검수 체크리스트 (seo-auditor가 자동 실행)
 
-- [ ] frontmatter.description 120~160자 범위
+- [ ] frontmatter.description 120~160자 범위 (빌드 게이트: `scripts/validate-frontmatter-seo.mjs`)
 - [ ] title 60자 이내, 브랜드 접미사 포함
 - [ ] openGraph.images 해상도 1200×630
 - [ ] canonical 설정 확인 (특히 시리즈·페이지네이션)
 - [ ] **포스트** slug가 소문자+영숫자+하이픈 패턴 준수 (태그·시리즈는 한글 허용 + 공백·특수문자 금지)
 - [ ] sitemap에 새 포스트 entry 포함 확인
-- [ ] `pnpm build` 성공 (메타데이터 타입 오류 차단)
+- [ ] `pnpm build` 성공 (메타데이터 타입 오류 차단 + frontmatter SEO 검증)
+
+## 회고 — 도입 보류한 항목 (2026-05-04)
+
+다음은 한때 추가했다가 효과 검증 부족 또는 Google rich result 자격 축소로 제거한 항목. 미래에 효과 입증 시 재도입 고려:
+
+| 제거 항목                              | 제거 사유                                                                                                             |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `/llms.txt` 라우트                     | [llmstxt.org](https://llmstxt.org) 표준 제안. ChatGPT/Claude/Perplexity 모두 공식 활용 발표 X. 효과 검증 부족 → YAGNI |
+| robots.txt AI 크롤러 명시 (11종)       | wildcard `*`로 충분. "명시가 인용 시그널"이라는 주장 검증 안 됨                                                       |
+| `FAQPage` JSON-LD                      | 2023년 9월 Google이 rich result 자격 대폭 축소 → 정부·건강 사이트만 SERP 표시. 일반 블로그에서 효과 없음              |
+| `HowTo` JSON-LD                        | 동일. desktop만 일부 노출, mobile 사실상 미노출                                                                       |
+| `Organization` JSON-LD (1인 블로그)    | Google은 개인 사이트에 `Person`만 권장. Organization은 회사 entity 신호                                               |
+| `CreativeWorkSeries` JSON-LD           | schema.org 정식이지만 Google이 적극 활용한다는 증거 약함. velog 등 대형 platform도 미사용                             |
+| frontmatter `faq[]` / `howTo` optional | 위 schema 제거에 따라 함께 정리                                                                                       |
+
+**결정 근거**: 코드 SEO baseline 상한선까지 갔지만 실효 미검증 항목은 유지보수 비용만 누적. 진짜 ranking 영향은 콘텐츠 품질·E-E-A-T·도메인 권위(외부 백링크) — 코드로 만들 수 없다. 외부 작업 가이드는 `docs/SEO_EXTERNAL.md` 참조.
