@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2026-05-05
+
 🚀 **SEO 정합성 강화 + 실험 항목 정리** — velog 벤치마크 후 진짜 효과 있는 baseline만 유지. 사용자 요청 "모든 아티클이 Google 첫 페이지"를 위한 **시스템화**(회귀 자동 차단)에 집중하고, Google이 rich result 자격을 축소했거나 효과 미검증인 항목은 도입 보류 (회고는 `.claude/rules/seo.md` 하단).
 
 ### Added
