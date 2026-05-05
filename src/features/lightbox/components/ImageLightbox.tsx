@@ -59,7 +59,7 @@ export function ImageLightbox({ images, index, onNext, onPrev, onClose }: ImageL
 								type="button"
 								onClick={onPrev}
 								aria-label="이전 이미지"
-								className="focus-visible:ring-ring absolute top-1/2 left-6 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+								className="focus-visible:ring-ring absolute top-1/2 left-6 inline-flex size-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 							>
 								<ChevronLeft className="size-6" aria-hidden />
 							</button>
@@ -67,7 +67,7 @@ export function ImageLightbox({ images, index, onNext, onPrev, onClose }: ImageL
 								type="button"
 								onClick={onNext}
 								aria-label="다음 이미지"
-								className="focus-visible:ring-ring absolute top-1/2 right-6 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+								className="focus-visible:ring-ring absolute top-1/2 right-6 inline-flex size-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 							>
 								<ChevronRight className="size-6" aria-hidden />
 							</button>
@@ -76,7 +76,7 @@ export function ImageLightbox({ images, index, onNext, onPrev, onClose }: ImageL
 
 					<DialogPrimitive.Close
 						aria-label="이미지 확대 닫기"
-						className="focus-visible:ring-ring absolute top-6 right-6 inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+						className="focus-visible:ring-ring absolute top-6 right-6 inline-flex size-10 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 					>
 						<X className="size-5" aria-hidden />
 					</DialogPrimitive.Close>
