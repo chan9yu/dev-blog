@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **빌드 타임 frontmatter SEO 검증** (`scripts/validate-frontmatter-seo.mjs`) — title ≤60자, description 120~160자, slug 영문 강제, slug↔디렉토리명 정합 검증. `prebuild`에 통합되어 위반 시 `pnpm build` 자동 실패. **신규 포스트 발행 시 SEO 회귀 자동 차단** — 사용자 요청 "모든 아티클" baseline 강제 메커니즘. 가장 결정적인 변경.
 - **`docs/SEO_EXTERNAL.md`** — 코드로 해결 못 하는 외부 SEO 작업 체크리스트. Google Search Console·Bing Webmaster·Naver Search Advisor 등록, dev.to/Medium/Hashnode canonical 유지 크로스 포스팅, Otterly·Peec·ZipTie AI visibility 모니터링, news.hada/Disquiet/OKKY/Hacker News/Lobste.rs 공유 가이드, 위키피디아 인용 전략. velog 같은 platform 도메인 권위 추격은 코드 외 작업이 결정적.
 - **`pnpm validate:seo` 스크립트** — 빌드 없이 frontmatter SEO만 검증.
+- **SEO 보조 스킬 3종 등록** (`.claude/skills/{ai-seo,programmatic-seo,seo-audit}`) — 일반 SEO 컨설팅 지식(AI 검색·programmatic SEO 패턴·SERP audit 절차)을 보조 스킬로 분리. dev-blog 도메인 baseline은 `.claude/rules/seo.md` 단일 진실 공급원 유지하되, 필요 시 보조 참조 가능. (스킬 카운트 12 → 15)
 
 ### Changed
 
@@ -29,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `HowTo` JSON-LD 빌더 + frontmatter `howTo` optional 필드 — 동일. mobile 사실상 미노출.
   - `Organization` JSON-LD (root layout) — Google은 1인 사이트에 `Person`만 권장. Organization은 회사 entity 신호.
   - `CreativeWorkSeries` JSON-LD (시리즈 상세) — schema.org 정식이지만 Google이 적극 활용한다는 증거 약함. velog 등 대형 platform도 미사용.
-  - SEO 보조 스킬(ai-seo·programmatic-seo·seo-audit) 에이전트 정의 통합 — 일반 SEO 컨설팅 지식 통합은 dev-blog 룰과 우선순위 충돌만 키움. `seo.md` 단일 진실 공급원 유지.
   - dead config: `src/shared/config/site.ts`의 `siteMetadata.ogImage` (사용처 0건, GC 발견) 삭제.
 - **결과**: schema.org JSON-LD 4종(WebSite·Person·BlogPosting·BreadcrumbList)으로 정착. 코드량 ~250줄 감소.
 
