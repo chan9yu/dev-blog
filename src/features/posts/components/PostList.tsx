@@ -47,7 +47,7 @@ export function PostList({ posts }: PostListProps) {
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const rafRef = useRef<number | undefined>(undefined);
 
-	const effectiveView = hydrated ? view : "list";
+	const effectiveView = hydrated ? view : "grid";
 	const visiblePosts = posts.slice(0, displayCount);
 	const hasMore = visiblePosts.length < posts.length;
 
@@ -108,9 +108,13 @@ export function PostList({ posts }: PostListProps) {
 			>
 				<AnimatePresence mode="popLayout">
 					{visiblePosts.map((post, index) => {
-						// 첫 카드: framer-motion 우회로 paint timing만 안정화 — priority preload는 view-mode 전환 시 sizes 불일치로 unused 워닝 발생하므로 제거.
+						// 첫 카드: layout 보간만 적용(variants 없음) — initial 애니메이션 우회로 LCP 보호 + view 전환 시 layout 일관성 회복.
 						if (index === 0) {
-							return <PostCard key={post.slug} post={post} variant={effectiveView} />;
+							return (
+								<motion.div key={post.slug} layout>
+									<PostCard post={post} variant={effectiveView} />
+								</motion.div>
+							);
 						}
 						return (
 							<motion.div key={post.slug} layout variants={cardVariants} initial="hidden" animate="visible" exit="exit">
