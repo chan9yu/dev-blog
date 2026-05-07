@@ -229,6 +229,14 @@
 	width: 90vw;
 }
 
+@utility max-h-lightbox {
+	max-height: 90vh;
+}
+
+@utility max-w-lightbox {
+	max-width: 90vw;
+}
+
 /* Sonner — 테마 변수를 CSS로 관리 (Sonner.tsx의 style prop 제거) */
 .toaster {
 	--normal-bg: var(--color-popover);
