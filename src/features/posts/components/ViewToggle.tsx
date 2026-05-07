@@ -22,8 +22,8 @@ const toggleButton = cva(
 export function ViewToggle() {
 	const { view, setView } = useViewMode();
 	const hydrated = useHydrated();
-	// hydrated gate — server snapshot "list" vs client localStorage "grid" 미스매치(React #418) 차단. PostList와 정합.
-	const effectiveView = hydrated ? view : "list";
+	// hydrated gate — server snapshot "grid" vs client localStorage 미스매치(React #418) 차단. PostList와 정합.
+	const effectiveView = hydrated ? view : "grid";
 
 	const handleSelectListView = () => setView("list");
 	const handleSelectGridView = () => setView("grid");

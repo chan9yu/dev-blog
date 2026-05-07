@@ -17,11 +17,11 @@ function subscribe(callback: () => void) {
 
 function getSnapshot(): ViewMode {
 	const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
-	return stored === "grid" ? "grid" : "list";
+	return stored === "list" ? "list" : "grid";
 }
 
 function getServerSnapshot(): ViewMode {
-	return "list";
+	return "grid";
 }
 
 export function useViewMode() {
