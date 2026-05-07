@@ -200,10 +200,61 @@ GSC `Performance → Queries`에서 다음을 확인:
 velog 같은 platform 도메인을 단일 1인 도메인으로 100% 따라잡는 것은 비현실적입니다. 그러나 다음 3가지를 충실히 누적하면 **특정 키워드(특히 long-tail)에서는 충분히 우위 가능**합니다:
 
 1. **콘텐츠 깊이** — velog의 일반 글보다 더 정합한 deep-dive (이미 WebRTC 시리즈가 좋은 예)
-2. **기술 SEO 우위** — JSON-LD(WebSite/Organization/Person/BlogPosting/Breadcrumb/CreativeWorkSeries/FAQ/HowTo) 8종 vs velog 0종
+2. **기술 SEO 우위** — JSON-LD 4종(WebSite·Person·BlogPosting·BreadcrumbList) vs velog 0종. v1.1.5 사이클에서 FAQPage·HowTo(rich result 자격 축소)·Organization(1인 사이트 미권장)·CreativeWorkSeries(Google 활용 증거 약함) 4종은 도입 보류 (회고: `.claude/rules/seo.md` 하단)
 3. **외부 권위 source 활용** — Wikipedia, dev.to(canonical), Hacker News, 한국 개발자 newsletter 인용 누적
 
 **6개월 목표**: long-tail 키워드(예: "WebRTC RTCPeerConnection 이벤트 흐름") 1페이지 진입 → 12개월 목표: 일반 키워드(예: "WebRTC") 1페이지 진입.
+
+---
+
+## 9. 진행 상황 (2026-05-07 기준 — GSC SEO Audit 사이클)
+
+### 인프라 측 100% 완료
+
+| 항목                         | 결과                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| **도메인 정규 정책**         | Vercel `www → 308 → apex` 적용 (chan9yu.dev 정규 정착)                    |
+| **GSC sitemap 등록**         | `https://chan9yu.dev/sitemap.xml` 신규 등록 — "성공 / 90 entries / fresh" |
+| **옛 www sitemap**           | 삭제 완료 (drift 정리, 308로 외부 백링크 보호)                            |
+| **URL Inspection 색인 요청** | 홈 + 인기 5포스트 즉시 요청 (harness/2025-retro/codecs/claude-agent/sdk)  |
+| **Schema 검증**              | 탐색경로 잘못됨 0 (코드 정상, 색인 누적 시 valid 자동 증가)               |
+| **HTTPS**                    | 14 valid / 0 invalid                                                      |
+| **Settings**                 | 소유권 인증 / 1인 운영 / 크롤링 통계 정상                                 |
+
+### Performance baseline (90일)
+
+- **클릭수 81 / 노출수 1,960 / CTR 4.1% / 평균 게재순위 6.7** (= 1페이지 top 10) ✅
+- 이미 1페이지 노출 중인 long-tail 키워드: `vp9 opus`, `vp9 코덱`, `webrtc vp8 codec`, `av1 vp9 차이`, `영상 코덱 확인`, `error: calling setstate synchronously...`
+
+### CTR 0 키워드 (콘텐츠 측 후속 작업 후보)
+
+| 쿼리                     | 노출 / 클릭 | 매칭 포스트                 | 권장 액션                                |
+| ------------------------ | ----------- | --------------------------- | ---------------------------------------- |
+| `클로드 팀메이트`        | 9 / 0       | claude-code-agent-teams     | description에 정확한 키워드 자연 삽입    |
+| `"teammatemode": "tmux"` | 7 / 0       | claude-code-agent-teams     | 본문 코드블록 caption 강화               |
+| `react sdk`              | 6 / 0       | separating-react-app-to-sdk | description "React SDK 만들기" 자연 삽입 |
+
+→ task #25 (전 23개 포스트 description 일관성)에서 우선 처리.
+
+### 30~90일 자연 추적 항목
+
+- 색인 21 → 30+ (apex sitemap 90 entries 점진 색인)
+- breadcrumb valid 1 → 21 (색인 진행에 따라 자동 증가)
+- 미색인 redirect 4 → 0 (HTTP/옛 www URL 자연 해소)
+- CWV 모바일·데스크톱 데이터 채움 (Field Data 임계 통과 시)
+- CTR 0 키워드 → 클릭 발생 (description 최적화 후)
+
+### 산출물
+
+- `_workspace/verification/gsc_seo_audit_2026-05-07.md` (195 lines, 종합 리포트)
+- 12개 GSC snapshot 진단 근거 파일
+
+### 다음 우선순위 (외부 작업)
+
+1. **Bing Webmaster Tools 등록** — Copilot/Perplexity 일부 source
+2. **Naver Search Advisor 등록** — 한국 트래픽 필수
+3. **dev.to / Hashnode cross-post (canonical 유지)** — 외부 백링크 즉시 5~10개
+4. **news.hada.io / Disquiet / Hacker News / Lobste.rs** 공유
 
 ---
 

@@ -393,3 +393,35 @@
 | M6 A11y & Perf         | 14      | 14      | 100%     |
 | M7 Polish              | 15      | 15      | 100%     |
 | **Total**              | **199** | **199** | **100%** |
+
+---
+
+## Post-v1.1.0 Release Cycle (production hotfix · UX 정합성)
+
+> M7 완료 + v1.1.0 production 배포 이후의 운영 단계. 마일스톤 단위가 아닌 hotfix release 사이클로 운영. 각 release는 사용자 검수 → 즉시 정정 패턴.
+
+| 버전       | 일자       | 핵심 변경                                                                                                                                                                                             | PR  |
+| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| **v1.1.0** | 2026-05-04 | M7 완료 production 첫 배포                                                                                                                                                                            | —   |
+| **v1.1.1** | 2026-05-04 | (회수) production streaming stuck fail-soft 시도 — 룰 위반(`no-fallback.md` 신규 트리거)                                                                                                              | —   |
+| **v1.1.2** | 2026-05-04 | `cacheComponents=false` + SSG-first 정착, contents/ runtime 의존 제거 (root cause fix)                                                                                                                | #27 |
+| **v1.1.3** | 2026-05-04 | `/api/views` KV sync throw 흡수, React #418 hydration mismatch 본질 fix, a11y Tier 2                                                                                                                  | #29 |
+| **v1.1.4** | 2026-05-04 | Giscus 댓글 매칭(#30), Header sticky 회귀, ViewToggle hydration, Footer 배포 버전 UI + 자동 release workflow                                                                                          | #31 |
+| **v1.1.5** | 2026-05-05 | SEO 정합성 강화 — frontmatter SEO 빌드 게이트, BlogPosting `dateModified`, `ai-seo`·`programmatic-seo`·`seo-audit` 보조 스킬, `SEO_EXTERNAL.md`, 23개 포스트 description 정합화, WebRTC 5편 본문 보강 | #33 |
+| **v1.1.6** | 2026-05-07 | Footer `v{APP_VERSION}` 좌측 하단 viewport fixed badge 회귀 hotfix                                                                                                                                    | #34 |
+| **v1.1.7** | 2026-05-07 | UX 정합성 hotfix bundle (5건) — Footer 배지 모바일 숨김, PostList 기본 grid + 첫 카드 layout 일관성, ImageLightbox 좌우 슬라이드 + 작은 이미지 깨짐 차단(적응형)                                      | #35 |
+
+### Release 사이클 운영 규약 (v1.1.5+ 정착)
+
+- **base 브랜치**: 통합 = `develop`, release = `main`. PR `develop → main`
+- **머지 전략**: **merge commit** 또는 **rebase merge** (squash 금지 — atomic commits 보존, graph 연속성 유지)
+- **PR 생성 전 main 동기화**: `git fetch origin main && git merge origin/main` 으로 conflict 사전 해소 (PR #32~#34 반복 실수 차단)
+- **Release tag**: 머지 후 `v*.*.*` annotated tag push → `.github/workflows/release.yaml` 자동 트리거 → GitHub Release 발행 + Vercel production 재배포
+- **Ralph QA**: release 후 Playwright MCP로 시나리오 E2E 검증 (`_workspace/verification/ralph_qa_*_cycle_*.md`)
+- **GC 사이클**: 누적된 변경 + 반복 실수 패턴 분석 (`_workspace/gc/*_report.md`)
+
+### 관련 산출물 (`_workspace/`)
+
+- `verification/ralph_qa_2026-05-07_cycle_1.md` — v1.1.7 working tree 검증 (14 PASS / 0 블로커)
+- `verification/gsc_seo_audit_2026-05-07.md` — GSC 인프라 100% 완료 (apex 정규 308, sitemap 90 entries fresh, 미색인 진단)
+- `gc/gc_v1.1.7_2026-05-07_report.md` — GC 5단계 종합 (96/100 하네스, drift 0)

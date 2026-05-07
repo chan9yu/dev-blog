@@ -124,7 +124,7 @@ pnpm test:e2e     # Playwright E2E (5 spec)
 ### 자율 범위
 
 - **자동**: `src/` 코드, 테스트, `docs/TASKS.md` 체크박스, `CHANGELOG.md`
-- **사용자 승인 필수**: 의존성 추가(`package.json`)·아키텍처 변경·PRD 수정·Git 쓰기 작업
+- **사용자 승인 필수**: 의존성 추가(`package.json`)·아키텍처 변경·PRD 수정·**Git 쓰기 작업** (commit·push·PR·머지·tag 모두 명시 요청 필수, `.claude/rules/workflow.md` "Git 쓰기 절대 금지 규칙" 참조)
 
 ### Git 브랜치 전략 (Git Flow Lite)
 
@@ -138,7 +138,9 @@ feature/M{n}-{슬러그}  ← 마일스톤 단위 개발
 <br />
 새 마일스톤 첫 태스크 진입 시 orchestrator가 리모트 최신 `develop`으로부터 `feature/M{n}-*` 브랜치 생성을 제안한다 (사용자 승인 후 실행).
 <br />
-마일스톤 완료 시 `develop`으로 PR, squash merge.
+마일스톤 완료 시 `develop`으로 PR, **merge commit 또는 rebase merge** (squash merge 금지 — atomic commits 보존).
+<br />
+PR 생성 **전** 반드시 `origin/main` (또는 base 브랜치)을 develop에 merge해서 conflict 사전 해소.
 
 ---
 
