@@ -66,7 +66,7 @@ export function Footer() {
 				href={`https://github.com/chan9yu/dev-blog/releases/tag/v${APP_VERSION}`}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="text-muted-foreground hover:text-accent focus-visible:ring-ring fixed bottom-4 left-4 z-30 rounded text-xs opacity-50 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				className="text-muted-foreground hover:text-accent focus-visible:ring-ring fixed bottom-4 left-4 z-30 hidden rounded text-xs opacity-50 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:inline-block"
 				aria-label={`현재 배포 버전 v${APP_VERSION} (GitHub Release 보기)`}
 			>
 				v{APP_VERSION}
