@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6] - 2026-05-07
+
+🚑 **Build version badge viewport fixed positioning hotfix** — v1.1.5에서 도입한 Footer `v{APP_VERSION}` 링크가 footer 컨테이너 내부 흐름 위치에 있어 스크롤 시 함께 흘러갔다. 사용자 의도는 **viewport 좌하단에 항상 떠있는 build badge** (페이지 기준 fixed). 본 hotfix가 그 의도를 정확히 구현.
+
+### Fixed
+
+- **Build version badge viewport fixed bottom-left** (`src/shared/components/layouts/Footer.tsx`) — `<a>` 링크를 `<footer>` 외부 fragment로 분리하고 `fixed bottom-4 left-4 z-30 opacity-50 hover:opacity-100`로 viewport 기준 좌하단 고정. 모든 페이지에서 항상 노출되며 GitHub Release tag로 직접 연결. 시각 noise 최소화를 위해 기본 `opacity-50`, hover/focus 시 `opacity-100`.
+
+### Notes
+
+- **회귀 컨텍스트**: v1.1.5 사이클 직후 사용자 검수에서 "footer 기준이 아니라 페이지 기준 fixed" 의도가 드러남. v1.1.5 release 직후 즉시 hotfix.
+- **z-index 계층**: `z-30` — 헤더(`z-40`)·모달(`z-50`)보다 낮음. 헤더·모달 띄울 때 자연스럽게 가려짐.
+
 ## [1.1.5] - 2026-05-05
 
 🚀 **SEO 정합성 강화 + 실험 항목 정리** — velog 벤치마크 후 진짜 효과 있는 baseline만 유지. 사용자 요청 "모든 아티클이 Google 첫 페이지"를 위한 **시스템화**(회귀 자동 차단)에 집중하고, Google이 rich result 자격을 축소했거나 효과 미검증인 항목은 도입 보류 (회고는 `.claude/rules/seo.md` 하단).
