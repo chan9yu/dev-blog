@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.7] - 2026-05-07
+
+🚑 **UX 정합성 hotfix bundle** — v1.1.6 release 직후 사용자 검수에서 발견한 5건의 UX 어색함을 통합 정정: Footer 버전 배지 모바일 숨김, PostList 기본 뷰 모드를 격자(grid)로, list↔grid 전환 시 첫 카드 layout 보간 일관성 회복, 이미지 라이트박스 좌우 슬라이드 애니메이션 추가, 작은 이미지 깨짐 차단.
+
+### Fixed
+
+- **Build version badge mobile hide** (`src/shared/components/layouts/Footer.tsx`) — `<a>` 링크 className에 `hidden md:inline-block` 추가. 모바일·태블릿(<768px)에서 숨김, PC(md ≥ 768px)에서만 노출. 모바일은 좁은 화면 + 한 손 조작 + content 우선이라 fixed badge가 거슬렸던 회귀 차단.
+- **PostList list↔grid 전환 첫 카드 layout 보간 일관성** (`src/features/posts/components/PostList.tsx`) — 첫 카드만 framer-motion 우회하던 부자연스러움 제거. `<motion.div layout>` (variants 없이 layout prop만)으로 wrap → list↔grid 전환 시 layout 보간 일관 적용 + initial stagger 애니메이션 우회로 LCP 보호 유지.
+- **ImageLightbox 작은 이미지 깨짐 차단** (`src/features/lightbox/components/ImageLightbox.tsx`) — `<Image fill>` + `h-lightbox w-lightbox` 컨테이너로 작은 이미지가 90vh×90vw로 늘어나 픽셀 깨지던 문제 해소. `width={0} height={0} sizes="100vw"` + `w-auto h-auto max-w-lightbox max-h-lightbox`로 변경 → 작은 이미지는 자연 크기 유지, 큰 이미지만 90vh/90vw 한도 내 축소.
+
+### Changed
+
+- **PostList 기본 뷰 모드 grid 전환** (`src/features/posts/hooks/useViewMode.ts`·`PostList.tsx`·`ViewToggle.tsx`) — `getSnapshot`·`getServerSnapshot` 모두 default를 `"grid"`로 변경. localStorage가 없거나 명시적으로 `"list"`가 아닐 때 격자 우선. PostList·ViewToggle의 `effectiveView` hydrated 전 fallback도 `"grid"`로 통일해 server↔client snapshot 정합성 유지 (React #418 mismatch 차단).
+
+### Added
+
+- **ImageLightbox 좌우 슬라이드 전환 애니메이션** (`src/features/lightbox/components/ImageLightbox.tsx`) — framer-motion `AnimatePresence custom={direction}` + slide+fade variants. `onNext`/`onPrev`·키보드 ←/→ 모두 wrapper handler로 direction(+1/-1) 추적해 carousel 방향성 시각화. `mode="wait"` + duration 0.25s + EASE_OUT으로 반응성·자연스러움 균형.
+- **`max-h-lightbox`·`max-w-lightbox` Tailwind utility** (`src/shared/styles/globals.css`) — `h-lightbox`·`w-lightbox`(고정 90vh/90vw)의 max 변형. 라이트박스 적응형 크기 구현용 토큰. styling.md 룰(arbitrary value 회피) 정합.
+
+### Notes
+
+- **회귀 컨텍스트**: v1.1.6 release 직후 사용자 검수에서 5건 즉시 통합 hotfix — "모바일에서 안 나오는 게 좋겠다" + "리스트→격자 전환 애니메이션 부자연스럽다" + "기본값 격자가 좋겠다" + "라이트박스 좌우 이동 시 애니메이션 있었으면" + "작은 이미지 크게보기하면 화질 깨짐".
+- **md breakpoint**: 768px (Tailwind 4 default). 태블릿(640~768px) 포함 모바일 카테고리로 처리.
+- **첫 카드 layout 일관성 trade-off**: 이전 framer-motion 우회는 stagger(0.05s)로 인한 LCP 지연 회피용이었음. variants 없이 `layout`만 적용하면 initial 애니메이션 없이 layout 보간만 적용 → 첫 카드 paint timing 보호 + view 전환 시 jump 없음.
+- **기본값 grid 선택 근거**: 21개 색인 포스트 + Popular sidebar 카드 패턴 + 모바일·태블릿 thumbnail 강조 일관성. list 사용자는 localStorage에 "list" 명시되면 그대로 유지.
+- **Lightbox `width=0 height=0 sizes` 패턴**: Next.js `<Image>`의 표준 intrinsic 크기 사용 패턴. CSS `w-auto h-auto`와 결합 시 자연 비율·크기 유지. `unoptimized`는 그대로 유지(외부 SVG·동적 src 호환).
+
 ## [1.1.6] - 2026-05-07
 
 🚑 **Build version badge viewport fixed positioning hotfix** — v1.1.5에서 도입한 Footer `v{APP_VERSION}` 링크가 footer 컨테이너 내부 흐름 위치에 있어 스크롤 시 함께 흘러갔다. 사용자 의도는 **viewport 좌하단에 항상 떠있는 build badge** (페이지 기준 fixed). 본 hotfix가 그 의도를 정확히 구현.
