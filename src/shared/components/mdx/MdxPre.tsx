@@ -60,7 +60,7 @@ export function MdxPre({ filename, className, children, ...rest }: MdxPreProps) 
 				type="button"
 				onClick={handleCopy}
 				aria-label={copied ? "복사됨" : "코드 복사"}
-				className="bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring absolute top-2 right-2 inline-flex size-9 items-center justify-center rounded-md opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+				className="bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring absolute top-2 right-2 inline-flex size-9 cursor-pointer items-center justify-center rounded-md opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
 			>
 				{copied ? <Check className="size-4" aria-hidden /> : <Copy className="size-4" aria-hidden />}
 			</button>

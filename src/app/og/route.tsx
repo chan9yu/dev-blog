@@ -7,9 +7,25 @@ export const dynamic = "force-dynamic";
 const MAX_TITLE = 80;
 const MAX_TAG = 32;
 
+// CWE-601 Open Redirect 차단 — siteMetadata.url의 hostname만 외부 redirect 허용.
+// 그 외 외부 URL은 fallback 렌더 (공격자가 /og?thumbnail=https://evil.com을 합법
+// 도메인의 OG endpoint로 위장하는 phishing 벡터 차단).
+const ALLOWED_THUMBNAIL_HOSTS = new Set<string>([new URL(siteMetadata.url).hostname]);
+
 function truncate(input: string, max: number) {
 	if (input.length <= max) return input;
 	return `${input.slice(0, max - 1).trimEnd()}…`;
+}
+
+function isAllowedThumbnailUrl(thumbnail: string, requestOrigin: string): boolean {
+	try {
+		const target = new URL(thumbnail);
+		if (target.protocol !== "https:" && target.protocol !== "http:") return false;
+		const requestHost = new URL(requestOrigin).hostname;
+		return target.hostname === requestHost || ALLOWED_THUMBNAIL_HOSTS.has(target.hostname);
+	} catch {
+		return false;
+	}
 }
 
 export function GET(req: Request) {
@@ -19,14 +35,16 @@ export function GET(req: Request) {
 	const tagParam = searchParams.get("tag")?.trim();
 	const tag = tagParam ? truncate(tagParam, MAX_TAG) : null;
 	const thumbnail = searchParams.get("thumbnail");
+	const origin = new URL(req.url).origin;
 
-	if (thumbnail && /^https?:\/\//i.test(thumbnail)) {
-		return Response.redirect(thumbnail, 302);
-	}
+	if (thumbnail) {
+		if (thumbnail.startsWith("/") && !thumbnail.startsWith("//")) {
+			return Response.redirect(`${origin}${thumbnail}`, 302);
+		}
 
-	if (thumbnail && thumbnail.startsWith("/")) {
-		const origin = new URL(req.url).origin;
-		return Response.redirect(`${origin}${thumbnail}`, 302);
+		if (/^https?:\/\//i.test(thumbnail) && isAllowedThumbnailUrl(thumbnail, origin)) {
+			return Response.redirect(thumbnail, 302);
+		}
 	}
 
 	const eyebrow = tag ? `#${tag}` : `${siteMetadata.name}.dev`;
