@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.8] - 2026-05-11
+
+🚑 **모바일 MDX 테이블 wrap 회귀 hotfix** — 4컬럼 + 짧은 헤더(≤3자) + 긴 인라인 코드 셀이 동반된 테이블이 모바일에서 한국어 음절 단위로 한 글자씩 깨지는 회귀를 렌더링 레이어에서 일반 차단.
+
+### Fixed
+
+- **MDX 테이블 모바일 wrap 회귀** (`src/shared/components/mdx/MdxTable.tsx`·`src/shared/styles/prose.css`) — `<table>` 클래스 `w-full` → `min-w-full`, `.prose table { width: 100% }` 제거, `.prose th, .prose td`에 `min-width: 8rem` + `word-break: keep-all` + `overflow-wrap: anywhere` 적용. CSS auto table-layout이 짧은 헤더 컬럼을 43px까지 압축하던 회귀를 차단하고, 컬럼 폭이 wrapper를 초과하면 wrapper의 `overflow-x: auto`로 자연 가로 스크롤이 동작.
+
+### Notes
+
+- **발생 조건**: 4컬럼 + 짧은 헤더(≤3자) + 60자+ 인라인 코드 셀 동반. 정적 분석상 12개 포스트 중 `harness-build-monorepo-agents` 1건만 충족했으나 렌더링 레이어 결함이라 새 포스트에서 언제든 재발 가능 → 일반 fix로 처리.
+- **검증**: 5개 뷰포트(iPhone SE 375 / iPhone 14 PM 430 / Pixel 7 412 / iPad 768 / Desktop 1280) × 12개 포스트 × 44+개 테이블 Playwright sweep 통과, 가로 스크롤 끝점 도달 가능 확인.
+- **trade-off**: `min-width: 8rem`(128px)으로 짧은 셀("항상", "Phase 2")도 128px 폭이 강제됨 → 가독성 균일성·회귀 방지 우선.
+- **이슈/PR**: closes #36 / merged via #37 / release PR 별도.
+
 ## [1.1.7] - 2026-05-07
 
 🚑 **UX 정합성 hotfix bundle** — v1.1.6 release 직후 사용자 검수에서 발견한 5건의 UX 어색함을 통합 정정: Footer 버전 배지 모바일 숨김, PostList 기본 뷰 모드를 격자(grid)로, list↔grid 전환 시 첫 카드 layout 보간 일관성 회복, 이미지 라이트박스 좌우 슬라이드 애니메이션 추가, 작은 이미지 깨짐 차단.
