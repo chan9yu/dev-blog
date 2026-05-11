@@ -138,7 +138,6 @@
 }
 
 .prose table {
-	width: 100%;
 	border-collapse: collapse;
 	font-size: 0.9375rem;
 }
@@ -148,6 +147,9 @@
 	padding: 0.75em 1em;
 	text-align: left;
 	border-bottom: 1px solid var(--color-border-subtle);
+	min-width: 8rem;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
 }
 
 .prose th {

@@ -7,7 +7,7 @@ type MdxTableProps = ComponentProps<"table">;
 export function MdxTable({ className, ...rest }: MdxTableProps) {
 	return (
 		<div className="border-border-subtle my-6 overflow-x-auto rounded-md border">
-			<table className={cn("w-full text-left text-sm", className)} {...rest} />
+			<table className={cn("min-w-full text-left text-sm", className)} {...rest} />
 		</div>
 	);
 }
