@@ -51,6 +51,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ index: 
 				{imageDataUri ? (
 					<img
 						src={imageDataUri}
+						alt=""
 						width={BADGE_CARD.width}
 						height={BADGE_CARD.thumbHeight}
 						style={{ objectFit: "cover" }}
