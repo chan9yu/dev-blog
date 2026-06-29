@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 export const BADGE_RECENT_COUNT = 6;
 
 export const BADGE_THEMES = ["dark", "light"] as const;
@@ -25,4 +28,24 @@ export function parseBadgeIndex(raw: string): number | null {
 	const index = Number(raw);
 	if (index >= BADGE_RECENT_COUNT) return null;
 	return index;
+}
+
+const BADGE_FONT_DIR = join(process.cwd(), "public", "fonts");
+
+// 빌드 타임 전용. Satori는 ttf/otf/woff만 지원 — variable woff2(PretendardVariable) 사용 불가.
+export function loadBadgeFonts() {
+	return [
+		{
+			name: "Pretendard" as const,
+			weight: 400 as const,
+			style: "normal" as const,
+			data: readFileSync(join(BADGE_FONT_DIR, "Pretendard-Regular.otf"))
+		},
+		{
+			name: "Pretendard" as const,
+			weight: 700 as const,
+			style: "normal" as const,
+			data: readFileSync(join(BADGE_FONT_DIR, "Pretendard-Bold.otf"))
+		}
+	];
 }
