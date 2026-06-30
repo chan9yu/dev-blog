@@ -18,7 +18,7 @@ const basePost: PostSummary = {
 };
 
 describe("resolveCardImageDataUri", () => {
-	it("썸네일이 null이면 placeholder가 svg로 해석되므로 null을 반환한다", () => {
+	it("썸네일이 null이면 null을 반환한다(resolveThumbnailSrc가 즉시 null)", () => {
 		expect(resolveCardImageDataUri(basePost)).toBeNull();
 	});
 
