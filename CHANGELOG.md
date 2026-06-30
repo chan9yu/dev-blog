@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-30
+
+✨ **GitHub README 최근 글 뱃지** — 블로그 최근 공개 글 6개를 썸네일 카드 이미지로 노출하는 정적 라우트. GitHub 프로필 README에 위치 기반(0~5)으로 박아두면 새 글 발행 시 무수정으로 자동 갱신된다.
+
+### Added
+
+- **`/badge/recent/[index]` 리다이렉트 라우트** (`src/app/badge/recent/[index]/route.ts`) — N번째 최신 공개 글의 `/posts/{slug}`로 302. 카드의 `<a href>`용. `force-static` + `dynamicParams = false`로 빌드 타임 prerender, 런타임 `contents/` fs 호출 0 (v1.1.2 incident 회귀 차단).
+- **`/badge/recent/[index]/[theme]` 카드 이미지 라우트** (`src/app/badge/recent/[index]/[theme]/route.tsx`) — `next/og`(Satori)로 썸네일(16:9) + 제목(2줄) + 날짜 PNG 카드 렌더. theme=`dark`|`light`. 썸네일 없는 글은 상단 브랜드 + 하단 제목/날짜로 폴백(썸네일 카드와 레이아웃 일관).
+- **뱃지 설정·유틸** — `src/shared/config/badge.ts`(팔레트·치수·`parseBadgeIndex`·`isBadgeTheme`·`loadBadgeFonts`·`BADGE_CACHE_CONTROL`), `src/shared/utils/fileToDataUri.ts`, `src/shared/utils/resolveCardImageDataUri.ts`(raster 썸네일만 data URI 인라인, svg/없음 → 폴백 카드).
+- **Pretendard 정적 OTF** (`public/fonts/Pretendard-{Regular,Bold}.otf`) — Satori는 woff2·variable 폰트 미지원이므로 한글 카드 렌더용 정적 OTF를 별도 로드.
+
+### Notes
+
+- 라이트/다크 자동 교체는 README `<picture>` + `prefers-color-scheme`로 처리. 붙여넣기용 마크업은 `_workspace/readme-badge-snippet.md`.
+- GitHub Camo 이미지 캐시 특성상 새 글 반영까지 수 시간 지연 가능(구조적 한계).
+
 ## [1.1.8] - 2026-05-11
 
 🚑 **모바일 MDX 테이블 wrap 회귀 hotfix** — 4컬럼 + 짧은 헤더(≤3자) + 긴 인라인 코드 셀이 동반된 테이블이 모바일에서 한국어 음절 단위로 한 글자씩 깨지는 회귀를 렌더링 레이어에서 일반 차단.
