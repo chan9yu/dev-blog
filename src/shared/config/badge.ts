@@ -9,7 +9,7 @@ export type BadgeTheme = (typeof BADGE_THEMES)[number];
 export const BADGE_CARD = {
 	width: 480,
 	thumbHeight: 270,
-	height: 400
+	height: 440
 } as const;
 
 type BadgePalette = { bg: string; title: string; muted: string; border: string };

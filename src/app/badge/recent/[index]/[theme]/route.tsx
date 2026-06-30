@@ -10,8 +10,11 @@ import {
 	loadBadgeFonts,
 	parseBadgeIndex
 } from "@/shared/config/badge";
+import { siteMetadata } from "@/shared/config/site";
 import { formatDate } from "@/shared/utils/formatDate";
 import { resolveCardImageDataUri } from "@/shared/utils/resolveCardImageDataUri";
+
+const BRAND_LABEL = siteMetadata.url.replace(/^https?:\/\//, "");
 
 // SSG-first(PRD G-1) — 빌드 타임 prerender → runtime contents/ 의존 0 (v1.1.2 incident 회귀 차단).
 export const dynamic = "force-static";
@@ -64,15 +67,14 @@ export async function GET(_req: Request, { params }: { params: Promise<{ index: 
 							height: "100%",
 							alignItems: "center",
 							justifyContent: "center",
-							padding: 24,
-							textAlign: "center",
 							backgroundImage: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #4f46e5 100%)",
-							color: "#f8fafc",
-							fontSize: 28,
-							fontWeight: 700
+							color: "#c7d2fe",
+							fontSize: 34,
+							fontWeight: 800,
+							letterSpacing: "0.04em"
 						}}
 					>
-						{post.title}
+						{BRAND_LABEL}
 					</div>
 				)}
 			</div>
@@ -82,24 +84,25 @@ export async function GET(_req: Request, { params }: { params: Promise<{ index: 
 					display: "flex",
 					flexDirection: "column",
 					flex: 1,
-					padding: "24px 28px",
-					justifyContent: "space-between"
+					padding: "20px 28px",
+					justifyContent: "center",
+					gap: 12
 				}}
 			>
 				<div
 					style={{
 						display: "flex",
-						fontSize: 30,
+						fontSize: 26,
 						fontWeight: 700,
 						lineHeight: 1.3,
 						color: palette.title,
-						maxHeight: 80,
+						maxHeight: 70,
 						overflow: "hidden"
 					}}
 				>
 					{post.title}
 				</div>
-				<div style={{ display: "flex", fontSize: 22, color: palette.muted }}>{formatDate(post.date)}</div>
+				<div style={{ display: "flex", fontSize: 20, color: palette.muted }}>{formatDate(post.date)}</div>
 			</div>
 		</div>,
 		{
