@@ -49,7 +49,7 @@ export function MdxImage({ alt, caption, className, src, ...rest }: MdxImageProp
 					loading="lazy"
 					decoding="async"
 					src={imageSrc}
-					className={cn("block h-auto max-w-full rounded-lg", className)}
+					className={cn("max-h-mdx-image block h-auto w-auto max-w-full rounded-lg", className)}
 					{...rest}
 				/>
 			</button>
