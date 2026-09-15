@@ -43,6 +43,21 @@
 	line-height: var(--leading-prose);
 }
 
+/* 볼드만 있는 문단은 소제목으로 쓴다. MDX가 이것을 p 없이 strong 하나로 내보내 인라인이 되므로
+   블록으로 세워야 간격이 먹는다. 위를 띄우고 아래를 붙여 뒤따르는 내용과 한 덩어리로 보이게 한다 */
+.prose > strong {
+	display: block;
+	margin-top: 32px;
+}
+
+.prose > strong + :is(p, ul, ol, pre, table, blockquote) {
+	margin-top: 10px;
+}
+
+.prose > strong + :is(ul, ol) > li:first-child {
+	margin-top: 0;
+}
+
 .prose a {
 	color: var(--color-accent-default);
 	text-decoration: underline;
