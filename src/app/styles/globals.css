@@ -256,6 +256,10 @@
 	max-width: 90vw;
 }
 
+@utility max-h-mdx-image {
+	max-height: min(70vh, 35rem);
+}
+
 [data-toc-panel],
 [data-toc-opener] {
 	transition-property: opacity, transform, visibility;

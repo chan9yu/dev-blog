@@ -68,7 +68,8 @@ function main() {
 			try {
 				const srcStat = statSync(srcFile);
 				const destStat = statSync(destFile);
-				if (destStat.mtimeMs >= srcStat.mtimeMs) {
+				// 이름만 바꾼 파일은 내용 수정 시각이 그대로라 시각만 보면 건너뛴다. 크기까지 본다
+				if (destStat.mtimeMs >= srcStat.mtimeMs && destStat.size === srcStat.size) {
 					shouldCopy = false;
 					skipped++;
 				}
