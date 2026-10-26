@@ -124,6 +124,10 @@ export function RootLayout({ children }: PropsWithChildren) {
 						{children}
 					</main>
 					<Footer />
+					<div
+						aria-hidden
+						className="bg-mascot pointer-events-none fixed right-0 bottom-0 hidden h-70 w-50 lg:block print:hidden"
+					/>
 					<ScrollToTop />
 				</Providers>
 				{process.env.VERCEL ? (
