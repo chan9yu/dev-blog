@@ -68,7 +68,7 @@ pnpm test:e2e        # Playwright. dev 서버(3100)를 자동 기동, 로컬 전
 | `docs/design/DESIGN-SPEC.md` | 화면 배치와 반응형, 접근성 요구    |
 | `docs/operations/RUNBOOK.md` | 배포하거나 무언가 깨졌을 때        |
 | `docs/operations/SEO.md`     | 코드 밖 검색 유입 작업             |
-| `docs/CLAUDE.md`             | 문서를 어디에 둘지 정할 때         |
+| `docs/README.md`             | 문서를 어디에 둘지 정할 때         |
 | `CONTRIBUTING.md`            | 환경 설정과 명령어, 콘텐츠 작성법  |
 
 ## 룰
