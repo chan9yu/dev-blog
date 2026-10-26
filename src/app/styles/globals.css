@@ -172,6 +172,13 @@
 	background-image: url("/images/logo-mark-white.png");
 }
 
+@utility bg-mascot {
+	background-image: url("/images/mascot.webp");
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
 @utility bg-post-placeholder {
 	background-image: url("/images/post-placeholder-light.png");
 	background-position: center;
